@@ -1,0 +1,1202 @@
+{
+ "001 - Otis McDonald - Scarlet Fire.opus": {
+  "lufs": -8.64,
+  "peak": 1.1417
+ },
+ "002 - TrackTribe - Walk Through the Park.opus": {
+  "lufs": -18.71,
+  "peak": 0.8668
+ },
+ "003 - Daft Punk - Doin' it Right.opus": {
+  "lufs": -11.68,
+  "peak": 1.1265
+ },
+ "004 - Billie Eilish - bad guy.opus": {
+  "lufs": -7.81,
+  "peak": 1.3399
+ },
+ "005 - James Blake - Limit to Your Love.opus": {
+  "lufs": -9.41,
+  "peak": 1.123
+ },
+ "006 - Massive Attack - Angel.opus": {
+  "lufs": -11.12,
+  "peak": 1.1735
+ },
+ "007 - Massive Attack - Teardrop.opus": {
+  "lufs": -11.35,
+  "peak": 1.0985
+ },
+ "008 - Burial - Archangel.opus": {
+  "lufs": -10.95,
+  "peak": 1.0738
+ },
+ "009 - Gesaffelstein - Opr.opus": {
+  "lufs": -7.27,
+  "peak": 1.2274
+ },
+ "010 - Kendrick Lamar - HUMBLE.opus": {
+  "lufs": -9.05,
+  "peak": 1.2413
+ },
+ "011 - Kendrick Lamar - Prayer.opus": {
+  "lufs": -12.19,
+  "peak": 1.1147
+ },
+ "012 - The Weeknd - Blinding Lights.opus": {
+  "lufs": -6.81,
+  "peak": 1.2233
+ },
+ "013 - Avicii - Levels.opus": {
+  "lufs": -9.12,
+  "peak": 1.2433
+ },
+ "014 - Avicii & Sandro Cavazza - Without You.opus": {
+  "lufs": -7.5,
+  "peak": 1.278
+ },
+ "015 - Avicii - The Nights.opus": {
+  "lufs": -7.03,
+  "peak": 1.1926
+ },
+ "016 - Rage Against the Machine - Killing in the Name.opus": {
+  "lufs": -8.55,
+  "peak": 1.1696
+ },
+ "017 - Dr. Dre - Still D.R.E.opus": {
+  "lufs": -7.68,
+  "peak": 1.495
+ },
+ "018 - Eminem - 'Till I Collapse.opus": {
+  "lufs": -6.42,
+  "peak": 1.3311
+ },
+ "019 - 50 Cent - Many Men (Wish Death).opus": {
+  "lufs": -13.41,
+  "peak": 1.1062
+ },
+ "020 - Tame Impala - The Less I Know the Better.opus": {
+  "lufs": -6.67,
+  "peak": 1.27
+ },
+ "021 - Tame Impala - New Person, Same Old Mistakes.opus": {
+  "lufs": -8.47,
+  "peak": 1.1877
+ },
+ "022 - Tame Impala - Feels Like We Only Go Backwards.opus": {
+  "lufs": -5.16,
+  "peak": 1.1618
+ },
+ "023 - America - A Horse with No Name.opus": {
+  "lufs": -17.52,
+  "peak": 0.8171
+ },
+ "024 - Radiohead - Everything in Its Right Place.opus": {
+  "lufs": -9.44,
+  "peak": 1.1122
+ },
+ "025 - Radiohead - Idioteque.opus": {
+  "lufs": -9.22,
+  "peak": 1.1314
+ },
+ "026 - Radiohead - Let Down.opus": {
+  "lufs": -8.56,
+  "peak": 1.142
+ },
+ "027 - Radiohead - Paranoid Android.opus": {
+  "lufs": -8.3,
+  "peak": 1.2917
+ },
+ "028 - Kanye West - Heartless.opus": {
+  "lufs": -8.84,
+  "peak": 1.0789
+ },
+ "029 - Kanye West - Love Lockdown.opus": {
+  "lufs": -7.3,
+  "peak": 1.288
+ },
+ "030 - Kanye West - Stronger.opus": {
+  "lufs": -9.41,
+  "peak": 1.1653
+ },
+ "031 - Panda Eyes & Teminite - Highscore.opus": {
+  "lufs": -7.1,
+  "peak": 1.3077
+ },
+ "032 - Panda Eyes - Colorblind.opus": {
+  "lufs": -4.31,
+  "peak": 1.4189
+ },
+ "033 - Waterflame - Ricochet Love.opus": {
+  "lufs": -7.12,
+  "peak": 1.2632
+ },
+ "034 - NOMA - Brain Power.opus": {
+  "lufs": -2.75,
+  "peak": 1.6075
+ },
+ "035 - DECO＊27 feat. Hatsune Miku - Ghost Rule.opus": {
+  "lufs": -5.67,
+  "peak": 1.2759
+ },
+ "037 - Damian Marley - Welcome to Jamrock.opus": {
+  "lufs": -9.64,
+  "peak": 1.318
+ },
+ "038 - Bad Bunny - Tití Me Preguntó.opus": {
+  "lufs": -10.18,
+  "peak": 1.1683
+ },
+ "039 - Dire Straits - Sultans of Swing.opus": {
+  "lufs": -13.75,
+  "peak": 1.0949
+ },
+ "040 - TLC - No Scrubs.opus": {
+  "lufs": -10.79,
+  "peak": 1.4227
+ },
+ "041 - Adele - Someone Like You.opus": {
+  "lufs": -10.62,
+  "peak": 1.0089
+ },
+ "042 - Adele - Skyfall.opus": {
+  "lufs": -8.44,
+  "peak": 1.1534
+ },
+ "043 - Whitney Houston - I Will Always Love You.opus": {
+  "lufs": -14.63,
+  "peak": 0.8836
+ },
+ "044 - Diana Krall - The Look of Love.opus": {
+  "lufs": -16.98,
+  "peak": 1.0177
+ },
+ "045 - Amy Winehouse - Back to Black.opus": {
+  "lufs": -10.3,
+  "peak": 1.1817
+ },
+ "046 - Frank Sinatra - Fly Me to the Moon.opus": {
+  "lufs": -13.08,
+  "peak": 1.118
+ },
+ "047 - Grover Washington Jr. feat. Bill Withers - Just the Two of Us.opus": {
+  "lufs": -15.3,
+  "peak": 0.9826
+ },
+ "048 - Sam Smith - Stay With Me.opus": {
+  "lufs": -8.34,
+  "peak": 1.1414
+ },
+ "049 - Eva Cassidy - Fields of Gold.opus": {
+  "lufs": -17.51,
+  "peak": 0.7742
+ },
+ "050 - IU - Through the Night.opus": {
+  "lufs": -9.95,
+  "peak": 1.1583
+ },
+ "051 - Aimer - Kataomoi.opus": {
+  "lufs": -10.58,
+  "peak": 1.0367
+ },
+ "052 - Leonard Cohen - You Want It Darker.opus": {
+  "lufs": -16.4,
+  "peak": 0.9207
+ },
+ "053 - Radiohead - Exit Music (For a Film).opus": {
+  "lufs": -10.77,
+  "peak": 1.1324
+ },
+ "054 - Kanye West - Through the Wire.opus": {
+  "lufs": -8.64,
+  "peak": 1.2643
+ },
+ "055 - livetune feat. Hatsune Miku - Tell Your World.opus": {
+  "lufs": -5.21,
+  "peak": 1.3911
+ },
+ "056 - Kurousa-P feat. Hatsune Miku - Senbonzakura.opus": {
+  "lufs": -6.44,
+  "peak": 1.1802
+ },
+ "057 - Kanzaki Iori feat. Hatsune Miku - Inochi ni Kirawarete Iru.opus": {
+  "lufs": -10.11,
+  "peak": 1.0366
+ },
+ "058 - Mariya Takeuchi - Plastic Love.opus": {
+  "lufs": -8.97,
+  "peak": 1.2475
+ },
+ "060 - Steely Dan - Aja.opus": {
+  "lufs": -18.14,
+  "peak": 1.0594
+ },
+ "061 - Rebecca Pidgeon - Spanish Harlem.opus": {
+  "lufs": -17.99,
+  "peak": 0.9307
+ },
+ "062 - The Dave Brubeck Quartet - Take Five.opus": {
+  "lufs": -15.9,
+  "peak": 1.0302
+ },
+ "063 - Fleetwood Mac - Dreams.opus": {
+  "lufs": -12.35,
+  "peak": 1.5317
+ },
+ "064 - Michael Jackson - Billie Jean.opus": {
+  "lufs": -14.15,
+  "peak": 1.1674
+ },
+ "065 - Radiohead - Weird Fishes-Arpeggi.opus": {
+  "lufs": -15.63,
+  "peak": 0.5835
+ },
+ "066 - Jennifer Warnes - Bird on a Wire.opus": {
+  "lufs": -14.73,
+  "peak": 1.191
+ },
+ "067 - Max Richter - Summer 3.opus": {
+  "lufs": -13.33,
+  "peak": 1.076
+ },
+ "068 - Nils Frahm - Says.opus": {
+  "lufs": -11.76,
+  "peak": 1.1058
+ },
+ "069 - Bon Iver - Holocene.opus": {
+  "lufs": -13.3,
+  "peak": 1.016
+ },
+ "070 - Imogen Heap - Hide and Seek.opus": {
+  "lufs": -10.79,
+  "peak": 1.0572
+ },
+ "071 - Radiohead - Reckoner.opus": {
+  "lufs": -8.18,
+  "peak": 1.276
+ },
+ "072 - Kanye West - Flashing Lights.opus": {
+  "lufs": -9.12,
+  "peak": 1.1771
+ },
+ "073 - Akitaka Tohyama - Tekken Tag Tournament Piano Intro (Massive Mix).opus": {
+  "lufs": -7.07,
+  "peak": 1.3285
+ },
+ "074 - Nami Nakagawa - Heat Haze Shadow 2.opus": {
+  "lufs": -5.65,
+  "peak": 1.2722
+ },
+ "075 - Hanasaka Yui (CV - M·A·O) - Harumachi Clover.opus": {
+  "lufs": -6.01,
+  "peak": 1.3414
+ },
+ "076 - siromaru + cranky - conflict.opus": {
+  "lufs": -7.45,
+  "peak": 1.1865
+ },
+ "077 - DECO＊27 feat. Hatsune Miku - Hibana.opus": {
+  "lufs": -5.71,
+  "peak": 1.2705
+ },
+ "078 - Hoshimachi Suisei - Bibbidiba.opus": {
+  "lufs": -9.55,
+  "peak": 1.2293
+ },
+ "079 - Kocchi no Kento - Hai Yorokonde.opus": {
+  "lufs": -15.22,
+  "peak": 0.9329
+ },
+ "080 - YOASOBI - The Brave (Yuusha).opus": {
+  "lufs": -7.38,
+  "peak": 1.2567
+ },
+ "081 - Ado - Show (唱).opus": {
+  "lufs": -9.58,
+  "peak": 0.77
+ },
+ "082 - Ado - Ashura-chan.opus": {
+  "lufs": -7.67,
+  "peak": 1.1374
+ },
+ "083 - Aimer - Zankyosanka.opus": {
+  "lufs": -8.49,
+  "peak": 0.9551
+ },
+ "084 - RADWIMPS - Zenzenzense (movie ver.).opus": {
+  "lufs": -6.98,
+  "peak": 1.3184
+ },
+ "085 - Yorushika - Dakara Boku wa Ongaku wo Yameta.opus": {
+  "lufs": -10.61,
+  "peak": 1.067
+ },
+ "086 - Eve - Kaikai Kitan.opus": {
+  "lufs": -5.84,
+  "peak": 1.4202
+ },
+ "087 - yama - Haru wo Tsugeru.opus": {
+  "lufs": -10.82,
+  "peak": 0.8605
+ },
+ "088 - HIMEHINA - Hello, Hologram.opus": {
+  "lufs": -8.72,
+  "peak": 1.2027
+ },
+ "089 - Sasuke Haraguchi feat. Kasane Teto - Igaku.opus": {
+  "lufs": -3.13,
+  "peak": 1.8569
+ },
+ "090 - Chinozo feat. FloweR - Goodbye Sengen.opus": {
+  "lufs": -8.58,
+  "peak": 1.066
+ },
+ "091 - Satsuki feat. Hatsune Miku - Mani Mani.opus": {
+  "lufs": -6.63,
+  "peak": 1.285
+ },
+ "092 - Neru feat. Kagamine Rin - Lost One's Weeping.opus": {
+  "lufs": -4.92,
+  "peak": 1.3093
+ },
+ "094 - dj-Nate - Thermodynamix.opus": {
+  "lufs": -9.13,
+  "peak": 1.2203
+ },
+ "095 - dj-Nate - Final Theory.opus": {
+  "lufs": -7.49,
+  "peak": 1.4037
+ },
+ "096 - Dimrain47 - At the Speed of Light.opus": {
+  "lufs": -9.38,
+  "peak": 1.1213
+ },
+ "097 - Camellia - Flamewall.opus": {
+  "lufs": -3.66,
+  "peak": 1.4904
+ },
+ "098 - Dion Timmer - Shiawase (VIP).opus": {
+  "lufs": -3.56,
+  "peak": 1.7333
+ },
+ "099 - Blksmiith - SR20DET.opus": {
+  "lufs": -7.52,
+  "peak": 1.1939
+ },
+ "100 - plenka - When You Find Me.opus": {
+  "lufs": -8.85,
+  "peak": 1.186
+ },
+ "101 - F-777 - Sonic Blaster (HJFod Remix).opus": {
+  "lufs": -8.75,
+  "peak": 1.2018
+ },
+ "102 - Dr.Phonics - Code Red.opus": {
+  "lufs": -6.2,
+  "peak": 1.3251
+ },
+ "103 - Dom & Roland - Thunder.opus": {
+  "lufs": -8.42,
+  "peak": 1.2361
+ },
+ "104 - Himawari (cover) - Fragile.opus": {
+  "lufs": -13.31,
+  "peak": 0.6673
+ },
+ "105 - Creo - Dimension.opus": {
+  "lufs": -5.6,
+  "peak": 1.3643
+ },
+ "106 - False Noise - Shiver.opus": {
+  "lufs": -8.38,
+  "peak": 1.2798
+ },
+ "107 - Eagles - Hotel California (live).opus": {
+  "lufs": -10.29,
+  "peak": 1.0306
+ },
+ "108 - Tracy Chapman - Fast Car.opus": {
+  "lufs": -12.01,
+  "peak": 1.2144
+ },
+ "109 - Yo-Yo Ma - Cello Suite No. 1 in G major, BWV 1007 - Prelude.opus": {
+  "lufs": -16.73,
+  "peak": 0.9518
+ },
+ "110 - Ludovico Einaudi - Nuvole Bianche.opus": {
+  "lufs": -22.16,
+  "peak": 0.5235
+ },
+ "111 - Yiruma - River Flows in You.opus": {
+  "lufs": -15.42,
+  "peak": 0.9076
+ },
+ "112 - Bill Evans Trio - Waltz for Debby.opus": {
+  "lufs": -15.21,
+  "peak": 0.9965
+ },
+ "113 - Miles Davis - So What.opus": {
+  "lufs": -18.49,
+  "peak": 1.042
+ },
+ "114 - Nick Drake - Pink Moon.opus": {
+  "lufs": -16.85,
+  "peak": 0.9501
+ },
+ "115 - Simon & Garfunkel - The Boxer.opus": {
+  "lufs": -16.11,
+  "peak": 0.7905
+ },
+ "116 - Johnny Cash - Hurt.opus": {
+  "lufs": -11.42,
+  "peak": 1.023
+ },
+ "117 - Yosi Horikawa - Bubbles.opus": {
+  "lufs": -8.78,
+  "peak": 1.2193
+ },
+ "120 - Ludwig Göransson - Can You Hear the Music.opus": {
+  "lufs": -12.87,
+  "peak": 1.0004
+ },
+ "123 - Roger Waters - Perfect Sense, Part I.opus": {
+  "lufs": -20.45,
+  "peak": 0.6824
+ },
+ "124 - Gustav Holst - The Planets - Mars, the Bringer of War.opus": {
+  "lufs": -11.34,
+  "peak": 1.1748
+ },
+ "125 - Ennio Morricone - The Ecstasy of Gold.opus": {
+  "lufs": -12.65,
+  "peak": 0.9608
+ },
+ "126 - ODESZA - A Moment Apart.opus": {
+  "lufs": -8.65,
+  "peak": 1.068
+ },
+ "127 - Joe Hisaishi - One Summer's Day.opus": {
+  "lufs": -23.86,
+  "peak": 0.4879
+ },
+ "128 - Dead Can Dance - The Host of Seraphim.opus": {
+  "lufs": -14.12,
+  "peak": 0.9746
+ },
+ "129 - Kanye West - Devil in a New Dress.opus": {
+  "lufs": -8.24,
+  "peak": 1.2671
+ },
+ "130 - Kanye West - Runaway.opus": {
+  "lufs": -6.95,
+  "peak": 1.2633
+ },
+ "131 - Sakuzyo - Altale.opus": {
+  "lufs": -7.18,
+  "peak": 1.3179
+ },
+ "132 - Sakuzyo - Altale (Duo Rework).opus": {
+  "lufs": -10.58,
+  "peak": 0.9811
+ },
+ "133 - Sakuzyo - Pandora Paradoxxx.opus": {
+  "lufs": -10.08,
+  "peak": 1.2336
+ },
+ "134 - ONE OK ROCK - The Beginning.opus": {
+  "lufs": -7.22,
+  "peak": 1.2241
+ },
+ "135 - Wuthering Waves - To Hold You on the Moon.opus": {
+  "lufs": -6.85,
+  "peak": 1.2345
+ },
+ "136 - Queen - Bohemian Rhapsody.opus": {
+  "lufs": -11.71,
+  "peak": 1.1841
+ },
+ "137 - Tool - Schism.opus": {
+  "lufs": -11.2,
+  "peak": 1.1133
+ },
+ "138 - Snarky Puppy - Lingus.opus": {
+  "lufs": -12.35,
+  "peak": 1.0668
+ },
+ "139 - Buddy Rich - Channel One Suite.opus": {
+  "lufs": -13.75,
+  "peak": 1.1077
+ },
+ "140 - Daft Punk - Contact.opus": {
+  "lufs": -10.35,
+  "peak": 1.028
+ },
+ "141 - Daft Punk - Aerodynamic.opus": {
+  "lufs": -11.31,
+  "peak": 1.2474
+ },
+ "142 - Dream Theater - The Dance of Eternity.opus": {
+  "lufs": -9.07,
+  "peak": 1.2826
+ },
+ "143 - Animals as Leaders - CAFO.opus": {
+  "lufs": -9.08,
+  "peak": 1.1807
+ },
+ "144 - Polyphia - G.O.A.T.opus": {
+  "lufs": -7.74,
+  "peak": 1.1597
+ },
+ "145 - Seatbelts - Tank!.opus": {
+  "lufs": -10.96,
+  "peak": 1.1251
+ },
+ "146 - Gojira - Stranded.opus": {
+  "lufs": -17.12,
+  "peak": 0.481
+ },
+ "147 - Muse - Knights of Cydonia.opus": {
+  "lufs": -8.65,
+  "peak": 1.1266
+ },
+ "148 - DragonForce - Through the Fire and Flames.opus": {
+  "lufs": -7.53,
+  "peak": 1.1916
+ },
+ "149 - Kanye West - Power.opus": {
+  "lufs": -7.34,
+  "peak": 1.2783
+ },
+ "150 - Kanye West - All of the Lights.opus": {
+  "lufs": -5.39,
+  "peak": 1.3067
+ },
+ "151 - xi - FREEDOM DiVE.opus": {
+  "lufs": -7.09,
+  "peak": 1.2169
+ },
+ "152 - xi - Blue Zenith.opus": {
+  "lufs": -6.38,
+  "peak": 1.2301
+ },
+ "153 - xi - Ascension to Heaven.opus": {
+  "lufs": -7.2,
+  "peak": 1.1739
+ },
+ "154 - xi - Halcyon.opus": {
+  "lufs": -7.67,
+  "peak": 1.2578
+ },
+ "155 - xi - Zauberkugel.opus": {
+  "lufs": -7.72,
+  "peak": 1.2039
+ },
+ "157 - Kurokotei - Galaxy Collapse.opus": {
+  "lufs": -5.88,
+  "peak": 1.3345
+ },
+ "158 - t+pazolite - CENSORED!!.opus": {
+  "lufs": -7.34,
+  "peak": 1.1644
+ },
+ "159 - t+pazolite - Oshama Scramble!.opus": {
+  "lufs": -6.29,
+  "peak": 1.3604
+ },
+ "160 - t+pazolite - QZKago Requiem.opus": {
+  "lufs": -15.44,
+  "peak": 0.7038
+ },
+ "161 - t+pazolite - Tempestissimo.opus": {
+  "lufs": -5.62,
+  "peak": 1.3184
+ },
+ "162 - t+pazolite - Garakuta Doll Play.opus": {
+  "lufs": -6.61,
+  "peak": 1.2707
+ },
+ "163 - t+pazolite - You are the Miserable.opus": {
+  "lufs": -7.19,
+  "peak": 1.2286
+ },
+ "164 - Team Grimoire - Sheriruth.opus": {
+  "lufs": -6.68,
+  "peak": 1.2745
+ },
+ "166 - Team Grimoire & Laur - Grievous Lady -nothing is but what is not-.opus": {
+  "lufs": -6.89,
+  "peak": 1.6419
+ },
+ "167 - Team Grimoire - Rrhar'il.opus": {
+  "lufs": -10.78,
+  "peak": 1.1753
+ },
+ "168 - Team Grimoire - Astaroth.opus": {
+  "lufs": -6.86,
+  "peak": 1.4913
+ },
+ "169 - Team Grimoire - Dantalion.opus": {
+  "lufs": -6.31,
+  "peak": 1.5303
+ },
+ "170 - wowaka feat. Hatsune Miku - Rolling Girl.opus": {
+  "lufs": -5.57,
+  "peak": 1.2198
+ },
+ "171 - Siinamota - Young Girl A.opus": {
+  "lufs": -6.89,
+  "peak": 1.2113
+ },
+ "172 - The Larping Tombstone - Looping the Rooms (Remix).opus": {
+  "lufs": -8.39,
+  "peak": 1.1647
+ },
+ "173 - YOASOBI - Racing into the Night.opus": {
+  "lufs": -10.59,
+  "peak": 1.0033
+ },
+ "174 - YOASOBI - Idol.opus": {
+  "lufs": -11.77,
+  "peak": 0.8455
+ },
+ "175 - Stardust - Music Sounds Better With You.opus": {
+  "lufs": -8.91,
+  "peak": 1.2017
+ },
+ "176 - Earth, Wind & Fire - Let's Groove.opus": {
+  "lufs": -13.56,
+  "peak": 1.1126
+ },
+ "177 - Nujabes feat. Cise Starr & Akin - Feather.opus": {
+  "lufs": -5.79,
+  "peak": 1.1572
+ },
+ "178 - Nujabes feat. Shing02 - Luv(sic).opus": {
+  "lufs": -9.02,
+  "peak": 1.1049
+ },
+ "179 - Nujabes feat. Shing02 - Luv(sic) Part 3.opus": {
+  "lufs": -9.87,
+  "peak": 1.1285
+ },
+ "180 - Travis Scott feat. Kacy Hill - 90210.opus": {
+  "lufs": -7.93,
+  "peak": 1.2679
+ },
+ "181 - Childish Gambino - I. The Worst Guys.opus": {
+  "lufs": -10.16,
+  "peak": 1.3127
+ },
+ "182 - Childish Gambino - 3005.opus": {
+  "lufs": -9.62,
+  "peak": 1.1831
+ },
+ "183 - Childish Gambino - 3005 (Beach Picnic Version).opus": {
+  "lufs": -11.72,
+  "peak": 1.1033
+ },
+ "184 - Richi303 - Monochrome x Big D Randy 1 + 2 (Mashup).opus": {
+  "lufs": -12.71,
+  "peak": 1.0098
+ },
+ "185 - David Bowie - Heroes.opus": {
+  "lufs": -9.78,
+  "peak": 1.153
+ },
+ "186 - Fleetwood Mac - The Chain.opus": {
+  "lufs": -12.22,
+  "peak": 1.2061
+ },
+ "187 - Shadrow - Never Be Alone.opus": {
+  "lufs": -12.02,
+  "peak": 1.0351
+ },
+ "188 - Ken Ashcorp - Absolute Territory.opus": {
+  "lufs": -7.38,
+  "peak": 1.2869
+ },
+ "189 - Kenichi Tokoi - Planet Wisp Act 1.opus": {
+  "lufs": -11.77,
+  "peak": 1.0848
+ },
+ "190 - Tomoya Ohtani - Aquarium Park Act 1.opus": {
+  "lufs": -11.61,
+  "peak": 1.0934
+ },
+ "191 - Feint feat. Laura Brehm - Words.opus": {
+  "lufs": -6.19,
+  "peak": 1.3825
+ },
+ "192 - Stratus - You Must Follow.opus": {
+  "lufs": -11.91,
+  "peak": 1.1157
+ },
+ "193 - THE SIXTH LIE - Setsuna.opus": {
+  "lufs": -5.74,
+  "peak": 1.3236
+ },
+ "194 - Nighthawk22 - Isolation.opus": {
+  "lufs": -4.54,
+  "peak": 1.306
+ },
+ "195 - Robert Miles - Children (Dream Version).opus": {
+  "lufs": -13.29,
+  "peak": 1.0559
+ },
+ "196 - Porter Robinson - Language.opus": {
+  "lufs": -8.36,
+  "peak": 1.2482
+ },
+ "197 - Porter Robinson & Madeon - Shelter.opus": {
+  "lufs": -6.86,
+  "peak": 1.3647
+ },
+ "198 - Daiki Kasho - All My Life (Opening Version).opus": {
+  "lufs": -7.9,
+  "peak": 1.1514
+ },
+ "199 - Depeche Mode - Enjoy the Silence.opus": {
+  "lufs": -12.93,
+  "peak": 1.07
+ },
+ "200 - Linkin Park - Somewhere I Belong.opus": {
+  "lufs": -6.33,
+  "peak": 1.3015
+ },
+ "201 - REDALiCE & USAO - 最強STRONGER.opus": {
+  "lufs": -5.09,
+  "peak": 1.4408
+ },
+ "202 - hkmori - anybody can find love (except you.) (Glitch Cat Remix).opus": {
+  "lufs": -11.79,
+  "peak": 1.1308
+ },
+ "203 - Freddie Gibbs & The Alchemist - Ensalada (feat. Anderson .Paak).opus": {
+  "lufs": -11.34,
+  "peak": 1.173
+ },
+ "204 - Kendrick Lamar - Wesley's Theory (feat. George Clinton & Thundercat).opus": {
+  "lufs": -7.59,
+  "peak": 1.2901
+ },
+ "206 - Tyler, The Creator - St. Chroma (feat. Daniel Caesar).opus": {
+  "lufs": -6.82,
+  "peak": 1.1902
+ },
+ "207 - Tyler, The Creator - NEW MAGIC WAND.opus": {
+  "lufs": -9.52,
+  "peak": 1.235
+ },
+ "208 - Nas - N.Y. State of Mind.opus": {
+  "lufs": -8.77,
+  "peak": 1.0418
+ },
+ "209 - Manuel - Gas Gas Gas.opus": {
+  "lufs": -6.65,
+  "peak": 1.5241
+ },
+ "210 - Dave Rodgers - Deja Vu.opus": {
+  "lufs": -8.14,
+  "peak": 1.3099
+ },
+ "211 - m.o.v.e - Gamble Rumble.opus": {
+  "lufs": -8.05,
+  "peak": 1.2995
+ },
+ "212 - Max Coveri - Running in the 90's.opus": {
+  "lufs": -8.1,
+  "peak": 1.3844
+ },
+ "213 - SOUND HOLIC feat. Nana Takahashi - ALBA -黎明- (Album edit.).opus": {
+  "lufs": -6,
+  "peak": 1.2917
+ },
+ "214 - A-One - Starbow Break.opus": {
+  "lufs": -5.82,
+  "peak": 1.3203
+ },
+ "215 - Turbo - Säkkijärven Polkka (Eurobeat Remix).opus": {
+  "lufs": -9.53,
+  "peak": 1.1084
+ },
+ "216 - Yuzo Koshiro - Avatar of Speed.opus": {
+  "lufs": -10.55,
+  "peak": 1.1801
+ },
+ "217 - Yuzo Koshiro - Burning Away.opus": {
+  "lufs": -7.02,
+  "peak": 1.2938
+ },
+ "218 - Yuzo Koshiro - Taillight.opus": {
+  "lufs": -8.77,
+  "peak": 1.2267
+ },
+ "219 - Yuzo Koshiro - Phantom of Blue.opus": {
+  "lufs": -10.67,
+  "peak": 1.0498
+ },
+ "220 - Yuzo Koshiro - Stream of Tears.opus": {
+  "lufs": -9.2,
+  "peak": 1.1589
+ },
+ "221 - Tokyo Xtreme Racer - Let Me Go (Vocal).opus": {
+  "lufs": -9.87,
+  "peak": 1.078
+ },
+ "222 - Camellia - Blackmagik Blazing.opus": {
+  "lufs": -3.58,
+  "peak": 1.5154
+ },
+ "223 - Sakuzyo - Fracture Ray.opus": {
+  "lufs": -6.77,
+  "peak": 1.4032
+ },
+ "224 - Æsir - CHAOS.opus": {
+  "lufs": -7.31,
+  "peak": 1.207
+ },
+ "225 - PSYQUI - Hype (feat. Such).opus": {
+  "lufs": -6.86,
+  "peak": 1.4105
+ },
+ "226 - Laur - Sound Chimera.opus": {
+  "lufs": -4.24,
+  "peak": 1.612
+ },
+ "227 - ginkiha - Oriens.opus": {
+  "lufs": -5.73,
+  "peak": 1.3698
+ },
+ "228 - Silentroom - Rainbow Frontier (この星の上で).opus": {
+  "lufs": -7.92,
+  "peak": 1.2284
+ },
+ "229 - Jamie Christopherson - Rules of Nature (Platinum Mix).opus": {
+  "lufs": -6.82,
+  "peak": 1.2374
+ },
+ "230 - Casey Edwards feat. Victor Borba - Bury the Light.opus": {
+  "lufs": -6.92,
+  "peak": 1.2547
+ },
+ "231 - Shoji Meguro & Lyn - Rivers in the Desert.opus": {
+  "lufs": -10.34,
+  "peak": 1.1216
+ },
+ "233 - Yuka Kitamura - Slave Knight Gael.opus": {
+  "lufs": -9.81,
+  "peak": 1.0932
+ },
+ "234 - Mick Gordon - The Only Thing They Fear Is You.opus": {
+  "lufs": -8.75,
+  "peak": 1.1981
+ },
+ "235 - Keiki Kobayashi - Daredevil.opus": {
+  "lufs": -10.91,
+  "peak": 1.0308
+ },
+ "236 - Lorien Testard - Une vie à t'aimer.opus": {
+  "lufs": -7.3,
+  "peak": 1.1709
+ },
+ "237 - HOYO-MiX & Chevy - If I Can Stop One Heart From Breaking.opus": {
+  "lufs": -9.87,
+  "peak": 1.268
+ },
+ "238 - Cynthia Harrell - Snake Eater.opus": {
+  "lufs": -9.19,
+  "peak": 1.085
+ },
+ "239 - Pendulum - Propane Nightmares.opus": {
+  "lufs": -7.32,
+  "peak": 1.2095
+ },
+ "240 - The Prodigy - Invaders Must Die.opus": {
+  "lufs": -20.04,
+  "peak": 0.3508
+ },
+ "241 - Porter Robinson - Goodbye to a World.opus": {
+  "lufs": -8.5,
+  "peak": 1.2864
+ },
+ "242 - Caravan Palace - Lone Digger.opus": {
+  "lufs": -7.57,
+  "peak": 1.3596
+ },
+ "243 - Sabaton - Shiroyama.opus": {
+  "lufs": -8.2,
+  "peak": 1.1682
+ },
+ "244 - Arctic Monkeys - Brianstorm.opus": {
+  "lufs": -11.23,
+  "peak": 0.7998
+ },
+ "245 - Rammstein - Sonne.opus": {
+  "lufs": -8.39,
+  "peak": 1.1979
+ },
+ "246 - Bring Me The Horizon feat. BABYMETAL - Kingslayer.opus": {
+  "lufs": -5.87,
+  "peak": 1.2078
+ },
+ "247 - Booker T. & the M.G.'s - Green Onions.opus": {
+  "lufs": -13.99,
+  "peak": 1.0492
+ },
+ "248 - Marty Robbins - Big Iron.opus": {
+  "lufs": -12.36,
+  "peak": 1.0885
+ },
+ "249 - ZUTOMAYO - 秒針を噛む (Byoushin wo Kamu).opus": {
+  "lufs": -6.68,
+  "peak": 1.2187
+ },
+ "250 - Kenshi Yonezu - IRIS OUT.opus": {
+  "lufs": -7.76,
+  "peak": 1.2619
+ },
+ "251 - Kaneko Ayano - ロマンス宣言 (Romance Sengen).opus": {
+  "lufs": -12.3,
+  "peak": 1.0917
+ },
+ "252 - Modjo - Lady (Hear Me Tonight).opus": {
+  "lufs": -8.77,
+  "peak": 1.2048
+ },
+ "253 - Nujabes feat. Shing02 - Luv(sic) Part 2.opus": {
+  "lufs": -7.08,
+  "peak": 1.1918
+ },
+ "254 - xi - Anima.opus": {
+  "lufs": -8.26,
+  "peak": 1.2176
+ },
+ "255 - KASAI HARCORES - サイクルヒット (Cycle Hit).opus": {
+  "lufs": -4.24,
+  "peak": 1.5233
+ },
+ "256 - Silentroom - Protoflicker.opus": {
+  "lufs": -8.21,
+  "peak": 1.1919
+ },
+ "257 - Silentroom - Angel Echo.opus": {
+  "lufs": -7.64,
+  "peak": 1.2665
+ },
+ "258 - Silentroom - Nhelv.opus": {
+  "lufs": -6.64,
+  "peak": 1.351
+ },
+ "259 - Silentroom × Shun - 驟雨の狭間 (Rainshower).opus": {
+  "lufs": -6.35,
+  "peak": 1.3731
+ },
+ "260 - Silentroom - Aegleseeker.opus": {
+  "lufs": -8.03,
+  "peak": 1.3384
+ },
+ "261 - M2U - Magnolia.opus": {
+  "lufs": -9.98,
+  "peak": 1.0469
+ },
+ "262 - M2U & Nicode - Myosotis.opus": {
+  "lufs": -6.4,
+  "peak": 1.2668
+ },
+ "263 - M2U - Marigold (feat. Guriri).opus": {
+  "lufs": -4.92,
+  "peak": 1.4293
+ },
+ "264 - Persona - Area184.opus": {
+  "lufs": -9.99,
+  "peak": 1.0321
+ },
+ "265 - Sta - The Ricochet - The Long Years.opus": {
+  "lufs": -6.51,
+  "peak": 1.2522
+ },
+ "266 - NeLiME - CODE NAME  ZERO.opus": {
+  "lufs": -7.31,
+  "peak": 1.25
+ },
+ "267 - Eminem feat. Dido - Stan.opus": {
+  "lufs": -8.23,
+  "peak": 1.2841
+ },
+ "268 - J. Cole - 39 Intro.opus": {
+  "lufs": -9.99,
+  "peak": 1.1908
+ },
+ "269 - ICE - Entrance (Deemo Version).opus": {
+  "lufs": -10.6,
+  "peak": 1.2032
+ },
+ "270 - NeLiME - Leviathan.opus": {
+  "lufs": -6.8,
+  "peak": 1.3776
+ },
+ "271 - NeLiME - GATORIX.opus": {
+  "lufs": -7.78,
+  "peak": 1.1704
+ },
+ "272 - Rave Cyanide & Lunatic Sounds - Lost in the nowhere.opus": {
+  "lufs": -6.07,
+  "peak": 1.2182
+ },
+ "273 - Haloweak - Bass Telekinesis.opus": {
+  "lufs": -7.82,
+  "peak": 1.2833
+ },
+ "274 - Morimori Atsushi - PUPA.opus": {
+  "lufs": -6.17,
+  "peak": 1.2723
+ },
+ "275 - Chaos City Niigata - 浮世絵横丁 (Ukiyoe Yokocho).opus": {
+  "lufs": -7.1,
+  "peak": 1.3022
+ },
+ "276 - Sakuzyo - Imprinting.opus": {
+  "lufs": -6.32,
+  "peak": 1.3979
+ },
+ "277 - SUi - Wish upon a shooting star.opus": {
+  "lufs": -7.06,
+  "peak": 1.2468
+ },
+ "278 - Camellia - Exit This Earth's Atomosphere.opus": {
+  "lufs": -4.74,
+  "peak": 1.7205
+ },
+ "279 - Camellia - THE WORLD REVOLVING (Camellia Remix).opus": {
+  "lufs": -4.87,
+  "peak": 1.4377
+ },
+ "280 - Camellia - MEGALOVANIA (Camellia Remix).opus": {
+  "lufs": -3.24,
+  "peak": 1.6752
+ },
+ "281 - Camellia - Quaoar.opus": {
+  "lufs": -8.04,
+  "peak": 1.3294
+ },
+ "282 - C-Show - GIMME DA BLOOD.opus": {
+  "lufs": -4.65,
+  "peak": 1.4067
+ },
+ "283 - Akira Complex - Ether Strike.opus": {
+  "lufs": -7.11,
+  "peak": 1.3394
+ },
+ "284 - Kendrick Lamar - King Kunta.opus": {
+  "lufs": -12.43,
+  "peak": 0.8837
+ },
+ "285 - Tyler, The Creator - EARFQUAKE.opus": {
+  "lufs": -9.31,
+  "peak": 1.1854
+ },
+ "286 - Nas - The World Is Yours.opus": {
+  "lufs": -8.38,
+  "peak": 1.2264
+ },
+ "287 - Nujabes - Aruarian Dance.opus": {
+  "lufs": -9.11,
+  "peak": 1.1258
+ },
+ "288 - The Beatles - Let It Be.opus": {
+  "lufs": -11.75,
+  "peak": 1.0642
+ },
+ "289 - Cyndi Lauper - True Colors.opus": {
+  "lufs": -14.87,
+  "peak": 0.9582
+ },
+ "290 - Seal - Kiss From a Rose.opus": {
+  "lufs": -10.48,
+  "peak": 1.1174
+ },
+ "291 - MGMT - Little Dark Age.opus": {
+  "lufs": -9.21,
+  "peak": 1.0784
+ },
+ "292 - Arctic Monkeys - R U Mine.opus": {
+  "lufs": -6.01,
+  "peak": 1.2278
+ },
+ "293 - Owl City - Fireflies.opus": {
+  "lufs": -8.81,
+  "peak": 1.2948
+ },
+ "294 - Strawberry Guy - F Song.opus": {
+  "lufs": -13.29,
+  "peak": 1.0168
+ },
+ "295 - Akira Yamaoka - Promise (Reprise).opus": {
+  "lufs": -14.81,
+  "peak": 0.9367
+ },
+ "296 - Shoji Meguro & Lyn - Beneath the Mask -rain-.opus": {
+  "lufs": -16.64,
+  "peak": 0.794
+ },
+ "297 - Jamie Christopherson - It Has to Be This Way.opus": {
+  "lufs": -7.38,
+  "peak": 1.195
+ },
+ "298 - Casey Edwards feat. Ali Edwards - Devil Trigger.opus": {
+  "lufs": -6.25,
+  "peak": 1.3313
+ },
+ "299 - m.o.v.e - Rage Your Dream.opus": {
+  "lufs": -6.35,
+  "peak": 1.2471
+ },
+ "301 - Infected Mushroom - The Pretender.opus": {
+  "lufs": -6.53,
+  "peak": 1.4388
+ },
+ "302 - Orangestar feat. IA - アスノヨゾラ哨戒班 (Asu no Yozora Shoukaihan).opus": {
+  "lufs": -7.35,
+  "peak": 1.2222
+ },
+ "303 - Mili - Nine Point Eight.opus": {
+  "lufs": -7.86,
+  "peak": 1.2411
+ },
+ "304 - Donna Burke - Heavens Divide.opus": {
+  "lufs": -15.23,
+  "peak": 0.8474
+ },
+ "305 - Lotus Juice & Azumi Takahashi - It's Going Down Now.opus": {
+  "lufs": -8.01,
+  "peak": 1.1031
+ },
+ "306 - arian - フォニイ (Phony) [6+α chorus].opus": {
+  "lufs": -8.26,
+  "peak": 1.177
+ },
+ "307 - RADWIMPS - Sparkle (Original Version).opus": {
+  "lufs": -7.78,
+  "peak": 1.1923
+ },
+ "308 - RADWIMPS - Grand Escape (feat. Toko Miura).opus": {
+  "lufs": -9.27,
+  "peak": 1.2292
+ },
+ "310 - Edo Boys - No One Sleep in Tokyo.opus": {
+  "lufs": -10.8,
+  "peak": 1.0549
+ },
+ "311 - GO2 - Don't Turn It Off (Energize Version).opus": {
+  "lufs": -5.18,
+  "peak": 1.4077
+ },
+ "312 - Lotus Juice & Azumi Takahashi - Color Your Night.opus": {
+  "lufs": -9.89,
+  "peak": 1.0363
+ },
+ "313 - Pendulum - Witchcraft (Nightcore).opus": {
+  "lufs": -14.82,
+  "peak": 0.5258
+ }
+}

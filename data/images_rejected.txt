@@ -1,0 +1,12 @@
+# Archived shop pages whose photo is wrong or unusable (checked by eye); wayback_images.py skips them.
+hifigo.com/astrotec-archimedes
+hifigo.com/oriveti-bleqk-dynabird
+linsoul.com/mim-audio-dark-magician
+linsoul.com/thieaudio-elixir
+linsoul.com/shozy-form-1-1
+linsoul.com/moondrop-block
+www.headphonezone.in/comply-truegrip-for-samsung-galaxy-buds-pro
+www.nicehck.com/nicehck-replaceable-acoustic-nozzle-set-titanium-stainless-steel-sound-tubes-for-iems-tuning-nozzle-kit-for-nx8-himalaya-nx8-se-compatible-with-m5-0-5-threaded-earphones
+shop.musicteck.com/elysian-annihilator
+shop.musicteck.com/elysian-diva
+www.nicehck.com/nicehck-db1-hifi-music-in-ear-earphone-iem-10mm-dynamic-unit-running-dj-sport-audiophile-earbud-studio-earplug-2pin-detachable

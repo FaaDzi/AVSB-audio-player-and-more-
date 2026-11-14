@@ -1,0 +1,49 @@
+{
+ "_note": "2026-10-24: 5 swaps asked for by the user (out: Zimmer Time, Interstellar, Pink Floyd Time, Mass Destruction, the short Grievous Lady). Input to scripts/add_songs.py.",
+ "songs": [
+  {
+   "artist": "Donna Burke",
+   "title": "Heavens Divide",
+   "album": "Metal Gear Solid: Peace Walker",
+   "year": 2010,
+   "genre": "soundtrack",
+   "from": "Metal Gear Solid",
+   "url": "https://www.youtube.com/watch?v=eDajkN_GBC4"
+  },
+  {
+   "artist": "Lotus Juice & Azumi Takahashi",
+   "title": "It's Going Down Now",
+   "album": "Persona 3 Reload Original Soundtrack",
+   "year": 2024,
+   "genre": "soundtrack",
+   "from": "Persona 3 Reload",
+   "url": "https://www.youtube.com/watch?v=4WRwg_-Q5Ls"
+  },
+  {
+   "artist": "arian",
+   "title": "フォニイ (Phony) [6+α chorus]",
+   "album": "",
+   "year": 2021,
+   "genre": "j-pop",
+   "url": "https://www.youtube.com/watch?v=TLlxqCbdF-o"
+  },
+  {
+   "artist": "RADWIMPS",
+   "title": "Sparkle (Original Version)",
+   "album": "Your Name.",
+   "year": 2016,
+   "genre": "j-rock",
+   "from": "Your Name",
+   "url": "https://www.youtube.com/watch?v=MgNItWdfEIU"
+  },
+  {
+   "artist": "RADWIMPS",
+   "title": "Grand Escape (feat. Toko Miura)",
+   "album": "Weathering With You",
+   "year": 2019,
+   "genre": "j-rock",
+   "from": "Weathering With You",
+   "url": "https://www.youtube.com/watch?v=saDmN2f3HI0"
+  }
+ ]
+}

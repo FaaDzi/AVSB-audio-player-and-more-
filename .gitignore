@@ -1,0 +1,81 @@
+# dependencies / builds
+app/node_modules/
+app/dist/
+app/dist-shell/
+app/release/
+.venv/
+__pycache__/
+
+# caches and local tools (all on D:, regenerable)
+.cache/
+tools/
+
+# raw downloads (AutoEq clone, reviewer graph DBs, shop feeds, captions) - see scripts/
+data/raw/
+
+# large audio: your own songs and the Abyss test cut from your WAV (scripts/cut_abyss.py)
+songs/originals/
+app/public/tests/
+
+# app user data (Electron dev profile)
+*.log
+
+# API keys (never commit)
+.secrets/
+
+# downloaded source video for the ear-training clips (cut copies live in app/public/tests)
+songs/*.mp4
+
+# Android build input: web build + phone-sized songs (scripts/build_android.mjs)
+app/dist-android/
+
+# MediaPipe WASM, copied from node_modules on every dev/build (vite.config.ts); the face model stays
+app/public/mediapipe/wasm/
+
+# browser-test screenshots and scratch scripts (playwright-cli)
+.playwright-cli/
+
+# vitest cache when run from the repo root
+/node_modules/
+
+# your music library and the originals of converted files (about 24 GB)
+songs/lossless/
+songs/Original nor converted/
+
+# reference screenshots of Mornye (not ours to redistribute)
+research_notes/mornye_refs/
+
+# sample data for the new shell, built by scripts/build_shell_fixture.py
+app/shell-fixture/
+app/electron/library-scan.bundle.mjs
+
+# Claude Code hook state
+.claude/hooks/.typecheck-stamp
+
+# working notes, plans and experiments that aren't part of the app (kept on this PC only)
+/CLAUDE.md
+/.claude/
+/implementation_plan.md
+/COMPETITOR_RESEARCH.md
+/GEMINI_LITE_REBUILD.md
+/HEADPHONE_SIM_RESEARCH.md
+/UI_DESIGN_AUDIT.md
+/UI_UX_CRITIQUE.md
+/UI_UX_REVIEW_2026-10-22.md
+/ui_review.md
+/err.txt
+/stdout.txt
+/stderr.txt
+/reports/
+/research_notes/
+/reference_screenshots/
+/scratch/
+/spikes/
+/temporary/
+/docs/plan_archive.md
+/docs/AI_STUDIO_UPDATE_PROMPT.md
+/docs/GROOVE_COASTER_CUSTOM_BACKGROUNDS.md
+/docs/groove_coaster_300_stage_choreography.md
+/docs/groove_coaster_300_unified_stages.json
+/songs/*.md
+/songs/rerip_log.json

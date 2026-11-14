@@ -1,0 +1,1598 @@
+{
+ "_note": "Hand-written metadata for files in songs/originals, keyed by track number. 'old' pins a file to an existing manifest id; otherwise the entry is a new song whose speciality the analyser guesses. Used by app/scripts/build_songs.ts.",
+ "01": {
+  "artist": "Otis McDonald",
+  "title": "Scarlet Fire",
+  "album": "",
+  "year": 2015,
+  "genre": "funk"
+ },
+ "02": {
+  "artist": "TrackTribe",
+  "title": "Walk Through the Park",
+  "album": "",
+  "year": 2019,
+  "genre": "funk"
+ },
+ "06": {
+  "old": "bass-04"
+ },
+ "09": {
+  "artist": "Gesaffelstein",
+  "title": "Opr",
+  "album": "Aleph",
+  "year": 2013,
+  "genre": "electronic"
+ },
+ "11": {
+  "artist": "Kendrick Lamar",
+  "title": "Prayer",
+  "album": "",
+  "year": null,
+  "genre": "hip-hop"
+ },
+ "14": {
+  "artist": "Avicii & Sandro Cavazza",
+  "title": "Without You",
+  "album": "Avīci (01)",
+  "year": 2017,
+  "genre": "electronic"
+ },
+ "15": {
+  "artist": "Avicii",
+  "title": "The Nights",
+  "album": "The Days / Nights",
+  "year": 2014,
+  "genre": "electronic"
+ },
+ "18": {
+  "artist": "Eminem",
+  "title": "'Till I Collapse",
+  "album": "The Eminem Show",
+  "year": 2002,
+  "genre": "hip-hop"
+ },
+ "19": {
+  "artist": "50 Cent",
+  "title": "Many Men (Wish Death)",
+  "album": "Get Rich or Die Tryin'",
+  "year": 2003,
+  "genre": "hip-hop"
+ },
+ "21": {
+  "artist": "Tame Impala",
+  "title": "New Person, Same Old Mistakes",
+  "album": "Currents",
+  "year": 2015,
+  "genre": "indie"
+ },
+ "22": {
+  "artist": "Tame Impala",
+  "title": "Feels Like We Only Go Backwards",
+  "album": "Lonerism",
+  "year": 2012,
+  "genre": "indie"
+ },
+ "23": {
+  "artist": "America",
+  "title": "A Horse with No Name",
+  "album": "America",
+  "year": 1971,
+  "genre": "folk"
+ },
+ "26": {
+  "artist": "Radiohead",
+  "title": "Let Down",
+  "album": "OK Computer",
+  "year": 1997,
+  "genre": "rock"
+ },
+ "28": {
+  "old": "bass-15"
+ },
+ "30": {
+  "old": "bass-16"
+ },
+ "32": {
+  "artist": "Panda Eyes",
+  "title": "Colorblind",
+  "album": "",
+  "year": 2015,
+  "genre": "electronic"
+ },
+ "33": {
+  "artist": "Waterflame",
+  "title": "Ricochet Love",
+  "album": "",
+  "year": 2009,
+  "genre": "rhythm-game",
+  "from": "Geometry Dash"
+ },
+ "35": {
+  "old": "bass-20"
+ },
+ "37": {
+  "artist": "Damian Marley",
+  "title": "Welcome to Jamrock",
+  "album": "Welcome to Jamrock",
+  "year": 2005,
+  "genre": "reggae"
+ },
+ "39": {
+  "artist": "Dire Straits",
+  "title": "Sultans of Swing",
+  "album": "Dire Straits",
+  "year": 1978,
+  "genre": "rock"
+ },
+ "40": {
+  "artist": "TLC",
+  "title": "No Scrubs",
+  "album": "FanMail",
+  "year": 1999,
+  "genre": "r&b"
+ },
+ "42": {
+  "artist": "Adele",
+  "title": "Skyfall",
+  "album": "",
+  "year": 2012,
+  "genre": "pop"
+ },
+ "43": {
+  "old": "voc-04"
+ },
+ "44": {
+  "old": "voc-05"
+ },
+ "47": {
+  "artist": "Grover Washington Jr. feat. Bill Withers",
+  "title": "Just the Two of Us",
+  "album": "Winelight",
+  "year": 1980,
+  "genre": "soul"
+ },
+ "55": {
+  "old": "voc-16"
+ },
+ "58": {
+  "old": "aco-13"
+ },
+ "63": {
+  "old": "tre-04"
+ },
+ "73": {
+  "artist": "Akitaka Tohyama",
+  "title": "Tekken Tag Tournament Piano Intro (Massive Mix)",
+  "album": "TEKKEN TAG TOURNAMENT 2 (Original Soundtrack)",
+  "year": 2012,
+  "genre": "soundtrack",
+  "from": "Tekken"
+ },
+ "74": {
+  "artist": "Nami Nakagawa",
+  "title": "Heat Haze Shadow 2",
+  "album": "TEKKEN 7 (Original Soundtrack)",
+  "year": null,
+  "genre": "soundtrack",
+  "from": "Tekken"
+ },
+ "77": {
+  "old": "tre-17"
+ },
+ "78": {
+  "artist": "Hoshimachi Suisei",
+  "title": "Bibbidiba",
+  "album": "",
+  "year": 2024,
+  "genre": "j-pop"
+ },
+ "79": {
+  "artist": "Kocchi no Kento",
+  "title": "Hai Yorokonde",
+  "album": "",
+  "year": 2024,
+  "genre": "j-pop"
+ },
+ "80": {
+  "artist": "YOASOBI",
+  "title": "The Brave (Yuusha)",
+  "album": "",
+  "year": 2023,
+  "genre": "j-pop"
+ },
+ "81": {
+  "artist": "Ado",
+  "title": "Show (唱)",
+  "album": "",
+  "year": 2023,
+  "genre": "j-pop"
+ },
+ "82": {
+  "artist": "Ado",
+  "title": "Ashura-chan",
+  "album": "Kyougen",
+  "year": 2021,
+  "genre": "j-pop"
+ },
+ "83": {
+  "artist": "Aimer",
+  "title": "Zankyosanka",
+  "album": "",
+  "year": 2022,
+  "genre": "j-pop"
+ },
+ "84": {
+  "artist": "RADWIMPS",
+  "title": "Zenzenzense (movie ver.)",
+  "album": "Your Name.",
+  "year": 2016,
+  "genre": "j-rock"
+ },
+ "85": {
+  "artist": "Yorushika",
+  "title": "Dakara Boku wa Ongaku wo Yameta",
+  "album": "",
+  "year": 2019,
+  "genre": "j-rock"
+ },
+ "86": {
+  "artist": "Eve",
+  "title": "Kaikai Kitan",
+  "album": "",
+  "year": 2020,
+  "genre": "j-rock"
+ },
+ "87": {
+  "artist": "yama",
+  "title": "Haru wo Tsugeru",
+  "album": "",
+  "year": 2020,
+  "genre": "j-pop"
+ },
+ "88": {
+  "artist": "HIMEHINA",
+  "title": "Hello, Hologram",
+  "album": "Chouchin Ankou",
+  "year": 2022,
+  "genre": "j-pop"
+ },
+ "89": {
+  "artist": "Sasuke Haraguchi feat. Kasane Teto",
+  "title": "Igaku",
+  "album": "",
+  "year": 2024,
+  "genre": "j-pop"
+ },
+ "90": {
+  "artist": "Chinozo feat. FloweR",
+  "title": "Goodbye Sengen",
+  "album": "",
+  "year": 2020,
+  "genre": "rhythm-game",
+  "from": "Project Sekai"
+ },
+ "91": {
+  "artist": "Satsuki feat. Hatsune Miku",
+  "title": "Mani Mani",
+  "album": "",
+  "year": 2023,
+  "genre": "rhythm-game",
+  "from": "Project Sekai"
+ },
+ "93": {
+  "artist": "ippo.tsk feat. Eleanor Forte",
+  "title": "oyasumination",
+  "album": "",
+  "year": 2021,
+  "genre": "electronic"
+ },
+ "94": {
+  "artist": "dj-Nate",
+  "title": "Thermodynamix",
+  "album": "",
+  "year": null,
+  "genre": "rhythm-game",
+  "from": "Geometry Dash"
+ },
+ "95": {
+  "artist": "dj-Nate",
+  "title": "Final Theory",
+  "album": "",
+  "year": null,
+  "genre": "rhythm-game",
+  "from": "Geometry Dash"
+ },
+ "96": {
+  "artist": "Dimrain47",
+  "title": "At the Speed of Light",
+  "album": "",
+  "year": null,
+  "genre": "rhythm-game",
+  "from": "Geometry Dash"
+ },
+ "97": {
+  "artist": "Camellia",
+  "title": "Flamewall",
+  "album": "",
+  "year": null,
+  "genre": "rhythm-game",
+  "from": "osu!"
+ },
+ "98": {
+  "artist": "Dion Timmer",
+  "title": "Shiawase (VIP)",
+  "album": "Shiawase",
+  "year": 2020,
+  "genre": "electronic"
+ },
+ "99": {
+  "artist": "Blksmiith",
+  "title": "SR20DET",
+  "album": "",
+  "year": 2023,
+  "genre": "electronic"
+ },
+ "100": {
+  "artist": "plenka",
+  "title": "When You Find Me",
+  "album": "Angle",
+  "year": 2020,
+  "genre": "electronic"
+ },
+ "101": {
+  "artist": "F-777",
+  "title": "Sonic Blaster (HJFod Remix)",
+  "album": "",
+  "year": null,
+  "genre": "rhythm-game",
+  "from": "Geometry Dash"
+ },
+ "102": {
+  "artist": "Dr.Phonics",
+  "title": "Code Red",
+  "album": "",
+  "year": null,
+  "genre": "rhythm-game",
+  "from": "Geometry Dash"
+ },
+ "103": {
+  "artist": "Dom & Roland",
+  "title": "Thunder",
+  "album": "",
+  "year": null,
+  "genre": "electronic"
+ },
+ "104": {
+  "artist": "Himawari (cover)",
+  "title": "Fragile",
+  "album": "",
+  "year": 2017,
+  "genre": "j-pop"
+ },
+ "105": {
+  "artist": "Creo",
+  "title": "Dimension",
+  "album": "",
+  "year": null,
+  "genre": "rhythm-game",
+  "from": "Geometry Dash"
+ },
+ "106": {
+  "artist": "False Noise",
+  "title": "Shiver",
+  "album": "Shiver",
+  "year": 2018,
+  "genre": "electronic"
+ },
+ "109": {
+  "old": "aco-04"
+ },
+ "111": {
+  "artist": "Yiruma",
+  "title": "River Flows in You",
+  "album": "First Love",
+  "year": 2001,
+  "genre": "classical"
+ },
+ "119": {
+  "artist": "Hans Zimmer",
+  "title": "Interstellar Main Theme",
+  "album": "Interstellar",
+  "year": 2014,
+  "genre": "soundtrack"
+ },
+ "120": {
+  "artist": "Ludwig Göransson",
+  "title": "Can You Hear the Music",
+  "album": "Oppenheimer",
+  "year": 2023,
+  "genre": "soundtrack"
+ },
+ "123": {
+  "old": "stg-05"
+ },
+ "124": {
+  "old": "stg-06"
+ },
+ "129": {
+  "artist": "Kanye West",
+  "title": "Devil in a New Dress",
+  "album": "My Beautiful Dark Twisted Fantasy",
+  "year": 2010,
+  "genre": "hip-hop"
+ },
+ "130": {
+  "old": "stg-14"
+ },
+ "131": {
+  "artist": "Sakuzyo",
+  "title": "Altale",
+  "album": "",
+  "year": 2014,
+  "genre": "rhythm-game",
+  "from": "G2R2014"
+ },
+ "132": {
+  "artist": "Sakuzyo",
+  "title": "Altale (Duo Rework)",
+  "album": "",
+  "year": 2021,
+  "genre": "classical"
+ },
+ "135": {
+  "artist": "Wuthering Waves",
+  "title": "To Hold You on the Moon",
+  "album": "At Dream's Edge (Original Game Soundtrack)",
+  "year": 2026,
+  "genre": "soundtrack",
+  "from": "Wuthering Waves"
+ },
+ "139": {
+  "old": "bsy-05"
+ },
+ "141": {
+  "artist": "Daft Punk",
+  "title": "Aerodynamic",
+  "album": "Discovery",
+  "year": 2001,
+  "genre": "electronic"
+ },
+ "145": {
+  "old": "bsy-12"
+ },
+ "148": {
+  "artist": "DragonForce",
+  "title": "Through the Fire and Flames",
+  "album": "Inhuman Rampage",
+  "year": 2006,
+  "genre": "metal"
+ },
+ "150": {
+  "artist": "Kanye West",
+  "title": "All of the Lights",
+  "album": "My Beautiful Dark Twisted Fantasy",
+  "year": 2010,
+  "genre": "hip-hop"
+ },
+ "153": {
+  "artist": "xi",
+  "title": "Ascension to Heaven",
+  "album": "Parousia",
+  "year": 2011,
+  "genre": "rhythm-game",
+  "from": "osu!"
+ },
+ "154": {
+  "artist": "xi",
+  "title": "Halcyon",
+  "album": "Parousia",
+  "year": 2011,
+  "genre": "rhythm-game",
+  "from": "osu!"
+ },
+ "155": {
+  "artist": "xi",
+  "title": "Zauberkugel",
+  "album": "Agartha",
+  "year": 2013,
+  "genre": "rhythm-game"
+ },
+ "158": {
+  "artist": "t+pazolite",
+  "title": "CENSORED!!",
+  "album": "",
+  "year": null,
+  "genre": "rhythm-game",
+  "from": "Touhou arrange"
+ },
+ "160": {
+  "artist": "t+pazolite",
+  "title": "QZKago Requiem",
+  "album": "",
+  "year": null,
+  "genre": "rhythm-game",
+  "from": "maimai"
+ },
+ "161": {
+  "artist": "t+pazolite",
+  "title": "Tempestissimo",
+  "album": "",
+  "year": null,
+  "genre": "rhythm-game",
+  "from": "Arcaea"
+ },
+ "162": {
+  "artist": "t+pazolite",
+  "title": "Garakuta Doll Play",
+  "album": "Ponko2 Girlish",
+  "year": null,
+  "genre": "rhythm-game",
+  "from": "maimai"
+ },
+ "163": {
+  "artist": "t+pazolite",
+  "title": "You are the Miserable",
+  "album": "See you again, HOLLOWood",
+  "year": null,
+  "genre": "rhythm-game"
+ },
+ "164": {
+  "artist": "Team Grimoire",
+  "title": "Sheriruth",
+  "album": "Arcaea Sound Collection: Memories of Conflict",
+  "year": 2019,
+  "genre": "rhythm-game",
+  "from": "Arcaea"
+ },
+ "166": {
+  "artist": "Team Grimoire & Laur",
+  "title": "Grievous Lady -nothing is but what is not-",
+  "album": "Arcaea Sound Collection: Memories of Conflict",
+  "year": 2019,
+  "genre": "rhythm-game",
+  "from": "Arcaea"
+ },
+ "167": {
+  "artist": "Team Grimoire",
+  "title": "Rrhar'il",
+  "album": "",
+  "year": null,
+  "genre": "rhythm-game",
+  "from": "Phigros"
+ },
+ "168": {
+  "artist": "Team Grimoire",
+  "title": "Astaroth",
+  "album": "",
+  "year": null,
+  "genre": "rhythm-game",
+  "from": "Lanota"
+ },
+ "169": {
+  "artist": "Team Grimoire",
+  "title": "Dantalion",
+  "album": "",
+  "year": null,
+  "genre": "rhythm-game",
+  "from": "Arcaea"
+ },
+ "170": {
+  "old": "bsy-21"
+ },
+ "171": {
+  "artist": "Siinamota",
+  "title": "Young Girl A",
+  "album": "",
+  "year": 2012,
+  "genre": "rhythm-game",
+  "from": "Project Sekai"
+ },
+ "172": {
+  "artist": "The Larping Tombstone",
+  "title": "Looping the Rooms (Remix)",
+  "album": "",
+  "year": 2026,
+  "genre": "electronic"
+ },
+ "173": {
+  "artist": "YOASOBI",
+  "title": "Racing into the Night",
+  "album": "",
+  "year": 2019,
+  "genre": "j-pop"
+ },
+ "175": {
+  "artist": "Stardust",
+  "title": "Music Sounds Better With You",
+  "album": "",
+  "year": 1998,
+  "genre": "electronic"
+ },
+ "176": {
+  "artist": "Earth, Wind & Fire",
+  "title": "Let's Groove",
+  "album": "Raise!",
+  "year": 1981,
+  "genre": "funk"
+ },
+ "177": {
+  "artist": "Nujabes feat. Cise Starr & Akin",
+  "title": "Feather",
+  "album": "Modal Soul",
+  "year": 2005,
+  "genre": "hip-hop"
+ },
+ "178": {
+  "artist": "Nujabes feat. Shing02",
+  "title": "Luv(sic)",
+  "album": "",
+  "year": 2001,
+  "genre": "hip-hop"
+ },
+ "179": {
+  "artist": "Nujabes feat. Shing02",
+  "title": "Luv(sic) Part 3",
+  "album": "Modal Soul",
+  "year": 2005,
+  "genre": "hip-hop"
+ },
+ "180": {
+  "artist": "Travis Scott feat. Kacy Hill",
+  "title": "90210",
+  "album": "Rodeo",
+  "year": 2015,
+  "genre": "hip-hop"
+ },
+ "181": {
+  "artist": "Childish Gambino",
+  "title": "I. The Worst Guys",
+  "album": "Because the Internet",
+  "year": 2013,
+  "genre": "hip-hop"
+ },
+ "182": {
+  "artist": "Childish Gambino",
+  "title": "3005",
+  "album": "Because the Internet",
+  "year": 2013,
+  "genre": "hip-hop"
+ },
+ "183": {
+  "artist": "Childish Gambino",
+  "title": "3005 (Beach Picnic Version)",
+  "album": "",
+  "year": 2014,
+  "genre": "hip-hop"
+ },
+ "184": {
+  "artist": "Richi303",
+  "title": "Monochrome x Big D Randy 1 + 2 (Mashup)",
+  "album": "",
+  "year": null,
+  "genre": "electronic"
+ },
+ "185": {
+  "artist": "David Bowie",
+  "title": "Heroes",
+  "album": "\"Heroes\"",
+  "year": 1977,
+  "genre": "rock"
+ },
+ "186": {
+  "artist": "Fleetwood Mac",
+  "title": "The Chain",
+  "album": "Rumours",
+  "year": 1977,
+  "genre": "rock"
+ },
+ "187": {
+  "artist": "Shadrow",
+  "title": "Never Be Alone",
+  "album": "",
+  "year": null,
+  "genre": "electronic",
+  "from": "Five Nights at Freddy's 4"
+ },
+ "188": {
+  "artist": "Ken Ashcorp",
+  "title": "Absolute Territory",
+  "album": "",
+  "year": 2013,
+  "genre": "electronic"
+ },
+ "189": {
+  "artist": "Kenichi Tokoi",
+  "title": "Planet Wisp Act 1",
+  "album": "Sonic Colors Original Soundtrack",
+  "year": 2010,
+  "genre": "soundtrack",
+  "from": "Sonic Colors"
+ },
+ "190": {
+  "artist": "Tomoya Ohtani",
+  "title": "Aquarium Park Act 1",
+  "album": "Sonic Colors Original Soundtrack",
+  "year": 2010,
+  "genre": "soundtrack",
+  "from": "Sonic Colors"
+ },
+ "191": {
+  "artist": "Feint feat. Laura Brehm",
+  "title": "Words",
+  "album": "",
+  "year": null,
+  "genre": "electronic"
+ },
+ "192": {
+  "artist": "Stratus",
+  "title": "You Must Follow",
+  "album": "",
+  "year": 2005,
+  "genre": "electronic",
+  "from": "Need for Speed: Most Wanted"
+ },
+ "193": {
+  "artist": "THE SIXTH LIE",
+  "title": "Setsuna",
+  "album": "",
+  "year": null,
+  "genre": "j-rock"
+ },
+ "194": {
+  "artist": "Nighthawk22",
+  "title": "Isolation",
+  "album": "",
+  "year": null,
+  "genre": "electronic"
+ },
+ "195": {
+  "artist": "Robert Miles",
+  "title": "Children (Dream Version)",
+  "album": "Dreamland",
+  "year": 1996,
+  "genre": "electronic"
+ },
+ "196": {
+  "artist": "Porter Robinson",
+  "title": "Language",
+  "album": "",
+  "year": 2012,
+  "genre": "electronic"
+ },
+ "197": {
+  "artist": "Porter Robinson & Madeon",
+  "title": "Shelter",
+  "album": "",
+  "year": 2016,
+  "genre": "electronic"
+ },
+ "198": {
+  "artist": "Daiki Kasho",
+  "title": "All My Life (Opening Version)",
+  "album": "",
+  "year": 2013,
+  "genre": "soundtrack",
+  "from": "Gran Turismo 6"
+ },
+ "199": {
+  "artist": "Depeche Mode",
+  "title": "Enjoy the Silence",
+  "album": "Violator",
+  "year": 1990,
+  "genre": "electronic"
+ },
+ "200": {
+  "artist": "Linkin Park",
+  "title": "Somewhere I Belong",
+  "album": "Meteora",
+  "year": 2003,
+  "genre": "rock"
+ },
+ "201": {
+  "artist": "REDALiCE & USAO",
+  "title": "最強STRONGER",
+  "album": "",
+  "year": null,
+  "genre": "rhythm-game"
+ },
+ "202": {
+  "artist": "hkmori",
+  "title": "anybody can find love (except you.) (Glitch Cat Remix)",
+  "album": "",
+  "year": null,
+  "genre": "electronic"
+ },
+ "203": {
+  "artist": "Freddie Gibbs & The Alchemist",
+  "title": "Ensalada (feat. Anderson .Paak)",
+  "album": "Alfredo 2",
+  "year": 2025,
+  "genre": "hip-hop"
+ },
+ "204": {
+  "artist": "Kendrick Lamar",
+  "title": "Wesley's Theory (feat. George Clinton & Thundercat)",
+  "album": "To Pimp a Butterfly",
+  "year": 2015,
+  "genre": "hip-hop"
+ },
+ "205": {
+  "artist": "Kendrick Lamar",
+  "title": "These Walls (feat. Bilal, Anna Wise & Thundercat)",
+  "album": "To Pimp a Butterfly",
+  "year": 2015,
+  "genre": "hip-hop"
+ },
+ "206": {
+  "artist": "Tyler, The Creator",
+  "title": "St. Chroma (feat. Daniel Caesar)",
+  "album": "CHROMAKOPIA",
+  "year": 2024,
+  "genre": "hip-hop"
+ },
+ "207": {
+  "artist": "Tyler, The Creator",
+  "title": "NEW MAGIC WAND",
+  "album": "IGOR",
+  "year": 2019,
+  "genre": "hip-hop"
+ },
+ "208": {
+  "artist": "Nas",
+  "title": "N.Y. State of Mind",
+  "album": "Illmatic",
+  "year": 1994,
+  "genre": "hip-hop"
+ },
+ "209": {
+  "artist": "Manuel",
+  "title": "Gas Gas Gas",
+  "album": "Super Eurobeat",
+  "year": 1998,
+  "genre": "eurobeat",
+  "from": "Initial D"
+ },
+ "210": {
+  "artist": "Dave Rodgers",
+  "title": "Deja Vu",
+  "album": "Super Eurobeat",
+  "year": 1998,
+  "genre": "eurobeat",
+  "from": "Initial D"
+ },
+ "211": {
+  "artist": "m.o.v.e",
+  "title": "Gamble Rumble",
+  "album": "Initial D Fourth Stage",
+  "year": 2004,
+  "genre": "eurobeat",
+  "from": "Initial D"
+ },
+ "212": {
+  "artist": "Max Coveri",
+  "title": "Running in the 90's",
+  "album": "Super Eurobeat",
+  "year": 1997,
+  "genre": "eurobeat",
+  "from": "Initial D"
+ },
+ "213": {
+  "artist": "SOUND HOLIC feat. Nana Takahashi",
+  "title": "ALBA -黎明- (Album edit.)",
+  "album": "Eurobeat Holic",
+  "year": 2014,
+  "genre": "eurobeat"
+ },
+ "214": {
+  "artist": "A-One",
+  "title": "Starbow Break",
+  "album": "Touhou Eurobeat",
+  "year": 2012,
+  "genre": "eurobeat",
+  "from": "Touhou arrange"
+ },
+ "215": {
+  "artist": "Turbo",
+  "title": "Säkkijärven Polkka (Eurobeat Remix)",
+  "album": "",
+  "year": 2021,
+  "genre": "eurobeat"
+ },
+ "216": {
+  "artist": "Yuzo Koshiro",
+  "title": "Avatar of Speed",
+  "album": "Wangan Midnight Maximum Tune 5 Soundtrack",
+  "year": 2016,
+  "genre": "racing-game",
+  "from": "Wangan Midnight Maximum Tune 5"
+ },
+ "217": {
+  "artist": "Yuzo Koshiro",
+  "title": "Burning Away",
+  "album": "Wangan Midnight Maximum Tune 6 Soundtrack",
+  "year": 2018,
+  "genre": "racing-game",
+  "from": "Wangan Midnight Maximum Tune 6"
+ },
+ "218": {
+  "artist": "Yuzo Koshiro",
+  "title": "Taillight",
+  "album": "Wangan Midnight Maximum Tune 4 Soundtrack",
+  "year": 2011,
+  "genre": "racing-game",
+  "from": "Wangan Midnight Maximum Tune 4"
+ },
+ "219": {
+  "artist": "Yuzo Koshiro",
+  "title": "Phantom of Blue",
+  "album": "Wangan Midnight Maximum Tune 3 Soundtrack",
+  "year": 2007,
+  "genre": "racing-game",
+  "from": "Wangan Midnight Maximum Tune 3"
+ },
+ "220": {
+  "artist": "Yuzo Koshiro",
+  "title": "Stream of Tears",
+  "album": "Wangan Midnight Maximum Tune Soundtrack",
+  "year": 2004,
+  "genre": "racing-game",
+  "from": "Wangan Midnight Maximum Tune"
+ },
+ "221": {
+  "artist": "Tokyo Xtreme Racer",
+  "title": "Let Me Go (Vocal)",
+  "album": "Shutokou Battle 0 Soundtrack",
+  "year": 2001,
+  "genre": "racing-game",
+  "from": "Tokyo Xtreme Racer Zero"
+ },
+ "222": {
+  "artist": "Camellia",
+  "title": "Blackmagik Blazing",
+  "album": "Blackmagik Blazing",
+  "year": 2020,
+  "genre": "rhythm-game",
+  "from": "osu!"
+ },
+ "223": {
+  "artist": "Sakuzyo",
+  "title": "Fracture Ray",
+  "album": "Arcaea",
+  "year": 2017,
+  "genre": "rhythm-game",
+  "from": "Arcaea"
+ },
+ "224": {
+  "artist": "Æsir",
+  "title": "CHAOS",
+  "album": "",
+  "year": 2016,
+  "genre": "rhythm-game",
+  "from": "osu!"
+ },
+ "225": {
+  "artist": "PSYQUI",
+  "title": "Hype (feat. Such)",
+  "album": "",
+  "year": 2019,
+  "genre": "rhythm-game"
+ },
+ "226": {
+  "artist": "Laur",
+  "title": "Sound Chimera",
+  "album": "",
+  "year": 2018,
+  "genre": "rhythm-game",
+  "from": "Arcaea"
+ },
+ "227": {
+  "artist": "ginkiha",
+  "title": "Oriens",
+  "album": "",
+  "year": 2016,
+  "genre": "rhythm-game",
+  "from": "osu!"
+ },
+ "228": {
+  "artist": "Silentroom",
+  "title": "Rainbow Frontier (この星の上で)",
+  "album": "",
+  "year": 2019,
+  "genre": "rhythm-game"
+ },
+ "229": {
+  "artist": "Jamie Christopherson",
+  "title": "Rules of Nature (Platinum Mix)",
+  "album": "Metal Gear Rising: Revengeance Vocal Tracks",
+  "year": 2013,
+  "genre": "soundtrack",
+  "from": "Metal Gear Rising: Revengeance"
+ },
+ "230": {
+  "artist": "Casey Edwards feat. Victor Borba",
+  "title": "Bury the Light",
+  "album": "Devil May Cry 5 Special Edition",
+  "year": 2020,
+  "genre": "soundtrack",
+  "from": "Devil May Cry 5"
+ },
+ "231": {
+  "artist": "Shoji Meguro & Lyn",
+  "title": "Rivers in the Desert",
+  "album": "Persona 5 Original Soundtrack",
+  "year": 2016,
+  "genre": "soundtrack",
+  "from": "Persona 5"
+ },
+ "232": {
+  "artist": "Shoji Meguro & Yumi Kawamura",
+  "title": "Mass Destruction",
+  "album": "Persona 3 Original Soundtrack",
+  "year": 2006,
+  "genre": "soundtrack",
+  "from": "Persona 3"
+ },
+ "233": {
+  "artist": "Yuka Kitamura",
+  "title": "Slave Knight Gael",
+  "album": "Dark Souls III: The Ringed City",
+  "year": 2017,
+  "genre": "soundtrack",
+  "from": "Dark Souls III"
+ },
+ "234": {
+  "artist": "Mick Gordon",
+  "title": "The Only Thing They Fear Is You",
+  "album": "DOOM Eternal (Original Game Soundtrack)",
+  "year": 2020,
+  "genre": "soundtrack",
+  "from": "DOOM Eternal"
+ },
+ "235": {
+  "artist": "Keiki Kobayashi",
+  "title": "Daredevil",
+  "album": "Ace Combat 7: Skies Unknown Original Soundtrack",
+  "year": 2019,
+  "genre": "soundtrack",
+  "from": "Ace Combat 7"
+ },
+ "236": {
+  "artist": "Lorien Testard",
+  "title": "Une vie à t'aimer",
+  "album": "Clair Obscur: Expedition 33 (Original Soundtrack)",
+  "year": 2025,
+  "genre": "soundtrack",
+  "from": "Clair Obscur: Expedition 33"
+ },
+ "237": {
+  "artist": "HOYO-MiX & Chevy",
+  "title": "If I Can Stop One Heart From Breaking",
+  "album": "Honkai: Star Rail 2.0",
+  "year": 2024,
+  "genre": "soundtrack",
+  "from": "Honkai: Star Rail"
+ },
+ "238": {
+  "artist": "Cynthia Harrell",
+  "title": "Snake Eater",
+  "album": "Metal Gear Solid 3: Snake Eater Original Soundtrack",
+  "year": 2004,
+  "genre": "soundtrack",
+  "from": "Metal Gear Solid 3"
+ },
+ "239": {
+  "artist": "Pendulum",
+  "title": "Propane Nightmares",
+  "album": "In Silico",
+  "year": 2008,
+  "genre": "electronic"
+ },
+ "240": {
+  "artist": "The Prodigy",
+  "title": "Invaders Must Die",
+  "album": "Invaders Must Die",
+  "year": 2009,
+  "genre": "electronic"
+ },
+ "241": {
+  "artist": "Porter Robinson",
+  "title": "Goodbye to a World",
+  "album": "Worlds",
+  "year": 2014,
+  "genre": "electronic"
+ },
+ "242": {
+  "artist": "Caravan Palace",
+  "title": "Lone Digger",
+  "album": "<I°_°I>",
+  "year": 2015,
+  "genre": "electronic"
+ },
+ "243": {
+  "artist": "Sabaton",
+  "title": "Shiroyama",
+  "album": "The Last Stand",
+  "year": 2016,
+  "genre": "metal"
+ },
+ "244": {
+  "artist": "Arctic Monkeys",
+  "title": "Brianstorm",
+  "album": "Favourite Worst Nightmare",
+  "year": 2007,
+  "genre": "rock"
+ },
+ "245": {
+  "artist": "Rammstein",
+  "title": "Sonne",
+  "album": "Mutter",
+  "year": 2001,
+  "genre": "metal"
+ },
+ "246": {
+  "artist": "Bring Me The Horizon feat. BABYMETAL",
+  "title": "Kingslayer",
+  "album": "Post Human: Survival Horror",
+  "year": 2020,
+  "genre": "metal"
+ },
+ "247": {
+  "artist": "Booker T. & the M.G.'s",
+  "title": "Green Onions",
+  "album": "Green Onions",
+  "year": 1962,
+  "genre": "soul"
+ },
+ "248": {
+  "artist": "Marty Robbins",
+  "title": "Big Iron",
+  "album": "Gunfighter Ballads and Trail Songs",
+  "year": 1959,
+  "genre": "country"
+ },
+ "249": {
+  "artist": "ZUTOMAYO",
+  "title": "秒針を噛む (Byoushin wo Kamu)",
+  "album": "正しい偽りからの起床",
+  "year": 2018,
+  "genre": "j-pop"
+ },
+ "250": {
+  "artist": "Kenshi Yonezu",
+  "title": "IRIS OUT",
+  "album": "IRIS OUT",
+  "year": 2025,
+  "genre": "j-pop",
+  "from": "Chainsaw Man – The Movie: Reze Arc"
+ },
+ "251": {
+  "artist": "Kaneko Ayano",
+  "title": "ロマンス宣言 (Romance Sengen)",
+  "album": "燦々",
+  "year": 2019,
+  "genre": "j-rock"
+ },
+ "252": {
+  "artist": "Modjo",
+  "title": "Lady (Hear Me Tonight)",
+  "album": "Modjo",
+  "year": 2000,
+  "genre": "electronic"
+ },
+ "253": {
+  "artist": "Nujabes feat. Shing02",
+  "title": "Luv(sic) Part 2",
+  "album": "",
+  "genre": "hip-hop"
+ },
+ "254": {
+  "artist": "xi",
+  "title": "Anima",
+  "album": "",
+  "genre": "rhythm-game"
+ },
+ "255": {
+  "artist": "KASAI HARCORES",
+  "title": "サイクルヒット (Cycle Hit)",
+  "album": "",
+  "genre": "rhythm-game"
+ },
+ "256": {
+  "artist": "Silentroom",
+  "title": "Protoflicker",
+  "album": "Rainbow Frontier",
+  "year": 2019,
+  "genre": "rhythm-game"
+ },
+ "257": {
+  "artist": "Silentroom",
+  "title": "Angel Echo",
+  "album": "Rainbow Frontier",
+  "year": 2019,
+  "genre": "rhythm-game"
+ },
+ "258": {
+  "artist": "Silentroom",
+  "title": "Nhelv",
+  "album": "Rainbow Frontier",
+  "year": 2019,
+  "genre": "rhythm-game"
+ },
+ "259": {
+  "artist": "Silentroom × Shun",
+  "title": "驟雨の狭間 (Rainshower)",
+  "album": "",
+  "genre": "rhythm-game"
+ },
+ "260": {
+  "artist": "Silentroom",
+  "title": "Aegleseeker",
+  "album": "",
+  "genre": "rhythm-game",
+  "from": "Arcaea"
+ },
+ "261": {
+  "artist": "M2U",
+  "title": "Magnolia",
+  "album": "",
+  "genre": "rhythm-game",
+  "from": "Deemo"
+ },
+ "262": {
+  "artist": "M2U & Nicode",
+  "title": "Myosotis",
+  "album": "",
+  "genre": "rhythm-game",
+  "from": "Deemo"
+ },
+ "263": {
+  "artist": "M2U",
+  "title": "Marigold (feat. Guriri)",
+  "album": "",
+  "genre": "rhythm-game"
+ },
+ "264": {
+  "artist": "Persona",
+  "title": "Area184",
+  "album": "",
+  "genre": "rhythm-game",
+  "from": "Cytus"
+ },
+ "265": {
+  "artist": "Sta",
+  "title": "The Ricochet - The Long Years",
+  "album": "",
+  "genre": "rhythm-game"
+ },
+ "266": {
+  "artist": "NeLiME",
+  "title": "CODE NAME : ZERO",
+  "album": "",
+  "genre": "rhythm-game"
+ },
+ "267": {
+  "artist": "Eminem feat. Dido",
+  "title": "Stan",
+  "album": "The Marshall Mathers LP",
+  "year": 2000,
+  "genre": "hip-hop"
+ },
+ "268": {
+  "artist": "J. Cole",
+  "title": "39 Intro",
+  "album": "",
+  "genre": "hip-hop"
+ },
+ "269": {
+  "artist": "ICE",
+  "title": "Entrance (Deemo Version)",
+  "album": "",
+  "genre": "rhythm-game",
+  "from": "Cytus x Deemo"
+ },
+ "270": {
+  "artist": "NeLiME",
+  "title": "Leviathan",
+  "album": "",
+  "genre": "rhythm-game"
+ },
+ "271": {
+  "artist": "NeLiME",
+  "title": "GATORIX",
+  "album": "",
+  "genre": "rhythm-game"
+ },
+ "272": {
+  "artist": "Rave Cyanide & Lunatic Sounds",
+  "title": "Lost in the nowhere",
+  "album": "",
+  "genre": "rhythm-game",
+  "from": "Deemo"
+ },
+ "273": {
+  "artist": "Haloweak",
+  "title": "Bass Telekinesis",
+  "album": "",
+  "genre": "rhythm-game"
+ },
+ "274": {
+  "artist": "Morimori Atsushi",
+  "title": "PUPA",
+  "album": "",
+  "genre": "rhythm-game"
+ },
+ "275": {
+  "artist": "Chaos City Niigata",
+  "title": "浮世絵横丁 (Ukiyoe Yokocho)",
+  "album": "",
+  "genre": "rhythm-game"
+ },
+ "276": {
+  "artist": "Sakuzyo",
+  "title": "Imprinting",
+  "album": "",
+  "genre": "rhythm-game"
+ },
+ "277": {
+  "artist": "SUi",
+  "title": "Wish upon a shooting star",
+  "album": "",
+  "genre": "rhythm-game",
+  "from": "Deemo"
+ },
+ "278": {
+  "artist": "Camellia",
+  "title": "Exit This Earth's Atomosphere",
+  "album": "PLANET//SHAPER",
+  "genre": "rhythm-game"
+ },
+ "279": {
+  "artist": "Camellia",
+  "title": "THE WORLD REVOLVING (Camellia Remix)",
+  "album": "",
+  "genre": "rhythm-game",
+  "from": "Deltarune"
+ },
+ "280": {
+  "artist": "Camellia",
+  "title": "MEGALOVANIA (Camellia Remix)",
+  "album": "",
+  "genre": "rhythm-game",
+  "from": "Undertale"
+ },
+ "281": {
+  "artist": "Camellia",
+  "title": "Quaoar",
+  "album": "",
+  "genre": "rhythm-game"
+ },
+ "282": {
+  "artist": "C-Show",
+  "title": "GIMME DA BLOOD",
+  "album": "",
+  "genre": "rhythm-game",
+  "from": "Arcaea"
+ },
+ "283": {
+  "artist": "Akira Complex",
+  "title": "Ether Strike",
+  "album": "",
+  "genre": "rhythm-game"
+ },
+ "284": {
+  "artist": "Kendrick Lamar",
+  "title": "King Kunta",
+  "album": "To Pimp a Butterfly",
+  "year": 2015,
+  "genre": "hip-hop"
+ },
+ "285": {
+  "artist": "Tyler, The Creator",
+  "title": "EARFQUAKE",
+  "album": "IGOR",
+  "year": 2019,
+  "genre": "hip-hop"
+ },
+ "286": {
+  "artist": "Nas",
+  "title": "The World Is Yours",
+  "album": "Illmatic",
+  "year": 1994,
+  "genre": "hip-hop"
+ },
+ "287": {
+  "artist": "Nujabes",
+  "title": "Aruarian Dance",
+  "album": "Samurai Champloo Music Record: Departure",
+  "year": 2004,
+  "genre": "hip-hop"
+ },
+ "288": {
+  "artist": "The Beatles",
+  "title": "Let It Be",
+  "album": "Let It Be",
+  "year": 1970,
+  "genre": "rock"
+ },
+ "289": {
+  "artist": "Cyndi Lauper",
+  "title": "True Colors",
+  "album": "True Colors",
+  "year": 1986,
+  "genre": "pop"
+ },
+ "290": {
+  "artist": "Seal",
+  "title": "Kiss From a Rose",
+  "album": "Seal",
+  "year": 1994,
+  "genre": "pop"
+ },
+ "291": {
+  "artist": "MGMT",
+  "title": "Little Dark Age",
+  "album": "Little Dark Age",
+  "year": 2017,
+  "genre": "indie"
+ },
+ "292": {
+  "artist": "Arctic Monkeys",
+  "title": "R U Mine?",
+  "album": "AM",
+  "year": 2012,
+  "genre": "rock"
+ },
+ "293": {
+  "artist": "Owl City",
+  "title": "Fireflies",
+  "album": "Ocean Eyes",
+  "year": 2009,
+  "genre": "pop"
+ },
+ "294": {
+  "artist": "Strawberry Guy",
+  "title": "F Song",
+  "album": "",
+  "genre": "indie"
+ },
+ "295": {
+  "artist": "Akira Yamaoka",
+  "title": "Promise (Reprise)",
+  "album": "Silent Hill 2 Original Soundtrack",
+  "year": 2001,
+  "genre": "soundtrack",
+  "from": "Silent Hill 2"
+ },
+ "296": {
+  "artist": "Shoji Meguro & Lyn",
+  "title": "Beneath the Mask -rain-",
+  "album": "Persona 5 Original Soundtrack",
+  "year": 2016,
+  "genre": "soundtrack",
+  "from": "Persona 5"
+ },
+ "297": {
+  "artist": "Jamie Christopherson",
+  "title": "It Has to Be This Way",
+  "album": "Metal Gear Rising: Revengeance Vocal Tracks",
+  "year": 2013,
+  "genre": "soundtrack",
+  "from": "Metal Gear Rising: Revengeance"
+ },
+ "298": {
+  "artist": "Casey Edwards feat. Ali Edwards",
+  "title": "Devil Trigger",
+  "album": "Devil May Cry 5 Original Soundtrack",
+  "year": 2019,
+  "genre": "soundtrack",
+  "from": "Devil May Cry 5"
+ },
+ "299": {
+  "artist": "m.o.v.e",
+  "title": "Rage Your Dream",
+  "album": "",
+  "year": 1998,
+  "genre": "eurobeat",
+  "from": "Initial D"
+ },
+ "300": {
+  "artist": "Pendulum",
+  "title": "Witchcraft",
+  "album": "Immersion",
+  "year": 2010,
+  "genre": "electronic"
+ },
+ "301": {
+  "artist": "Infected Mushroom",
+  "title": "The Pretender",
+  "album": "Legend of the Black Shawarma",
+  "year": 2009,
+  "genre": "electronic"
+ },
+ "302": {
+  "artist": "Orangestar feat. IA",
+  "title": "アスノヨゾラ哨戒班 (Asu no Yozora Shoukaihan)",
+  "album": "",
+  "year": 2014,
+  "genre": "j-pop"
+ },
+ "303": {
+  "artist": "Mili",
+  "title": "Nine Point Eight",
+  "album": "Miracle Milk",
+  "year": 2016,
+  "genre": "j-pop"
+ },
+ "304": {
+  "artist": "Donna Burke",
+  "title": "Heavens Divide",
+  "album": "Metal Gear Solid: Peace Walker",
+  "year": 2010,
+  "genre": "soundtrack",
+  "from": "Metal Gear Solid"
+ },
+ "305": {
+  "artist": "Lotus Juice & Azumi Takahashi",
+  "title": "It's Going Down Now",
+  "album": "Persona 3 Reload Original Soundtrack",
+  "year": 2024,
+  "genre": "soundtrack",
+  "from": "Persona 3 Reload"
+ },
+ "306": {
+  "artist": "arian",
+  "title": "フォニイ (Phony) [6+α chorus]",
+  "album": "",
+  "year": 2021,
+  "genre": "j-pop"
+ },
+ "307": {
+  "artist": "RADWIMPS",
+  "title": "Sparkle (Original Version)",
+  "album": "Your Name.",
+  "year": 2016,
+  "genre": "j-rock",
+  "from": "Your Name"
+ },
+ "308": {
+  "artist": "RADWIMPS",
+  "title": "Grand Escape (feat. Toko Miura)",
+  "album": "Weathering With You",
+  "year": 2019,
+  "genre": "j-rock",
+  "from": "Weathering With You"
+ },
+ "310": {
+  "artist": "Edo Boys",
+  "title": "No One Sleep in Tokyo",
+  "album": "Super Eurobeat",
+  "year": 1998,
+  "genre": "eurobeat",
+  "from": "Initial D"
+ },
+ "311": {
+  "artist": "GO2",
+  "title": "Don't Turn It Off (Energize Version)",
+  "album": "Super Eurobeat",
+  "year": 2009,
+  "genre": "eurobeat",
+  "from": "Initial D"
+ },
+ "312": {
+  "artist": "Lotus Juice & Azumi Takahashi",
+  "title": "Color Your Night",
+  "album": "Persona 3 Reload Original Soundtrack",
+  "year": 2024,
+  "genre": "soundtrack",
+  "from": "Persona 3 Reload"
+ },
+ "313": {
+  "artist": "Pendulum",
+  "title": "Witchcraft (Nightcore)",
+  "album": "Immersion",
+  "year": 2010,
+  "genre": "electronic",
+  "note": "nightcore: 1.25x speed and pitch"
+ }
+}

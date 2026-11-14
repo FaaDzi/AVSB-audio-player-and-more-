@@ -1,0 +1,924 @@
+{
+ "tws": {
+  "duplicates": [
+   {
+    "dupId": "soundcore-liberty-3-pro-tws",
+    "dupName": "Soundcore Liberty 3 Pro (TWS)",
+    "keepId": "anker-soundcore-liberty-3-pro",
+    "keepName": "Anker Soundcore Liberty 3 Pro",
+    "reason": "Brand prefix dropped plus a \"(TWS)\" tag (rms 1.71 dB)"
+   },
+   {
+    "dupId": "soundcore-liberty-pro-3",
+    "dupName": "Soundcore Liberty Pro 3",
+    "keepId": "anker-soundcore-liberty-3-pro",
+    "keepName": "Anker Soundcore Liberty 3 Pro",
+    "reason": "Same model with \"Pro 3\" word order; the spread fits TWS seal variation (rms 2.16 dB)"
+   },
+   {
+    "dupId": "soundcore-liberty-4-nc",
+    "dupName": "Soundcore Liberty 4 NC",
+    "keepId": "anker-soundcore-liberty-4nc",
+    "keepName": "Anker Soundcore Liberty 4NC",
+    "reason": "\"4 NC\" vs \"4NC\" spacing, brand prefix dropped; name-certain, curve spread is from seal/ANC (rms 2.51 dB)"
+   },
+   {
+    "dupId": "apple-airpods-pro-1",
+    "dupName": "Apple AirPods Pro 1",
+    "keepId": "apple-airpods-pro",
+    "keepName": "Apple AirPods Pro",
+    "reason": "\"Pro 1\" = AirPods Pro 1st generation (rms 2.23 dB)"
+   },
+   {
+    "dupId": "apple-airpods-pro-2nd-generation-tws",
+    "dupName": "Apple AirPods Pro 2nd Generation (TWS)",
+    "keepId": "apple-airpods-pro-2",
+    "keepName": "Apple AirPods Pro 2",
+    "reason": "\"2nd Generation\" = Pro 2 (rms 1.65 dB)"
+   },
+   {
+    "dupId": "apple-airpods-pro-gen-2-apple-airpods-pro-gen-2-70db",
+    "dupName": "Apple AirPods Pro Gen 2 (Apple Airpods Pro Gen 2 70dB)",
+    "keepId": "apple-airpods-pro-2",
+    "keepName": "Apple AirPods Pro 2",
+    "reason": "\"Gen 2\" spelling of Pro 2; listening-level row like the S1 72-94 dB rows already merged into apple-airpods-pro-2 (rms 2.12 dB)"
+   },
+   {
+    "dupId": "apple-airpods-pro-gen-2-apple-airpods-pro-gen-2-75db-spatial-audio",
+    "dupName": "Apple AirPods Pro Gen 2 (Apple Airpods Pro Gen 2 75dB Spatial Audio)",
+    "keepId": "apple-airpods-pro-2",
+    "keepName": "Apple AirPods Pro 2",
+    "reason": "\"Gen 2\" spelling of Pro 2; listening-level row (rms 1.83 dB)"
+   },
+   {
+    "dupId": "apple-airpods-pro-gen-2-apple-airpods-pro-gen-2-80db",
+    "dupName": "Apple AirPods Pro Gen 2 (Apple Airpods Pro Gen 2 80dB)",
+    "keepId": "apple-airpods-pro-2",
+    "keepName": "Apple AirPods Pro 2",
+    "reason": "\"Gen 2\" spelling of Pro 2; listening-level row (rms 1.55 dB)"
+   },
+   {
+    "dupId": "samsung-galaxy-buds",
+    "dupName": "Samsung Galaxy Buds +",
+    "keepId": "samsung-galaxy-buds-plus",
+    "keepName": "Samsung Galaxy Buds Plus",
+    "reason": "\"Buds +\" = Buds Plus; identical Super Review data (rms 0.02 dB)"
+   },
+   {
+    "dupId": "samsung-galaxy-buds-plus-tws",
+    "dupName": "Samsung Galaxy Buds Plus TWS",
+    "keepId": "samsung-galaxy-buds-plus",
+    "keepName": "Samsung Galaxy Buds Plus",
+    "reason": "\"TWS\" tag only (rms 1.50 dB)"
+   },
+   {
+    "dupId": "samsung-galaxy-buds-pro-tws",
+    "dupName": "Samsung Galaxy Buds Pro TWS",
+    "keepId": "samsung-galaxy-buds-pro",
+    "keepName": "Samsung Galaxy Buds Pro",
+    "reason": "\"TWS\" tag only (rms 1.56 dB)"
+   },
+   {
+    "dupId": "apple-powerbeats-pro",
+    "dupName": "Apple Powerbeats Pro",
+    "keepId": "beats-powerbeats-pro",
+    "keepName": "Beats Powerbeats Pro",
+    "reason": "Beats product filed under Apple; same Harpo data (rms 0.08 dB)"
+   },
+   {
+    "dupId": "oppo-enco-x2-classic",
+    "dupName": "Oppo Enco X2 - Classic",
+    "keepId": "oppo-enco-x2-eq-classic",
+    "keepName": "OPPO Enco X2 EQ Classic",
+    "reason": "Same Classic EQ preset, two sources (rms 1.58 dB)"
+   },
+   {
+    "dupId": "oppo-enco-x2-enco-classic-preset",
+    "dupName": "Oppo Enco X2 (Enco classic preset)",
+    "keepId": "oppo-enco-x2-eq-classic",
+    "keepName": "OPPO Enco X2 EQ Classic",
+    "reason": "Same Classic preset (0.08 dB from \"Oppo Enco X2 - Classic\", same Harpo data) (rms 1.61 dB)"
+   },
+   {
+    "dupId": "oppo-enco-x2-punchy",
+    "dupName": "Oppo Enco X2 - Punchy",
+    "keepId": "oppo-enco-x2-eq-punchy",
+    "keepName": "OPPO Enco X2 EQ Punchy",
+    "reason": "Same Punchy EQ preset, two sources (rms 1.29 dB)"
+   },
+   {
+    "dupId": "oppo-enco-x2-real",
+    "dupName": "Oppo Enco X2 - Real",
+    "keepId": "oppo-enco-x2-eq-real",
+    "keepName": "OPPO Enco X2 EQ Real",
+    "reason": "Same Real EQ preset, two sources (rms 1.29 dB)"
+   },
+   {
+    "dupId": "oppo-enco-x2-simple-and-clear",
+    "dupName": "Oppo Enco X2 - Simple and Clear",
+    "keepId": "oppo-enco-x2-eq-simple-clear",
+    "keepName": "OPPO Enco X2 EQ Simple & Clear",
+    "reason": "Same \"Simple & Clear\" preset (\"and\" vs \"&\") (rms 1.46 dB)"
+   },
+   {
+    "dupId": "edifier-x3-lite",
+    "dupName": "Edifier ['X3 Lite']",
+    "keepId": "edifier-x3-lite-tws",
+    "keepName": "Edifier X3 Lite TWS",
+    "reason": "Bracket-artifact name [\"X3 Lite\"]; its Classical/Pop/Rock preset rows stay as variants (rms 1.72 dB)"
+   },
+   {
+    "dupId": "soundpeats-capsule-3-pro-soundpeats-capsule-3-pro",
+    "dupName": "Soundpeats ['Capsule 3 Pro'] (Soundpeats Capsule 3 Pro)",
+    "keepId": "soundpeats-capsule3-pro-tws",
+    "keepName": "Soundpeats Capsule3 Pro TWS",
+    "reason": "\"Capsule 3 Pro\" vs \"Capsule3 Pro\"; the paren just repeats the name (rms 0.52 dB)"
+   },
+   {
+    "dupId": "soundpeats-capsule3-pro-plus-tws",
+    "dupName": "Soundpeats Capsule3 Pro Plus TWS",
+    "keepId": "soundpeats-capsule3-pro",
+    "keepName": "Soundpeats Capsule3 Pro+",
+    "reason": "\"Pro Plus\" = \"Pro+\" (the keep row is Capsule3 Pro+) (rms 1.20 dB)"
+   },
+   {
+    "dupId": "soundpeats-air-4-pro-tws",
+    "dupName": "Soundpeats Air 4 Pro TWS",
+    "keepId": "soundpeats-air4-pro",
+    "keepName": "Soundpeats Air4 Pro",
+    "reason": "\"Air 4 Pro\" vs \"Air4 Pro\", TWS tag (rms 0.65 dB)"
+   },
+   {
+    "dupId": "soundpeats-air5-pro-tws",
+    "dupName": "Soundpeats Air5 Pro TWS",
+    "keepId": "soundpeats-air5-pro",
+    "keepName": "SoundPeats Air5 Pro",
+    "reason": "\"TWS\" tag only (rms 1.43 dB)"
+   },
+   {
+    "dupId": "soundpeats-clear-tws",
+    "dupName": "Soundpeats Clear TWS",
+    "keepId": "soundpeats-clear",
+    "keepName": "SoundPEATS Clear",
+    "reason": "\"TWS\" tag only (rms 1.80 dB)"
+   },
+   {
+    "dupId": "soundpeats-engine-4-tws",
+    "dupName": "Soundpeats Engine 4 TWS",
+    "keepId": "soundpeats-engine-4",
+    "keepName": "SoundPeats Engine 4",
+    "reason": "\"TWS\" tag only (rms 1.28 dB)"
+   },
+   {
+    "dupId": "soundpeats-life-tws",
+    "dupName": "Soundpeats Life TWS",
+    "keepId": "soundpeats-life",
+    "keepName": "Soundpeats Life",
+    "reason": "\"TWS\" tag only (rms 1.12 dB)"
+   },
+   {
+    "dupId": "soundpeats-mini-pro-hs-tws",
+    "dupName": "Soundpeats Mini Pro HS TWS",
+    "keepId": "soundpeats-mini-pro-hs",
+    "keepName": "Soundpeats Mini Pro HS",
+    "reason": "\"TWS\" tag only (0.25 dB from the kr0mka Mini Pro HS ANC-off row) (rms 2.07 dB)"
+   },
+   {
+    "dupId": "soundpeats-opera05-tws",
+    "dupName": "Soundpeats Opera05 TWS",
+    "keepId": "soundpeats-opera05",
+    "keepName": "SoundPeats Opera05",
+    "reason": "\"TWS\" tag only (rms 0.91 dB)"
+   },
+   {
+    "dupId": "soundpeats-h3-tws",
+    "dupName": "Soundpeats H3 TWS",
+    "keepId": "soundpeats-h3",
+    "keepName": "Soundpeats H3",
+    "reason": "\"TWS\" tag only (rms 1.07 dB)"
+   },
+   {
+    "dupId": "earfun-oluv-edition",
+    "dupName": "Earfun Oluv Edition",
+    "keepId": "earfun-free-pro-oluv-edition",
+    "keepName": "EarFun Free Pro - Oluv Edition",
+    "reason": "Model name dropped; the Oluv Edition is the Free Pro (rms 0.29 dB)"
+   },
+   {
+    "dupId": "tinhifi-buds-3",
+    "dupName": "TINHiFi Buds 3",
+    "keepId": "tin-hifi-tin-buds-3",
+    "keepName": "Tin HiFi Tin Buds 3",
+    "reason": "Brand spelling TINHiFi / Tin HiFi (rms 1.88 dB)"
+   },
+   {
+    "dupId": "final-audio-ze3000-tws",
+    "dupName": "Final Audio ZE3000 TWS",
+    "keepId": "final-audio-ze3000",
+    "keepName": "Final Audio ZE3000",
+    "reason": "ZE3000 only exists as TWS; \"TWS\" tag only (rms 2.20 dB)"
+   },
+   {
+    "dupId": "steelseries-gamebuds-anc-off",
+    "dupName": "SteelSeries GameBuds (ANC off)",
+    "keepId": "steelseries-arctis-gamebuds",
+    "keepName": "SteelSeries Arctis Gamebuds",
+    "reason": "\"Arctis\" dropped; same GameBuds in default ANC-off (rms 0.75 dB)"
+   },
+   {
+    "dupId": "realme-buds-air-5-pro-original-sound-effect-mode",
+    "dupName": "realme Buds Air 5 Pro (original sound effect mode)",
+    "keepId": "realme-buds-air-5-pro-original",
+    "keepName": "realme Buds Air 5 Pro - Original",
+    "reason": "Same \"Original\" sound mode, same Harpo data (rms 0.09 dB)"
+   },
+   {
+    "dupId": "rose-technics-roseselsa-ceramics-mk2",
+    "dupName": "Rose Technics (Roseselsa) Ceramics MK2",
+    "keepId": "roseselsa-ceramics-mk2",
+    "keepName": "Roseselsa Ceramics MK2",
+    "reason": "Brand written \"Rose Technics (Roseselsa)\" vs \"Roseselsa\"; same data (rms 0.08 dB)"
+   },
+   {
+    "dupId": "rose-technics-roseselsa-ceramics-ultra",
+    "dupName": "Rose Technics (Roseselsa) Ceramics Ultra",
+    "keepId": "roseselsa-ceramics-ultra",
+    "keepName": "Roseselsa Ceramics Ultra",
+    "reason": "Brand written \"Rose Technics (Roseselsa)\" vs \"Roseselsa\"; same data (rms 0.08 dB)"
+   },
+   {
+    "dupId": "rosetechnics-ceramics-ultra-tws",
+    "dupName": "RoseTechnics Ceramics Ultra TWS",
+    "keepId": "roseselsa-ceramics-ultra",
+    "keepName": "Roseselsa Ceramics Ultra",
+    "reason": "Same Ceramics Ultra, brand spelling plus TWS tag; name-certain, large spread probably from the preset (rms 2.96 dB)"
+   },
+   {
+    "dupId": "rose-technics-roseselsa-ceramics-x-tws",
+    "dupName": "Rose Technics (Roseselsa) Ceramics X TWS",
+    "keepId": "roseselsa-ceramics-x",
+    "keepName": "Roseselsa Ceramics X",
+    "reason": "Brand spelling plus TWS tag (rms 1.03 dB)"
+   },
+   {
+    "dupId": "rose-technics-ceramics-x",
+    "dupName": "Rose Technics Ceramics X",
+    "keepId": "roseselsa-ceramics-x",
+    "keepName": "Roseselsa Ceramics X",
+    "reason": "Brand spelling; name-certain, the lumerion curve is the outlier (likely another preset) (rms 3.05 dB)"
+   },
+   {
+    "dupId": "roseselsa-ceramics-x-hifi",
+    "dupName": "ROSESELSA CERAMICS X HIFI",
+    "keepId": "rose-technics-roseselsa-ceramics-x-hifi-tws",
+    "keepName": "Rose Technics Roseselsa Ceramics X HIFI TWS",
+    "reason": "Same Ceramics X HiFi preset, brand spelling (rms 1.19 dB)"
+   },
+   {
+    "dupId": "rose-ceramics-x-pop",
+    "dupName": "Rose Ceramics X Pop",
+    "keepId": "roseselsa-ceramics-x-pop",
+    "keepName": "ROSESELSA CERAMICS X POP",
+    "reason": "Same Ceramics X Pop preset, brand spelling (rms 1.01 dB)"
+   },
+   {
+    "dupId": "rose-ceramics-x-rock",
+    "dupName": "Rose Ceramics X Rock",
+    "keepId": "roseselsa-ceramics-x-rock",
+    "keepName": "ROSESELSA CERAMICS X ROCK",
+    "reason": "Same Ceramics X Rock preset, brand spelling (rms 1.22 dB)"
+   },
+   {
+    "dupId": "rose-technics-roseselsa-earfree-i5",
+    "dupName": "ROSE TECHNICS ROSESELSA EARFREE-i5",
+    "keepId": "rose-technics-earfree-i5",
+    "keepName": "Rose Technics EARFREE i5",
+    "reason": "Brand spelling for Earfree i5 (rms 1.26 dB)"
+   },
+   {
+    "dupId": "roseselsa-earfree-i5",
+    "dupName": "Roseselsa Earfree-i5",
+    "keepId": "rose-technics-earfree-i5",
+    "keepName": "Rose Technics EARFREE i5",
+    "reason": "Brand spelling for Earfree i5 (rms 1.23 dB)"
+   },
+   {
+    "dupId": "rose-technics-roseselsa-earfree-i5-tws",
+    "dupName": "Rose Technics (Roseselsa) Earfree i5 TWS",
+    "keepId": "rose-technics-earfree-i5",
+    "keepName": "Rose Technics EARFREE i5",
+    "reason": "Brand spelling plus TWS tag (rms 1.58 dB)"
+   },
+   {
+    "dupId": "rose-earfree-i5-light",
+    "dupName": "Rose EARFREE-i5 Light",
+    "keepId": "roseselsa-earfree-i5-light",
+    "keepName": "Roseselsa Earfree i5 Light",
+    "reason": "Same Earfree i5 Light preset, brand spelling (rms 1.28 dB)"
+   },
+   {
+    "dupId": "rose-earfree-i5-pop",
+    "dupName": "Rose EARFREE-i5 Pop",
+    "keepId": "roseselsa-earfree-i5-pop",
+    "keepName": "Roseselsa Earfree i5 Pop",
+    "reason": "Same Earfree i5 Pop preset, brand spelling (rms 1.42 dB)"
+   },
+   {
+    "dupId": "rose-earfree-i5-rock",
+    "dupName": "Rose EARFREE-i5 Rock",
+    "keepId": "roseselsa-earfree-i5-rock",
+    "keepName": "Roseselsa Earfree i5 Rock",
+    "reason": "Same Earfree i5 Rock preset, brand spelling (rms 1.33 dB)"
+   },
+   {
+    "dupId": "rose-technics-roseselsa-earfree-i3",
+    "dupName": "Rose Technics (Roseselsa) Earfree-i3",
+    "keepId": "rose-technics-earfree-i3",
+    "keepName": "Rose Technics Earfree i3",
+    "reason": "Brand spelling for Earfree i3 (rms 1.41 dB)"
+   },
+   {
+    "dupId": "roseselsa-earfree-i3",
+    "dupName": "ROSESELSA EARFREE-i3",
+    "keepId": "rose-technics-earfree-i3",
+    "keepName": "Rose Technics Earfree i3",
+    "reason": "Brand spelling for Earfree i3 (1.70 dB from the Roseselsa-paren row) (rms 2.46 dB)"
+   }
+  ],
+  "unsure": [
+   {
+    "dupId": "realme-buds-air-5-pro-clean-bass",
+    "dupName": "realme Buds Air 5 Pro - Clean Bass",
+    "keepId": "realme-buds-air-5-pro-deep-bass",
+    "keepName": "realme Buds Air 5 Pro - Deep Bass",
+    "reason": "Identical data under two different preset names; more likely a mislabel than a rename (rms 0.00 dB)"
+   },
+   {
+    "dupId": "realme-buds-air-5-pro-dynamic-bass-5",
+    "dupName": "realme Buds Air 5 Pro - Dynamic Bass +5",
+    "keepId": "realme-buds-air-5-pro-original",
+    "keepName": "realme Buds Air 5 Pro - Original",
+    "reason": "Near-identical curves, different preset names (rms 0.05 dB)"
+   },
+   {
+    "dupId": "soundpeats-h3-default",
+    "dupName": "Soundpeats H3 Default",
+    "keepId": "soundpeats-h3-normal",
+    "keepName": "SoundPEATS H3 Normal",
+    "reason": "Both are the default preset from two sources; could also fold into soundpeats-h3 (rms 0.86 dB)"
+   },
+   {
+    "dupId": "earfun-free-pro-oluv-edition-anc-off",
+    "dupName": "EarFun Free Pro (Oluv Edition, ANC off)",
+    "keepId": "earfun-free-pro-oluv-edition",
+    "keepName": "EarFun Free Pro - Oluv Edition",
+    "reason": "Same data; the base row is probably ANC off too, but the mode is listed on its own (rms 0.02 dB)"
+   },
+   {
+    "dupId": "soundpeats-air5-pro-normal",
+    "dupName": "SoundPEATS Air5 Pro+ Normal",
+    "keepId": "soundpeats-air-5-pro-plus",
+    "keepName": "SoundPEATS Air 5 Pro Plus",
+    "reason": "Air5 Pro+ = Air 5 Pro Plus. The cqtek/tonedeafmonk preset rows are filed under a second spelling; better renamed into the family than merged (rms 1.83 dB)"
+   },
+   {
+    "dupId": "lypertek-z3",
+    "dupName": "Lypertek Z3",
+    "keepId": "lypertek-pureplay-z3",
+    "keepName": "Lypertek PurePlay Z3",
+    "reason": "Z3 1.0 vs 2.0 unknown for both rows; curves differ (rms 3.34 dB)"
+   },
+   {
+    "dupId": "tin-hifi-t3-buds",
+    "dupName": "Tin Hifi T3 Buds",
+    "keepId": "tin-hifi-tin-buds-3",
+    "keepName": "Tin HiFi Tin Buds 3",
+    "reason": "\"T3 Buds\" could be the Tin Buds 3 or a mislabel (rms 2.44 dB)"
+   },
+   {
+    "dupId": "sennheiser-momentum-tw2-sennheiser-mtw2-he",
+    "dupName": "Sennheiser Momentum TW2 (Sennheiser MTW2 (HE))",
+    "keepId": "sennheiser-momentum-true-wireless-2",
+    "keepName": "Sennheiser Momentum True Wireless 2",
+    "reason": "TW2 = True Wireless 2, but \"(HE)\" is an unknown configuration (rms 1.36 dB)"
+   },
+   {
+    "dupId": "samsung-galaxy-buds-tws",
+    "dupName": "Samsung Galaxy Buds TWS",
+    "keepId": "samsung-galaxy-buds-samsung-galaxy-buds-clear",
+    "keepName": "Samsung Galaxy Buds (Samsung Galaxy Buds (Clear))",
+    "reason": "Original Galaxy Buds; that family has only aden preset rows to keep, no base row (rms 2.20 dB)"
+   },
+   {
+    "dupId": "nothing-ear-2-nothing-ear-2",
+    "dupName": "Nothing Ear 2 (Nothing Ear 2)",
+    "keepId": "nothing-ear-2",
+    "keepName": "Nothing ear (2)",
+    "reason": "Both are Super Review \"Ear (2)\" but 2.36 dB apart. Also, \"Nothing ear (2)\" loses its \"(2)\" to paren-stripping and groups with Ear (2024) (rms 2.36 dB)"
+   },
+   {
+    "dupId": "nothing-ear-nothing-ear-b162-tws",
+    "dupName": "Nothing Ear Nothing Ear B162 TWS",
+    "keepId": "nothing-ear-2024-nothing-ear-2024-anc",
+    "keepName": "Nothing Ear (2024) (Nothing Ear (2024) ANC)",
+    "reason": "B162 model code: possibly Ear (a), not Ear (2024) (rms 1.32 dB)"
+   },
+   {
+    "dupId": "samsung-galazy-buds-fe-galaxy-buds-fe-anc-off",
+    "dupName": "Samsung ['Galazy Buds FE'] (Galaxy Buds FE ANC OFF)",
+    "keepId": "samsung-galaxy-buds-fe",
+    "keepName": "Samsung Galaxy Buds FE",
+    "reason": "\"Galazy\" typo rows for Buds FE (modes). Note: aliases.json merges samsung-galazy-buds-fe into galaxy-buds-3-pro, which looks wrong (rms 2.00 dB)"
+   },
+   {
+    "dupId": "samsung-galazy-buds-fe-galaxy-buds-fe-ambient",
+    "dupName": "Samsung ['Galazy Buds FE'] (Galaxy Buds FE Ambient)",
+    "keepId": "samsung-galaxy-buds-fe",
+    "keepName": "Samsung Galaxy Buds FE",
+    "reason": "Same as above, Ambient mode (rms 1.21 dB)"
+   },
+   {
+    "dupId": "rose-ceramics",
+    "dupName": "Rose Ceramics",
+    "keepId": "rose-technics-roseselsa-ceramics-tws",
+    "keepName": "Rose Technics Roseselsa Ceramics TWS",
+    "reason": "Same Ceramics, but base rows are 2.2-4.9 dB apart (preset unknown); pick the HiFi/default one before merging (rms 3.97 dB)"
+   },
+   {
+    "dupId": "rose-technics-roseselsa-ceramics",
+    "dupName": "Rose Technics (Roseselsa) Ceramics",
+    "keepId": "rose-technics-roseselsa-ceramics-tws",
+    "keepName": "Rose Technics Roseselsa Ceramics TWS",
+    "reason": "Same as above (rms 2.57 dB)"
+   },
+   {
+    "dupId": "rosetechnics-ceramics-tws",
+    "dupName": "RoseTechnics Ceramics TWS",
+    "keepId": "rose-technics-roseselsa-ceramics-tws",
+    "keepName": "Rose Technics Roseselsa Ceramics TWS",
+    "reason": "Same as above (rms 4.92 dB)"
+   },
+   {
+    "dupId": "roseselsa-ceramics-2",
+    "dupName": "ROSESELSA CERAMICS 2",
+    "keepId": "roseselsa-ceramics-mk2",
+    "keepName": "Roseselsa Ceramics MK2",
+    "reason": "\"Ceramics 2\" probably = MK2 (rms 1.87 dB)"
+   }
+  ]
+ },
+ "headphones": {
+  "duplicates": [
+   {
+    "dupId": "hp-fiio-jt7",
+    "dupName": "FiiO JT7",
+    "keepId": "hp-fiio-jadeaudio-jt7",
+    "keepName": "FiiO Jadeaudio JT7",
+    "reason": "JadeAudio sub-brand dropped (rms 0.96 dB)"
+   },
+   {
+    "dupId": "hp-denon-d5200",
+    "dupName": "Denon D5200",
+    "keepId": "hp-denon-ah-d5200",
+    "keepName": "Denon AH-D5200",
+    "reason": "\"AH-\" prefix dropped (rms 0.99 dB)"
+   },
+   {
+    "dupId": "hp-denon-d7200",
+    "dupName": "Denon D7200",
+    "keepId": "hp-denon-ah-d7200",
+    "keepName": "Denon AH-D7200",
+    "reason": "\"AH-\" prefix dropped (rms 1.30 dB)"
+   },
+   {
+    "dupId": "hp-denon-d7000",
+    "dupName": "Denon D7000",
+    "keepId": "hp-denon-ah-d7000",
+    "keepName": "Denon AH-D7000",
+    "reason": "\"AH-\" prefix dropped (rms 2.17 dB)"
+   },
+   {
+    "dupId": "hp-hedd-audio-d1",
+    "dupName": "HEDD Audio D1",
+    "keepId": "hp-hedd-audio-heddphone-d1",
+    "keepName": "HEDD Audio HEDDphone D1",
+    "reason": "\"HEDDphone\" dropped (rms 1.03 dB)"
+   },
+   {
+    "dupId": "hp-hedd-d1",
+    "dupName": "HEDD D1",
+    "keepId": "hp-hedd-audio-heddphone-d1",
+    "keepName": "HEDD Audio HEDDphone D1",
+    "reason": "\"Audio HEDDphone\" dropped (rms 1.22 dB)"
+   },
+   {
+    "dupId": "hp-hedd-heddphone-d1",
+    "dupName": "HEDD HEDDPhone D1",
+    "keepId": "hp-hedd-audio-heddphone-d1",
+    "keepName": "HEDD Audio HEDDphone D1",
+    "reason": "\"Audio\" dropped (rms 1.36 dB)"
+   },
+   {
+    "dupId": "hp-heddphone-d1",
+    "dupName": "HEDDPhone D1",
+    "keepId": "hp-hedd-audio-heddphone-d1",
+    "keepName": "HEDD Audio HEDDphone D1",
+    "reason": "Brand dropped (rms 1.37 dB)"
+   },
+   {
+    "dupId": "hp-heddphone-two",
+    "dupName": "HEDDphone TWO",
+    "keepId": "hp-hedd-audio-heddphone-two",
+    "keepName": "HEDD Audio HEDDphone TWO",
+    "reason": "Brand dropped (rms 1.59 dB)"
+   },
+   {
+    "dupId": "hp-hedd-heddphone-2",
+    "dupName": "HEDD Heddphone 2",
+    "keepId": "hp-hedd-audio-heddphone-two",
+    "keepName": "HEDD Audio HEDDphone TWO",
+    "reason": "\"2\" = TWO (rms 1.30 dB)"
+   },
+   {
+    "dupId": "hp-heddphone-two-gt",
+    "dupName": "HEDDphone TWO GT",
+    "keepId": "hp-hedd-audio-heddphone-two-gt",
+    "keepName": "HEDD Audio HEDDphone TWO GT",
+    "reason": "Brand dropped (rms 1.63 dB)"
+   },
+   {
+    "dupId": "hp-hedd-heddphone",
+    "dupName": "HEDD HEDDphone",
+    "keepId": "hp-heddphone-one",
+    "keepName": "HEDDphone ONE",
+    "reason": "Original HEDDphone, renamed ONE after TWO launched (rms 1.39 dB)"
+   },
+   {
+    "dupId": "hp-hedd-hedd",
+    "dupName": "Hedd hedd",
+    "keepId": "hp-heddphone-one",
+    "keepName": "HEDDphone ONE",
+    "reason": "\"Hedd hedd\" = original HEDDphone (ONE) (rms 1.81 dB)"
+   },
+   {
+    "dupId": "hp-mirph-mirph-1",
+    "dupName": "MIRPH MIRPH-1",
+    "keepId": "hp-mirph-designs-mirph-1",
+    "keepName": "Mirph Designs Mirph-1",
+    "reason": "\"Designs\" dropped, caps (rms 1.10 dB)"
+   },
+   {
+    "dupId": "hp-philips-x2hr",
+    "dupName": "Philips x2hr",
+    "keepId": "hp-philips-fidelio-x2hr",
+    "keepName": "Philips Fidelio X2HR",
+    "reason": "\"Fidelio\" dropped (rms 1.29 dB)"
+   },
+   {
+    "dupId": "hp-philips-l2",
+    "dupName": "Philips L2",
+    "keepId": "hp-philips-fidelio-l2",
+    "keepName": "Philips Fidelio L2",
+    "reason": "\"Fidelio\" dropped (rms 2.72 dB)"
+   },
+   {
+    "dupId": "hp-verum-2",
+    "dupName": "Verum 2",
+    "keepId": "hp-verum-audio-verum-2",
+    "keepName": "Verum Audio Verum 2",
+    "reason": "Brand shortened (rms 1.59 dB)"
+   },
+   {
+    "dupId": "hp-beyerdynamic-tygr-300",
+    "dupName": "Beyerdynamic TYGR 300",
+    "keepId": "hp-beyerdynamic-tygr-300r",
+    "keepName": "beyerdynamic TYGR 300R",
+    "reason": "TYGR 300 R is the only TYGR 300; \"R\" dropped (rms 1.62 dB)"
+   },
+   {
+    "dupId": "hp-akg-q701",
+    "dupName": "AKG Q701",
+    "keepId": "hp-akg-q701-quincy-jones",
+    "keepName": "AKG Q701 Quincy Jones",
+    "reason": "Q701 is the Quincy Jones signature model (rms 1.69 dB)"
+   },
+   {
+    "dupId": "hp-sivga-robin",
+    "dupName": "Sivga robin",
+    "keepId": "hp-sivga-audio-robin",
+    "keepName": "Sivga Audio Robin",
+    "reason": "\"Audio\" dropped (rms 0.82 dB)"
+   },
+   {
+    "dupId": "hp-sivga-robin-sv021",
+    "dupName": "SIVGA Robin SV021",
+    "keepId": "hp-sivga-audio-robin",
+    "keepName": "Sivga Audio Robin",
+    "reason": "SV021 is the Robin model number (rms 0.84 dB)"
+   },
+   {
+    "dupId": "hp-sivga-phoenix",
+    "dupName": "Sivga Phoenix",
+    "keepId": "hp-sivga-audio-phoenix",
+    "keepName": "Sivga Audio Phoenix",
+    "reason": "\"Audio\" dropped (rms 1.54 dB)"
+   },
+   {
+    "dupId": "hp-aurorus-borealis",
+    "dupName": "Aurorus Borealis",
+    "keepId": "hp-aurorus-audio-borealis",
+    "keepName": "Aurorus Audio Borealis",
+    "reason": "\"Audio\" dropped (rms 0.96 dB)"
+   },
+   {
+    "dupId": "hp-grell-oae1",
+    "dupName": "Grell OAE1",
+    "keepId": "hp-grell-audio-oae1",
+    "keepName": "Grell Audio OAE1",
+    "reason": "\"Audio\" dropped (rms 1.22 dB)"
+   },
+   {
+    "dupId": "hp-drop-grell-oae1",
+    "dupName": "Drop + Grell OAE1",
+    "keepId": "hp-grell-audio-oae1",
+    "keepName": "Grell Audio OAE1",
+    "reason": "Drop collab naming of the OAE1 (rms 1.14 dB)"
+   },
+   {
+    "dupId": "hp-grell-x-drop-oae1",
+    "dupName": "Grell x Drop OAE1",
+    "keepId": "hp-grell-audio-oae1",
+    "keepName": "Grell Audio OAE1",
+    "reason": "Drop collab naming of the OAE1 (rms 1.46 dB)"
+   },
+   {
+    "dupId": "hp-sennheiser-momentum-4",
+    "dupName": "Sennheiser Momentum 4",
+    "keepId": "hp-sennheiser-momentum-4-wireless",
+    "keepName": "Sennheiser Momentum 4 Wireless",
+    "reason": "Momentum 4 only exists as the Wireless (rms 1.71 dB)"
+   },
+   {
+    "dupId": "hp-fractal-designs-scape",
+    "dupName": "Fractal Designs Scape",
+    "keepId": "hp-fractal-design-scape",
+    "keepName": "Fractal Design Scape",
+    "reason": "Brand typo \"Designs\" (rms 1.74 dB)"
+   },
+   {
+    "dupId": "hp-final-ux3000",
+    "dupName": "final UX3000",
+    "keepId": "hp-final-audio-ux3000",
+    "keepName": "Final Audio UX3000",
+    "reason": "\"Audio\" dropped (not the UX3000 SV) (rms 1.95 dB)"
+   },
+   {
+    "dupId": "hp-sony-zx110",
+    "dupName": "Sony zx110",
+    "keepId": "hp-sony-mdr-zx110",
+    "keepName": "Sony MDR-ZX110",
+    "reason": "\"MDR-\" dropped; same Auriculares Argentina data (rms 0.14 dB)"
+   },
+   {
+    "dupId": "hp-edifier-950nb",
+    "dupName": "Edifier 950NB",
+    "keepId": "hp-edifier-wh950nb",
+    "keepName": "Edifier WH950NB",
+    "reason": "\"WH\" prefix dropped (rms 2.35 dB)"
+   },
+   {
+    "dupId": "hp-drop-hd-6xx",
+    "dupName": "Drop hd 6XX",
+    "keepId": "hp-sennheiser-hd-6xx",
+    "keepName": "Sennheiser HD 6XX",
+    "reason": "Drop/Massdrop collab naming of the HD 6XX (rms 0.94 dB)"
+   },
+   {
+    "dupId": "hp-sennheiser-x-drop-hd-6xx",
+    "dupName": "Sennheiser x Drop HD 6XX",
+    "keepId": "hp-sennheiser-hd-6xx",
+    "keepName": "Sennheiser HD 6XX",
+    "reason": "Drop collab naming of the HD 6XX (rms 1.15 dB)"
+   },
+   {
+    "dupId": "hp-sennheiser-x-massdrop-hd-6xx",
+    "dupName": "Sennheiser x Massdrop HD-6XX",
+    "keepId": "hp-sennheiser-hd-6xx",
+    "keepName": "Sennheiser HD 6XX",
+    "reason": "Massdrop collab naming of the HD 6XX (rms 1.00 dB)"
+   },
+   {
+    "dupId": "hp-drop-hd-58x",
+    "dupName": "Drop hd 58X",
+    "keepId": "hp-sennheiser-hd-58x",
+    "keepName": "Sennheiser HD 58X",
+    "reason": "Drop collab naming of the HD 58X (rms 0.85 dB)"
+   },
+   {
+    "dupId": "hp-sennheiser-x-drop-hd58x",
+    "dupName": "Sennheiser x Drop HD58X",
+    "keepId": "hp-sennheiser-hd-58x",
+    "keepName": "Sennheiser HD 58X",
+    "reason": "Drop collab naming, spacing (rms 0.66 dB)"
+   },
+   {
+    "dupId": "hp-sennheiser-x-massdrop-hd-58x",
+    "dupName": "Sennheiser x Massdrop HD-58X",
+    "keepId": "hp-sennheiser-hd-58x",
+    "keepName": "Sennheiser HD 58X",
+    "reason": "Massdrop collab naming of the HD 58X (rms 1.22 dB)"
+   },
+   {
+    "dupId": "hp-drop-sennheiser-pc38x",
+    "dupName": "Drop + Sennheiser PC38X",
+    "keepId": "hp-sennheiser-pc38x",
+    "keepName": "Sennheiser PC38X",
+    "reason": "Drop collab naming of the PC38X (rms 0.93 dB)"
+   },
+   {
+    "dupId": "hp-epos-x-drop-pc38x",
+    "dupName": "Epos x Drop PC38X",
+    "keepId": "hp-sennheiser-pc38x",
+    "keepName": "Sennheiser PC38X",
+    "reason": "EPOS-era rebrand of the same PC38X (rms 0.87 dB)"
+   },
+   {
+    "dupId": "hp-epos-drop-pc38x",
+    "dupName": "EPOS×DROP PC38X",
+    "keepId": "hp-sennheiser-pc38x",
+    "keepName": "Sennheiser PC38X",
+    "reason": "EPOS-era rebrand of the same PC38X (rms 0.78 dB)"
+   },
+   {
+    "dupId": "hp-sennheiser-x-drop-pc38x",
+    "dupName": "Sennheiser x Drop PC38X",
+    "keepId": "hp-sennheiser-pc38x",
+    "keepName": "Sennheiser PC38X",
+    "reason": "Drop collab naming of the PC38X (rms 0.96 dB)"
+   },
+   {
+    "dupId": "hp-drop-hifiman-he-4xx",
+    "dupName": "Drop + Hifiman HE-4xx",
+    "keepId": "hp-hifiman-he4xx",
+    "keepName": "HIFIMAN HE4XX",
+    "reason": "Drop collab naming, \"HE-4xx\" spelling (rms 1.53 dB)"
+   },
+   {
+    "dupId": "hp-steelseries-nova-1",
+    "dupName": "SteelSeries Nova 1",
+    "keepId": "hp-steel-series-arctis-nova-1",
+    "keepName": "Steel Series Arctis Nova 1",
+    "reason": "\"Arctis\" dropped (keep row spells the brand \"Steel Series\", worth fixing) (rms 1.50 dB)"
+   },
+   {
+    "dupId": "hp-playstation-pulse-3d",
+    "dupName": "PlayStation Pulse 3D",
+    "keepId": "hp-sony-pulse-3d",
+    "keepName": "Sony PULSE 3D",
+    "reason": "Sony PlayStation Pulse 3D, brand written differently (rms 1.57 dB)"
+   },
+   {
+    "dupId": "hp-phillips-shp9500-sample-1",
+    "dupName": "Phillips SHP9500 (sample 1)",
+    "keepId": "hp-philips-shp9500",
+    "keepName": "Philips SHP9500",
+    "reason": "Brand typo \"Phillips\"; \"(sample 1)\" is bookkeeping (rms 1.80 dB)"
+   },
+   {
+    "dupId": "hp-audio-research-ar-h1",
+    "dupName": "Audio Research AR-H1",
+    "keepId": "hp-acoustic-research-ar-h1",
+    "keepName": "Acoustic Research AR-H1",
+    "reason": "Brand typo: AR-H1 is from Acoustic Research (rms 2.37 dB)"
+   },
+   {
+    "dupId": "hp-soundcore-q45",
+    "dupName": "Soundcore Q45",
+    "keepId": "hp-anker-soundcore-space-q45",
+    "keepName": "Anker Soundcore Space Q45",
+    "reason": "\"Anker\" and \"Space\" dropped; ANC headphone, 2.31 dB from the ANC-on row (rms 3.32 dB)"
+   },
+   {
+    "dupId": "hp-fiio-jt1",
+    "dupName": "FiiO JT1",
+    "keepId": "hp-fiio-x-jadeaudio-jt1",
+    "keepName": "FiiO x JadeAudio JT1",
+    "reason": "JadeAudio sub-brand dropped (rms 1.65 dB)"
+   },
+   {
+    "dupId": "hp-fiio-jadeaudio-jt1",
+    "dupName": "FiiO & JadeAudio JT1",
+    "keepId": "hp-fiio-x-jadeaudio-jt1",
+    "keepName": "FiiO x JadeAudio JT1",
+    "reason": "\"&\" vs \"x\" (rms 2.94 dB)"
+   },
+   {
+    "dupId": "hp-sennheiser-hd-580",
+    "dupName": "Sennheiser HD 580",
+    "keepId": "hp-sennheiser-hd-580-precision",
+    "keepName": "Sennheiser HD 580 precision",
+    "reason": "HD 580 was sold as the HD 580 Precision; its (BS) row stays as a variant (rms 2.83 dB)"
+   },
+   {
+    "dupId": "hp-audio-technica-r50x",
+    "dupName": "Audio Technica R50x",
+    "keepId": "hp-audio-technica-ath-r50x",
+    "keepName": "Audio-Technica ATH-R50x",
+    "reason": "\"ATH-\" dropped (rms 0.86 dB)"
+   },
+   {
+    "dupId": "hp-audio-technica-r70xa",
+    "dupName": "Audio Technica R70xa",
+    "keepId": "hp-audio-technica-ath-r70xa",
+    "keepName": "Audio-Technica ATH-R70xa",
+    "reason": "\"ATH-\" dropped (rms 1.09 dB)"
+   }
+  ],
+  "unsure": [
+   {
+    "dupId": "hp-heddphone-d1-2",
+    "dupName": "Heddphone D1 2",
+    "keepId": "hp-hedd-audio-heddphone-d1",
+    "keepName": "HEDD Audio HEDDphone D1",
+    "reason": "\"D1 2\" could be a second sample or a D1 II (rms 1.94 dB)"
+   },
+   {
+    "dupId": "hp-massdrop-grell-oae1-signature",
+    "dupName": "Massdrop + Grell OAE1 Signature",
+    "keepId": "hp-grell-audio-oae1",
+    "keepName": "Grell Audio OAE1",
+    "reason": "\"Signature\" may be Drop's name for the OAE1 or a special version (rms 1.65 dB)"
+   },
+   {
+    "dupId": "hp-bose-quietcomfort-ultra",
+    "dupName": "Bose QuietComfort Ultra",
+    "keepId": "hp-bose-quietcomfort-ultra-headphones",
+    "keepName": "Bose QuietComfort Ultra Headphones",
+    "reason": "Could be the 1st or 2nd gen (2025); large spread (rms 3.16 dB)"
+   },
+   {
+    "dupId": "hp-fosi-audio-fosi-i5",
+    "dupName": "Fosi Audio Fosi I5",
+    "keepId": "hp-fosi-audio-i5",
+    "keepName": "Fosi Audio i5",
+    "reason": "Same name, but 4.4 dB apart (rms 4.44 dB)"
+   },
+   {
+    "dupId": "hp-ultrasone-edition-8-palladium",
+    "dupName": "Ultrasone Edition 8 Palladium",
+    "keepId": "hp-ultrasone-edition-8",
+    "keepName": "Ultrasone Edition 8",
+    "reason": "Identical data; Palladium is a finish edition, so it may be listed on purpose (rms 0.00 dB)"
+   },
+   {
+    "dupId": "hp-koss-kph30i-clear",
+    "dupName": "Koss KPH30i Clear",
+    "keepId": "hp-koss-kph30i",
+    "keepName": "Koss KPH30i",
+    "reason": "Clear is a colour edition (rms 0.99 dB)"
+   },
+   {
+    "dupId": "hp-koss-kph40-utility",
+    "dupName": "Koss KPH40 Utility",
+    "keepId": "hp-koss-kph40",
+    "keepName": "Koss KPH40",
+    "reason": "Utility edition, different housing (rms 1.20 dB)"
+   },
+   {
+    "dupId": "hp-adam-h200-h200-2025-sample-fresh-stock-pads-realistic-seal",
+    "dupName": "ADAM H200 (H200 (2025 sample, fresh stock pads, realistic seal))",
+    "keepId": "hp-adam-audio-h200",
+    "keepName": "Adam Audio H200",
+    "reason": "Shortened brand, single measurement-note row; 2.9 dB (rms 2.86 dB)"
+   },
+   {
+    "dupId": "hp-simgot-ep5-ep5-2025-sample-fresh-stock-pads-realistic-seal",
+    "dupName": "Simgot EP5 (EP5 (2025 sample, fresh stock pads, realistic seal))",
+    "keepId": "hp-simgot-audio-ep5",
+    "keepName": "Simgot Audio EP5",
+    "reason": "Shortened brand, single measurement-note row; 3.2 dB (rms 3.20 dB)"
+   },
+   {
+    "dupId": "hp-acezone-a-spire",
+    "dupName": "AceZone A-Spire",
+    "keepId": "hp-acezone-a-spire-wireless",
+    "keepName": "AceZone A-Spire Wireless",
+    "reason": "Unsure whether a wired A-Spire exists apart from the Wireless (rms 2.17 dB)"
+   },
+   {
+    "dupId": "hp-sineaptic-se-1",
+    "dupName": "Sineaptic SE-1",
+    "keepId": "hp-sineaptic-se-1-wireless",
+    "keepName": "Sineaptic SE-1 Wireless",
+    "reason": "Unsure whether the wired and wireless versions differ (rms 1.98 dB)"
+   },
+   {
+    "dupId": "hp-sennheiser-hd-25-1-ii-b-2012",
+    "dupName": "Sennheiser HD 25-1 II B (2012)",
+    "keepId": "hp-sennheiser-hd25-1-ii",
+    "keepName": "Sennheiser HD25-1 II",
+    "reason": "\"II B (2012)\" may be the Basic edition or a revision (rms 2.57 dB)"
+   }
+  ]
+ }
+}

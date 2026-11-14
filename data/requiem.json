@@ -1,0 +1,945 @@
+{
+ "source": "RequIEM review ranking (.xlsx shared by the user)",
+ "entries": [
+  {
+   "kind": "iem",
+   "row": 2,
+   "name": "Thieaudio Monarch MKIV",
+   "rank": 1,
+   "tier": "S+",
+   "price": 1150.0,
+   "verdict": "Versatile with a premium finish, the goat of the list. Dual tuning, punchy bass, smooth treble, and a massive soundstage.",
+   "url": "https://www.reddit.com/r/iems/comments/1qirn82/finally_found_my_endgame_thieaudio_monarch_mkiv/"
+  },
+  {
+   "kind": "iem",
+   "row": 3,
+   "name": "Mysticraft Myth",
+   "rank": 2,
+   "tier": "S+",
+   "price": 999.0,
+   "verdict": "U-shaped, great soundstage, excellent treble, narrowly surpassed by Monarch MKIV's texture and resolution",
+   "url": "https://www.reddit.com/r/inearfidelity/comments/1rdnwi4/making_the_monarch_mkiv_sweat_mysticraft_myth/"
+  },
+  {
+   "kind": "iem",
+   "row": 4,
+   "name": "NiceHCK Rockies",
+   "rank": 3,
+   "tier": "S",
+   "price": 499.0,
+   "verdict": "META balance with firm bass and relaxed, airy EST treble, detailed, natural, and spacious.",
+   "url": "https://www.reddit.com/r/iems/comments/1p4t6bx/the_sound_i_was_looking_for_under_500_nicehck/"
+  },
+  {
+   "kind": "iem",
+   "row": 5,
+   "name": "Thieaudio Hype 4 MKII",
+   "rank": 4,
+   "tier": "S",
+   "price": 399.0,
+   "verdict": "High-level tech, detailed sub-bass, wide stage, top-tier separation, and extended highs.",
+   "url": "https://www.reddit.com/r/iems/comments/1q0k93e/damn_it_the_hype_is_real_thieaudio_hype_mkii/"
+  },
+  {
+   "kind": "iem",
+   "row": 6,
+   "name": "Xenns Mangird Top Pro",
+   "rank": 5,
+   "tier": "S",
+   "price": 499.0,
+   "verdict": "A total all-rounder. Natural, detailed, and immersive. Perfect value-for-money, though the treble isn't for everyone.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 7,
+   "name": "Binary EP321",
+   "rank": 6,
+   "tier": "S-",
+   "price": 310.0,
+   "verdict": "Analytical and technical, fast MEMS treble, clean sub-bass and precise separation, addictive tuning, ideal for critical listening.",
+   "url": "https://www.reddit.com/r/inearfidelity/comments/1tru5be/technical_fidelity_over_relaxed_enjoyment_binary/"
+  },
+  {
+   "kind": "iem",
+   "row": 8,
+   "name": "Ziigaat Horizon",
+   "rank": 7,
+   "tier": "S-",
+   "price": 320.0,
+   "verdict": "Defined bass, clean mids, and sparkly highs. Wide stage and a balanced sound with plenty of energy.",
+   "url": "https://www.reddit.com/r/iems/comments/1pktqbn/ziigaat_horizon_their_first_tribrid_and_my/"
+  },
+  {
+   "kind": "iem",
+   "row": 9,
+   "name": "Ziigaat Arcanis",
+   "rank": 8,
+   "tier": "S-",
+   "price": 399.0,
+   "verdict": "Fast sub-bass, hypnotic natural vocals, relaxed treble, zero fatigue, mature tuning",
+   "url": "https://www.reddit.com/r/inearfidelity/comments/1tocrl0/hypnotic_vocals_with_absolute_control_ziigaat/"
+  },
+  {
+   "kind": "iem",
+   "row": 10,
+   "name": "Aful Performer 8S",
+   "rank": 9,
+   "tier": "S-",
+   "price": 360.0,
+   "verdict": "Highly technical and transparent, superb separation, adaptable soundstage via passive radiator, detailed and precise.",
+   "url": "https://www.reddit.com/r/IemReviews/comments/1srywuz/aful_performer_8s_sculpting_sound_with_passive/"
+  },
+  {
+   "kind": "iem",
+   "row": 11,
+   "name": "Binary 1900",
+   "rank": 10,
+   "tier": "S-",
+   "price": 235.0,
+   "verdict": "Balanced tuning, quality bass, highly musical, excellent comfort and great versatility.",
+   "url": "https://www.reddit.com/r/iems/s/9d2zk2eFmo"
+  },
+  {
+   "kind": "iem",
+   "row": 12,
+   "name": "Kiwi Ears Orchestra II",
+   "rank": 11,
+   "tier": "S-",
+   "price": 400.0,
+   "verdict": "Technical and crystal clear with elite separation, realistic mids and natural stage, requires quality sources",
+   "url": "https://www.reddit.com/r/inearfidelity/comments/1skireu/20_bas_in_perfect_sync_kiwi_ears_orchestra_ii/"
+  },
+  {
+   "kind": "iem",
+   "row": 13,
+   "name": "Ziigaat Luna",
+   "rank": 12,
+   "tier": "A+",
+   "price": 337.0,
+   "verdict": "Balanced and clear. Fast bass with good body, wide stage, and bright highs without any harshness.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 14,
+   "name": "Kiwi Ears Halcyon",
+   "rank": 13,
+   "tier": "A+",
+   "price": 259.0,
+   "verdict": "Physical sub-bass, premium chassis, and a pathbreaking treble resolution thanks to the MEMS driver.",
+   "url": "https://www.reddit.com/r/inearfidelity/comments/1t02uey/a_highend_shell_for_a_hightech_debut_kiwi_ears/"
+  },
+  {
+   "kind": "iem",
+   "row": 15,
+   "name": "Punch Audio Martilo",
+   "rank": 14,
+   "tier": "A+",
+   "price": 329.0,
+   "verdict": "More energetic/faster bass than the HBB Punch, though less airy. Best value-for-money for bassheads.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 16,
+   "name": "Kiwi Ears Astral",
+   "rank": 15,
+   "tier": "A+",
+   "price": 299.0,
+   "verdict": "Clean and balanced, wide stage, natural mids and controlled bass; highly coherent, not for bassheads.",
+   "url": "https://www.reddit.com/r/iems/s/AYkVMCvHGi"
+  },
+  {
+   "kind": "iem",
+   "row": 17,
+   "name": "Ziigaat Arete II",
+   "rank": 16,
+   "tier": "A+",
+   "price": 320.0,
+   "verdict": "Surgical imaging, premium metal build, effective bass switch, and a high-performance hybrid tuning.",
+   "url": "https://www.reddit.com/r/inearfidelity/comments/1rszj5n/switch_power_punch_and_precision_ziigaat_arete_ii/"
+  },
+  {
+   "kind": "iem",
+   "row": 18,
+   "name": "Ziigaat Estrella",
+   "rank": 17,
+   "tier": "A+",
+   "price": 318.0,
+   "verdict": "Consistent, detailed bass with warm mids and energetic highs. V-shaped tuning that's a ton of fun.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 19,
+   "name": "Kiwi Ears x HBB Punch",
+   "rank": 18,
+   "tier": "A+",
+   "price": 449.0,
+   "verdict": "Deep bass with great texture and natural tuning. EST drivers for the highs, a HBB collab done right.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 20,
+   "name": "Simgot EA1000",
+   "rank": 19,
+   "tier": "A",
+   "price": 224.0,
+   "verdict": "Premium build, very open soundstage, fast bass, great resolution, detailed and slightly energetic treble.",
+   "url": "https://www.reddit.com/r/iems/s/Xb6ClVdCtS"
+  },
+  {
+   "kind": "iem",
+   "row": 21,
+   "name": "Dunu DN-142",
+   "rank": 20,
+   "tier": "A",
+   "price": 250.0,
+   "verdict": "Technical U-shape, deep and energetic sub-bass, airy stage, precise imaging, great accessory pack and modular cable",
+   "url": "https://www.reddit.com/r/iems/comments/1s5y6rk/the_meta_ushaped_hybrid_dunu_dn142_review/"
+  },
+  {
+   "kind": "iem",
+   "row": 22,
+   "name": "AFUL Performer 5+2",
+   "rank": 21,
+   "tier": "A",
+   "price": 239.0,
+   "verdict": "Balanced sound with good separation. The bass is there but doesn't go overboard.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 23,
+   "name": "Juzear Shuttle",
+   "rank": 22,
+   "tier": "A",
+   "price": 185.0,
+   "verdict": "Smooth U-shape all-rounder, intimate detailed vocals, airy non-fatiguing treble and deep sub-bass.",
+   "url": "https://www.reddit.com/r/inearfidelity/s/u9iemleGEn"
+  },
+  {
+   "kind": "iem",
+   "row": 24,
+   "name": "Roseselsa CJ20",
+   "rank": 23,
+   "tier": "A",
+   "price": 169.0,
+   "verdict": "Fast planar for metal, punchy bass, great separation, raw tuning, watch out for short nozzles.",
+   "url": "https://www.reddit.com/r/iems/comments/1t9gkku/planar_speed_and_a_metal_soulroseselsa_cj20_review/"
+  },
+  {
+   "kind": "iem",
+   "row": 25,
+   "name": "Punch Audio Portazo",
+   "rank": 24,
+   "tier": "A",
+   "price": 189.0,
+   "verdict": "Visceral and fast bass, surprising technicality via micro-planars, ultralight, fun, and breaks the market",
+   "url": "https://www.reddit.com/r/iems/comments/1sd4y0z/the_names_not_a_joke_its_a_warning_punch_audio/"
+  },
+  {
+   "kind": "iem",
+   "row": 26,
+   "name": "Simgot ET142",
+   "rank": 25,
+   "tier": "A",
+   "price": 250.0,
+   "verdict": "Technical planar hybrid, deep fast bass, high resolution, very versatile with nozzles, premium build",
+   "url": "https://www.reddit.com/r/inearfidelity/comments/1sutq7a/titanium_copper_and_steel_to_shape_the_sound/"
+  },
+  {
+   "kind": "iem",
+   "row": 27,
+   "name": "Ziigaat Odyssey",
+   "rank": 26,
+   "tier": "A",
+   "price": 229.0,
+   "verdict": "Super balanced with clean mids, great detail, and a natural feel.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 28,
+   "name": "Simgot Supermix 5",
+   "rank": 27,
+   "tier": "A",
+   "price": 187.0,
+   "verdict": "Tactile bass and full vocals, immersive and mature profile, treble is too safe and lacks air.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 29,
+   "name": "CKLVX CK2V",
+   "rank": 28,
+   "tier": "A",
+   "price": 200.0,
+   "verdict": "Airy and defined treble with excellent top-end detail. Fast bass that doesn't muddy the stage.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 30,
+   "name": "Juzear Nebula",
+   "rank": 29,
+   "tier": "A",
+   "price": 125.0,
+   "verdict": "Clean and technical tribrid, detailed airy treble, fast sub-bass, slightly thin mids, great separation.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 31,
+   "name": "TRN Whale Shark",
+   "rank": 30,
+   "tier": "A",
+   "price": 140.0,
+   "verdict": "Technically spectacular, surgical separation and great planar detail, bulky shells, not for those sensitive to treble.",
+   "url": "https://www.reddit.com/r/inearfidelity/comments/1r6kupc/when_the_planar_driver_takes_control_trn_whale/"
+  },
+  {
+   "kind": "iem",
+   "row": 32,
+   "name": "Ziigaat Doscinco",
+   "rank": 31,
+   "tier": "A",
+   "price": 225.0,
+   "verdict": "Balanced with a wide stage. Features powerful bass and somewhat bright highs. Average resolution.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 33,
+   "name": "Simgot SuperMix 4",
+   "rank": 32,
+   "tier": "A",
+   "price": 150.0,
+   "verdict": "Highly detailed with a great stage. Technical, clean profile—a true all-rounder.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 34,
+   "name": "Juzear Defiant",
+   "rank": 33,
+   "tier": "A",
+   "price": 95.0,
+   "verdict": "Balanced, clean and spacious, better mids and separation than Fiesta, less bass-focused.",
+   "url": "https://www.reddit.com/r/InEarHifi/s/3pOOup8myL"
+  },
+  {
+   "kind": "iem",
+   "row": 35,
+   "name": "Kefine Arnar",
+   "rank": 34,
+   "tier": "A-",
+   "price": 189.0,
+   "verdict": "Hybrid with lush mids and effective nozzles, performs above its price but falls short in sub bass impact and airy extension",
+   "url": "https://www.reddit.com/r/iems/comments/1t7f8df/cohesion_over_technicalities_its_best_asset/"
+  },
+  {
+   "kind": "iem",
+   "row": 36,
+   "name": "Juzear Fiesta",
+   "rank": 35,
+   "tier": "A-",
+   "price": 119.0,
+   "verdict": "Visceral subbass impact, full bodied mids, intimate stage, pure fun without any technical pretensions.",
+   "url": "https://www.reddit.com/r/IemReviews/comments/1tkwa5l/honest_iems_for_urban_beats_and_pure/"
+  },
+  {
+   "kind": "iem",
+   "row": 37,
+   "name": "Aful Explorer",
+   "rank": 36,
+   "tier": "A-",
+   "price": 110.0,
+   "verdict": "Deep textured bass, smooth fatigue-free treble, great comfort, warm and immersive profile built for long sessions.",
+   "url": "https://www.reddit.com/r/iems/s/v7x5eBt8xT"
+  },
+  {
+   "kind": "iem",
+   "row": 38,
+   "name": "ISN H20",
+   "rank": 37,
+   "tier": "A-",
+   "price": 70.0,
+   "verdict": "Wide stage and extreme bass. Musical, warm tuning with very soft highs. Best for specific genres.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 39,
+   "name": "FATfreq x HBB Deuce",
+   "rank": 38,
+   "tier": "A-",
+   "price": 230.0,
+   "verdict": "Subwoofer-like bass and refined tuning. Top-tier for lows and detail, but has some QC (Quality Control) issues.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 40,
+   "name": "KBear Kalideer",
+   "rank": 39,
+   "tier": "A-",
+   "price": 79.0,
+   "verdict": "Balanced and warm hybrid, well tamed piezo, zero fatigue, great separation, not the most technical.",
+   "url": "https://www.reddit.com/r/InEarHifi/s/Sn51zLmPR3"
+  },
+  {
+   "kind": "iem",
+   "row": 41,
+   "name": "Tanchjim Nora",
+   "rank": 40,
+   "tier": "A-",
+   "price": 110.0,
+   "verdict": "Neutral-warm, very comfortable, airy, excellent modular cable, lacks some sub-bass slam",
+   "url": "https://www.reddit.com/r/iems/s/BazM6kwqId"
+  },
+  {
+   "kind": "iem",
+   "row": 42,
+   "name": "Sivga Que UTG",
+   "rank": 41,
+   "tier": "A-",
+   "price": 98.0,
+   "verdict": "Clean and fast sound, great stage and separation, lightweight bass, highly detailed but energetic treble.",
+   "url": "https://www.reddit.com/r/iems/s/lNsVXE5Z6s"
+  },
+  {
+   "kind": "iem",
+   "row": 43,
+   "name": "Hidizs My Lin",
+   "rank": 42,
+   "tier": "A-",
+   "price": 89.0,
+   "verdict": "Warm and relaxed tuning, full bodied bass, natural vocals, zero fatigue, pure musicality for long sessions.",
+   "url": "https://www.reddit.com/r/inearfidelity/s/BkHQZtiVzS"
+  },
+  {
+   "kind": "iem",
+   "row": 44,
+   "name": "Twistura Beta Flagship",
+   "rank": 43,
+   "tier": "A-",
+   "price": 119.0,
+   "verdict": "Clinical resolution, premium accessories, huge stage, fast bass, but fatiguing upper mids at high volume.",
+   "url": "https://www.reddit.com/r/inearfidelity/comments/1ro7jyd/flagship_level_details_and_a_brutal_unboxing_for/"
+  },
+  {
+   "kind": "iem",
+   "row": 45,
+   "name": "Kiwi Ears Étude",
+   "rank": 44,
+   "tier": "A-",
+   "price": 119.0,
+   "verdict": "Advanced hybrid with powerful sub-bass and KVT tech. Great transparency and dynamics.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 46,
+   "name": "Hidizs MP143",
+   "rank": 45,
+   "tier": "A-",
+   "price": 129.0,
+   "verdict": "Warm sound with present bass. A safe, comfortable tuning with that signature planar speed.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 47,
+   "name": "Tanchjim OLA II",
+   "rank": 46,
+   "tier": "A-",
+   "price": 57.0,
+   "verdict": "Transparent sound, forward vocals, perfect fit, two signatures (3.5mm & DSP), fast and light bass.",
+   "url": "https://www.reddit.com/r/iems/s/1pnWPDnjxC"
+  },
+  {
+   "kind": "iem",
+   "row": 48,
+   "name": "Simgot EW300 DSP",
+   "rank": 47,
+   "tier": "A-",
+   "price": 77.0,
+   "verdict": "Balanced and versatile tribrid, good detail and control, useful DSP, slight V-shape with mildly recessed mids",
+   "url": "https://www.reddit.com/r/iems/comments/1rxctyu/the_most_versatile_tribrid_under_100_simgot_ew300/"
+  },
+  {
+   "kind": "iem",
+   "row": 49,
+   "name": "Deifo Glyph",
+   "rank": 48,
+   "tier": "B+",
+   "price": 110.0,
+   "verdict": "Bright tuning, clean sound, excellent separation and stage, ideal for listeners who enjoy lively treble.",
+   "url": "https://www.reddit.com/r/iems/s/RTUALUgtsT"
+  },
+  {
+   "kind": "iem",
+   "row": 50,
+   "name": "Hidizs MK10",
+   "rank": 49,
+   "tier": "B+",
+   "price": 70.0,
+   "verdict": "Fast and detailed, premium metal build, versatile nozzles, clean sound with energetic treble.",
+   "url": "https://www.reddit.com/r/IemReviews/s/yZa70PuiRW"
+  },
+  {
+   "kind": "iem",
+   "row": 51,
+   "name": "EPZ G30",
+   "rank": 50,
+   "tier": "B+",
+   "price": 80.0,
+   "verdict": "Gaming IEM, spacious sound, clear Knowles mids, and excellent comfort for long sessions.",
+   "url": "https://www.reddit.com/r/IemReviews/comments/1tycond/a_hybrid_gaming_iem_with_a_solid_mic_and_knowles/"
+  },
+  {
+   "kind": "iem",
+   "row": 52,
+   "name": "Juzear Nimbus",
+   "rank": 51,
+   "tier": "B+",
+   "price": 55.0,
+   "verdict": "Premium build, top accessories, warm all-rounder tuning, natural mids, somewhat intimate soundstage.",
+   "url": "https://www.reddit.com/r/iems/s/68PtzXceKo"
+  },
+  {
+   "kind": "iem",
+   "row": 53,
+   "name": "KZ Decet",
+   "rank": 52,
+   "tier": "B+",
+   "price": 56.0,
+   "verdict": "Versatile V-shape. Impactful bass and detailed highs with slightly recessed mids.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 54,
+   "name": "Kinera Celest Phoenixcall",
+   "rank": 53,
+   "tier": "B+",
+   "price": 139.0,
+   "verdict": "Unique design and balanced sound with a wide stage. Niche for certain genres, but great value.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 55,
+   "name": "Kefine Klean SV",
+   "rank": 54,
+   "tier": "B+",
+   "price": 40.0,
+   "verdict": "Technical and detailed, very honest mids, surgical imaging and premium build, a solid all-rounder punching above its price",
+   "url": "https://www.reddit.com/r/inearfidelity/comments/1rkqol0/real_balance_after_too_many_wild_signatures/"
+  },
+  {
+   "kind": "iem",
+   "row": 56,
+   "name": "Kiwi Ears Cadenza II",
+   "rank": 55,
+   "tier": "B+",
+   "price": 50.0,
+   "verdict": "All-rounder profile, impactful bass, natural mids, and smooth treble",
+   "url": "https://www.reddit.com/r/iems/comments/1r1cmwr/refining_budget_excellence_kiwi_ears_cadenza_ii/"
+  },
+  {
+   "kind": "iem",
+   "row": 57,
+   "name": "Kiwi Ears Stardust",
+   "rank": 56,
+   "tier": "B+",
+   "price": 77.0,
+   "verdict": "Warm 5-driver hybrid, very comfortable, safe non-fatiguing tuning, lacks air and treble detail.",
+   "url": "https://www.reddit.com/r/inearfidelity/s/rq6UvCX5I7"
+  },
+  {
+   "kind": "iem",
+   "row": 58,
+   "name": "CCA Phoenix",
+   "rank": 57,
+   "tier": "B+",
+   "price": 29.0,
+   "verdict": "Premium mirror build, smooth fatigue-free tuning, fast controlled bass, an ideal all-rounder for daily use.",
+   "url": "https://www.reddit.com/r/iems/comments/1tcrtz0/cca_phoenix_heavy_build_and_agile_sound_the_new/"
+  },
+  {
+   "kind": "iem",
+   "row": 59,
+   "name": "Ziigaat Rumba",
+   "rank": 58,
+   "tier": "B+",
+   "price": 35.0,
+   "verdict": "Warm V-shape with punchy sub-bass, fun tuning and outstanding value for money.",
+   "url": "https://www.reddit.com/r/iems/comments/1u1vrt2/beyond_the_v_testing_the_punch_of_the_ziigaat/"
+  },
+  {
+   "kind": "iem",
+   "row": 60,
+   "name": "ooopusX Op.22",
+   "rank": 59,
+   "tier": "B+",
+   "price": 35.0,
+   "verdict": "Wide soundstage, versatile bass via dial, technical and direct, energetic treble,but QDC connection, great value for the price.",
+   "url": "https://www.reddit.com/r/iems/comments/1t2vu2r/a_bass_dial_that_actually_makes_a_difference/"
+  },
+  {
+   "kind": "iem",
+   "row": 61,
+   "name": "Sivga SM100",
+   "rank": 60,
+   "tier": "B+",
+   "price": 40.0,
+   "verdict": "Analytical and clean profile, tank-like build, excellent technical resolution and open stage, demands good recordings.",
+   "url": "https://www.reddit.com/r/inearfidelity/comments/1s9vb9b/moving_from_wood_to_a_full_metal_build_sivga/"
+  },
+  {
+   "kind": "iem",
+   "row": 62,
+   "name": "Kefine Loric",
+   "rank": 61,
+   "tier": "B+",
+   "price": 30.0,
+   "verdict": "Warm 1DD, physical sub-bass, natural vocals, fatigue-free treble; intimate stage, ideal for long sessions.",
+   "url": "https://www.reddit.com/r/inearfidelity/s/cQmU2ff6j6"
+  },
+  {
+   "kind": "iem",
+   "row": 63,
+   "name": "TRN Dolphin",
+   "rank": 62,
+   "tier": "B+",
+   "price": 24.0,
+   "verdict": "Physical and fast sub-bass, great technical resolution, TRN breaks the market for the price, detailed and somewhat bright treble.",
+   "url": "https://www.reddit.com/r/inearfidelity/comments/1rgp891/the_liquid_metal_beast_that_broke_the_market_for/"
+  },
+  {
+   "kind": "iem",
+   "row": 64,
+   "name": "7Hz Elua Ultra",
+   "rank": 63,
+   "tier": "B+",
+   "price": 38.0,
+   "verdict": "Balanced sound with present (not excessive) bass, clear mids, and smooth highs. Great versatile budget pick.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 65,
+   "name": "Twistura Delta",
+   "rank": 64,
+   "tier": "B",
+   "price": 34.0,
+   "verdict": "Amazing technical resolution, mini and very comfortable size, full bodied bass, somewhat spicy in the high frequencies.",
+   "url": "https://www.reddit.com/r/inearfidelity/comments/1sgzg4y/efficiency_of_lcp_in_a_compact_size_twistura/"
+  },
+  {
+   "kind": "iem",
+   "row": 66,
+   "name": "Juzear Ultra",
+   "rank": 65,
+   "tier": "B",
+   "price": 40.0,
+   "verdict": "Energetic V-shape with deep bass. Bright but not piercing highs. Fun and wide for the price.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 67,
+   "name": "NiceHCK Tears",
+   "rank": 66,
+   "tier": "B",
+   "price": 29.0,
+   "verdict": "Open soundstage, airy treble, absolute comfort, light bass, and surprising resolution for the price.",
+   "url": "https://www.reddit.com/r/iems/comments/1qu0zfy/breaking_the_walls_of_budget_sound_nicehck_tears/"
+  },
+  {
+   "kind": "iem",
+   "row": 68,
+   "name": "Pula Arc",
+   "rank": 67,
+   "tier": "B",
+   "price": 20.0,
+   "verdict": "Balanced and natural tuning, very comfortable, controlled bass with good texture, wide soundstage, average imaging.",
+   "url": "https://www.reddit.com/r/InEarHifi/s/xc8vt6yKCC"
+  },
+  {
+   "kind": "iem",
+   "row": 69,
+   "name": "GK Streak",
+   "rank": 68,
+   "tier": "B",
+   "price": 20.0,
+   "verdict": "Fast and punchy bass, recessed vocals, intimate stage, premium accessories and questionable quality control",
+   "url": "https://www.reddit.com/r/iems/comments/1thuc5v/gk_streak_review_the_kuntens_hybrid_evolution/"
+  },
+  {
+   "kind": "iem",
+   "row": 70,
+   "name": "GK Kunten",
+   "rank": 69,
+   "tier": "B",
+   "price": 14.0,
+   "verdict": "Energetic V-shape, physical sub-bass with brutal impact, very open soundstage, technical and fun, unbeatable value for the price",
+   "url": "https://www.reddit.com/r/iems/comments/1qxc7sc/setting_the_entrylevel_ablaze_gk_kunten_review/"
+  },
+  {
+   "kind": "iem",
+   "row": 71,
+   "name": "KZ Taurus",
+   "rank": 70,
+   "tier": "B",
+   "price": 16.0,
+   "verdict": "Powerful, textured bass with good stage and clarity, though mids are a bit cold and highs are somewhat bright.",
+   "url": "https://www.reddit.com/r/IemReviews/comments/1ow9r3d/kz_taurus_by_requiem_review/"
+  },
+  {
+   "kind": "iem",
+   "row": 72,
+   "name": "Vzonis VD-01",
+   "rank": 71,
+   "tier": "B",
+   "price": 45.0,
+   "verdict": "Punchy bass and pleasant mids. Smooth highs, wide stage, and a friendly V-shaped tuning.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 73,
+   "name": "JingHong Z3",
+   "rank": 72,
+   "tier": "B",
+   "price": 40.0,
+   "verdict": "Solid metal build, natural intimate vocals, controlled bass, limited treble, solid daily driver",
+   "url": "https://www.reddit.com/r/inearfidelity/s/sXKB9xGY05"
+  },
+  {
+   "kind": "iem",
+   "row": 74,
+   "name": "Truthear Gate",
+   "rank": 73,
+   "tier": "B",
+   "price": 12.0,
+   "verdict": "Balanced sound with deep bass and bright highs. Comfortable and detailed for its price point.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 75,
+   "name": "TRN Starfish",
+   "rank": 74,
+   "tier": "B",
+   "price": 34.0,
+   "verdict": "Natural timbre, textured bass, and very comfortable. A musical, relaxed all-rounder for long sessions.",
+   "url": "https://www.reddit.com/r/IemReviews/comments/1qqinkc/the_missing_star_in_your_collection_trn_starfish/"
+  },
+  {
+   "kind": "iem",
+   "row": 76,
+   "name": "CVJ Neko",
+   "rank": 75,
+   "tier": "B",
+   "price": 30.0,
+   "verdict": "Solid metal build, excellent modular cable, punchy bass, lively treble, fun V-shape with an intimate soundstage.",
+   "url": "https://www.reddit.com/r/iems/comments/1u8gcjm/cvj_neko_review_a_1dd_banking_on_a_safe_fun/"
+  },
+  {
+   "kind": "iem",
+   "row": 77,
+   "name": "CCA Xyrra",
+   "rank": 76,
+   "tier": "B",
+   "price": 19.0,
+   "verdict": "Energetic V-shape with punchy bass. Highs are bright/slightly metallic. Great detail for a budget pair.",
+   "url": "https://www.reddit.com/r/iems/comments/1q8qnxj/cca_xyrra_review_my_first_pair_from_this_brand/"
+  },
+  {
+   "kind": "iem",
+   "row": 78,
+   "name": "TANGZU Wan'er S.G II",
+   "rank": 77,
+   "tier": "B",
+   "price": 28.0,
+   "verdict": "Balanced signature with forward mids and a decent stage. Comfortable and easy to drive for pop, rock, and vocals.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 79,
+   "name": "KZ Castor Pro Bass",
+   "rank": 78,
+   "tier": "B",
+   "price": 17.0,
+   "verdict": "Refined bass with a fun V-shaped profile and a robust build.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 80,
+   "name": "Tanchjim Bunny",
+   "rank": 79,
+   "tier": "B",
+   "price": 30.0,
+   "verdict": "Excellent for vocals and comfort. Bass lacks texture and highs are very soft. Customizable DSP version.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 81,
+   "name": "KBear KB02",
+   "rank": 80,
+   "tier": "B",
+   "price": 30.0,
+   "verdict": "Balanced tonality with a subtle bone conductor effect. Good timbre, though bass is a bit limited.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 82,
+   "name": "KZ EDC Pro",
+   "rank": 81,
+   "tier": "B-",
+   "price": 8.0,
+   "verdict": "Balanced, versatile sound with firm bass and controlled highs. A great, comfy budget option for beginners.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 83,
+   "name": "CCA Falcon",
+   "rank": 82,
+   "tier": "B-",
+   "price": 25.0,
+   "verdict": "Excellent clarity and imaging, wide stage, restrained bass, not the most musical tuning.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 84,
+   "name": "AFUL Magic One",
+   "rank": 83,
+   "tier": "B-",
+   "price": 80.0,
+   "verdict": "Single BA setup. Very comfortable with warm tuning and good detail, but lacks bass.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 85,
+   "name": "ND Planet",
+   "rank": 84,
+   "tier": "C+",
+   "price": 17.0,
+   "verdict": "Clean, entry-level sound. Smooth mids and warm tuning—safe for those sensitive to treble.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 86,
+   "name": "Hidizs ST2 Pro Nebula",
+   "rank": 85,
+   "tier": "C+",
+   "price": 65.0,
+   "verdict": "Decent bass and treble. Comfortable, fun tuning, and comes with a great USB-C DAC cable.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 87,
+   "name": "7Hz x HBB Elua",
+   "rank": 86,
+   "tier": "C+",
+   "price": 30.0,
+   "verdict": "Deep, textured bass with warm mids and controlled highs. A musical, pleasant profile for long listens.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 88,
+   "name": "KZ Libra High Res",
+   "rank": 87,
+   "tier": "C",
+   "price": 10.0,
+   "verdict": "Balanced tuning with good clarity and separation. Bass is a bit light, not very forgiving with bad recordings.",
+   "url": null
+  },
+  {
+   "kind": "iem",
+   "row": 89,
+   "name": "Faaeal Iris Ancestor",
+   "rank": 88,
+   "tier": "C-",
+   "price": 5.0,
+   "verdict": "Weak bass, decent mids, and rolled-off highs. Airy stage but lacks punch and brightness is limited.",
+   "url": null
+  },
+  {
+   "kind": "tws",
+   "row": 94,
+   "name": "Moondrop Wuthering Waves",
+   "rank": null,
+   "tier": null,
+   "price": 80.0,
+   "verdict": "Very comfy open-ear, clear mids, wide stage, balanced tuning, light bass and somewhat low max volume.",
+   "url": "https://www.reddit.com/r/InEarHifi/s/OQ413XbLAW"
+  },
+  {
+   "kind": "tws",
+   "row": 95,
+   "name": "Moondrop Pudding",
+   "rank": null,
+   "tier": null,
+   "price": 50.0,
+   "verdict": "Feature-packed TWS with deep bass, impressive ANC and an app hard to beat for the price.",
+   "url": "https://www.reddit.com/r/IemReviews/comments/1uarvck/moondrop_pudding_review_the_most_complete_budget/"
+  },
+  {
+   "kind": "tws",
+   "row": 96,
+   "name": "Soundpeats Air5 Pro+",
+   "rank": null,
+   "tier": null,
+   "price": 115.0,
+   "verdict": "Balanced sound with firm bass, smooth highs, and a wide stage. Effective ANC makes it ideal for versatile daily use.",
+   "url": "https://www.reddit.com/r/iems/comments/1puia91/xmems_driver_in_tws_soundpeats_air_pro_review/"
+  },
+  {
+   "kind": "tws",
+   "row": 97,
+   "name": "Soundpeats H3",
+   "rank": null,
+   "tier": null,
+   "price": 93.0,
+   "verdict": "Powerful and controlled bass, slightly recessed mids, and sparkly yet non-fatiguing highs. Wide stage with solid detail.",
+   "url": "https://www.reddit.com/r/iems/comments/1pag59i/soundpeats_h3_tws_that_could_pass_for_iems_or_not/"
+  },
+  {
+   "kind": "tws",
+   "row": 98,
+   "name": "Moondrop Space Travel",
+   "rank": null,
+   "tier": null,
+   "price": 30.0,
+   "verdict": "Good sound and decent ANC for the price, but limited battery life and no advanced codecs.",
+   "url": null
+  },
+  {
+   "kind": "headphone",
+   "row": 2,
+   "name": "Moondrop Old Fashioned",
+   "rank": 1,
+   "tier": "B+",
+   "price": 22.0,
+   "verdict": "Retro design, very comfortable, natural and warm vocals, wide soundstage, lacks physical punch, ideal for relaxed listening.",
+   "url": "https://www.reddit.com/r/headphones/comments/1s078jq/from_iem_to_onear_moondrop_old_fashioned_review/"
+  }
+ ]
+}

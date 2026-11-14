@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Enables high-throughput LAN HTTP streaming (128 kbps & lossless) between paired PC & phone on Wi-Fi while preserving full system HTTPS certificate verification. -->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

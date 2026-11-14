@@ -1,0 +1,396 @@
+/* Sound (§68): Settings → Equalizer section, player chip */
+.ms-snd { display: flex; flex-direction: column; gap: 14px; margin-bottom: 22px; padding: 20px; border-radius: var(--radius-card, 24px); background: var(--chip); }
+.ms-snd.on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--accent) 55%, transparent); }
+.ms-snd-head { display: flex; align-items: flex-start; gap: 12px; }
+.ms-snd-head .ms-icon { color: var(--accent); margin-top: 2px; }
+.ms-snd-head h3 { font-size: 18px; color: var(--text-strong); }
+.ms-snd-head p { color: var(--text-dim); font-size: 14px; }
+.ms-snd-row { display: flex; flex-direction: column; gap: 8px; }
+.ms-snd-row > small { font-weight: 600; letter-spacing: 0.3px; }
+.ms-snd-row .ms-tz-device { margin-top: 0; background: var(--page); }
+.ms-snd-kind { padding: 2px 10px; border-radius: 10px; background: var(--page); color: var(--text-dim); font-size: 12px; }
+.ms-snd .ms-tz-seg { align-self: flex-start; background: var(--page); }
+.ms-snd-targets { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; }
+.ms-snd-target { display: flex; flex-direction: column; gap: 3px; padding: 12px 14px; border-radius: 16px; background: var(--page); text-align: left; color: var(--text-strong); border: 2px solid transparent; }
+.ms-snd-target.on { border-color: var(--accent); }
+.ms-snd-target small { color: var(--text-dim); }
+.ms-snd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+/* Spatial & Crossfeed (§78 D): same surface as the EQ card */
+.ms-snd.spatial { margin-top: 16px; padding: 16px; background: var(--chrome); }
+.ms-snd.spatial .ms-tz-seg { align-self: stretch; background: var(--chip); }
+.ms-snd.spatial .ms-tz-seg button { flex: 1 1 auto; min-width: 0; padding: 0 10px; white-space: nowrap; }
+.ms-snd.spatial .ms-snd-target { background: var(--chip); }
+.ms-snd-part { padding-top: 14px; border-top: 1px solid var(--hairline); }
+.ms-snd-switchline { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.ms-tz-note.tight { margin: 2px 0 0; }
+.ms-tz-note.danger { color: var(--danger); }
+.ms-snd-hrtf { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.ms-snd-select { flex: 1 1 220px; min-width: 0; height: 40px; padding: 0 12px; border-radius: 12px; background: var(--chip); color: var(--text-strong); border: 1px solid var(--outline); }
+.ms-btn.text.ms-snd-reset { margin-left: 8px; padding: 0 6px; min-height: 22px; }
+.ms-snd-track { display: flex; align-items: center; gap: 12px; }
+.ms-snd-graph { padding: 10px 12px 8px; border-radius: 16px; background: var(--page); }
+.ms-snd-graph svg { display: block; width: 100%; height: 130px; }
+.ms-snd-graph line { stroke: var(--outline); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.ms-snd-graph polyline { fill: none; stroke-width: 2; vector-effect: non-scaling-stroke; }
+.ms-snd-graph .device { stroke: var(--text-faint); }
+.ms-snd-graph .aim { stroke: #e0a100; stroke-dasharray: 6 4; }
+.ms-snd-graph .heard { stroke: var(--accent); stroke-width: 2.5; }
+.ms-snd-legend { display: flex; gap: 16px; margin-top: 6px; font-size: 12px; color: var(--text-dim); }
+.ms-snd-legend span::before { content: ''; display: inline-block; width: 14px; height: 3px; margin-right: 6px; vertical-align: middle; border-radius: 2px; background: var(--text-faint); }
+.ms-snd-legend .aim::before { background: #e0a100; }
+.ms-snd-legend .heard::before { background: var(--accent); }
+@media (max-width: 760px) { .ms-snd-grid { grid-template-columns: 1fr; } }
+.ms-snd-chip { display: inline-flex; align-items: center; gap: 6px; max-width: 220px; height: 32px; padding: 0 12px; border-radius: 16px; background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--text-strong); font-size: 13px; font-weight: 600; border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent); transition: background var(--motion-fast); }
+.ms-snd-chip .ms-icon { color: var(--accent); }
+.ms-snd-chip:hover { background: color-mix(in srgb, var(--accent) 28%, transparent); }
+.ms-snd-chip.bypass { background: transparent; border-style: dashed; color: var(--text-dim); }
+.ms-snd-chip.bypass .ms-icon { color: var(--text-dim); }
+.ms-snd-chip.big { height: 40px; padding: 0 16px; border-radius: 20px; font-size: 14px; }
+:root[data-style='gameshow'] .ms-snd-chip { border: 2px solid var(--gs-ink, #1a0f24); box-shadow: 2px 3px 0 var(--gs-ink, #1a0f24); background: #ffd23f; color: #1a0f24; }
+:root[data-style='gameshow'] .ms-snd-chip .ms-icon { color: #1a0f24; }
+:root[data-style='gameshow'] .ms-snd-chip.bypass { background: #fff3e6; }
+.ms-db-try { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; }
+.ms-np-sound { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 18px; }
+.ms-np-sound .ms-btn { height: 40px; border-radius: 20px; user-select: none; touch-action: none; }
+.ms-menu-heading { padding: 10px 16px 4px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-faint); }
+.ms-menu-heading:not(:first-child) { margin-top: 4px; border-top: 1px solid var(--outline); }
+
+/* My gear (§69) */
+.ms-gear { display: flex; flex-direction: column; gap: 8px; }
+.ms-gear-now { display: flex; flex-direction: column; gap: 8px; padding: 20px; border-radius: 24px; background: var(--chip); }
+.ms-gear-now > small { font-weight: 600; }
+.ms-gear-now-card { display: flex; align-items: center; gap: 18px; }
+.ms-gear-now-card b { display: block; font-size: 22px; color: var(--text-strong); }
+.ms-gear-now-card span { color: var(--text-dim); }
+.ms-gear-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.ms-gear-add { margin: 10px 0; }
+.ms-gear-list { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+.ms-gear-row { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 16px; color: var(--text-strong); }
+.ms-gear-row.on { background: var(--nav-selected); }
+.ms-gear-row small { display: block; }
+.ms-gear-anc { display: flex; align-items: center; gap: 6px; margin-top: 4px; font-size: 13px; color: var(--text-dim); }
+.ms-gear-source { display: flex; gap: 12px; padding: 14px 16px; border-radius: 18px; background: var(--chip); margin: 8px 0; }
+.ms-gear-source.ok .ms-icon { color: #2e9d5b; }
+.ms-gear-source.warn .ms-icon { color: #d64545; }
+.ms-gear-source.caution .ms-icon { color: #d99a00; }
+.ms-gear-source b { color: var(--text-strong); }
+.ms-gear-pick { display: flex; flex-direction: column; gap: 6px; margin: 6px 0 16px; }
+.ms-gear-pick select { height: 40px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--outline); background: var(--page); color: var(--text-strong); font: inherit; }
+.ms-gear-dsp { display: flex; flex-direction: column; gap: 10px; }
+.ms-gear-dsp .ms-btn { align-self: flex-start; }
+.ms-gear-dsp-actions { display: flex; gap: 8px; }
+
+/* Compact Gear Circle Indicator */
+.ms-gear-circle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 50%;
+  position: relative;
+  transition: transform var(--motion-fast), filter var(--motion-fast);
+  outline: none;
+  touch-action: manipulation;
+}
+.ms-gear-circle-btn:hover {
+  transform: scale(1.08);
+}
+.ms-gear-circle-btn:active {
+  transform: scale(0.94);
+}
+.ms-gear-circle-btn.active {
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 55%, transparent));
+}
+.ms-gear-circle-svg {
+  display: block;
+  overflow: visible;
+}
+.ms-gear-circle-bg {
+  transition: fill 0.2s ease, stroke 0.2s ease;
+}
+.ms-gear-circle-arc {
+  transition: stroke-dashoffset 0.25s ease;
+}
+
+/* Audio Profile Sheet (Bounded max-height 70vh) */
+.ms-profile-sheet-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 70vh;
+}
+.ms-profile-sheet-device-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--chip);
+  border-radius: 12px;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+.ms-profile-sheet-device-bar b {
+  color: var(--text-strong);
+}
+.ms-profile-sheet-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: calc(70vh - 120px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable;
+  padding-right: 4px;
+}
+.ms-profile-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ms-profile-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ms-profile-group-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-faint);
+}
+.ms-profile-empty {
+  font-size: 13px;
+  color: var(--text-dim);
+  padding: 6px 4px;
+}
+.ms-profile-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: var(--chip);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+  user-select: none;
+}
+.ms-profile-item:hover {
+  background: color-mix(in srgb, var(--accent) 12%, var(--chip));
+}
+.ms-profile-item.active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 16%, var(--chip));
+}
+.ms-gear-circle-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.ms-gear-circle-dot.raw {
+  background: transparent;
+  border: 2px solid var(--text-dim);
+}
+.ms-profile-pct-pill {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--page);
+  border: 1px solid var(--outline);
+  color: var(--accent);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.ms-profile-pct-pill:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* Saved EQ Page Styling */
+.ms-saved-eq-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 30px;
+}
+.ms-saved-eq-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.ms-saved-eq-header h2 {
+  margin: 0;
+  font-size: 22px;
+  color: var(--text-strong);
+}
+.ms-saved-eq-header p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--text-dim);
+}
+.ms-saved-eq-top-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ms-saved-eq-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ms-saved-eq-group h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  color: var(--text-strong);
+  margin: 0;
+}
+.ms-saved-eq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ms-saved-eq-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: var(--chip);
+  border: 1.5px solid transparent;
+  transition: border-color 0.15s ease;
+}
+.ms-saved-eq-card.on {
+  border-color: var(--accent);
+}
+.ms-saved-eq-card.autosave {
+  border-color: #f59e0b;
+  background: color-mix(in srgb, #f59e0b 8%, var(--chip));
+}
+.ms-saved-eq-card-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 240px;
+}
+.ms-saved-eq-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ms-saved-eq-name {
+  font-size: 16px;
+  color: var(--text-strong);
+}
+.ms-saved-eq-sub {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.ms-saved-eq-svg {
+  width: 160px;
+  height: 40px;
+  margin-top: 4px;
+  background: var(--page);
+  border-radius: 6px;
+  padding: 2px 4px;
+}
+.ms-saved-eq-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Channel check (§78 E): quick sweep and balance steps side by side, stacked on the phone */
+.ms-cc { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+.ms-cc-card { display: flex; flex-direction: column; gap: 14px; padding: 16px; border-radius: var(--radius-card); background: var(--chrome); }
+.ms-cc-card .ms-set-row { padding-left: 0; padding-right: 0; }
+.ms-cc-head { display: flex; align-items: center; gap: 12px; font-size: 17px; color: var(--text-strong); }
+.ms-cc-head > .ms-icon { color: var(--accent); }
+.ms-cc-ears { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.ms-cc-ears span { display: grid; place-items: center; width: clamp(56px, 18vw, 88px); aspect-ratio: 1; border-radius: 50%; background: var(--chip); color: var(--text-dim); font-size: clamp(22px, 6vw, 32px); font-weight: 700; transition: background 120ms, color 120ms, transform 120ms; }
+.ms-cc-ears span.on { background: var(--accent); color: var(--on-accent); transform: scale(1.06); }
+.ms-cc-ears b { flex: 1; text-align: center; white-space: nowrap; font-size: clamp(16px, 4vw, 24px); font-variant-numeric: tabular-nums; color: var(--text-strong); }
+.ms-cc-bands { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+.ms-cc-band { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 2px; border-radius: 14px; background: var(--chip); }
+.ms-cc-band.now { box-shadow: inset 0 0 0 2px var(--accent); }
+.ms-cc-band small { color: var(--text-dim); font-size: 12px; }
+.ms-cc-band b { font-size: 12px; font-variant-numeric: tabular-nums; color: var(--text-strong); }
+.ms-cc-bar { position: relative; width: 10px; height: 64px; border-radius: 5px; background: var(--page); }
+.ms-cc-bar::after { content: ''; position: absolute; left: -3px; right: -3px; top: 50%; height: 1px; background: var(--outline); }
+.ms-cc-bar i { position: absolute; left: 0; right: 0; height: var(--h); border-radius: 5px; background: var(--accent); bottom: calc(50% - (1 - var(--up)) * var(--h)); }
+.ms-cc-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.ms-cc-sum { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 8px; }
+.ms-cc-sum > div { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 14px; background: var(--chip); }
+.ms-cc-sum small { color: var(--text-dim); }
+.ms-cc-sum b { font-size: 20px; color: var(--text-strong); font-variant-numeric: tabular-nums; }
+.ms-cc-sum .warn b { color: var(--danger); }
+
+/* EQ L/R view (§78 E5): each ear's curve over the shared EQ line */
+.ms-eq-curve polyline.ear-l, .ms-eq-hero.on .ms-eq-curve polyline.ear-l { stroke: #38bdf8; stroke-width: 2; stroke-dasharray: 6 4; }
+.ms-eq-curve polyline.ear-r, .ms-eq-hero.on .ms-eq-curve polyline.ear-r { stroke: #f43f5e; stroke-width: 2; stroke-dasharray: 6 4; }
+.ms-eq-ears { display: inline-flex; gap: 6px; margin-left: 10px; }
+.ms-eq-ears b { padding: 0 6px; border-radius: 6px; font-size: 11px; color: #fff; }
+.ms-eq-ears .l { background: #38bdf8; }
+.ms-eq-ears .r { background: #f43f5e; }
+/* the slider grows along a row; in these column stacks it keeps its own height */
+.ms-snd-row .ms-slider, .ms-cc-card .ms-slider { flex: none; }
+
+/* Audio Tools (§79 A): one card per job */
+.ms-at { align-items: start; }
+.ms-at > :first-child { grid-row: span 2; }
+.ms-at-seg { align-self: stretch; }
+.ms-at-seg button { flex: 1 1 0; min-width: 0; padding: 0 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ms-at-ears button { display: grid; place-items: center; width: clamp(56px, 18vw, 88px); aspect-ratio: 1; border-radius: 50%; background: var(--chip); color: var(--text-dim); font-size: clamp(22px, 6vw, 32px); font-weight: 700; transition: background 120ms, color 120ms, transform 120ms; }
+.ms-at-ears button:hover { color: var(--text-strong); }
+.ms-at-ears button.on { background: var(--accent); color: var(--on-accent); transform: scale(1.06); }
+.ms-at-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ms-at-row .ms-btn { justify-content: center; }
+.ms-at-tips { display: flex; flex-direction: column; gap: 8px; padding-top: 12px; border-top: 1px solid var(--outline); }
+.ms-at-tips-head { display: flex; align-items: center; gap: 8px; color: var(--text-strong); }
+.ms-at-tips-head > .ms-icon { color: var(--accent); }
+.ms-cc-sum b.ms-at-word { font-size: 14px; font-weight: 600; }
+
+/* Hearing check (§79 B) */
+.ms-hc-freqs { gap: 6px; }
+.ms-hc-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.ms-hc-level { display: inline-flex; align-items: baseline; gap: 4px; min-width: 76px; justify-content: center; font-variant-numeric: tabular-nums; }
+.ms-hc-level b { font-size: 24px; color: var(--text-strong); }
+.ms-hc-level small { color: var(--text-dim); }
+.ms-hc-controls > .ms-btn:last-child { margin-left: auto; }
+
+/* Ear-training (§79 C) */
+.ms-et-modes { margin-bottom: 12px; }
+.ms-et-modes button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.ms-et-play { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ms-et-play button { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 18px 8px; border-radius: 20px; background: var(--chip); color: var(--text-strong); font-size: 16px; }
+.ms-et-play button .ms-icon { font-size: 32px; color: var(--accent); }
+.ms-et-play button.mystery { background: var(--accent); color: var(--on-accent); }
+.ms-et-play button.mystery .ms-icon { color: var(--on-accent); }
+.ms-et-play button:active, .ms-at-ears button:active { transform: scale(0.96); }
+.ms-et-ring { position: relative; display: grid; place-items: center; width: 44px; height: 44px; flex: none; }
+.ms-et-ring svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+.ms-et-ring circle { fill: none; stroke: var(--chip); stroke-width: 4; }
+.ms-et-ring circle.fill { stroke: var(--accent); stroke-linecap: round; transition: stroke-dasharray 300ms; }
+.ms-et-ring b { font-size: 11px; font-variant-numeric: tabular-nums; color: var(--text-strong); }
+
+/* DAC picker (§79 F) */
+.ms-dac-row { width: 100%; border-radius: 16px; }
+.ms-dac-row.on { background: var(--accent-container, var(--chip)); }
+.ms-dac-row > .ms-icon:last-child { color: var(--accent); }
+.ms-dac-list { display: flex; flex-direction: column; gap: 2px; max-height: min(60vh, 560px); overflow-y: auto; margin-top: 12px; }

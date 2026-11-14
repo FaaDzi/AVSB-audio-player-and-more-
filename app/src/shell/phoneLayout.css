@@ -1,0 +1,724 @@
+/* The phone layout (plan §70 B1, §73.B, §73.E, PhoneNav.tsx): bottom tabs, a mini player above them, panels as sheets. */
+
+/* The page draws under the status and navigation bars (viewport-fit=cover, plan Phase 3): the theme shows behind them,
+   and everything that sits at the top or bottom edge moves in by the bar heights. */
+.ms-window.phone {
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+}
+/* pages: their own background runs under the status bar, their content starts below it */
+.ms-window.phone .ms-layer { padding-top: var(--sat); }
+/* most pages scroll in an absolutely placed .ms-scroll, which the padding above doesn't move */
+.ms-window.phone .ms-layer > .ms-scroll { top: var(--sat); }
+.ms-window.phone .ms-inspector-slot { padding-top: var(--sat); padding-bottom: var(--sab); }
+
+.ms-btabs {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  height: calc(80px + var(--sab, 0px));
+  padding: 12px 0 calc(16px + var(--sab, 0px));
+  background: color-mix(in srgb, var(--chrome) 94%, var(--accent) 6%);
+  border-top: 1px solid var(--hairline);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+.ms-btab { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-dim); font-size: 12px; font-weight: 500; letter-spacing: 0.5px; }
+.ms-btab-pill { display: grid; place-items: center; width: 64px; height: 32px; border-radius: 16px; transition: background-color 200ms; }
+.ms-btab.on { color: var(--text-strong); font-weight: 700; }
+.ms-btab.on .ms-btab-pill { background: var(--nav-selected); }
+
+.ms-pmini {
+  flex: none;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 72px;
+  padding: 6px 8px 6px 12px;
+  background: color-mix(in srgb, var(--chrome) 88%, var(--accent) 12%);
+  border-top: 1px solid var(--hairline);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+/* Party Mode Theme for Phone Mini Player & Bottom Tabs */
+:root[data-style='gameshow'] .ms-pmini {
+  background: var(--gs-player, #1b0d26) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+:root[data-style='gameshow'] .ms-pmini .ms-player-title {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+}
+:root[data-style='gameshow'] .ms-pmini .ms-player-artist {
+  color: #d1c5db !important;
+  font-weight: 500 !important;
+}
+:root[data-style='gameshow'] .ms-pmini .ms-play {
+  background: #f5b335 !important;
+  color: #1b0d26 !important;
+  box-shadow: 0 0 14px rgba(245, 179, 53, 0.45) !important;
+}
+:root[data-style='gameshow'] .ms-btabs {
+  background: var(--gs-rail, #1b0d26) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+:root[data-style='gameshow'] .ms-btab {
+  color: #c7b8d4 !important;
+}
+:root[data-style='gameshow'] .ms-btab.on {
+  color: #ffffff !important;
+}
+:root[data-style='gameshow'] .ms-btab.on .ms-btab-pill {
+  background: var(--gs-card-cream, #fff8eb) !important;
+  color: #210f2c !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35) !important;
+}
+:root[data-style='gameshow'] .ms-btab.on .ms-icon {
+  color: #210f2c !important;
+}
+.ms-pmini-progress { position: absolute; left: 0; right: 0; top: -1px; height: 3px; overflow: hidden; }
+.ms-pmini-progress > span { display: block; height: 100%; background: var(--cover-primary, var(--accent)); transform-origin: left; }
+.ms-pmini-open { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; text-align: left; }
+.ms-pmini-art { width: 48px !important; height: 48px !important; border-radius: 10px; flex: none; }
+.ms-pmini .ms-play { width: 52px; height: 52px; flex: none; }
+
+/* pages get the full width, with phone margins */
+.ms-window.phone .ms-page { padding-left: 16px; padding-right: 16px; }
+.ms-window.phone .ms-h1 { font-size: 40px; }
+
+/* queue and lyrics slide up over the page instead of opening beside it */
+.ms-window.phone .ms-inspector-slot { position: absolute; inset: 0; z-index: 20; width: auto; animation: ms-sheet-open 260ms var(--spring-spatial); }
+.ms-window.phone .ms-inspector-slot.closing { animation: ms-sheet-close 240ms var(--ease-in-cubic) forwards; pointer-events: none; }
+.ms-window.phone .ms-inspector { width: 100%; border-left: 0; border-radius: 28px 28px 0 0; }
+@keyframes ms-sheet-open { from { transform: translateY(100%); opacity: 0.6; } to { transform: none; opacity: 1; } }
+@keyframes ms-sheet-close { from { transform: none; opacity: 1; } to { transform: translateY(100%); opacity: 0; } }
+
+/* the toast sits above the mini player and tabs */
+.ms-window.phone .ms-toast { bottom: 168px; left: 16px; right: 16px; max-width: none; }
+
+/* Home's way into the Database (owner's answer 2026-11-07) */
+.ms-home-db { display: flex; align-items: center; gap: 16px; width: 100%; padding: 16px 20px; margin: 8px 0 24px; border-radius: 24px; background: var(--field); text-align: left; }
+.ms-home-db b { display: block; font-size: 18px; color: var(--text-strong); }
+.ms-home-db small { color: var(--text-dim); }
+.ms-home-db .grow { flex: 1; min-width: 0; }
+
+/* Settings on the phone (§70 B2): the list, or one page with a back arrow, never both side by side */
+/* .ms-settings is absolutely placed, so the layer's status-bar padding doesn't move it (back arrow sat on the clock, §78 D) */
+.ms-window.phone .ms-layer > .ms-settings { top: var(--sat); }
+.ms-settings.phone .ms-settings-list { width: 100%; padding: 12px 16px 16px; background: var(--page); }
+.ms-settings.phone .ms-settings-list h1 { font-size: 40px; font-weight: 700; padding: 24px 4px 16px; }
+.ms-settings.phone.list .ms-settings-pane { display: none; }
+.ms-settings.phone.pane .ms-settings-list { display: none; }
+.ms-settings.phone .ms-settings-item.on, .ms-settings.phone .ms-settings-profile.on { background: none; font-weight: inherit; color: var(--text); }
+.ms-settings.phone .ms-settings-profile.on { background: var(--player); }
+
+/* Local Library's folder rows: the switch keeps its spot, its word goes so the folder line has room */
+.ms-window.phone .ms-lib-sub small { display: none; }
+
+/* the toast: full width between the phone margins, no centring shift (it pushed half of it off the screen) */
+.ms-window.phone .ms-toast { transform: none; min-width: 0; }
+
+/* menus open as bottom sheets on the phone (Mornye's song menu), whatever opened them */
+@media (max-width: 640px), (max-height: 540px) and (pointer: coarse), (orientation: landscape) and (pointer: coarse) {
+  .ms-menu-scrim { background: var(--scrim); }
+  .ms-menu {
+    left: 0 !important;
+    right: 0;
+    top: auto !important;
+    bottom: 0;
+    width: 100%;
+    max-height: 75vh;
+    /* the sheet is portaled outside .ms-window, so env() rather than --sab: its last row clears the navigation bar */
+    padding: 12px 0 calc(24px + env(safe-area-inset-bottom, 0px));
+    border-radius: 28px 28px 0 0;
+    transform-origin: bottom;
+    animation: ms-sheet-open 260ms var(--spring-spatial);
+  }
+  .ms-menu::before { content: ''; display: block; width: 32px; height: 4px; margin: 0 auto 12px; border-radius: 2px; background: var(--outline); }
+  .ms-exit .ms-menu { animation: ms-sheet-close 150ms var(--ease-in-cubic) forwards; }
+  .ms-menu-item { min-height: 52px; padding-left: 24px; }
+}
+
+/* Local Library → Hidden folders (Android, plan §71 F2): styled like a section heading */
+.ms-lib-hidden-title { padding: 20px 16px 11px; font-size: 15px; line-height: 20px; font-weight: 600; color: var(--accent); }
+
+/* Song page: the two card columns stack */
+.ms-window.phone .ms-song-cards { grid-template-columns: 1fr; padding: 0 16px 32px; gap: 16px; }
+.ms-window.phone .ms-song-actions { grid-template-columns: 1fr; }
+
+/* §73.E — Starred Audio Device Quick-Switcher Bar & Side Panel Tabs */
+.ms-np-side-tabs {
+  display: none;
+  gap: 6px;
+  padding: 4px;
+  margin-bottom: 10px;
+  border-radius: 20px;
+  background: rgb(var(--ink) / 0.08);
+  align-self: flex-start;
+  flex: none;
+}
+.ms-np-side-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim);
+  transition: background 150ms, color 150ms;
+}
+.ms-np-side-tab.on {
+  background: var(--cover-primary, var(--accent));
+  color: var(--cover-on-primary, var(--on-accent));
+}
+
+.ms-np-gear-bar {
+  position: absolute;
+  left: 20px;
+  right: 196px;
+  bottom: 16px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 6px;
+  border-radius: 22px;
+  background: rgb(var(--ink) / 0.06);
+  scrollbar-width: none;
+}
+.ms-np-gear-bar::-webkit-scrollbar { display: none; }
+.ms-np-gear-chip {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 180px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 16px;
+  background: rgb(var(--ink) / 0.08);
+  border: 1px solid rgb(var(--ink) / 0.12);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background 150ms, border-color 150ms, color 150ms;
+}
+.ms-np-gear-chip:hover { background: rgb(var(--ink) / 0.14); }
+.ms-np-gear-chip.on {
+  background: color-mix(in srgb, var(--cover-primary, var(--accent)) 28%, rgb(var(--ink) / 0.1));
+  border-color: var(--cover-primary, var(--accent));
+  color: #fff;
+  font-weight: 600;
+}
+.ms-np-gear-chip.manage {
+  background: transparent;
+  border-style: dashed;
+  color: var(--text-dim);
+}
+.ms-np-gear-star { font-size: 12px; line-height: 1; }
+
+/* Now Playing on the phone (§70 B1, Mornye's phone player): one column top to bottom: cover, title, seek, times with
+   the quality chip, the three big buttons, then volume, starred gear quick-switch bar, and the lyrics/gear/queue buttons along the bottom */
+.ms-window.phone .ms-np { --np-col: calc(100vw - 40px); }
+.ms-window.phone .ms-np-close { left: max(16px, env(safe-area-inset-left)); top: calc(8px + var(--sat)); }
+.ms-window.phone .ms-np-info { right: max(16px, env(safe-area-inset-right)); left: auto; top: calc(8px + var(--sat)); }
+.ms-window.phone .ms-np-close .ms-iconbtn,
+.ms-window.phone .ms-np-info .ms-iconbtn { width: 44px; height: 44px; }
+.ms-window.phone .ms-np-player { left: 20px; right: 20px; width: auto; top: calc(64px + var(--sat)); bottom: calc(136px + var(--sab)); justify-content: flex-end; }
+/* the cover takes what's left after the bars, the title block, the heart/+ row and the controls; text never shrinks */
+.ms-window.phone .ms-np-cover { width: clamp(140px, min(100%, 100vh - 500px - var(--sat) - var(--sab)), 340px); align-self: center; }
+.ms-window.phone .ms-np-player > :not(.ms-np-cover) { flex-shrink: 0; }
+.ms-window.phone .ms-np-player h1 { margin-top: 16px; font-size: 26px; font-weight: 700; }
+.ms-window.phone .ms-np-seek { margin-top: 14px; }
+.ms-window.phone .ms-np-times { margin-top: 10px; }
+.ms-window.phone .ms-np-controls { gap: 6px; margin-top: 14px; }
+.ms-window.phone .ms-np-controls .ms-iconbtn { width: 40px; flex: none; }
+.ms-window.phone .ms-np-step, .ms-window.phone .ms-np-play { height: 60px; }
+.ms-window.phone .ms-np-volume { top: auto; bottom: calc(76px + var(--sab)); left: 20px; right: 20px; width: auto; height: 46px; }
+.ms-window.phone .ms-np-corner { left: 20px; right: 20px; bottom: calc(16px + var(--sab)); justify-content: space-around; }
+/* lyrics and queue take the whole screen on portrait phone instead of a side column; the close button and bottom gear/corner stay reachable */
+.ms-window.phone .ms-np.split .ms-np-player { opacity: 0; pointer-events: none; }
+.ms-window.phone .ms-np-side {
+  left: 0;
+  right: 0;
+  padding: calc(68px + var(--sat)) 16px calc(84px + var(--sab));
+  translate: none;
+  animation: ms-sheet-open 260ms var(--spring-spatial);
+}
+.ms-window.phone .ms-np-side.closing {
+  animation: ms-sheet-close 240ms var(--ease-in-cubic) forwards;
+  pointer-events: none;
+}
+.ms-window.phone .ms-np.split .ms-np-volume { display: none; }
+/* the idle "slim" bar is for a mouse left still; on a phone the full player stays */
+.ms-window.phone .ms-np.compact .ms-np-player { opacity: 1; pointer-events: auto; }
+.ms-window.phone .ms-np-slim { display: none; }
+
+/* Local Library: a folder's subfolders, each kept or left out (owner 2026-11-07) */
+.ms-lib-folder { flex-wrap: wrap; }
+.ms-lib-subs, .ms-lib-subs-none { flex-basis: 100%; margin: 4px 0 4px 40px; }
+.ms-lib-subs-none { color: var(--text-dim); font-size: 14px; }
+.ms-lib-subrow { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 4px 0; cursor: pointer; }
+.ms-lib-subrow.off { color: var(--text-dim); }
+
+/* Album, artist, folder and playlist pages on the phone (Mornye's album page): cover centred over the title, the song
+   list as two-line rows (title, then artist · format) with no column headings */
+.ms-window.phone .ms-detail { padding: 4px 4px 24px; }
+.ms-window.phone .ms-detail-head { flex-direction: column; align-items: center; gap: 16px; padding: 0 12px; text-align: center; }
+.ms-window.phone .ms-detail-cover, .ms-window.phone .ms-album-cover { width: min(220px, 60vw); height: min(220px, 60vw); }
+.ms-window.phone .ms-detail-info { align-items: center; gap: 16px; width: 100%; }
+.ms-window.phone .ms-detail-info h1 { margin-top: 0; font-size: 26px; overflow-wrap: anywhere; }
+.ms-window.phone .ms-detail-sub, .ms-window.phone .ms-album-meta { justify-content: center; flex-wrap: wrap; }
+.ms-window.phone .ms-detail-actions, .ms-window.phone .ms-album-actions { justify-content: center; flex-wrap: wrap; }
+.ms-window.phone .ms-table { margin-top: 16px; }
+.ms-window.phone .ms-tr.head { display: none; }
+.ms-window.phone .ms-tr { grid-template-columns: minmax(0, 1fr) auto 36px; height: 64px; }
+.ms-window.phone .ms-tr:has(> .num) { grid-template-columns: 32px minmax(0, 1fr) auto 36px; }
+.ms-window.phone .ms-tr > .ms-td.ms-ellipsis { display: none; }
+.ms-window.phone .ms-title-stack { display: flex; flex-direction: column; min-width: 0; }
+.ms-window.phone .ms-title-stack .ms-title-link { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ms-window.phone .ms-phone-sub { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; color: var(--text-dim); }
+
+/* card grids: three across instead of two big ones */
+.ms-window.phone .ms-grid, .ms-window.phone .ms-grid.songs, .ms-window.phone .ms-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.ms-window.phone .ms-card .ms-badge { font-size: 10px; padding: 2px 6px; }
+
+/* nothing on a phone page scrolls sideways except the Library tab row itself */
+.ms-window.phone .ms-scroll { overflow-x: hidden; }
+.ms-window.phone .ms-tabs { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+.ms-window.phone .ms-tabs > * { flex: none; }
+
+/* no hover on a phone: each row's ⋮ is always there */
+.ms-window.phone .ms-rowmenu { opacity: 0.8; }
+
+/* Tournament on the phone (§70 C4): one column for the choices, smaller photos, buttons that fit, the bracket scrolling
+   sideways in its own strip, and big A/B buttons for thumbs */
+.ms-window.phone .ms-tz-kinds { grid-template-columns: 1fr; }
+.ms-window.phone .ms-tz-go .ms-btn,
+.ms-window.phone .ms-tz-verdict .ms-btn,
+.ms-window.phone .ms-tz-reveal > .ms-btn,
+.ms-window.phone .ms-tz-qnext { min-width: 0; width: 100%; }
+.ms-window.phone .ms-tz-col { min-width: 168px; }
+.ms-window.phone .ms-tz-cols { margin: 0 -16px; padding: 8px 16px 12px; scroll-snap-type: x proximity; }
+.ms-window.phone .ms-tz-col { scroll-snap-align: start; }
+.ms-window.phone .ms-tz-ab, .ms-window.phone .ms-tz-votes { gap: 10px; }
+.ms-window.phone .ms-tz-reveal-cards { gap: 10px; }
+.ms-window.phone .ms-tz-reveal-photo { width: 96px; height: 96px; }
+.ms-window.phone .ms-tz-champ-photo { width: 120px; height: 120px; }
+.ms-window.phone .ms-tz-podium-row { gap: 6px; }
+.ms-window.phone .ms-tz-podium-photo { width: 72px; height: 72px; }
+.ms-window.phone .ms-tz-podium-card.p1 .ms-tz-podium-photo { width: 96px; height: 96px; }
+.ms-window.phone .ms-tz-qslot-photo { width: 110px; height: 110px; }
+.ms-window.phone .ms-tz-qopts.three { grid-template-columns: 1fr; }
+.ms-window.phone .ms-tz-qslot { min-height: 0; }
+.ms-window.phone .ms-tz-qvs { justify-self: center; font-size: 36px; }
+/* key hints are for a keyboard */
+.ms-window.phone kbd { display: none; }
+
+/* while the on-screen keyboard is up, the tabs and the mini player step aside so the field and its results have room */
+.ms-window.phone.typing .ms-btabs, .ms-window.phone.typing .ms-pmini { display: none; }
+/* §81 D: a match on screen: the mini player steps aside too */
+.ms-window.phone:has(.ms-layer.in .ms-tz-match-top) .ms-pmini { display: none; }
+
+/* ==========================================================================
+   §73.B — Phone & Tablet Landscape Layout Overhaul
+   ========================================================================== */
+@media (orientation: landscape) and (max-height: 540px), (orientation: landscape) and (pointer: coarse) {
+  /* Safe-area horizontal padding so camera hole-punch cutouts never overlap text or controls */
+  .ms-window.phone .ms-page,
+  .ms-window.phone .ms-home,
+  .ms-window.phone .ms-sr {
+    padding-top: 8px;
+    padding-bottom: 24px;
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+  .ms-window.phone .ms-main {
+    padding-bottom: 24px;
+  }
+  .ms-window.phone .ms-topbar {
+    height: 44px;
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+    background: transparent !important;
+  }
+  .ms-window.phone .ms-h1 {
+    font-size: 24px;
+    line-height: 28px;
+  }
+  .ms-window.phone .ms-search {
+    margin-top: 8px;
+    height: 40px;
+  }
+  .ms-window.phone .ms-tabs {
+    margin-top: 6px;
+  }
+  .ms-window.phone .ms-tab {
+    height: 38px;
+  }
+  .ms-window.phone .ms-rewind {
+    margin-top: 8px;
+    padding: 10px 14px;
+  }
+  .ms-window.phone .ms-rewind-badge {
+    width: 38px;
+    height: 38px;
+  }
+  .ms-window.phone .ms-rewind + .ms-row,
+  .ms-window.phone .ms-row {
+    margin-top: 8px;
+    min-height: 34px;
+  }
+  .ms-window.phone .ms-tool {
+    height: 34px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+
+  /* Slim Navigation (46px) & Mini Player (48px) = 94px total instead of 152px */
+  .ms-btabs {
+    height: calc(46px + var(--sab, 0px));
+    padding: 4px max(16px, env(safe-area-inset-right)) calc(4px + var(--sab, 0px)) max(16px, env(safe-area-inset-left));
+    align-items: center;
+  }
+  .ms-btab {
+    flex-direction: row;
+    justify-content: center;
+    gap: 6px;
+    font-size: 12px;
+  }
+  .ms-btab-pill {
+    width: auto;
+    height: 30px;
+    padding: 0 10px;
+    border-radius: 15px;
+  }
+  .ms-pmini {
+    height: 48px;
+    bottom: 0;
+    padding: 4px max(12px, env(safe-area-inset-right)) 4px max(12px, env(safe-area-inset-left));
+  }
+  .ms-pmini-art {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 8px;
+  }
+  .ms-pmini .ms-play {
+    width: 38px;
+    height: 38px;
+  }
+  .ms-window.phone .ms-toast {
+    bottom: 106px;
+    left: max(16px, env(safe-area-inset-left));
+    right: max(16px, env(safe-area-inset-right));
+  }
+
+  /* Detail Pages (Album, Artist, Playlist, Folder) in Landscape */
+  .ms-window.phone .ms-detail {
+    padding: 4px max(12px, env(safe-area-inset-right)) 24px max(12px, env(safe-area-inset-left));
+  }
+  .ms-window.phone .ms-detail-head {
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    gap: 18px;
+    padding: 4px 8px;
+  }
+  .ms-window.phone .ms-detail-cover,
+  .ms-window.phone .ms-album-cover {
+    width: 112px;
+    height: 112px;
+  }
+  .ms-window.phone .ms-detail-info {
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .ms-window.phone .ms-detail-info h1,
+  .ms-window.phone .ms-detail-head.ms-album-head .ms-detail-info h1 {
+    margin-top: 0;
+    font-size: 22px;
+  }
+  .ms-window.phone .ms-detail-sub,
+  .ms-window.phone .ms-album-meta,
+  .ms-window.phone .ms-detail-actions,
+  .ms-window.phone .ms-album-actions {
+    justify-content: flex-start;
+  }
+  .ms-window.phone .ms-tr {
+    height: 52px;
+  }
+
+  /* Responsive Card Grids in Landscape: 4-5 cards fit cleanly across the row */
+  .ms-window.phone .ms-grid,
+  .ms-window.phone .ms-grid.songs,
+  .ms-window.phone .ms-tiles {
+    grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+    gap: 10px;
+  }
+
+  /* Song Page in Landscape */
+  .ms-window.phone .ms-song-hero {
+    min-height: 240px;
+    padding-bottom: 16px;
+  }
+  .ms-window.phone .ms-song-head {
+    padding-top: 8px;
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    gap: 18px;
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
+  }
+  .ms-window.phone .ms-song-cover {
+    width: 120px !important;
+    height: 120px !important;
+    flex: none !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+  .ms-window.phone .ms-song-head h1 {
+    margin-top: 0;
+    font-size: 22px;
+  }
+  .ms-window.phone .ms-song-head-text { align-items: flex-start; }
+  .ms-window.phone .ms-song-cards {
+    grid-template-columns: 1fr 1fr;
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+
+  /* Tournament & VS Clash Screen in Landscape */
+  .ms-window.phone .ms-tz-kinds {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ms-window.phone .ms-tz-ab {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    align-items: stretch;
+  }
+  .ms-window.phone .ms-tz-reveal-photo,
+  .ms-window.phone .ms-tz-champ-photo,
+  .ms-window.phone .ms-tz-qslot-photo {
+    width: clamp(64px, 20vh, 96px);
+    height: clamp(64px, 20vh, 96px);
+  }
+  .ms-window.phone .ms-tz-qopts.three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  /* ========================================================================
+     Now Playing Drawer in Landscape (2-Column Split Pane: 42% Left / 58% Right)
+     ======================================================================== */
+  .ms-np,
+  .ms-window.phone .ms-np {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  .ms-np-close,
+  .ms-window.phone .ms-np-close {
+    left: max(12px, env(safe-area-inset-left));
+    top: calc(8px + var(--sat, 0px));
+  }
+  .ms-np-info,
+  .ms-window.phone .ms-np-info {
+    right: max(12px, env(safe-area-inset-right));
+    left: auto;
+    top: calc(8px + var(--sat, 0px));
+  }
+  .ms-np-close .ms-iconbtn,
+  .ms-np-info .ms-iconbtn,
+  .ms-window.phone .ms-np-close .ms-iconbtn,
+  .ms-window.phone .ms-np-info .ms-iconbtn {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Left Column (~42% width): always visible even when split is active */
+  .ms-np-player,
+  .ms-window.phone .ms-np-player,
+  .ms-window.phone .ms-np.split .ms-np-player {
+    opacity: 1;
+    pointer-events: auto;
+    left: max(16px, env(safe-area-inset-left));
+    right: auto;
+    width: calc(42% - max(16px, env(safe-area-inset-left)) - 12px);
+    top: calc(46px + var(--sat, 0px));
+    bottom: calc(84px + var(--sab, 0px));
+    display: grid;
+    grid-template-columns: clamp(96px, 28vh, 160px) minmax(0, 1fr);
+    grid-auto-rows: min-content;
+    align-content: center;
+    align-items: center;
+    column-gap: 12px;
+    row-gap: 4px;
+  }
+
+  .ms-np-cover,
+  .ms-window.phone .ms-np-cover {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+    width: clamp(96px, 28vh, 160px);
+    height: clamp(96px, 28vh, 160px);
+    align-self: center;
+  }
+
+  .ms-np-title-row,
+  .ms-window.phone .ms-np-title-row {
+    grid-column: 2;
+    grid-row: 1;
+    margin-top: 0;
+    width: 100%;
+    align-self: end;
+  }
+  /* heart over + at the right of the title, small enough not to push the seek bar down */
+  .ms-np-title-actions { gap: 0; }
+  .ms-np-title-actions .ms-iconbtn,
+  .ms-np .ms-np-title-actions .ms-pl-add .ms-iconbtn { width: 34px; height: 34px; }
+
+  .ms-np-player h1,
+  .ms-window.phone .ms-np-player h1 {
+    margin-top: 0;
+    font-size: 18px;
+    line-height: 22px;
+  }
+
+  .ms-np-artist,
+  .ms-window.phone .ms-np-artist {
+    grid-column: 2;
+    grid-row: 2;
+    font-size: 13px;
+    line-height: 18px;
+    align-self: start;
+  }
+
+  .ms-np-sound,
+  .ms-window.phone .ms-np-sound {
+    grid-column: 2;
+    grid-row: 3;
+    justify-content: flex-start;
+    margin-top: 2px;
+    gap: 6px;
+  }
+  .ms-np-sound .ms-snd-chip.big,
+  .ms-window.phone .ms-np-sound .ms-snd-chip.big,
+  .ms-np-sound .ms-btn,
+  .ms-window.phone .ms-np-sound .ms-btn {
+    height: 28px;
+    padding: 0 10px;
+    font-size: 11px;
+  }
+
+  .ms-np-seek,
+  .ms-window.phone .ms-np-seek {
+    grid-column: 1 / -1;
+    margin-top: 6px;
+  }
+
+  .ms-np-times,
+  .ms-window.phone .ms-np-times {
+    grid-column: 1 / -1;
+    margin-top: 2px;
+    font-size: 12px;
+  }
+  .ms-np-quality,
+  .ms-window.phone .ms-np-quality {
+    height: 22px;
+    padding: 0 8px;
+    font-size: 11px;
+  }
+
+  .ms-np-controls,
+  .ms-window.phone .ms-np-controls {
+    grid-column: 1 / -1;
+    margin-top: 4px;
+    gap: 6px;
+  }
+  .ms-np-step,
+  .ms-np-play,
+  .ms-window.phone .ms-np-step,
+  .ms-window.phone .ms-np-play {
+    height: 40px;
+  }
+  .ms-np-controls .ms-iconbtn,
+  .ms-window.phone .ms-np-controls .ms-iconbtn,
+  .ms-np-controls .ms-iconbtn.active,
+  .ms-window.phone .ms-np-controls .ms-iconbtn.active {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Volume & Corner Buttons in Left Column bottom */
+  .ms-np-volume,
+  .ms-window.phone .ms-np-volume,
+  .ms-window.phone .ms-np.split .ms-np-volume {
+    display: flex;
+    top: auto;
+    bottom: calc(46px + var(--sab, 0px));
+    left: max(16px, env(safe-area-inset-left));
+    right: auto;
+    width: calc(42% - max(16px, env(safe-area-inset-left)) - 12px);
+    height: 32px;
+    padding: 0 10px;
+  }
+
+  .ms-np-corner,
+  .ms-window.phone .ms-np-corner {
+    left: max(16px, env(safe-area-inset-left));
+    right: auto;
+    width: calc(42% - max(16px, env(safe-area-inset-left)) - 12px);
+    bottom: calc(6px + var(--sab, 0px));
+    padding: 2px;
+    justify-content: space-around;
+  }
+  .ms-np-corner .ms-iconbtn,
+  .ms-window.phone .ms-np-corner .ms-iconbtn {
+    width: 34px;
+    height: 34px;
+  }
+
+  /* Right Column (~58% width): Always visible in landscape, with tabs & independent scroll */
+  .ms-np-side,
+  .ms-window.phone .ms-np-side {
+    left: 42%;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    padding: calc(10px + var(--sat, 0px)) max(16px, env(safe-area-inset-right)) calc(10px + var(--sab, 0px)) 16px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    opacity: 1;
+    pointer-events: auto;
+    translate: none;
+    border-left: 1px solid rgb(255 255 255 / 0.1);
+    z-index: 2;
+  }
+  .ms-np-side .ms-swapbox {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+  }
+  .ms-np-side-tabs {
+    display: inline-flex;
+  }
+  .ms-np-side .ms-lyrics {
+    padding: 12px 8px;
+  }
+  .ms-np-side .ms-lyric {
+    font-size: 20px;
+    padding: 7px 0;
+  }
+  .ms-np-side .ms-queue-row {
+    height: 52px;
+  }
+}

@@ -1,0 +1,1939 @@
+{
+ "reviewer": "Jay's Audio",
+ "url": "https://docs.google.com/spreadsheets/d/1vNziv6_hnVKzkT8qq6FXhrsJM2zQWXkEHycuyFMnv8o/htmlview",
+ "baseline": "KBEAR K07",
+ "note": "Every tip is graphed on the same IEM against KBEAR K07, the most common tip.",
+ "tips": [
+  {
+   "id": "acoustune-aet06-flange",
+   "name": "Acoustune AET06 Flange",
+   "kind": "silicone",
+   "tonality": "A little more balanced, and ever slightly smoother in the treble",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Dual Flange/Cone shape, silicone, wide to narrow width, slightly taller than normal, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Niche",
+    "note": ""
+   },
+   "verdict": "Better for smaller ears that wants a deeper fit - may not fit bigger ears",
+   "photo": "img/eartips/acoustune-aet06-flange.webp",
+   "graph": "img/eartips/acoustune-aet06-flange-graph.webp"
+  },
+  {
+   "id": "acoustune-aex07",
+   "name": "Acoustune AEX07",
+   "kind": "silicone",
+   "tonality": "Sounds the same as the KBEAR 07s",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "verdict": "All-rounder that's almost 1 to 1 as the KBEAR 07s but black",
+   "photo": "img/eartips/acoustune-aex07.webp",
+   "graph": "img/eartips/acoustune-aex07-graph.webp",
+   "fernanda": "Acoustune AEX07"
+  },
+  {
+   "id": "acoustune-aex50",
+   "name": "Acoustune AEX50",
+   "kind": "silicone",
+   "tonality": "Slightly smoother treble while maintaining the air - sounds very similar to KBEAR 07s",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Hat shape, jelly silicone, normal width but extended bottom lip, normal height, normal opening/hole size, reduces pressure build up by a little but can't be fit deeply",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Niche",
+    "note": "May not fit deeply into bigger ear holes due to unique shape"
+   },
+   "verdict": "Good for smaller ears or sealing shallow IEMs due to extended bottom lip, but not as flexible due to shape",
+   "photo": "img/eartips/acoustune-aex50.webp",
+   "graph": "img/eartips/acoustune-aex50-graph.webp",
+   "fernanda": "Acoustune AEX50"
+  },
+  {
+   "id": "acoustune-aex70",
+   "name": "Acoustune AEX70",
+   "kind": "silicone",
+   "tonality": "Sounds the same as the KBEAR 07s",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, jelly silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal+",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": ""
+   },
+   "verdict": "Great all-rounder that's a better version of the KBEAR 07s physically due to improved comfort/softer and better grip and flexibility",
+   "photo": "img/eartips/acoustune-aex70.webp",
+   "graph": "img/eartips/acoustune-aex70-graph.webp",
+   "fernanda": "Acoustune AEX70"
+  },
+  {
+   "id": "azla-sedna-crystal-2",
+   "name": "AZLA Sedna Crystal 2",
+   "kind": "silicone",
+   "tonality": "Sounds the same as the KBEAR 07s",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, liquid silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": "One of the most grippy tips"
+   },
+   "flex": {
+    "rating": "Great",
+    "note": "Softer material allows better flexibility and seal for more ears"
+   },
+   "verdict": "Great all-rounder that's a better version of the KBEAR 07s physically due to improved grip/stickiness and material flexibility, allowing Crystal 2 to mold/seal better with different ear shapes/sizes",
+   "photo": "img/eartips/azla-sedna-crystal-2.webp",
+   "graph": "img/eartips/azla-sedna-crystal-2-graph.webp"
+  },
+  {
+   "id": "azla-sedna-max-asmr",
+   "name": "AZLA Sedna Max ASMR",
+   "kind": "silicone",
+   "tonality": "More vocal clarity/detail, slight bass boost, slightly more v-shaped and detailed",
+   "tech": {
+    "rating": "Improved",
+    "note": "Slightly better vocal detail, and overall dynamics"
+   },
+   "build": "Regular shape, medical silicone, slightly wider, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": "One of the most grippy tips"
+   },
+   "flex": {
+    "rating": "Great",
+    "note": "Softer material allows better flexibility and seal for more ears"
+   },
+   "verdict": "For those who want more vocal pop/detail, a little more bass, and better grip/stickiness than 07s",
+   "photo": "img/eartips/azla-sedna-max-asmr.webp",
+   "graph": "img/eartips/azla-sedna-max-asmr-graph.webp"
+  },
+  {
+   "id": "azla-sedna-mithryl",
+   "name": "AZLA Sedna Mithryl",
+   "kind": "silicone",
+   "tonality": "Ever slightly sharper in the transients/dynamics",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, liquid silicone + stainless steel ring, normal width, taller than normal, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": "Very grippy like the Crystal 2"
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "Stainless steel ring adds length for shallower/short nozzle IEMs for a deeper and better seal, but overall shape/size will still fit for most IEMs"
+   },
+   "verdict": "Good if you need a boost to reach deeper into the ear canal with certain IEMs, or if you need better seal if your ears are bigger",
+   "photo": "img/eartips/azla-sedna-mithryl.webp",
+   "graph": "img/eartips/azla-sedna-mithryl-graph.webp"
+  },
+  {
+   "id": "azla-sedna-origin",
+   "name": "AZLA Sedna Origin",
+   "kind": "silicone",
+   "tonality": "Ever slightly sharper in the transients/dynamics",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, medical silicone, normal width, taller than normal, normal opening/hole size",
+   "grip": {
+    "rating": "Normal+",
+    "note": "Not as sticky as Crystal 2 but still good"
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "Extended base adds length for shallower/short nozzle IEMs for a deeper and better seal, but overall shape/size will still fit for most IEMs (around same height as Mithryl)"
+   },
+   "verdict": "Good if you need a boost to reach deeper into the ear canal with certain IEMs, or if you need better seal if your ears are bigger",
+   "photo": "img/eartips/azla-sedna-origin.webp",
+   "graph": "img/eartips/azla-sedna-origin-graph.webp"
+  },
+  {
+   "id": "azla-sedna-light",
+   "name": "AZLA Sedna Light",
+   "kind": "silicone",
+   "tonality": "Smoother and less bright/energetic in the treble region",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Less treble boost and more balanced, but a slight hit to micro-details"
+   },
+   "build": "Regular shape, silicone, normal width, extended bass but around normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": "Material feels similar to the 07, not super grippy but also not slippery"
+   },
+   "flex": {
+    "rating": "Great",
+    "note": "Seals bigger ears, and lots of sizes"
+   },
+   "verdict": "For those who want less treble energy and a smoother playback, offers lots of sizes",
+   "photo": "img/eartips/azla-sedna-light.webp",
+   "graph": "img/eartips/azla-sedna-light-graph.webp",
+   "fernanda": "Azla Sedna Earfit Light"
+  },
+  {
+   "id": "azla-sedna-light-short",
+   "name": "AZLA Sedna Light Short",
+   "kind": "silicone",
+   "tonality": "Less bright/energetic in the treble region, highlights vocals better (sounds very similar to OG Sedna Light)",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Less treble boost and more balanced, but a slight hit to micro-details"
+   },
+   "build": "Regular shape, silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Poor",
+    "note": "On the stiffer side and doesn't mold/seal as well"
+   },
+   "verdict": "A wider/shorter version of the OG Sedna Lights that doesn't seal as well, and not as soft/comfy",
+   "photo": "img/eartips/azla-sedna-light-short.webp",
+   "graph": "img/eartips/azla-sedna-light-short-graph.webp"
+  },
+  {
+   "id": "azla-sedna-xelastec-2",
+   "name": "AZLA Sedna Xelastec 2",
+   "kind": "silicone",
+   "tonality": "Less bright/energetic in the treble region, highlights vocals better",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Less treble boost and more balanced, but a slight hit to micro-details"
+   },
+   "build": "Regular shape, custom TPE, wider than normal, slightly shorter than normal, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": "One of the most grippy tips"
+   },
+   "flex": {
+    "rating": "Great",
+    "note": "Seals bigger ears, and lots of sizes"
+   },
+   "verdict": "For those who want less treble energy/brightness, or if you have a bigger ear and need a wider tip for better seal",
+   "photo": "img/eartips/azla-sedna-xelastec-2.webp",
+   "graph": "img/eartips/azla-sedna-xelastec-2-graph.webp"
+  },
+  {
+   "id": "bgvp-b01-clears",
+   "name": "BGVP B01 Clears",
+   "kind": "silicone",
+   "tonality": "Sounds the same as the KBEAR 07s",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, liquid silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Great",
+    "note": ""
+   },
+   "verdict": "07s but with better grip and flexibility, feels comfier to wear due to softer material",
+   "photo": "img/eartips/bgvp-b01-clears.webp",
+   "graph": "img/eartips/bgvp-b01-clears-graph.webp"
+  },
+  {
+   "id": "bgvp-b01-copper-clears",
+   "name": "BGVP B01 Copper Clears",
+   "kind": "silicone",
+   "tonality": "Sounds the same as the KBEAR 07s",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, liquid silicone + copper ring, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": "Better grip and flexibility, feels comfier to wear due to softer material vs 07 (same as B01 CLEARS)"
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "Creates more stability as the inside of the tip hole doesn't get bent when adjusting which allows sound to shoot directly into the ear with lower distortion, but tip itself can't mold to different ear shapes as well due to the in-flexable copper part"
+   },
+   "verdict": "Overall more stable than the regular B01 Clears as long as it seals - may not seal well with bigger ear holes",
+   "photo": "img/eartips/bgvp-b01-copper-clears.webp",
+   "graph": "img/eartips/bgvp-b01-copper-clears-graph.webp"
+  },
+  {
+   "id": "ddhifi-st35",
+   "name": "DDHiFi ST35",
+   "kind": "silicone",
+   "tonality": "Less bright/energetic in the treble region, slightly more vocal pop",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Less bright, but a slight hit to micro-details"
+   },
+   "build": "Regular shape, silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal+",
+    "note": "Grippy, but not liquid silicone level"
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "Well work for most people, but may not seal as well with bigger ear holes"
+   },
+   "verdict": "For those who want less treble energy/brightness",
+   "photo": "img/eartips/ddhifi-st35.webp",
+   "graph": "img/eartips/ddhifi-st35-graph.webp"
+  },
+  {
+   "id": "divinus-prism-wide-bore",
+   "name": "Divinus Prism Wide Bore",
+   "kind": "silicone",
+   "tonality": "Less sharp/bright/energetic in the treble region, wider bore opening plus late treble peak gives a more open feeling",
+   "tech": {
+    "rating": "Reduced",
+    "note": "More openness, but a slight hit to micro-details"
+   },
+   "build": "Regular shape, liquid silicone, wider than normal, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": "One of the most grippy tips"
+   },
+   "flex": {
+    "rating": "Great",
+    "note": "Seals bigger ears"
+   },
+   "verdict": "For those who want less treble energy/brightness, or more openness, good for bigger ears/shallow IEMs that needs a wider tip for better seal",
+   "photo": "img/eartips/divinus-prism-wide-bore.webp",
+   "graph": "img/eartips/divinus-prism-wide-bore-graph.webp"
+  },
+  {
+   "id": "divinus-velvet-regular",
+   "name": "Divinus Velvet Regular",
+   "kind": "silicone",
+   "tonality": "Sounds the same as the KBEAR 07s",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, velvet silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Great",
+    "note": "Opening hole flexibility allows great fitment for every nozzle size without the side walls bending inwards inside the hole and distorting the sound"
+   },
+   "verdict": "07s but with better grip and flexibility, feels comfier to wear due to softer material, also seals bigger ears",
+   "photo": "img/eartips/divinus-velvet-regular.webp",
+   "graph": "img/eartips/divinus-velvet-regular-graph.webp",
+   "fernanda": "Divinus Velvet"
+  },
+  {
+   "id": "divinus-velvet-wide",
+   "name": "Divinus Velvet Wide",
+   "kind": "silicone",
+   "tonality": "Less sharp/bright/energetic in the treble region, wider bore opening plus late treble peak gives a more open feeling",
+   "tech": {
+    "rating": "Reduced",
+    "note": "More openness, but a slight hit to micro-details, tamer than DIVINUS PRISM"
+   },
+   "build": "Wider shaped, velvet silicone, wider than normal, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": "Opening hole flexibility allows great fitment for every nozzle size, but may be too wide for smaller ears"
+   },
+   "verdict": "For those who want less treble energy/brightness, or more openness, good for bigger ears/shallow IEMs that needs a wider tip for better seal",
+   "photo": "img/eartips/divinus-velvet-wide.webp",
+   "graph": "img/eartips/divinus-velvet-wide-graph.webp"
+  },
+  {
+   "id": "dunu-candy",
+   "name": "DUNU Candy",
+   "kind": "silicone",
+   "tonality": "Less bright/energetic in the treble region, slightly more vocal pop (very similar to DDHIFI ST35)",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Less bright, but a slight hit to micro-details"
+   },
+   "build": "Regular shape, silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal+",
+    "note": "Grippy, but not liquid silicone level"
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "Stem may be too stiff to stretch for big nozzles/stem squishes inwards on itself and may cover up nozzle/sound"
+   },
+   "verdict": "For those who want less treble energy/brightness",
+   "photo": "img/eartips/dunu-candy.webp",
+   "graph": "img/eartips/dunu-candy-graph.webp",
+   "fernanda": "Dunu Candy"
+  },
+  {
+   "id": "dunu-s-s",
+   "name": "DUNU S&S",
+   "kind": "silicone",
+   "tonality": "Sounds the same as the KBEAR 07s",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Cone shape, liquid silicone, slightly narrower than normal, slightly taller than normal, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Niche",
+    "note": "Really need to squish them in deeply to stay in place, may not seal/stay/fit bigger ear holes due to less width"
+   },
+   "verdict": "For those with smaller ears who wants a deep fit that stays in place with good grip",
+   "photo": "img/eartips/dunu-s-s.webp",
+   "graph": "img/eartips/dunu-s-s-graph.webp",
+   "fernanda": "Dunu Stage & Studio"
+  },
+  {
+   "id": "eletech-baroque",
+   "name": "Eletech Baroque",
+   "kind": "silicone",
+   "tonality": "Slighlty less bright/energetic in the treble region (a wide bore that's a little more detailed than divinus wides)",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Slightly more openness for a slight hit to micro-details"
+   },
+   "build": "Round shape, silicone, normal width, shorter than normal, normal opening/hole size",
+   "grip": {
+    "rating": "Normal+",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": ""
+   },
+   "verdict": "A comfier and slightly more detailed version of the Divinus Wides",
+   "photo": "img/eartips/eletech-baroque.webp",
+   "graph": "img/eartips/eletech-baroque-graph.webp"
+  },
+  {
+   "id": "eletech-baroque-stage",
+   "name": "Eletech Baroque Stage",
+   "kind": "silicone",
+   "tonality": "Slighlty less bright/energetic in the treble region (basically the same as OG Baroque but with a tiny more air although not very noticeable)",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Slightly more openness for a slight hit to micro-details"
+   },
+   "build": "Round shape, silicone, normal width, shorter than normal, normal opening/hole size",
+   "grip": {
+    "rating": "Normal+",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": ""
+   },
+   "verdict": "A comfier and slightly more detailed version of the Divinus Wides",
+   "photo": "img/eartips/eletech-baroque-stage.webp",
+   "graph": "img/eartips/eletech-baroque-stage-graph.webp"
+  },
+  {
+   "id": "epz-m100-clear",
+   "name": "EPZ M100 Clear",
+   "kind": "silicone",
+   "tonality": "Sounds the same as the KBEAR 07s",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, liquid silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Great",
+    "note": ""
+   },
+   "verdict": "07s but with better grip and flexibility, feels comfier to wear due to softer material",
+   "photo": "img/eartips/epz-m100-clear.webp",
+   "graph": "img/eartips/epz-m100-clear-graph.webp"
+  },
+  {
+   "id": "feaulle-h570",
+   "name": "Feaulle H570",
+   "kind": "silicone",
+   "tonality": "Less v-shaped, more balanced, slightly more air",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Slightly less treble detail and bass texture"
+   },
+   "build": "Regular shape, liquid silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Great",
+    "note": ""
+   },
+   "verdict": "For those who want something more neutral with good grip and comfort",
+   "photo": "img/eartips/feaulle-h570.webp",
+   "graph": "img/eartips/feaulle-h570-graph.webp",
+   "fernanda": "Feaulle H570"
+  },
+  {
+   "id": "fiio-hs18",
+   "name": "Fiio HS18",
+   "kind": "silicone",
+   "tonality": "Less v-shaped, more balanced, tamer highs (H570 without the air)",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Slightly less treble detail and bass texture"
+   },
+   "build": "Regular shape, jelly silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Great",
+    "note": ""
+   },
+   "verdict": "For those who want something more neutral with good grip and comfort",
+   "photo": "img/eartips/fiio-hs18.webp",
+   "graph": "img/eartips/fiio-hs18-graph.webp"
+  },
+  {
+   "id": "final-audio-e",
+   "name": "Final Audio E",
+   "kind": "silicone",
+   "tonality": "Less bright/energetic in the treble region, slightly more vocal pop (very similar to Dunu Candy)",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Less bright, but a slight hit to micro-details"
+   },
+   "build": "Regular shape, silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal+",
+    "note": "Grippy, but not liquid silicone level"
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "May not be wide enough for bigger ears"
+   },
+   "verdict": "For those who want less treble energy/brightness, and more emphasis on the vocals/low-end",
+   "photo": "img/eartips/final-audio-e.webp",
+   "graph": "img/eartips/final-audio-e-graph.webp",
+   "fernanda": "Final Audio Type E"
+  },
+  {
+   "id": "final-audio-fusion-g",
+   "name": "Final Audio Fusion-G",
+   "kind": "silicone",
+   "tonality": "Less bright/energetic in the treble region, tames down the treble by good amount but still maintains air, hear other regions better",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Less bright, but a hit to micro-details"
+   },
+   "build": "Regular shape, triple hybrid foam + silicone, normal width, shorter than normal, normal opening/hole size",
+   "grip": {
+    "rating": "Normal+",
+    "note": "Grippy, but not liquid silicone level"
+   },
+   "flex": {
+    "rating": "Great",
+    "note": "Lots of size options that should fir for most"
+   },
+   "verdict": "For those who want a noticeable dip in treble energy while maintaining the air",
+   "photo": "img/eartips/final-audio-fusion-g.webp",
+   "graph": "img/eartips/final-audio-fusion-g-graph.webp",
+   "fernanda": "Final Audio Fusion G"
+  },
+  {
+   "id": "harmonic-empire-sonic",
+   "name": "Harmonic Empire Sonic",
+   "kind": "silicone",
+   "tonality": "Less bright/energetic in the treble region, still maintains air",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Less bright, but a hit to micro-details"
+   },
+   "build": "Normal shape, silicone, less wide than normal, shorter than normal, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "May not seal well/small for bigger ears even with largest size"
+   },
+   "verdict": "For those who want less energy but still maintains the air",
+   "photo": "img/eartips/harmonic-empire-sonic.webp",
+   "graph": "img/eartips/harmonic-empire-sonic-graph.webp"
+  },
+  {
+   "id": "hidizs-sea-anemone",
+   "name": "Hidizs Sea Anemone",
+   "kind": "silicone",
+   "tonality": "Slightly more neutral",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Cone shape, silicone, less wide than normal, shorter than normal, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "May slip out in big ear holes due to material and shape"
+   },
+   "verdict": "For those who want slightly less sub-bass and a little smoother",
+   "photo": "img/eartips/hidizs-sea-anemone.webp",
+   "graph": "img/eartips/hidizs-sea-anemone-graph.webp"
+  },
+  {
+   "id": "infiter-variety-dot-pro",
+   "name": "Infiter Variety Dot Pro",
+   "kind": "silicone",
+   "tonality": "Less sharp/bright/energetic in the treble region, but maintains the air",
+   "tech": {
+    "rating": "Reduced",
+    "note": "More openness, but a slight hit to micro-details"
+   },
+   "build": "Regular shape, velvet silicone, slightly wider than normal, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": "Slight increase in wideness works well for big ear holes"
+   },
+   "verdict": "For those who want less treble energy/brightness while maintaining the air",
+   "photo": "img/eartips/infiter-variety-dot-pro.webp",
+   "graph": "img/eartips/infiter-variety-dot-pro-graph.webp"
+  },
+  {
+   "id": "jvc-spiral-dot-pro",
+   "name": "JVC Spiral Dot Pro",
+   "kind": "silicone",
+   "tonality": "Less sharp/bright/energetic in the treble region, but maintains the air (tames more treble than variety dot pro)",
+   "tech": {
+    "rating": "Reduced",
+    "note": "More openness, but a slight hit to micro-details"
+   },
+   "build": "Regular shape, velvet silicone, slightly wider than normal, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": "Slight increase in wideness works well for big ear holes"
+   },
+   "verdict": "For those who want less treble energy/brightness while maintaining the air",
+   "photo": "img/eartips/jvc-spiral-dot-pro.webp",
+   "graph": "img/eartips/jvc-spiral-dot-pro-graph.webp"
+  },
+  {
+   "id": "kbear-coffee",
+   "name": "KBEAR Coffee",
+   "kind": "silicone",
+   "tonality": "Less sharp/bright/energetic in the treble region, but maintains the air",
+   "tech": {
+    "rating": "Reduced",
+    "note": "More openness, but a slight hit to micro-details"
+   },
+   "build": "Regular shape, silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": ""
+   },
+   "verdict": "Good shape and enough grip + multiple sizes, comes with most IEMs which means lots of people can use it as a baseline of comparison",
+   "photo": "img/eartips/kbear-coffee.webp",
+   "graph": "img/eartips/kbear-coffee-graph.webp"
+  },
+  {
+   "id": "kbear-k08",
+   "name": "KBEAR K08",
+   "kind": "silicone",
+   "tonality": "Less bright/energetic in the treble region, slightly more vocal pop (very similar to Dunu Candy)",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Less bright, but a slight hit to micro-details"
+   },
+   "build": "Regular shape, silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": "Grippy, but not liquid silicone level"
+   },
+   "flex": {
+    "rating": "Poor",
+    "note": "Narrower fit may not be wide enough for bigger ears"
+   },
+   "verdict": "A worse version of the Dunu Candy",
+   "photo": "img/eartips/kbear-k08.webp",
+   "graph": "img/eartips/kbear-k08-graph.webp"
+  },
+  {
+   "id": "kbear-kt01-clear",
+   "name": "KBEAR KT01 Clear",
+   "kind": "silicone",
+   "tonality": "Sounds the same as the KBEAR 07s",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, liquid silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Great",
+    "note": ""
+   },
+   "verdict": "07s but with better grip and flexibility, feels comfier to wear due to softer material",
+   "photo": "img/eartips/kbear-kt01-clear.webp",
+   "graph": "img/eartips/kbear-kt01-clear-graph.webp"
+  },
+  {
+   "id": "kbear-kt02-clear",
+   "name": "KBEAR KT02 Clear",
+   "kind": "silicone",
+   "tonality": "Tamer treble/less energetic while maintaining air",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, liquid silicone, normal width, shorter than normal, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": "Grippier K07 that stays in the ear for longer, but may not fit deeply for bigger ears"
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "Can't be fitted super deeply due to wider base"
+   },
+   "verdict": "For those who want a less energetic sound, or with an IEM that has a shallower fit",
+   "photo": "img/eartips/kbear-kt02-clear.webp",
+   "graph": "img/eartips/kbear-kt02-clear-graph.webp"
+  },
+  {
+   "id": "kiwiears-flex",
+   "name": "Kiwiears Flex",
+   "kind": "silicone",
+   "tonality": "Tamer treble/less energetic while maintaining air (similar to Dunu Candy)",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Slightly less micro-nuances for smoother treble playback"
+   },
+   "build": "Regular shape, silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "verdict": "For those who want a less energetic/smoother sound",
+   "photo": "img/eartips/kiwiears-flex.webp",
+   "graph": "img/eartips/kiwiears-flex-graph.webp"
+  },
+  {
+   "id": "moondrop-spring",
+   "name": "Moondrop Spring",
+   "kind": "silicone",
+   "tonality": "Tamer treble/less energetic while maintaining air",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Slightly less micro-nuances for smoother treble playback"
+   },
+   "build": "Regular shape, silicone, normal width, shorter than normal, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "May be too small for bigger ears"
+   },
+   "verdict": "For those who want a less energetic/smoother sound",
+   "photo": "img/eartips/moondrop-spring.webp",
+   "graph": "img/eartips/moondrop-spring-graph.webp"
+  },
+  {
+   "id": "nicehck-black-silicone",
+   "name": "NiceHCK Black Silicone",
+   "kind": "silicone",
+   "tonality": "Tamer treble/less energetic while maintaining air (similar to Dunu Candy/Kiwiears Flex)",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Slightly less micro-nuances for smoother treble playback"
+   },
+   "build": "Regular shape, silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "May be a little small for big ear holes"
+   },
+   "verdict": "For those who want a less energetic/smoother sound",
+   "photo": "img/eartips/nicehck-black-silicone.webp",
+   "graph": "img/eartips/nicehck-black-silicone-graph.webp"
+  },
+  {
+   "id": "nicehck-c03-clear",
+   "name": "NiceHCK C03 Clear",
+   "kind": "silicone",
+   "tonality": "Sounds the same as the KBEAR 07s",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, liquid silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Great",
+    "note": ""
+   },
+   "verdict": "07s but with better grip and flexibility, feels comfier to wear due to softer material",
+   "photo": "img/eartips/nicehck-c03-clear.webp",
+   "graph": "img/eartips/nicehck-c03-clear-graph.webp"
+  },
+  {
+   "id": "nicehck-c04-clear",
+   "name": "NiceHCK C04 Clear",
+   "kind": "silicone",
+   "tonality": "Sounds the same as the KBEAR 07s (C03 but blue lol)",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, liquid silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Great",
+    "note": ""
+   },
+   "verdict": "07s but with better grip and flexibility, feels comfier to wear due to softer material",
+   "photo": "img/eartips/nicehck-c04-clear.webp",
+   "graph": "img/eartips/nicehck-c04-clear-graph.webp"
+  },
+  {
+   "id": "nicehck-p03-clear",
+   "name": "NiceHCK P03 Clear",
+   "kind": "silicone",
+   "tonality": "Sounds the same as the KBEAR 07s (C03 but pink lol)",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, liquid silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Great",
+    "note": ""
+   },
+   "verdict": "07s but with better grip and flexibility, feels comfier to wear due to softer material",
+   "photo": "img/eartips/nicehck-p03-clear.webp",
+   "graph": "img/eartips/nicehck-p03-clear-graph.webp"
+  },
+  {
+   "id": "pentaconn-coreir-aluminium",
+   "name": "Pentaconn Coreir Aluminium",
+   "kind": "silicone",
+   "tonality": "Sounds the same as the KBEAR 07s and other liquid silicones",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, medical silicone + aluminium ring, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "Creates more stability as the inside of the tip hole doesn't get bent when adjusting which allows sound to shoot directly into the ear with lower distortion, but tip itself can't mold to different ear shapes as well due to the in-flexable metal part"
+   },
+   "verdict": "07s but with better grip and flexibility, feels comfier to wear due to softer material, better longevity due to higher quality material vs BGVP Brass Tips but x3 the cost",
+   "photo": "img/eartips/pentaconn-coreir-aluminium.webp",
+   "graph": "img/eartips/pentaconn-coreir-aluminium-graph.webp"
+  },
+  {
+   "id": "pentaconn-coreir-brass",
+   "name": "Pentaconn Coreir Brass",
+   "kind": "silicone",
+   "tonality": "Sounds the same as the KBEAR 07s and other liquid silicones (slight 5K difference most likely due to measuring variance)",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, medical silicone + brass ring, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "Creates more stability as the inside of the tip hole doesn't get bent when adjusting which allows sound to shoot directly into the ear with lower distortion, but tip itself can't mold to different ear shapes as well due to the in-flexable metal part"
+   },
+   "verdict": "07s but with better grip and flexibility, feels comfier to wear due to softer material, better longevity due to higher quality material vs BGVP Brass Tips but x3 the cost",
+   "photo": "img/eartips/pentaconn-coreir-brass.webp",
+   "graph": "img/eartips/pentaconn-coreir-brass-graph.webp",
+   "fernanda": "Pentacon Coreir"
+  },
+  {
+   "id": "radius-zone-clear",
+   "name": "Radius Zone Clear",
+   "kind": "silicone",
+   "tonality": "Sounds very similar to K07 but a little less airy",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Round shape, liquid silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Niche",
+    "note": "Bottom base overlaps and covers the IEM - can see it being useful by providing more surface for longer/skinnier IEMs, but wtih normal ones it's harder to seal"
+   },
+   "verdict": "Other liquid silicones will be better unless you have a longer nozzle or bullet style IEM",
+   "photo": "img/eartips/radius-zone-clear.webp",
+   "graph": "img/eartips/radius-zone-clear-graph.webp"
+  },
+  {
+   "id": "roseselsa-soundcocoon",
+   "name": "Roseselsa SoundCocoon",
+   "kind": "silicone",
+   "tonality": "Sounds the same as the KBEAR 07s and other liquid silicone tips",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, liquid silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Great",
+    "note": ""
+   },
+   "verdict": "07s but with better grip and flexibility, feels comfier to wear due to softer material",
+   "photo": "img/eartips/roseselsa-soundcocoon.webp",
+   "graph": "img/eartips/roseselsa-soundcocoon-graph.webp"
+  },
+  {
+   "id": "shanling-se100",
+   "name": "Shanling SE100",
+   "kind": "silicone",
+   "tonality": "Sounds a little smoother in the treble",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, liquid silicone + metal ring, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": "Metal ring near the top adds some stability while allowing adjustability since the entire stem isn't metal and is still flexable enough"
+   },
+   "verdict": "A better version of the Sancai Nobles detail/treble extension wise while providing similar stability",
+   "photo": "img/eartips/shanling-se100.webp",
+   "graph": "img/eartips/shanling-se100-graph.webp"
+  },
+  {
+   "id": "softears-ultraclear",
+   "name": "Softears UltraClear",
+   "kind": "silicone",
+   "tonality": "Sounds a little smoother in the treble",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, liquid silicone + metal ring, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Great",
+    "note": ""
+   },
+   "verdict": "Great all-rounder that will work with most ears and IEMs, material is tougher than other liquid silicone",
+   "photo": "img/eartips/softears-ultraclear.webp",
+   "graph": "img/eartips/softears-ultraclear-graph.webp",
+   "fernanda": "Softears UC"
+  },
+  {
+   "id": "softears-ultraclear-titanium",
+   "name": "Softears UltraClear Titanium",
+   "kind": "silicone",
+   "tonality": "Slight treble boost/a little brighter",
+   "tech": {
+    "rating": "Improved",
+    "note": "Sharper transients, a little more resolving"
+   },
+   "build": "Regular shape, liquid silicone + titanium ring, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": "Metal ring near the top adds some stability while allowing adjustability since the entire stem isn't metal and is still flexable enough"
+   },
+   "verdict": "A more detailed SE100 while providing similar stability, material is tougher than other liquid silicone",
+   "photo": "img/eartips/softears-ultraclear-titanium.webp",
+   "graph": "img/eartips/softears-ultraclear-titanium-graph.webp"
+  },
+  {
+   "id": "spinfit-cp100",
+   "name": "Spinfit CP100",
+   "kind": "silicone",
+   "tonality": "Tames Treble air and some sub-bass, more balanced, slightly peakier",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Similar resolution, but less bright at the cost of slight hit to air"
+   },
+   "build": "Regular shape, medical silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Great",
+    "note": ""
+   },
+   "verdict": "For those who want less energy in the highs",
+   "photo": "img/eartips/spinfit-cp100.webp",
+   "graph": "img/eartips/spinfit-cp100-graph.webp"
+  },
+  {
+   "id": "spinfit-cp100z",
+   "name": "Spinfit CP100Z",
+   "kind": "silicone",
+   "tonality": "Tames treble energy/sibilance while maintaining air",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Slightly less treble detail for smoother playback"
+   },
+   "build": "Regular shape, silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "Stem can squeeze in on bigger/wider nozzles"
+   },
+   "verdict": "For those who want less peakiness in the treble without sacrificing the air",
+   "photo": "img/eartips/spinfit-cp100z.webp",
+   "graph": "img/eartips/spinfit-cp100z-graph.webp"
+  },
+  {
+   "id": "spinfit-cp145",
+   "name": "Spinfit CP145",
+   "kind": "silicone",
+   "tonality": "Slightly more v-shaped and energetic",
+   "tech": {
+    "rating": "Improved",
+    "note": "Slightly Sharper transients and attack, slighlty more detailed in the treble and a little more bass impact"
+   },
+   "build": "Regular shape, silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": "Stem is a little more flexable than CP100Z"
+   },
+   "verdict": "For those who want a more dynamic playback with more treble and bass",
+   "photo": "img/eartips/spinfit-cp145.webp",
+   "graph": "img/eartips/spinfit-cp145-graph.webp",
+   "fernanda": "Spinfit CP145"
+  },
+  {
+   "id": "spinfit-cp155",
+   "name": "Spinfit CP155",
+   "kind": "silicone",
+   "tonality": "Sounds the same as the K07s",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Cone shape, silicone, skinnier than normal, normal height, bigger than average hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": "Stem width is wider than K07 and doesn't cover hole"
+   },
+   "verdict": "For those who want a skinnier/less wide versions of the K07s",
+   "photo": "img/eartips/spinfit-cp155.webp",
+   "graph": "img/eartips/spinfit-cp155-graph.webp"
+  },
+  {
+   "id": "spinfit-cp240-flanges",
+   "name": "Spinfit CP240 Flanges",
+   "kind": "silicone",
+   "tonality": "More neutral and mid-range/vocal focused, noticeably tamer treble and uppermids, and less sub-bass",
+   "tech": {
+    "rating": "Reduced",
+    "note": "A lot less treble detail and sharpness in general"
+   },
+   "build": "Dual Flange shape, silicone, 2nd ring wider than normal/1st ring smaller than normal, taller than normal, regular hole size on 2nd ring and smaller hole size on 1st ring",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Poor",
+    "note": "Hard time staying in place with shallower IEMs, short nozzles, or bigger ears"
+   },
+   "verdict": "For those with long shaped IEMs that want less energy and a more neutral playback",
+   "photo": "img/eartips/spinfit-cp240-flanges.webp",
+   "graph": "img/eartips/spinfit-cp240-flanges-graph.webp"
+  },
+  {
+   "id": "spinfit-cp500",
+   "name": "Spinfit CP500",
+   "kind": "silicone",
+   "tonality": "More neutral and with noticeably tamer bass and treble, less v-shape",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Less bass impact and sub-bass extension, less treble detail"
+   },
+   "build": "Regular shape, jelly silicone, slightly wider base, normal height, regular hole size/opening",
+   "grip": {
+    "rating": "Normal+",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": "Good all aroound but base may be a bit wide for smaller ear holes"
+   },
+   "verdict": "For those who want less sub-bass and treble energy, and a more neutral playback",
+   "photo": "img/eartips/spinfit-cp500.webp",
+   "graph": "img/eartips/spinfit-cp500-graph.webp"
+  },
+  {
+   "id": "spinfit-360",
+   "name": "Spinfit 360",
+   "kind": "silicone",
+   "tonality": "More neutral with noticeably tamer sub-bass, probably the most decrease, also slightly less treble sharpness while maintaining air",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Less sub-bass impact and extension, slightly less treble sharpness"
+   },
+   "build": "Regular shape, liquid silicone, slightly wider base, normal height, regular hole size/opening",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "Hole can be a bit stiff which results in the side walls covering the nozzles a bit"
+   },
+   "verdict": "For those who want a lot less sub-bass quantity, and slightly smoother treble",
+   "photo": "img/eartips/spinfit-360.webp",
+   "graph": "img/eartips/spinfit-360-graph.webp"
+  },
+  {
+   "id": "spinfit-neo",
+   "name": "Spinfit Neo",
+   "kind": "silicone",
+   "tonality": "Slightly smoother treble while maintaining air, and slightly more pop in vocals",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Slightly less treble detail"
+   },
+   "build": "Regular shape, medical silicone, normal width, normal height, regular hole size/opening",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "Hole can be a bit stiff which results in the side walls covering the nozzles a bit"
+   },
+   "verdict": "For those who want smoother treble",
+   "photo": "img/eartips/spinfit-neo.webp",
+   "graph": "img/eartips/spinfit-neo-graph.webp",
+   "fernanda": "Spinfit Neo"
+  },
+  {
+   "id": "spinfit-omni",
+   "name": "Spinfit Omni",
+   "kind": "silicone",
+   "tonality": "Sounds the same as the K07s",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, liquid silicone, skinnier than normal, normal height, smaller hole size/opening",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Poor",
+    "note": "Hole is small and stiff, can't fit bigger nozzles, starts squeezing together and blocks parts of the nozzle opening"
+   },
+   "verdict": "Better options if you want a stickier material that sounds the same as the K07",
+   "photo": "img/eartips/spinfit-omni.webp",
+   "graph": "img/eartips/spinfit-omni-graph.webp"
+  },
+  {
+   "id": "spinfit-w1",
+   "name": "Spinfit W1",
+   "kind": "silicone",
+   "tonality": "Slightly more neutral and smoother",
+   "tech": {
+    "rating": "No Change",
+    "note": "Slighlty less air"
+   },
+   "build": "Regular shape, medical silicone, normal width, normal height, normal size hole/opening",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Great",
+    "note": ""
+   },
+   "verdict": "For those who want a smoother and more balanced sound",
+   "photo": "img/eartips/spinfit-w1.webp",
+   "graph": "img/eartips/spinfit-w1-graph.webp",
+   "fernanda": "Spinfit W1"
+  },
+  {
+   "id": "tanchjim-bass",
+   "name": "Tanchjim Bass",
+   "kind": "silicone",
+   "tonality": "Sounds the same as K07 but slighlty smoother",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, medical silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal+",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": ""
+   },
+   "verdict": "Smoother highs, and slightly grippier and thicker than K07",
+   "photo": "img/eartips/tanchjim-bass.webp",
+   "graph": "img/eartips/tanchjim-bass-graph.webp"
+  },
+  {
+   "id": "tanchjim-treble",
+   "name": "Tanchjim Treble",
+   "kind": "silicone",
+   "tonality": "Slightly less bright and smoother, tamer highs vs bass tip",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Slightly less sharp in the transients"
+   },
+   "build": "Regular shape, medical silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal+",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "Can be a bit narrow for wider ear holes"
+   },
+   "verdict": "Less bright/tamer highs, and slightly grippier and thicker than K07",
+   "photo": "img/eartips/tanchjim-treble.webp",
+   "graph": "img/eartips/tanchjim-treble-graph.webp"
+  },
+  {
+   "id": "tangzu-sancai-flange",
+   "name": "Tangzu Sancai Flange",
+   "kind": "silicone",
+   "tonality": "Vocal boost, a lot tamer treble, less air and energy, little less sub-bass",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Better vocal clarity and smoother treble at the cost of less air and detail/resolution"
+   },
+   "build": "Hat shape, rubber silicone, wide to narrow, taller than normal, normal opening/hole size",
+   "grip": {
+    "rating": "Normal+",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Poor",
+    "note": ""
+   },
+   "verdict": "Good if you want a deep fit for longer nozzles since or smaller ears, but wtih normal IEMs/bigger ears it's harder to seal because there's a slight gap from the first small cone to the wider bottom cone",
+   "photo": "img/eartips/tangzu-sancai-flange.webp",
+   "graph": "img/eartips/tangzu-sancai-flange-graph.webp"
+  },
+  {
+   "id": "tangzu-sancai-noble",
+   "name": "Tangzu Sancai Noble",
+   "kind": "silicone",
+   "tonality": "Vocal boost, tamer treble, less air and energy, little less sub-bass (similar to sancai flange but less aggressive in decreasing the treble air)",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Better vocal clarity and smoother treble at the cost of less air and detail/resolution"
+   },
+   "build": "Regular shape, rubber silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": "Metal ring near the top adds some stability while allowing adjustability since the entire stem isn't metal and is still flexable"
+   },
+   "verdict": "For those who want a more vocal/midrange approach with less treble and sub-bass",
+   "photo": "img/eartips/tangzu-sancai-noble.webp",
+   "graph": "img/eartips/tangzu-sancai-noble-graph.webp"
+  },
+  {
+   "id": "tangzu-sancai-regular",
+   "name": "Tangzu Sancai Regular",
+   "kind": "silicone",
+   "tonality": "More balanced, a little smoother, noticeable less sub-bass",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Sub-bass extension is reduced in favor for better overal balance"
+   },
+   "build": "Regular shape, rubber silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": ""
+   },
+   "verdict": "For those who want a less bassy presentation and softer material for longer listening",
+   "photo": "img/eartips/tangzu-sancai-regular.webp",
+   "graph": "img/eartips/tangzu-sancai-regular-graph.webp",
+   "fernanda": "Tangzu Sancai"
+  },
+  {
+   "id": "tangzu-sancai-wide",
+   "name": "Tangzu Sancai Wide",
+   "kind": "silicone",
+   "tonality": "Less treble/brightness/smoother while maintaining air",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Smoother sound with less detail/softer transients"
+   },
+   "build": "Regular shape, rubber silicone, slightly wider than normal, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": ""
+   },
+   "verdict": "For those who want a smoother listen and less energy, wider area works better for bigger ear holes or shallower IEMs",
+   "photo": "img/eartips/tangzu-sancai-wide.webp",
+   "graph": "img/eartips/tangzu-sancai-wide-graph.webp"
+  },
+  {
+   "id": "tri-clarion",
+   "name": "TRI Clarion",
+   "kind": "silicone",
+   "tonality": "Sounds the same as the K07s maybe a little more open",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, silicone, normal width, normal height, normal hole size/opening",
+   "grip": {
+    "rating": "Normal+",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": "Less round vs K07 and feels less tight/more open"
+   },
+   "verdict": "For those who want a comfier K07 that feels slightly more open with less isolation",
+   "photo": "img/eartips/tri-clarion.webp",
+   "graph": "img/eartips/tri-clarion-graph.webp",
+   "fernanda": "Tri clarion"
+  },
+  {
+   "id": "whizzer-lt100-clear",
+   "name": "Whizzer LT100 Clear",
+   "kind": "silicone",
+   "tonality": "Sounds the same as K07",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, liquid silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Great",
+    "note": ""
+   },
+   "verdict": "Great all-rounder that will work with most ears and IEMs, a grippier and softer K07",
+   "photo": "img/eartips/whizzer-lt100-clear.webp",
+   "graph": "img/eartips/whizzer-lt100-clear-graph.webp"
+  },
+  {
+   "id": "zhulinniao-zhu-rythme",
+   "name": "Zhulinniao Zhu Rythme",
+   "kind": "silicone",
+   "tonality": "Less treble/brightness/smoother while maintaining air",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Smoother sound with less detail/softer transients"
+   },
+   "build": "Cone shape, medical silicone, slightly narrower than normal, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "Cone shape makes it harder to fit bigger ear holes, harder to get deeper fit"
+   },
+   "verdict": "For those who want a smoother listen and less energy",
+   "photo": "img/eartips/zhulinniao-zhu-rythme.webp",
+   "graph": "img/eartips/zhulinniao-zhu-rythme-graph.webp"
+  },
+  {
+   "id": "ziigaat-black-clear",
+   "name": "Ziigaat Black Clear",
+   "kind": "silicone",
+   "tonality": "Sounds the same as K07 slighlty smoother",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, liquid silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Great",
+    "note": ""
+   },
+   "verdict": "Great all-rounder that will work with most ears and IEMs, a grippier and softer K07",
+   "photo": "img/eartips/ziigaat-black-clear.webp",
+   "graph": "img/eartips/ziigaat-black-clear-graph.webp"
+  },
+  {
+   "id": "ziigaat-clear",
+   "name": "Ziigaat Clear",
+   "kind": "silicone",
+   "tonality": "Sounds the same as K07",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, liquid silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Great",
+    "note": ""
+   },
+   "verdict": "Great all-rounder that will work with most ears and IEMs, a grippier and softer K07",
+   "photo": "img/eartips/ziigaat-clear.webp",
+   "graph": "img/eartips/ziigaat-clear-graph.webp"
+  },
+  {
+   "id": "zisin-clear",
+   "name": "Zisin Clear",
+   "kind": "silicone",
+   "tonality": "Less treble/brightness/smoother while maintaining air",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Smoother sound with less detail/softer transients"
+   },
+   "build": "Cone shape, medical silicone, wider than normal, slightly shorter than normal, slightly bigger hole/opening than normal",
+   "grip": {
+    "rating": "Great",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": "Wider base makes it good for larger ears, but may not get a deep fit for smaller ears"
+   },
+   "verdict": "For those who want a smoother listen and less energy",
+   "photo": "img/eartips/zisin-clear.webp",
+   "graph": "img/eartips/zisin-clear-graph.webp"
+  },
+  {
+   "id": "azla-sedna-foamax",
+   "name": "AZLA Sedna Foamax",
+   "kind": "foam",
+   "tonality": "Tames the most sharpness/peaks/brightness out of all the tips, smoothest treble playback, changes the sound to more mid-range/vocal forward with 4K boost, bass is not as textured and tactile in the attack as low-end is more smoothed out",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Better vocal clarity, but softer transients and a little less detailed/textured overall"
+   },
+   "build": "Normal tip shape with foam outer layer and silicone inner ring/mesh, normal width/height, normal opening hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "Seals better for bigger ears vs cone foams due to increased surface area, and more size options vs other foams"
+   },
+   "verdict": "For those who the smoothest treble playback, and a more midrange/vocal emphasis",
+   "photo": "img/eartips/azla-sedna-foamax.webp",
+   "graph": "img/eartips/azla-sedna-foamax-graph.webp"
+  },
+  {
+   "id": "comply-200",
+   "name": "Comply 200",
+   "kind": "foam",
+   "tonality": "Smoother highs, less treble energy, slightly more mid-range/vocal forward, bass is not as textured and tactile in the attack as low-end is more smoothed out",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Smoother, but softer transients and a little less textured overall"
+   },
+   "build": "Cone shape, fully foam, less round vs regular silicone tips, normal height, normal opening hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "A bit stiff and may not fully seal for bigger ear holes (similar to LETSHUOER ORANGE HYBRID but more bass)"
+   },
+   "verdict": "For those who want the vocals to pop more, and a smoother sound at the cost of slight hit to dynamics/texture (very similar to GREY MEMORY/THIEAUDIO FOAMS)",
+   "photo": "img/eartips/comply-200.webp",
+   "graph": "img/eartips/comply-200-graph.webp"
+  },
+  {
+   "id": "letshuoer-symbio-orange-hybrid",
+   "name": "Letshuoer/Symbio Orange Hybrid",
+   "kind": "foam",
+   "tonality": "Brighter sound, more uppermids/treble energy, less smooth with slightly sharper transients, bass texture unchanged",
+   "tech": {
+    "rating": "Improved",
+    "note": "Slight bump in vocal details/transients"
+   },
+   "build": "Round shape, Foam inner padding with silicone outer layer, normal round shape, normal width/height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Poor",
+    "note": "A bit stiff and may not fully seal for bigger ear holes (similar to ZEOS Render Hybrid)"
+   },
+   "verdict": "For those who want a little more pop in the vocals - although can be harder to seal/and hit to comfort",
+   "photo": "img/eartips/letshuoer-symbio-orange-hybrid.webp",
+   "graph": "img/eartips/letshuoer-symbio-orange-hybrid-graph.webp"
+  },
+  {
+   "id": "round-foams",
+   "name": "Round Foams",
+   "kind": "foam",
+   "tonality": "More balanced with tamer sub-bass, less textured low-end, but a little smoother overall",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Tamer low-end impact/softer bass texture"
+   },
+   "build": "Round shape, fully foam, slightly on the wider side, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "Seals better for bigger ears vs cone foams due to increased surface area"
+   },
+   "verdict": "For those who want less sub-bass and a smoother sound",
+   "photo": "img/eartips/round-foams.webp",
+   "graph": "img/eartips/round-foams-graph.webp"
+  },
+  {
+   "id": "thieaudio-stock-foams-tripowin-tp45",
+   "name": "Thieaudio Stock Foams (tripowin TP45)",
+   "kind": "foam",
+   "tonality": "More forward vocal/midrange boost with less treble air, bass texture is smoothed out a little and not as tactile",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Smoother, but softer transients and a little less textured overall"
+   },
+   "build": "Cone shape, fully foam, slightly on the thinner side, slightly taller, smaller opening/hole size than normal",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "Not as soft as GREY MEMORY FOAMS but offers bigger size for bigger ears"
+   },
+   "verdict": "For those who want the vocals to pop more, and a smoother sound at the cost of slight hit to dynamics/texture (very similar to GREY MEMORY/COMPLY 200)",
+   "photo": "img/eartips/thieaudio-stock-foams-tripowin-tp45.webp",
+   "graph": "img/eartips/thieaudio-stock-foams-tripowin-tp45-graph.webp"
+  },
+  {
+   "id": "grey-memory-cone-foams",
+   "name": "Grey Memory Cone Foams",
+   "kind": "foam",
+   "tonality": "More forward vocal/midrange boost with less treble air, bass texture is smoothed out a little and not as tactile, slightly less sub-bass, similar to the Thieaudio foams",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Smoother, but softer transients and a little less textured overall"
+   },
+   "build": "Cone shape, fully foam, slightly on the thinner side, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "Soft and comfy, but may have a hard time sealing bigger ear holes due to limited size"
+   },
+   "verdict": "For those who want the vocals to pop more, and a smoother sound at the cost of slight hit to dynamics/texture (very similar to THIEAUDIO FOAMS/COMPLY 200)",
+   "photo": "img/eartips/grey-memory-cone-foams.webp",
+   "graph": "img/eartips/grey-memory-cone-foams-graph.webp"
+  },
+  {
+   "id": "zeos-render-hybrid",
+   "name": "Zeos Render Hybrid",
+   "kind": "foam",
+   "tonality": "Slightly more v-shaped, more uppermids/treble energy, slightly sharper transients, feels more \"fun\"",
+   "tech": {
+    "rating": "Improved",
+    "note": "Slight bump in details and dynamics with sharper attack"
+   },
+   "build": "Normal shape, foam inner filling with silicone outer layer, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Poor",
+    "note": "A bit stiff and may not fully seal for bigger ear holes (similar to LETSHUOER ORANGE HYBRID but more bass)"
+   },
+   "verdict": "For those who want a little more bass and more pop in the vocals with a slight detail bump - although can be harder to seal/and hit to comfort",
+   "photo": "img/eartips/zeos-render-hybrid.webp",
+   "graph": "img/eartips/zeos-render-hybrid-graph.webp"
+  },
+  {
+   "id": "black-blue-silicone",
+   "name": "Black Blue Silicone",
+   "kind": "stock",
+   "tonality": "Sounds the same as the KBEAR 07s (measuring variance)",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": ""
+   },
+   "verdict": "Same as K07 but blue?",
+   "photo": "img/eartips/black-blue-silicone.webp",
+   "graph": "img/eartips/black-blue-silicone-graph.webp"
+  },
+  {
+   "id": "black-ccz-zt01-silicone",
+   "name": "Black CCZ ZT01 Silicone",
+   "kind": "stock",
+   "tonality": "Less treble/bright, smoother highs while maintaining air (very similar to orange wide and black wide)",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Slight hit to micro-details"
+   },
+   "build": "Regular shape, silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": "Tip is on the smaller side so may not fit bigger earholes"
+   },
+   "verdict": "Less energetic/bright version of the K07 but maintains openness",
+   "photo": "img/eartips/black-ccz-zt01-silicone.webp",
+   "graph": "img/eartips/black-ccz-zt01-silicone-graph.webp"
+  },
+  {
+   "id": "black-orange-silicone",
+   "name": "Black Orange Silicone",
+   "kind": "stock",
+   "tonality": "Less treble/bright, smoother highs",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Slight hit to micro-details"
+   },
+   "build": "Regular shape, silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": ""
+   },
+   "verdict": "Less energetic bright version of the K07 (same build/material)",
+   "photo": "img/eartips/black-orange-silicone.webp",
+   "graph": "img/eartips/black-orange-silicone-graph.webp"
+  },
+  {
+   "id": "black-orange-wide-silicone",
+   "name": "Black Orange Wide Silicone",
+   "kind": "stock",
+   "tonality": "Less treble/bright, smoother highs while maintaining air",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Slight hit to micro-details"
+   },
+   "build": "Regular shape, silicone, slightly wider than normal, slightly shorter than normal, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "Tip is on the smaller side so may not fit bigger earholes"
+   },
+   "verdict": "Less energetic/bright version of the K07 but maintains openness",
+   "photo": "img/eartips/black-orange-wide-silicone.webp",
+   "graph": "img/eartips/black-orange-wide-silicone-graph.webp"
+  },
+  {
+   "id": "black-smooth-stripe-silicone",
+   "name": "Black Smooth/Stripe Silicone",
+   "kind": "stock",
+   "tonality": "Slightly more forward vocals, smoother treble while maintaining air",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": ""
+   },
+   "verdict": "For those who want slightly more vocal pop, and smoother treble playback",
+   "photo": "img/eartips/black-smooth-stripe-silicone.webp",
+   "graph": "img/eartips/black-smooth-stripe-silicone-graph.webp"
+  },
+  {
+   "id": "black-silicone-softears",
+   "name": "Black Silicone Softears",
+   "kind": "stock",
+   "tonality": "Less treble/bright, smoother highs (identical to black orange silicone)",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Slight hit to micro-details"
+   },
+   "build": "Regular shape, silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": ""
+   },
+   "verdict": "Less energetic bright version of the K07 (same build/material)",
+   "photo": "img/eartips/black-silicone-softears.webp",
+   "graph": "img/eartips/black-silicone-softears-graph.webp"
+  },
+  {
+   "id": "black-silicone-wide",
+   "name": "Black Silicone Wide",
+   "kind": "stock",
+   "tonality": "Less treble/bright, smoother highs while maintaining air (very similar to orange wide)",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Slight hit to micro-details"
+   },
+   "build": "Regular shape, silicone, slightly wider than normal, slightly shorter than normal, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "verdict": "Less energetic/bright version of the K07 but maintains openness",
+   "photo": "img/eartips/black-silicone-wide.webp",
+   "graph": "img/eartips/black-silicone-wide-graph.webp"
+  },
+  {
+   "id": "black-yellow-silicone",
+   "name": "Black Yellow Silicone",
+   "kind": "stock",
+   "tonality": "Less treble/bright, smoother highs (identical to black orange silicone and black softears silicone)",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Slight hit to micro-details"
+   },
+   "build": "Regular shape, silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": ""
+   },
+   "verdict": "Less energetic bright version of the K07 (same build/material)",
+   "photo": "img/eartips/black-yellow-silicone.webp",
+   "graph": "img/eartips/black-yellow-silicone-graph.webp"
+  },
+  {
+   "id": "white-silicone",
+   "name": "White Silicone",
+   "kind": "stock",
+   "tonality": "Sounds the same as the KBEAR 07s",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, medical silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Great",
+    "note": ""
+   },
+   "verdict": "Same but grippier and softer",
+   "photo": "img/eartips/white-silicone.webp",
+   "graph": "img/eartips/white-silicone-graph.webp"
+  },
+  {
+   "id": "white-silicone-black-ring",
+   "name": "White Silicone Black Ring",
+   "kind": "stock",
+   "tonality": "Slightly more forward vocals, smoother treble while maintaining air (very similar to smooth/stripe black silicone)",
+   "tech": {
+    "rating": "No Change",
+    "note": ""
+   },
+   "build": "Regular shape, silicone, normal width, normal height, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal+",
+    "note": ""
+   },
+   "verdict": "For those who want slightly more vocal pop, and smoother treble playback",
+   "photo": "img/eartips/white-silicone-black-ring.webp",
+   "graph": "img/eartips/white-silicone-black-ring-graph.webp"
+  },
+  {
+   "id": "white-silicone-wide",
+   "name": "White Silicone Wide",
+   "kind": "stock",
+   "tonality": "Less treble/bright, smoother highs while maintaining air",
+   "tech": {
+    "rating": "Reduced",
+    "note": "Slight hit to micro-details"
+   },
+   "build": "Regular shape, silicone, slightly wider than normal, slightly shorter than normal, normal opening/hole size",
+   "grip": {
+    "rating": "Normal",
+    "note": ""
+   },
+   "flex": {
+    "rating": "Normal",
+    "note": "Tip is on the smaller side so may not fit bigger earholes"
+   },
+   "verdict": "Less energetic/bright version of the K07 but maintains openness",
+   "photo": "img/eartips/white-silicone-wide.webp",
+   "graph": "img/eartips/white-silicone-wide-graph.webp"
+  }
+ ]
+}

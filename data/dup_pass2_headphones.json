@@ -1,0 +1,155 @@
+[
+ {
+  "a": "Ultrasone Edition 8",
+  "b": "Ultrasone Edition 8 Palladium",
+  "idA": "hp-ultrasone-edition-8",
+  "idB": "hp-ultrasone-edition-8-palladium",
+  "rms": 0.0,
+  "sim": 0.64,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Modhouse Tungsten DS V2",
+  "b": "Modhouse Tungsten DS V2 mods",
+  "idA": "hp-modhouse-tungsten-ds-v2",
+  "idB": "hp-modhouse-tungsten-ds-v2-mods",
+  "rms": 0.57,
+  "sim": 0.85,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Koss KPH30i",
+  "b": "Koss KPH30i Clear",
+  "idA": "hp-koss-kph30i",
+  "idB": "hp-koss-kph30i-clear",
+  "rms": 0.99,
+  "sim": 0.67,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Fostex TH900mk2",
+  "b": "Fostex TH900mk2 Sapphire Blue",
+  "idA": "hp-fostex-th900mk2",
+  "idB": "hp-fostex-th900mk2-sapphire-blue",
+  "rms": 1.03,
+  "sim": 0.53,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Fostex TH900mk2",
+  "b": "Fostex TH900mk2 OG Red",
+  "idA": "hp-fostex-th900mk2",
+  "idB": "hp-fostex-th900mk2-og-red",
+  "rms": 1.09,
+  "sim": 0.7,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Polk Audio UltraFocus 8000",
+  "b": "Polk Audio UltraFocus 8000 NC",
+  "idA": "hp-polk-audio-ultrafocus-8000",
+  "idB": "hp-polk-audio-ultrafocus-8000-nc",
+  "rms": 1.15,
+  "sim": 0.91,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Koss KPH40",
+  "b": "Koss KPH40 Utility",
+  "idA": "hp-koss-kph40",
+  "idB": "hp-koss-kph40-utility",
+  "rms": 1.2,
+  "sim": 0.56,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "HiFiMan HE400se V1",
+  "b": "HiFiMan HE400se V1 Super Grills mod",
+  "idA": "hp-hifiman-he400se-v1",
+  "idB": "hp-hifiman-he400se-v1-super-grills-mod",
+  "rms": 1.36,
+  "sim": 0.54,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Audeze LCD-2",
+  "b": "Audeze LCD-2 Classic",
+  "idA": "hp-audeze-lcd-2",
+  "idB": "hp-audeze-lcd-2-classic",
+  "rms": 1.39,
+  "sim": 0.56,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Fostex TH900mk2",
+  "b": "Fostex TH900mk2 Pearl White",
+  "idA": "hp-fostex-th900mk2",
+  "idB": "hp-fostex-th900mk2-pearl-white",
+  "rms": 1.63,
+  "sim": 0.57,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "*MOD Hifiman HE4XX Fazor Mod",
+  "b": "HIFIMAN HE4XX",
+  "idA": "hp-mod-hifiman-he4xx-fazor-mod-modded-by-nerin",
+  "idB": "hp-hifiman-he4xx",
+  "rms": 1.71,
+  "sim": 0.5,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "AKG K361",
+  "b": "AKG K361BT",
+  "idA": "hp-akg-k361",
+  "idB": "hp-akg-k361bt",
+  "rms": 1.74,
+  "sim": 0.8,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Grado HF1",
+  "b": "Grado HF1 Prototype",
+  "idA": "hp-grado-hf1",
+  "idB": "hp-grado-hf1-prototype",
+  "rms": 1.76,
+  "sim": 0.38,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "AKG K553",
+  "b": "AKG K553 MKII",
+  "idA": "hp-akg-k553",
+  "idB": "hp-akg-k553-mkii",
+  "rms": 1.81,
+  "sim": 0.62,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "HIFIMAN HE1000",
+  "b": "HiFiMAN HE1000 Unveiled",
+  "idA": "hp-hifiman-he1000",
+  "idB": "hp-hifiman-he1000-unveiled",
+  "rms": 1.91,
+  "sim": 0.57,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Sennheiser PXC 550 Wireless",
+  "b": "Sennheiser PXC 550-II Wireless",
+  "idA": "hp-sennheiser-pxc-550-wireless-wired-anc-on",
+  "idB": "hp-sennheiser-pxc-550-ii-wireless",
+  "rms": 1.94,
+  "sim": 0.91,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Beyerdynamic DJX-1",
+  "b": "Beyerdynamic T1",
+  "idA": "hp-beyerdynamic-djx-1",
+  "idB": "hp-beyerdynamic-t1",
+  "rms": 1.94,
+  "sim": 0.29,
+  "why": "same model number, one name's words inside the other's"
+ }
+]

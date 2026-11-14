@@ -1,0 +1,875 @@
+{
+ "duplicates": [
+  {
+   "dupId": "madoo-t711",
+   "dupName": "Madoo T711",
+   "keepId": "madoo-type-711",
+   "keepName": "Madoo Type 711",
+   "reason": "T711 = Typ 711 shorthand"
+  },
+  {
+   "dupId": "mangird-tea-2",
+   "dupName": "Mangird Tea 2",
+   "keepId": "mangird-xenns-tea-2",
+   "keepName": "Mangird Xenns Tea 2",
+   "reason": "Xenns Mangird Tea 2, brand word dropped/reordered"
+  },
+  {
+   "dupId": "xenns-mangird-tea2",
+   "dupName": "Xenns Mangird Tea2",
+   "keepId": "mangird-xenns-tea-2",
+   "keepName": "Mangird Xenns Tea 2",
+   "reason": "Xenns Mangird Tea 2, brand word dropped/reordered"
+  },
+  {
+   "dupId": "xenns-tea-2",
+   "dupName": "XENNS Tea 2",
+   "keepId": "mangird-xenns-tea-2",
+   "keepName": "Mangird Xenns Tea 2",
+   "reason": "Xenns Mangird Tea 2, brand word dropped/reordered"
+  },
+  {
+   "dupId": "mangird-tea",
+   "dupName": "Mangird Tea",
+   "keepId": "xenns-mangird-tea",
+   "keepName": "Xenns Mangird Tea",
+   "reason": "Xenns Mangird Tea, brand word dropped/reordered"
+  },
+  {
+   "dupId": "mangird-xenns-tea",
+   "dupName": "Mangird  Xenns Tea",
+   "keepId": "xenns-mangird-tea",
+   "keepName": "Xenns Mangird Tea",
+   "reason": "Xenns Mangird Tea, brand word dropped/reordered"
+  },
+  {
+   "dupId": "xenns-tea",
+   "dupName": "XENNS Tea",
+   "keepId": "xenns-mangird-tea",
+   "keepName": "Xenns Mangird Tea",
+   "reason": "Xenns Mangird Tea, brand word dropped/reordered"
+  },
+  {
+   "dupId": "mangird-tea-pro",
+   "dupName": "Mangird Tea Pro",
+   "keepId": "xenns-mangird-tea-pro",
+   "keepName": "XENNS Mangird Tea Pro",
+   "reason": "same Tea Pro; brand word dropped / typo"
+  },
+  {
+   "dupId": "xenns-mangrid-tea-pro",
+   "dupName": "Xenns Mangrid Tea PRO",
+   "keepId": "xenns-mangird-tea-pro",
+   "keepName": "XENNS Mangird Tea Pro",
+   "reason": "same Tea Pro; brand word dropped / typo"
+  },
+  {
+   "dupId": "xenns-tea-pro",
+   "dupName": "XENNS Tea PRO",
+   "keepId": "xenns-mangird-tea-pro",
+   "keepName": "XENNS Mangird Tea Pro",
+   "reason": "same Tea Pro; brand word dropped / typo"
+  },
+  {
+   "dupId": "xenns-tea-pro-se",
+   "dupName": "Xenns Tea Pro SE",
+   "keepId": "xenns-mangird-tea-pro-se",
+   "keepName": "XENNS Mangird Tea Pro SE",
+   "reason": "brand word dropped"
+  },
+  {
+   "dupId": "mangird-top",
+   "dupName": "Mangird Top",
+   "keepId": "xenns-mangird-top",
+   "keepName": "Xenns Mangird Top",
+   "reason": "brand word dropped"
+  },
+  {
+   "dupId": "xenns-top",
+   "dupName": "XENNS Top",
+   "keepId": "xenns-mangird-top",
+   "keepName": "Xenns Mangird Top",
+   "reason": "brand word dropped"
+  },
+  {
+   "dupId": "xenns-top-pro",
+   "dupName": "Xenns Top Pro",
+   "keepId": "xenns-mangird-top-pro",
+   "keepName": "Xenns Mangird Top Pro",
+   "reason": "brand word dropped"
+  },
+  {
+   "dupId": "xenns-up",
+   "dupName": "XENNS UP",
+   "keepId": "xenns-mangird-up",
+   "keepName": "XENNS Mangird UP",
+   "reason": "brand word dropped"
+  },
+  {
+   "dupId": "myer-audio-cklvx-d41",
+   "dupName": "MYER-AUDIO  CKLVX D41",
+   "keepId": "myer-audio-cklvx-ck-d41",
+   "keepName": "Myer Audio CKLVX CK-D41",
+   "reason": "CKLVX D41 = CK-D41"
+  },
+  {
+   "dupId": "myer-cklvx-d41",
+   "dupName": "Myer CKLVX D41",
+   "keepId": "myer-audio-cklvx-ck-d41",
+   "keepName": "Myer Audio CKLVX CK-D41",
+   "reason": "CKLVX D41 = CK-D41"
+  },
+  {
+   "dupId": "myer-ck2v",
+   "dupName": "MYER CK2V",
+   "keepId": "myer-audio-cklvx-ck2v",
+   "keepName": "MYER-AUDIO  CKLVX CK2V",
+   "reason": "same CK2V; note myer-audio-ck2v already merges into myer-ck2v, re-point it"
+  },
+  {
+   "dupId": "myer-cklvx-ck2v",
+   "dupName": "Myer CKLVX CK2V",
+   "keepId": "myer-audio-cklvx-ck2v",
+   "keepName": "MYER-AUDIO  CKLVX CK2V",
+   "reason": "same CK2V; note myer-audio-ck2v already merges into myer-ck2v, re-point it"
+  },
+  {
+   "dupId": "myer-audio-d62",
+   "dupName": "Myer Audio D62",
+   "keepId": "myer-audio-cklvx-d62",
+   "keepName": "MYER-AUDIO CKLVX D62",
+   "reason": "series/brand word dropped"
+  },
+  {
+   "dupId": "myer-cklvx-d62",
+   "dupName": "MYER CKLVX D62",
+   "keepId": "myer-audio-cklvx-d62",
+   "keepName": "MYER-AUDIO CKLVX D62",
+   "reason": "series/brand word dropped"
+  },
+  {
+   "dupId": "myer-audio-sla3",
+   "dupName": "Myer Audio SLA3",
+   "keepId": "myer-audio-sliivo-sla3",
+   "keepName": "MYER-AUDIO  SLIIVO SLA3",
+   "reason": "series/brand word dropped"
+  },
+  {
+   "dupId": "myer-sliivo-sla3",
+   "dupName": "MYER SLIIVO SLA3",
+   "keepId": "myer-audio-sliivo-sla3",
+   "keepName": "MYER-AUDIO  SLIIVO SLA3",
+   "reason": "series/brand word dropped"
+  },
+  {
+   "dupId": "myer-audio-slt6",
+   "dupName": "Myer Audio SLT6",
+   "keepId": "myer-audio-sliivo-slt6",
+   "keepName": "MYER-AUDIO  SLIIVO SLT6",
+   "reason": "series/brand word dropped"
+  },
+  {
+   "dupId": "myer-sliivo-slt6",
+   "dupName": "Myer SLIIVO SLT6",
+   "keepId": "myer-audio-sliivo-slt6",
+   "keepName": "MYER-AUDIO  SLIIVO SLT6",
+   "reason": "series/brand word dropped"
+  },
+  {
+   "dupId": "myer-audio-sl-224",
+   "dupName": "Myer Audio SL-224",
+   "keepId": "myer-audio-sliivo-sl224",
+   "keepName": "MYER-AUDIO  SLIIVO SL224",
+   "reason": "series/brand word dropped"
+  },
+  {
+   "dupId": "myer-sliivo-sl224",
+   "dupName": "Myer SLIIVO SL224",
+   "keepId": "myer-audio-sliivo-sl224",
+   "keepName": "MYER-AUDIO  SLIIVO SL224",
+   "reason": "series/brand word dropped"
+  },
+  {
+   "dupId": "myer-sliivo-sl41",
+   "dupName": "MYER SLIIVO SL41",
+   "keepId": "myer-audio-sliivo-sl41",
+   "keepName": "MYER-AUDIO SLIIVO SL41",
+   "reason": "brand word dropped"
+  },
+  {
+   "dupId": "myer-audio-slivo-sl-41-mk2",
+   "dupName": "Myer-Audio SLIVO SL-41 MK2",
+   "keepId": "myer-audio-sliivo-sl-41-mk2",
+   "keepName": "MYER-AUDIO  SLIIVO SL-41 MK2",
+   "reason": "SLIVO typo / brand word dropped"
+  },
+  {
+   "dupId": "myer-sliivo-sl41-mk2",
+   "dupName": "Myer SLIIVO SL41 MK2",
+   "keepId": "myer-audio-sliivo-sl-41-mk2",
+   "keepName": "MYER-AUDIO  SLIIVO SL-41 MK2",
+   "reason": "SLIVO typo / brand word dropped"
+  },
+  {
+   "dupId": "myer-audio-cklvx-hydra",
+   "dupName": "Myer Audio CKLVX Hydra",
+   "keepId": "myer-audio-cklvx-x-soundcheck39-hydra",
+   "keepName": "MYER-AUDIO CKLVX x Soundcheck39 Hydra",
+   "reason": "Hydra is the Soundcheck39 collab"
+  },
+  {
+   "dupId": "nd-nd-001",
+   "dupName": "ND ND-001",
+   "keepId": "nd-earphone-nd-001",
+   "keepName": "ND Earphone ND-001",
+   "reason": "brand spelling"
+  },
+  {
+   "dupId": "nd-nd-x12",
+   "dupName": "ND ND-X12",
+   "keepId": "nd-earphone-nd-x12",
+   "keepName": "ND Earphone ND-X12",
+   "reason": "brand spelling"
+  },
+  {
+   "dupId": "nd-x12",
+   "dupName": "ND x12",
+   "keepId": "nd-earphone-nd-x12",
+   "keepName": "ND Earphone ND-X12",
+   "reason": "brand spelling"
+  },
+  {
+   "dupId": "nd-planet",
+   "dupName": "ND PLANET",
+   "keepId": "nd-nd-planet",
+   "keepName": "ND ND-Planet",
+   "reason": "brand prefix dropped"
+  },
+  {
+   "dupId": "nf-acous-na1",
+   "dupName": "NF ACOUS NA1",
+   "keepId": "nf-audio-na1",
+   "keepName": "NF AUDIO NA1",
+   "reason": "NF Acous = old name of NF Audio"
+  },
+  {
+   "dupId": "nf-acous-na2",
+   "dupName": "NF ACOUS NA2+",
+   "keepId": "nf-audio-na2",
+   "keepName": "NF Audio NA2+",
+   "reason": "NF Acous = NF Audio"
+  },
+  {
+   "dupId": "nf-acous-audio-na2",
+   "dupName": "NF Acous/Audio NA2+",
+   "keepId": "nf-audio-na2",
+   "keepName": "NF Audio NA2+",
+   "reason": "NF Acous = NF Audio"
+  },
+  {
+   "dupId": "nf-acous-na20",
+   "dupName": "NF ACOUS NA20",
+   "keepId": "nf-audio-na20",
+   "keepName": "NF Audio NA20",
+   "reason": "NF Acous = NF Audio"
+  },
+  {
+   "dupId": "nf-acous-na3",
+   "dupName": "NF ACOUS NA3",
+   "keepId": "nf-audio-na3",
+   "keepName": "NF Audio NA3",
+   "reason": "NF Acous = NF Audio"
+  },
+  {
+   "dupId": "nf-acous-nf2u",
+   "dupName": "NF ACOUS NF2u",
+   "keepId": "nf-audio-nf2u",
+   "keepName": "NF AUDIO NF2U",
+   "reason": "NF Acous = NF Audio"
+  },
+  {
+   "dupId": "nf-acous-nm2",
+   "dupName": "NF ACOUS NM2",
+   "keepId": "nf-audio-nm2",
+   "keepName": "NF Audio NM2",
+   "reason": "NF Acous = NF Audio"
+  },
+  {
+   "dupId": "nf-acous-nm20",
+   "dupName": "NF ACOUS NM20",
+   "keepId": "nf-audio-nm20",
+   "keepName": "NF Audio NM20",
+   "reason": "NF Acous = NF Audio"
+  },
+  {
+   "dupId": "nf-acous-audio-nm20",
+   "dupName": "NF Acous/Audio NM20",
+   "keepId": "nf-audio-nm20",
+   "keepName": "NF Audio NM20",
+   "reason": "NF Acous = NF Audio"
+  },
+  {
+   "dupId": "nfacous-nm25",
+   "dupName": "NFAcous ['NM25']",
+   "keepId": "nf-audio-nm25",
+   "keepName": "NF Audio NM25",
+   "reason": "NF Acous = NF Audio"
+  },
+  {
+   "dupId": "nfacous-ra15",
+   "dupName": "NFAcous RA15",
+   "keepId": "nf-audio-ra15",
+   "keepName": "NF Audio RA15",
+   "reason": "NF Acous = NF Audio"
+  },
+  {
+   "dupId": "nf-acous-rg15",
+   "dupName": "NF ACOUS RG15",
+   "keepId": "nf-audio-rg15",
+   "keepName": "NF Audio RG15",
+   "reason": "NF Acous = NF Audio"
+  },
+  {
+   "dupId": "nf-acous-audio-rg15",
+   "dupName": "NF Acous/Audio RG15",
+   "keepId": "nf-audio-rg15",
+   "keepName": "NF Audio RG15",
+   "reason": "NF Acous = NF Audio"
+  },
+  {
+   "dupId": "nf-acous-audio-ra05",
+   "dupName": "NF Acous/Audio RA05",
+   "keepId": "nf-ra05",
+   "keepName": "NF RA05",
+   "reason": "NF Acous = NF Audio"
+  },
+  {
+   "dupId": "nfaudio-ne4",
+   "dupName": "NFAudio ['NE4']",
+   "keepId": "nf-acous-ne4",
+   "keepName": "NF ACOUS NE4",
+   "reason": "NF Acous = NF Audio, plain NE4"
+  },
+  {
+   "dupId": "nf-audio-ne4-nf-audio-ne4-clr",
+   "dupName": "NF AUDIO NE4 (NF AUDIO NE4 CLR)",
+   "keepId": "nf-audio-ne4-clear",
+   "keepName": "NF AUDIO NE4 CLEAR",
+   "reason": "CLR = CLEAR, same config"
+  },
+  {
+   "dupId": "nf-audio-x-mirage-rg15",
+   "dupName": "NF AUDIO x Mirage RG15",
+   "keepId": "nf-rg15-x-assassin-s-creed-mirage",
+   "keepName": "NF RG15 x Assassin's Creed Mirage",
+   "reason": "same Mirage edition"
+  },
+  {
+   "dupId": "nicehck-nicehck-nx8-se",
+   "dupName": "NiceHCK NiceHCK NX8 SE",
+   "keepId": "nicehck-nx8-se",
+   "keepName": "Nicehck NX8 SE",
+   "reason": "doubled brand"
+  },
+  {
+   "dupId": "noble-audio-k10",
+   "dupName": "Noble Audio K10",
+   "keepId": "noble-audio-kaiser-10",
+   "keepName": "Noble Audio Kaiser 10",
+   "reason": "K10 = Kaiser 10"
+  },
+  {
+   "dupId": "ns-audio-ns5mkii-bass",
+   "dupName": "NS Audio NS5MKII Bass",
+   "keepId": "ns-audio-ns5-mkii-extra-bass",
+   "keepName": "NS Audio NS5 MKII Extra Bass",
+   "reason": "same model, rms 0.10"
+  },
+  {
+   "dupId": "penon-10th-anniversary-iem",
+   "dupName": "Penon 10th Anniversary IEM",
+   "keepId": "penon-10th-anniversary",
+   "keepName": "Penon 10th Anniversary",
+   "reason": "IEM suffix / typo"
+  },
+  {
+   "dupId": "penon-10th-annivesary",
+   "dupName": "PENON 10TH ANNIVESARY",
+   "keepId": "penon-10th-anniversary",
+   "keepName": "Penon 10th Anniversary",
+   "reason": "IEM suffix / typo"
+  },
+  {
+   "dupId": "qkz-qkz-x-hbb-hades",
+   "dupName": "QKZ ['QKZ x HBB Hades']",
+   "keepId": "qkz-x-hbb-hades",
+   "keepName": "QKZ x HBB Hades",
+   "reason": "list-formatted name"
+  },
+  {
+   "dupId": "qkz-qkz-x-hbb-khan",
+   "dupName": "QKZ QKZ X HBB KHAN",
+   "keepId": "qkz-x-hbb-khan",
+   "keepName": "QKZ x HBB Khan",
+   "reason": "list-formatted name / typo"
+  },
+  {
+   "dupId": "qkz-x-hbb-kahn",
+   "dupName": "QKZ x HBB Kahn",
+   "keepId": "qkz-x-hbb-khan",
+   "keepName": "QKZ x HBB Khan",
+   "reason": "list-formatted name / typo"
+  },
+  {
+   "dupId": "qoa-magarita",
+   "dupName": "QoA Magarita",
+   "keepId": "qoa-margarita",
+   "keepName": "Qoa ['Margarita']",
+   "reason": "typo"
+  },
+  {
+   "dupId": "rose-qt9-mk2",
+   "dupName": "Rose QT9 MK2",
+   "keepId": "rose-technics-qt9-mk2",
+   "keepName": "Rose Technics QT9 MK2",
+   "reason": "brand word dropped"
+  },
+  {
+   "dupId": "rose-qt9-mk3",
+   "dupName": "Rose QT9 MK3",
+   "keepId": "rose-technics-roseselsa-qt9-mk3",
+   "keepName": "Rose Technics (Roseselsa) QT9 MK3",
+   "reason": "brand word dropped"
+  },
+  {
+   "dupId": "rose-technics-qt9-mk3",
+   "dupName": "Rose Technics ['QT9 MK3']",
+   "keepId": "rose-technics-roseselsa-qt9-mk3",
+   "keepName": "Rose Technics (Roseselsa) QT9 MK3",
+   "reason": "brand word dropped"
+  },
+  {
+   "dupId": "rose-star-city-5-pro",
+   "dupName": "Rose Star City 5 Pro",
+   "keepId": "rose-technics-star-city-5-pro",
+   "keepName": "Rose Technics Star City 5 Pro",
+   "reason": "Rose/Roseselsa brand spelling"
+  },
+  {
+   "dupId": "roseselsa-star-city-5-pro",
+   "dupName": "Roseselsa Star City 5 Pro",
+   "keepId": "rose-technics-star-city-5-pro",
+   "keepName": "Rose Technics Star City 5 Pro",
+   "reason": "Rose/Roseselsa brand spelling"
+  },
+  {
+   "dupId": "rose-technics-roseselsa-star-city-5-pro",
+   "dupName": "Rose Technics (Roseselsa) Star City 5 Pro",
+   "keepId": "rose-technics-star-city-5-pro",
+   "keepName": "Rose Technics Star City 5 Pro",
+   "reason": "Rose/Roseselsa brand spelling"
+  },
+  {
+   "dupId": "roseselsa-star-city-5",
+   "dupName": "ROSESELSA STAR CITY 5",
+   "keepId": "rose-technics-star-city-5",
+   "keepName": "Rose Technics Star City 5",
+   "reason": "Roseselsa = Rose Technics"
+  },
+  {
+   "dupId": "rose-quietsea",
+   "dupName": "Rose QuietSea",
+   "keepId": "rose-technics-quietsea",
+   "keepName": "Rose Technics QuietSea",
+   "reason": "brand spelling"
+  },
+  {
+   "dupId": "roseselsa-quiet-sea",
+   "dupName": "Roseselsa Quiet Sea",
+   "keepId": "rose-technics-quietsea",
+   "keepName": "Rose Technics QuietSea",
+   "reason": "brand spelling"
+  },
+  {
+   "dupId": "rose-quietsea-ii",
+   "dupName": "Rose QuietSea II",
+   "keepId": "rose-technics-roseselsa-quietsea-ii",
+   "keepName": "Rose Technics (Roseselsa) Quietsea II",
+   "reason": "brand spelling, II = 2"
+  },
+  {
+   "dupId": "roseselsa-quietsea-ii",
+   "dupName": "ROSESELSA QuietSea II",
+   "keepId": "rose-technics-roseselsa-quietsea-ii",
+   "keepName": "Rose Technics (Roseselsa) Quietsea II",
+   "reason": "brand spelling, II = 2"
+  },
+  {
+   "dupId": "rosetechnics-quietsea-2",
+   "dupName": "RoseTechnics QuietSea 2",
+   "keepId": "rose-technics-roseselsa-quietsea-ii",
+   "keepName": "Rose Technics (Roseselsa) Quietsea II",
+   "reason": "brand spelling, II = 2"
+  },
+  {
+   "dupId": "roseselsa-aurora-ultra",
+   "dupName": "ROSESELSA Aurora Ultra",
+   "keepId": "rose-technics-aurora-ultra",
+   "keepName": "Rose Technics Aurora Ultra",
+   "reason": "Roseselsa = Rose Technics"
+  },
+  {
+   "dupId": "roseselsa-earfree-i3",
+   "dupName": "ROSESELSA EARFREE-i3",
+   "keepId": "rose-technics-earfree-i3",
+   "keepName": "Rose Technics Earfree i3",
+   "reason": "Roseselsa = Rose Technics"
+  },
+  {
+   "dupId": "roseselsa-x-aav-cj20",
+   "dupName": "ROSESELSA x AAV CJ20",
+   "keepId": "roseselsa-cj20-x-andyaudiovault",
+   "keepName": "Roseselsa CJ20 x AndyAudioVault",
+   "reason": "AAV = AndyAudioVault"
+  },
+  {
+   "dupId": "rosetechnics-x-aav-cj20",
+   "dupName": "RoseTechnics x AAV CJ20",
+   "keepId": "roseselsa-cj20-x-andyaudiovault",
+   "keepName": "Roseselsa CJ20 x AndyAudioVault",
+   "reason": "AAV = AndyAudioVault"
+  },
+  {
+   "dupId": "samsung-eo-ig955",
+   "dupName": "Samsung EO-IG955",
+   "keepId": "samsung-akg-eo-ig955",
+   "keepName": "Samsung AKG EO-IG955",
+   "reason": "AKG word dropped"
+  },
+  {
+   "dupId": "seeaudio-x-z-review-rinko",
+   "dupName": "SeeAudio  x Z Review Rinko",
+   "keepId": "seeaudio-x-z-reviews-rinko",
+   "keepName": "SeeAudio x Z-Reviews Rinko",
+   "reason": "typo"
+  },
+  {
+   "dupId": "seeaudio-x-crinacle-midnight",
+   "dupName": "SeeAudio X Crinacle Midnight",
+   "keepId": "seeaudio-x-crinacle-yume-midnight",
+   "keepName": "SeeAudio x Crinacle Yume Midnight",
+   "reason": "model word dropped"
+  },
+  {
+   "dupId": "shozy-1-1",
+   "dupName": "SHOZY 1.1",
+   "keepId": "shozy-form-1-1",
+   "keepName": "Shozy Form 1.1",
+   "reason": "Form word dropped"
+  },
+  {
+   "dupId": "shozy-1-4",
+   "dupName": "SHOZY 1.4",
+   "keepId": "shozy-form-1-4",
+   "keepName": "SHOZY Form 1.4",
+   "reason": "Form word dropped"
+  },
+  {
+   "dupId": "simgot-em6l",
+   "dupName": "Simgot EM6L",
+   "keepId": "simgot-em6l-phoenix",
+   "keepName": "Simgot EM6L Phoenix",
+   "reason": "EM6L is the Phoenix"
+  },
+  {
+   "dupId": "smabat-m4-balanced-armature-driver",
+   "dupName": "Smabat M4 (balanced armature driver)",
+   "keepId": "smabat-m4-ba",
+   "keepName": "Smabat M4+BA",
+   "reason": "same BA config, rms 0.09"
+  },
+  {
+   "dupId": "softears-studio4-softears-studio4-starry",
+   "dupName": "Softears Studio4 (Softears Studio4 Starry)",
+   "keepId": "softears-studio4-starry-version",
+   "keepName": "SoftEars Studio4 Starry Version",
+   "reason": "same, rms 0.01"
+  },
+  {
+   "dupId": "strauss-em205",
+   "dupName": "Strauss em205",
+   "keepId": "strauss-and-wagner-em205",
+   "keepName": "Strauss and Wagner EM205",
+   "reason": "brand truncated"
+  },
+  {
+   "dupId": "symphonium-x-elise-helios-se",
+   "dupName": "Symphonium x Elise Helios SE",
+   "keepId": "symphonium-audio-x-elise-audio-helios-se",
+   "keepName": "Symphonium Audio x Elise Audio Helios SE",
+   "reason": "brand words dropped"
+  },
+  {
+   "dupId": "tangzu-fu-du-verse-i",
+   "dupName": "TangZu Fu Du (Verse I)",
+   "keepId": "tangzu-fudu",
+   "keepName": "TANGZU FUDU",
+   "reason": "Fudu (Verse 1) original"
+  },
+  {
+   "dupId": "tangzu-wan-er-s-g-2-jade",
+   "dupName": "Tangzu Wan'Er S.G 2 Jade",
+   "keepId": "tangzu-wan-er-sg-2-jade-dragon",
+   "keepName": "Tangzu Wan'er SG 2 Jade Dragon",
+   "reason": "Jade = Jade Dragon colourway"
+  },
+  {
+   "dupId": "tangzu-wan-er-studio-edition",
+   "dupName": "Tangzu Wan'Er Studio Edition",
+   "keepId": "tangzu-waner-s-g-studio-edition",
+   "keepName": "Tangzu Waner S.G Studio Edition",
+   "reason": "S.G word dropped"
+  },
+  {
+   "dupId": "tangzu-waner-2-amethyst-dragon",
+   "dupName": "TANGZU Waner 2 Amethyst Dragon",
+   "keepId": "tangzu-waner-s-g-2-amethyst-dragon",
+   "keepName": "Tangzu Waner S.G 2 Amethyst Dragon",
+   "reason": "S.G word dropped"
+  },
+  {
+   "dupId": "tangzu-wuzetian-heyday",
+   "dupName": "Tangzu Wuzetian Heyday",
+   "keepId": "tangzu-zetian-wu-heyday",
+   "keepName": "Tangzu Zetian Wu Heyday",
+   "reason": "word order"
+  },
+  {
+   "dupId": "thieaudio-l3",
+   "dupName": "ThieAudio L3",
+   "keepId": "thieaudio-legacy-3",
+   "keepName": "ThieAudio Legacy 3",
+   "reason": "L3 = Legacy 3"
+  },
+  {
+   "dupId": "thieaudio-mk2",
+   "dupName": "THIEAUDIO MK2",
+   "keepId": "thieaudio-oracle-mk2",
+   "keepName": "ThieAudio Oracle MK2",
+   "reason": "Oracle word dropped"
+  },
+  {
+   "dupId": "thieaudio-v16",
+   "dupName": "ThieAudio V16",
+   "keepId": "thieaudio-v16-divinity",
+   "keepName": "Thieaudio V16 Divinity",
+   "reason": "V16 Divinity"
+  },
+  {
+   "dupId": "tinhifi-c2",
+   "dupName": "TinHiFi C2",
+   "keepId": "tin-hifi-c2-mech-warrior",
+   "keepName": "Tin Hifi C2 Mech Warrior",
+   "reason": "C2 Mech Warrior, shortened"
+  },
+  {
+   "dupId": "tin-hifi-mech-c2",
+   "dupName": "Tin Hifi Mech C2",
+   "keepId": "tin-hifi-c2-mech-warrior",
+   "keepName": "Tin Hifi C2 Mech Warrior",
+   "reason": "C2 Mech Warrior, shortened"
+  },
+  {
+   "dupId": "tinhifi-meca-c2",
+   "dupName": "Tinhifi MECA C2",
+   "keepId": "tin-hifi-c2-mech-warrior",
+   "keepName": "Tin Hifi C2 Mech Warrior",
+   "reason": "C2 Mech Warrior, shortened"
+  },
+  {
+   "dupId": "tin-t5s",
+   "dupName": "Tin T5S",
+   "keepId": "tinhifi-t5s",
+   "keepName": "TinHiFi T5S",
+   "reason": "brand spelling"
+  },
+  {
+   "dupId": "tipsy-ttromso",
+   "dupName": "Tipsy TTROMSO",
+   "keepId": "tipsy-tromso",
+   "keepName": "Tipsy Tromso",
+   "reason": "typo, rms 0.08"
+  },
+  {
+   "dupId": "tri-x-hbb-kai-tri-hbb-kai",
+   "dupName": "Tri x HBB KAI (Tri HBB Kai)",
+   "keepId": "tri-tri-x-hbb-kai",
+   "keepName": "TRI TRI X HBB KAI",
+   "reason": "same; parenthetical is the same name"
+  },
+  {
+   "dupId": "truthear-zero-red-truthear-zero-red-10ohm",
+   "dupName": "TruthEar ['Zero Red'] (TruthEar Zero Red 10Ohm)",
+   "keepId": "truthear-zero-red-truthear-zero-red-10-ohm-adapter",
+   "keepName": "Truthear Zero Red (Truthear Zero Red (10 Ohm adapter))",
+   "reason": "same 10 ohm config"
+  },
+  {
+   "dupId": "whizzer-he10",
+   "dupName": "Whizzer HE10",
+   "keepId": "whizzer-kylin-he10",
+   "keepName": "Whizzer Kylin HE10",
+   "reason": "Kylin word dropped"
+  },
+  {
+   "dupId": "whizzer-kylin-heo3d",
+   "dupName": "Whizzer Kylin HEO3D",
+   "keepId": "whizzer-he03d",
+   "keepName": "Whizzer HE03D",
+   "reason": "HEO3D typo"
+  },
+  {
+   "dupId": "yanyin-canon-og",
+   "dupName": "Yanyin Canon OG",
+   "keepId": "yanyin-canon",
+   "keepName": "Yanyin Canon",
+   "reason": "OG = original Canon"
+  },
+  {
+   "dupId": "ziigaat-x-hangout-odyssey2",
+   "dupName": "ZiiGaat x Hangout Odyssey2",
+   "keepId": "ziigaat-x-hangout-audio-odyssey-2",
+   "keepName": "Ziigaat x Hangout Audio Odyssey 2",
+   "reason": "Audio word dropped"
+  },
+  {
+   "dupId": "zisin-gyziisine-340",
+   "dupName": "ZiSin GYZIISINE 340",
+   "keepId": "zisin-340",
+   "keepName": "ZiSin 340",
+   "reason": "GYZiisine = ZiSin brand"
+  }
+ ],
+ "unsure": [
+  {
+   "a": "Lime Ears sample",
+   "b": "Lime Ears SampleA",
+   "note": "unclear if same unit/product"
+  },
+  {
+   "a": "Moondrop DUSK 2 L (3.5)",
+   "b": "Moondrop DUSK 2 R (3.5)",
+   "note": "left/right channel of one product"
+  },
+  {
+   "a": "Mystori Audio M-121i",
+   "b": "Mystori Audio M121",
+   "note": "i suffix may be a revision"
+  },
+  {
+   "a": "NF Audio  N2+",
+   "b": "NF Audio NA2+ / NM2",
+   "note": "N2+ ambiguous between NA2+ and NM2+"
+  },
+  {
+   "a": "NF Audio NA2 Metal",
+   "b": "NFAudio (NFAcous) NA2",
+   "note": "Metal may be a separate edition"
+  },
+  {
+   "a": "NICEHCK NX8",
+   "b": "NiceHCK NX8 Ti",
+   "note": "Ti may be a different edition"
+  },
+  {
+   "a": "Simgot EW100P",
+   "b": "Simgot EW100P Shark / SIMGOT EW100 Shark",
+   "note": "not sure Shark is the same product"
+  },
+  {
+   "a": "Simgot EM10",
+   "b": "Simgot EM10 DREAM",
+   "note": "Dream may be an edition"
+  },
+  {
+   "a": "Simgot EW200",
+   "b": "Simgot EW200 Maze",
+   "note": "Maze may be an edition"
+  },
+  {
+   "a": "Softears SE6",
+   "b": "Softears SE6 Live",
+   "note": "rms 0.26 but Live may be an edition"
+  },
+  {
+   "a": "Tin Hifi C0 Elf",
+   "b": "TinHiFi C0",
+   "note": "likely same, unsure of Elf name"
+  },
+  {
+   "a": "Tin Hifi T5S Mars",
+   "b": "TinHiFi T5S",
+   "note": "rms 0.31, Mars may be official name"
+  },
+  {
+   "a": "TIN HiFi T6 Black/Green/Pink",
+   "b": "TinHiFi T6 X Ring Clear",
+   "note": "same filter colour, Clear unclear"
+  },
+  {
+   "a": "TRN MT4 Pro",
+   "b": "TRN MT4 PRO Final",
+   "note": "rms 0.08; Final may be production vs prototype"
+  },
+  {
+   "a": "WHIZZER H1",
+   "b": "Whizzer HE1",
+   "note": "H1 may be a typo of HE1"
+  },
+  {
+   "a": "XENNS Top PRO 1",
+   "b": "XENNS TOP PRO T1",
+   "note": "unit labels"
+  },
+  {
+   "a": "XENNS TEA MKII",
+   "b": "XENNS Tea 2",
+   "note": "MKII may be Tea 2"
+  },
+  {
+   "a": "Rose Technics (ROSESELSA) Quiet Sea II (stock silicone tips)",
+   "b": "Rose Technics (Roseselsa) Quietsea II",
+   "note": "stock-tip row = default config"
+  },
+  {
+   "a": "Sennheiser IE 900",
+   "b": "Sennheiser IE900 (stock foam tips) / Standard foam",
+   "note": "foam tips vs default"
+  },
+  {
+   "a": "QoA Misty Blue",
+   "b": "QoA x Eir Aoi Misty Blue",
+   "note": "probably the same collab IEM"
+  },
+  {
+   "a": "Truthear Crinacle Zero Red (Project Red IMP 2)",
+   "b": "TRUTHEAR CRINACLE ZERO RED IMP",
+   "note": "IMP 2 vs IMP"
+  },
+  {
+   "a": "Reecho SG-01",
+   "b": "Reecho SG-01 OVA",
+   "note": "OVA may be an edition"
+  },
+  {
+   "a": "VSonic GR07",
+   "b": "VSonic GR07 Classic",
+   "note": "Classic is a re-release"
+  },
+  {
+   "a": "TANGZU Shimin Li",
+   "b": "Tangzu ShiminLi (DownUnder)",
+   "note": "DownUnder may be a rig label or edition"
+  }
+ ]
+}

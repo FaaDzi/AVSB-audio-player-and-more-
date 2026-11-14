@@ -1,0 +1,7036 @@
+{
+  "version": 19,
+  "categories": {
+    "bass": "Bass / energy: sub-bass extension, mid-bass punch, slam",
+    "vocals": "Vocals / mids: presence, warmth, naturalness of voices",
+    "treble": "Treble / detail: cymbals, sibilance, air, sparkle",
+    "acoustic": "Acoustic / timbre: realism of real instruments",
+    "stage": "Soundstage / separation: width, depth, placement, layering",
+    "busy": "Busy / complex: dense mixes, speed, keeping instruments apart"
+  },
+  "clipNote": "clip.start/end are in seconds. null = not set yet; filled by the analysis script after files are added, then editable by hand.",
+  "songs": [
+    {
+      "id": "s-001",
+      "artist": "Otis McDonald",
+      "title": "Scarlet Fire",
+      "album": "",
+      "year": 2015,
+      "category": "bass",
+      "also": [],
+      "genre": "funk",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "001 - Otis McDonald - Scarlet Fire",
+      "auto": true,
+      "level": {
+        "lufs": -8.64,
+        "peak": 1.1417
+      },
+      "builtin": true
+    },
+    {
+      "id": "s-002",
+      "artist": "TrackTribe",
+      "title": "Walk Through the Park",
+      "album": "",
+      "year": 2019,
+      "category": "bass",
+      "also": [],
+      "genre": "funk",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "002 - TrackTribe - Walk Through the Park",
+      "auto": true,
+      "level": {
+        "lufs": -18.71,
+        "peak": 0.8668
+      }
+    },
+    {
+      "id": "bass-01",
+      "artist": "Daft Punk",
+      "title": "Doin' it Right",
+      "album": "Random Access Memories",
+      "year": 2013,
+      "category": "bass",
+      "also": [
+        "vocals"
+      ],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "003 - Daft Punk - Doin' it Right",
+      "level": {
+        "lufs": -11.68,
+        "peak": 1.1265
+      }
+    },
+    {
+      "id": "bass-02",
+      "artist": "Billie Eilish",
+      "title": "bad guy",
+      "album": "When We All Fall Asleep, Where Do We Go?",
+      "year": 2019,
+      "category": "bass",
+      "also": [
+        "vocals"
+      ],
+      "genre": "pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "004 - Billie Eilish - bad guy",
+      "level": {
+        "lufs": -7.81,
+        "peak": 1.3399
+      },
+      "builtin": true
+    },
+    {
+      "id": "bass-03",
+      "artist": "James Blake",
+      "title": "Limit to Your Love",
+      "album": "James Blake",
+      "year": 2011,
+      "category": "bass",
+      "also": [
+        "vocals"
+      ],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "005 - James Blake - Limit to Your Love",
+      "level": {
+        "lufs": -9.41,
+        "peak": 1.123
+      }
+    },
+    {
+      "id": "bass-04",
+      "artist": "Massive Attack",
+      "title": "Angel",
+      "album": "Mezzanine",
+      "year": 1998,
+      "category": "bass",
+      "also": [
+        "stage"
+      ],
+      "genre": "trip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "006 - Massive Attack - Angel",
+      "level": {
+        "lufs": -11.12,
+        "peak": 1.1735
+      }
+    },
+    {
+      "id": "stg-13",
+      "artist": "Massive Attack",
+      "title": "Teardrop",
+      "album": "Mezzanine",
+      "year": 1998,
+      "category": "stage",
+      "also": [
+        "vocals"
+      ],
+      "genre": "trip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "007 - Massive Attack - Teardrop",
+      "level": {
+        "lufs": -11.35,
+        "peak": 1.0985
+      },
+      "builtin": true
+    },
+    {
+      "id": "bass-09",
+      "artist": "Burial",
+      "title": "Archangel",
+      "album": "Untrue",
+      "year": 2007,
+      "category": "bass",
+      "also": [
+        "stage"
+      ],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "008 - Burial - Archangel",
+      "level": {
+        "lufs": -10.95,
+        "peak": 1.0738
+      }
+    },
+    {
+      "id": "s-009",
+      "artist": "Gesaffelstein",
+      "title": "Opr",
+      "album": "Aleph",
+      "year": 2013,
+      "category": "bass",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "009 - Gesaffelstein - Opr",
+      "auto": true,
+      "level": {
+        "lufs": -7.27,
+        "peak": 1.2274
+      }
+    },
+    {
+      "id": "bass-05",
+      "artist": "Kendrick Lamar",
+      "title": "HUMBLE.",
+      "album": "DAMN.",
+      "year": 2017,
+      "category": "bass",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "010 - Kendrick Lamar - HUMBLE",
+      "level": {
+        "lufs": -9.05,
+        "peak": 1.2413
+      }
+    },
+    {
+      "id": "s-011",
+      "artist": "Kendrick Lamar",
+      "title": "Prayer",
+      "album": "",
+      "year": null,
+      "category": "treble",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "011 - Kendrick Lamar - Prayer",
+      "auto": true,
+      "level": {
+        "lufs": -12.19,
+        "peak": 1.1147
+      }
+    },
+    {
+      "id": "bass-08",
+      "artist": "The Weeknd",
+      "title": "Blinding Lights",
+      "album": "After Hours",
+      "year": 2020,
+      "category": "bass",
+      "also": [
+        "vocals"
+      ],
+      "genre": "pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "012 - The Weeknd - Blinding Lights",
+      "level": {
+        "lufs": -6.81,
+        "peak": 1.2233
+      }
+    },
+    {
+      "id": "bass-10",
+      "artist": "Avicii",
+      "title": "Levels",
+      "album": "Levels",
+      "year": 2011,
+      "category": "bass",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "013 - Avicii - Levels",
+      "level": {
+        "lufs": -9.12,
+        "peak": 1.2433
+      }
+    },
+    {
+      "id": "s-014",
+      "artist": "Avicii & Sandro Cavazza",
+      "title": "Without You",
+      "album": "Avīci (01)",
+      "year": 2017,
+      "category": "bass",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "014 - Avicii & Sandro Cavazza - Without You",
+      "auto": true,
+      "level": {
+        "lufs": -7.5,
+        "peak": 1.278
+      }
+    },
+    {
+      "id": "s-015",
+      "artist": "Avicii",
+      "title": "The Nights",
+      "album": "The Days / Nights",
+      "year": 2014,
+      "category": "busy",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "015 - Avicii - The Nights",
+      "auto": true,
+      "level": {
+        "lufs": -7.03,
+        "peak": 1.1926
+      }
+    },
+    {
+      "id": "bass-11",
+      "artist": "Rage Against the Machine",
+      "title": "Killing in the Name",
+      "album": "Rage Against the Machine",
+      "year": 1992,
+      "category": "bass",
+      "also": [
+        "busy"
+      ],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "016 - Rage Against the Machine - Killing in the Name",
+      "level": {
+        "lufs": -8.55,
+        "peak": 1.1696
+      }
+    },
+    {
+      "id": "bass-12",
+      "artist": "Dr. Dre",
+      "title": "Still D.R.E.",
+      "album": "2001",
+      "year": 1999,
+      "category": "bass",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "017 - Dr. Dre - Still D.R.E",
+      "level": {
+        "lufs": -7.68,
+        "peak": 1.495
+      }
+    },
+    {
+      "id": "s-018",
+      "artist": "Eminem",
+      "title": "'Till I Collapse",
+      "album": "The Eminem Show",
+      "year": 2002,
+      "category": "bass",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "018 - Eminem - 'Till I Collapse",
+      "auto": true,
+      "level": {
+        "lufs": -6.42,
+        "peak": 1.3311
+      }
+    },
+    {
+      "id": "s-019",
+      "artist": "50 Cent",
+      "title": "Many Men (Wish Death)",
+      "album": "Get Rich or Die Tryin'",
+      "year": 2003,
+      "category": "bass",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "019 - 50 Cent - Many Men (Wish Death)",
+      "auto": true,
+      "level": {
+        "lufs": -13.41,
+        "peak": 1.1062
+      }
+    },
+    {
+      "id": "bass-13",
+      "artist": "Tame Impala",
+      "title": "The Less I Know the Better",
+      "album": "Currents",
+      "year": 2015,
+      "category": "bass",
+      "also": [
+        "vocals"
+      ],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "020 - Tame Impala - The Less I Know the Better",
+      "level": {
+        "lufs": -6.67,
+        "peak": 1.27
+      }
+    },
+    {
+      "id": "s-021",
+      "artist": "Tame Impala",
+      "title": "New Person, Same Old Mistakes",
+      "album": "Currents",
+      "year": 2015,
+      "category": "treble",
+      "also": [],
+      "genre": "indie",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "021 - Tame Impala - New Person, Same Old Mistakes",
+      "auto": true,
+      "level": {
+        "lufs": -8.47,
+        "peak": 1.1877
+      }
+    },
+    {
+      "id": "s-022",
+      "artist": "Tame Impala",
+      "title": "Feels Like We Only Go Backwards",
+      "album": "Lonerism",
+      "year": 2012,
+      "category": "stage",
+      "also": [],
+      "genre": "indie",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "022 - Tame Impala - Feels Like We Only Go Backwards",
+      "auto": true,
+      "level": {
+        "lufs": -5.16,
+        "peak": 1.1618
+      }
+    },
+    {
+      "id": "s-023",
+      "artist": "America",
+      "title": "A Horse with No Name",
+      "album": "America",
+      "year": 1971,
+      "category": "acoustic",
+      "also": [],
+      "genre": "folk",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "023 - America - A Horse with No Name",
+      "auto": true,
+      "level": {
+        "lufs": -17.52,
+        "peak": 0.8171
+      }
+    },
+    {
+      "id": "stg-07",
+      "artist": "Radiohead",
+      "title": "Everything in Its Right Place",
+      "album": "Kid A",
+      "year": 2000,
+      "category": "stage",
+      "also": [],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "024 - Radiohead - Everything in Its Right Place",
+      "level": {
+        "lufs": -9.44,
+        "peak": 1.1122
+      }
+    },
+    {
+      "id": "bass-14",
+      "artist": "Radiohead",
+      "title": "Idioteque",
+      "album": "Kid A",
+      "year": 2000,
+      "category": "bass",
+      "also": [
+        "busy"
+      ],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "025 - Radiohead - Idioteque",
+      "level": {
+        "lufs": -9.22,
+        "peak": 1.1314
+      }
+    },
+    {
+      "id": "s-026",
+      "artist": "Radiohead",
+      "title": "Let Down",
+      "album": "OK Computer",
+      "year": 1997,
+      "category": "stage",
+      "also": [],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "026 - Radiohead - Let Down",
+      "auto": true,
+      "level": {
+        "lufs": -8.56,
+        "peak": 1.142
+      }
+    },
+    {
+      "id": "bsy-13",
+      "artist": "Radiohead",
+      "title": "Paranoid Android",
+      "album": "OK Computer",
+      "year": 1997,
+      "category": "busy",
+      "also": [
+        "stage"
+      ],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "027 - Radiohead - Paranoid Android",
+      "level": {
+        "lufs": -8.3,
+        "peak": 1.2917
+      },
+      "builtin": true
+    },
+    {
+      "id": "bass-15",
+      "artist": "Kanye West",
+      "title": "Heartless",
+      "album": "808s & Heartbreak",
+      "year": 2008,
+      "category": "bass",
+      "also": [
+        "vocals"
+      ],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "028 - Kanye West - Heartless",
+      "level": {
+        "lufs": -8.84,
+        "peak": 1.0789
+      }
+    },
+    {
+      "id": "bass-17",
+      "artist": "Kanye West",
+      "title": "Love Lockdown",
+      "album": "808s & Heartbreak",
+      "year": 2008,
+      "category": "bass",
+      "also": [
+        "stage"
+      ],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "029 - Kanye West - Love Lockdown",
+      "level": {
+        "lufs": -7.3,
+        "peak": 1.288
+      }
+    },
+    {
+      "id": "bass-16",
+      "artist": "Kanye West",
+      "title": "Stronger",
+      "album": "Graduation",
+      "year": 2007,
+      "category": "bass",
+      "also": [
+        "busy"
+      ],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "030 - Kanye West - Stronger",
+      "level": {
+        "lufs": -9.41,
+        "peak": 1.1653
+      }
+    },
+    {
+      "id": "bass-18",
+      "artist": "Panda Eyes & Teminite",
+      "title": "Highscore",
+      "album": "",
+      "year": 2014,
+      "category": "bass",
+      "also": [
+        "busy"
+      ],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "from": "osu!",
+      "fileName": "031 - Panda Eyes & Teminite - Highscore",
+      "level": {
+        "lufs": -7.1,
+        "peak": 1.3077
+      }
+    },
+    {
+      "id": "s-032",
+      "artist": "Panda Eyes",
+      "title": "Colorblind",
+      "album": "",
+      "year": 2015,
+      "category": "bass",
+      "also": [
+        "busy"
+      ],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "032 - Panda Eyes - Colorblind",
+      "auto": true,
+      "level": {
+        "lufs": -4.31,
+        "peak": 1.4189
+      }
+    },
+    {
+      "id": "s-033",
+      "artist": "Waterflame",
+      "title": "Ricochet Love",
+      "album": "",
+      "year": 2009,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Geometry Dash",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "033 - Waterflame - Ricochet Love",
+      "auto": true,
+      "level": {
+        "lufs": -7.12,
+        "peak": 1.2632
+      }
+    },
+    {
+      "id": "bass-19",
+      "artist": "NOMA",
+      "title": "Brain Power",
+      "album": "",
+      "year": null,
+      "category": "bass",
+      "also": [
+        "busy"
+      ],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "from": "osu!",
+      "fileName": "034 - NOMA - Brain Power",
+      "level": {
+        "lufs": -2.75,
+        "peak": 1.6075
+      }
+    },
+    {
+      "id": "bass-20",
+      "artist": "DECO*27 feat. Hatsune Miku",
+      "title": "Ghost Rule",
+      "album": "",
+      "year": 2016,
+      "category": "bass",
+      "also": [
+        "vocals"
+      ],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "from": "Project Sekai",
+      "fileName": "035 - DECO＊27 feat. Hatsune Miku - Ghost Rule",
+      "level": {
+        "lufs": -5.67,
+        "peak": 1.2759
+      }
+    },
+    {
+      "id": "s-037",
+      "artist": "Damian Marley",
+      "title": "Welcome to Jamrock",
+      "album": "Welcome to Jamrock",
+      "year": 2005,
+      "category": "bass",
+      "also": [],
+      "genre": "reggae",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "037 - Damian Marley - Welcome to Jamrock",
+      "auto": true,
+      "level": {
+        "lufs": -9.64,
+        "peak": 1.318
+      }
+    },
+    {
+      "id": "bass-22",
+      "artist": "Bad Bunny",
+      "title": "Tití Me Preguntó",
+      "album": "Un Verano Sin Ti",
+      "year": 2022,
+      "category": "bass",
+      "also": [
+        "busy"
+      ],
+      "genre": "reggaeton",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "038 - Bad Bunny - Tití Me Preguntó",
+      "level": {
+        "lufs": -10.18,
+        "peak": 1.1683
+      }
+    },
+    {
+      "id": "s-039",
+      "artist": "Dire Straits",
+      "title": "Sultans of Swing",
+      "album": "Dire Straits",
+      "year": 1978,
+      "category": "treble",
+      "also": [],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "039 - Dire Straits - Sultans of Swing",
+      "auto": true,
+      "level": {
+        "lufs": -13.75,
+        "peak": 1.0949
+      }
+    },
+    {
+      "id": "s-040",
+      "artist": "TLC",
+      "title": "No Scrubs",
+      "album": "FanMail",
+      "year": 1999,
+      "category": "vocals",
+      "also": [],
+      "genre": "r&b",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "040 - TLC - No Scrubs",
+      "auto": true,
+      "level": {
+        "lufs": -10.79,
+        "peak": 1.4227
+      }
+    },
+    {
+      "id": "voc-01",
+      "artist": "Adele",
+      "title": "Someone Like You",
+      "album": "21",
+      "year": 2011,
+      "category": "vocals",
+      "also": [
+        "acoustic"
+      ],
+      "genre": "pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "041 - Adele - Someone Like You",
+      "level": {
+        "lufs": -10.62,
+        "peak": 1.0089
+      },
+      "builtin": true
+    },
+    {
+      "id": "s-042",
+      "artist": "Adele",
+      "title": "Skyfall",
+      "album": "",
+      "year": 2012,
+      "category": "vocals",
+      "also": [],
+      "genre": "pop",
+      "clip": {
+        "start": 135,
+        "end": 275
+      },
+      "fileName": "042 - Adele - Skyfall",
+      "auto": true,
+      "level": {
+        "lufs": -8.44,
+        "peak": 1.1534
+      }
+    },
+    {
+      "id": "voc-04",
+      "artist": "Whitney Houston",
+      "title": "I Will Always Love You",
+      "album": "The Bodyguard (soundtrack)",
+      "year": 1992,
+      "category": "vocals",
+      "also": [],
+      "genre": "r&b",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "043 - Whitney Houston - I Will Always Love You",
+      "level": {
+        "lufs": -14.63,
+        "peak": 0.8836
+      }
+    },
+    {
+      "id": "voc-05",
+      "artist": "Diana Krall",
+      "title": "The Look of Love",
+      "album": "The Look of Love",
+      "year": 2001,
+      "category": "vocals",
+      "also": [
+        "stage"
+      ],
+      "genre": "jazz",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "044 - Diana Krall - The Look of Love",
+      "level": {
+        "lufs": -16.98,
+        "peak": 1.0177
+      }
+    },
+    {
+      "id": "voc-06",
+      "artist": "Amy Winehouse",
+      "title": "Back to Black",
+      "album": "Back to Black",
+      "year": 2006,
+      "category": "vocals",
+      "also": [],
+      "genre": "soul",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "045 - Amy Winehouse - Back to Black",
+      "level": {
+        "lufs": -10.3,
+        "peak": 1.1817
+      }
+    },
+    {
+      "id": "voc-08",
+      "artist": "Frank Sinatra",
+      "title": "Fly Me to the Moon",
+      "album": "It Might as Well Be Swing",
+      "year": 1964,
+      "category": "vocals",
+      "also": [
+        "stage"
+      ],
+      "genre": "jazz",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "046 - Frank Sinatra - Fly Me to the Moon",
+      "level": {
+        "lufs": -13.08,
+        "peak": 1.118
+      }
+    },
+    {
+      "id": "s-047",
+      "artist": "Grover Washington Jr. feat. Bill Withers",
+      "title": "Just the Two of Us",
+      "album": "Winelight",
+      "year": 1980,
+      "category": "acoustic",
+      "also": [],
+      "genre": "soul",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "047 - Grover Washington Jr. feat. Bill Withers - Just the Two of Us",
+      "auto": true,
+      "level": {
+        "lufs": -15.3,
+        "peak": 0.9826
+      }
+    },
+    {
+      "id": "voc-07",
+      "artist": "Sam Smith",
+      "title": "Stay With Me",
+      "album": "In the Lonely Hour",
+      "year": 2014,
+      "category": "vocals",
+      "also": [],
+      "genre": "pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "048 - Sam Smith - Stay With Me",
+      "level": {
+        "lufs": -8.34,
+        "peak": 1.1414
+      }
+    },
+    {
+      "id": "voc-09",
+      "artist": "Eva Cassidy",
+      "title": "Fields of Gold",
+      "album": "Songbird",
+      "year": 1998,
+      "category": "vocals",
+      "also": [
+        "acoustic"
+      ],
+      "genre": "folk",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "049 - Eva Cassidy - Fields of Gold",
+      "level": {
+        "lufs": -17.51,
+        "peak": 0.7742
+      }
+    },
+    {
+      "id": "voc-11",
+      "artist": "IU",
+      "title": "Through the Night",
+      "album": "Palette",
+      "year": 2017,
+      "category": "vocals",
+      "also": [
+        "acoustic"
+      ],
+      "genre": "k-pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "050 - IU - Through the Night",
+      "level": {
+        "lufs": -9.95,
+        "peak": 1.1583
+      }
+    },
+    {
+      "id": "voc-12",
+      "artist": "Aimer",
+      "title": "Kataomoi",
+      "album": "daydream",
+      "year": 2016,
+      "category": "vocals",
+      "also": [
+        "acoustic"
+      ],
+      "genre": "j-pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "051 - Aimer - Kataomoi",
+      "level": {
+        "lufs": -10.58,
+        "peak": 1.0367
+      }
+    },
+    {
+      "id": "voc-13",
+      "artist": "Leonard Cohen",
+      "title": "You Want It Darker",
+      "album": "You Want It Darker",
+      "year": 2016,
+      "category": "vocals",
+      "also": [
+        "bass"
+      ],
+      "genre": "folk",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "052 - Leonard Cohen - You Want It Darker",
+      "level": {
+        "lufs": -16.4,
+        "peak": 0.9207
+      }
+    },
+    {
+      "id": "voc-14",
+      "artist": "Radiohead",
+      "title": "Exit Music (For a Film)",
+      "album": "OK Computer",
+      "year": 1997,
+      "category": "vocals",
+      "also": [
+        "stage"
+      ],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "053 - Radiohead - Exit Music (For a Film)",
+      "level": {
+        "lufs": -10.77,
+        "peak": 1.1324
+      }
+    },
+    {
+      "id": "voc-15",
+      "artist": "Kanye West",
+      "title": "Through the Wire",
+      "album": "The College Dropout",
+      "year": 2004,
+      "category": "vocals",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "054 - Kanye West - Through the Wire",
+      "level": {
+        "lufs": -8.64,
+        "peak": 1.2643
+      }
+    },
+    {
+      "id": "voc-16",
+      "artist": "livetune feat. Hatsune Miku",
+      "title": "Tell Your World",
+      "album": "",
+      "year": 2011,
+      "category": "vocals",
+      "also": [
+        "treble"
+      ],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "from": "Project Sekai",
+      "fileName": "055 - livetune feat. Hatsune Miku - Tell Your World",
+      "level": {
+        "lufs": -5.21,
+        "peak": 1.3911
+      }
+    },
+    {
+      "id": "voc-17",
+      "artist": "Kurousa-P feat. Hatsune Miku",
+      "title": "Senbonzakura",
+      "album": "",
+      "year": 2011,
+      "category": "vocals",
+      "also": [
+        "busy"
+      ],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "from": "Project Sekai",
+      "fileName": "056 - Kurousa-P feat. Hatsune Miku - Senbonzakura",
+      "level": {
+        "lufs": -6.44,
+        "peak": 1.1802
+      }
+    },
+    {
+      "id": "voc-18",
+      "artist": "Kanzaki Iori feat. Hatsune Miku",
+      "title": "Inochi ni Kirawarete Iru",
+      "album": "",
+      "year": 2017,
+      "category": "vocals",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "from": "Project Sekai",
+      "fileName": "057 - Kanzaki Iori feat. Hatsune Miku - Inochi ni Kirawarete Iru",
+      "level": {
+        "lufs": -10.11,
+        "peak": 1.0366
+      }
+    },
+    {
+      "id": "aco-13",
+      "artist": "Mariya Takeuchi",
+      "title": "Plastic Love",
+      "album": "Variety",
+      "year": 1984,
+      "category": "acoustic",
+      "also": [
+        "vocals"
+      ],
+      "genre": "city-pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "058 - Mariya Takeuchi - Plastic Love",
+      "level": {
+        "lufs": -8.97,
+        "peak": 1.2475
+      }
+    },
+    {
+      "id": "tre-01",
+      "artist": "Steely Dan",
+      "title": "Aja",
+      "album": "Aja",
+      "year": 1977,
+      "category": "treble",
+      "also": [
+        "busy"
+      ],
+      "genre": "jazz-rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "060 - Steely Dan - Aja",
+      "level": {
+        "lufs": -18.14,
+        "peak": 1.0594
+      },
+      "builtin": true
+    },
+    {
+      "id": "tre-02",
+      "artist": "Rebecca Pidgeon",
+      "title": "Spanish Harlem",
+      "album": "The Raven",
+      "year": 1994,
+      "category": "treble",
+      "also": [
+        "vocals"
+      ],
+      "genre": "jazz",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "061 - Rebecca Pidgeon - Spanish Harlem",
+      "level": {
+        "lufs": -17.99,
+        "peak": 0.9307
+      }
+    },
+    {
+      "id": "tre-03",
+      "artist": "The Dave Brubeck Quartet",
+      "title": "Take Five",
+      "album": "Time Out",
+      "year": 1959,
+      "category": "treble",
+      "also": [
+        "acoustic"
+      ],
+      "genre": "jazz",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "062 - The Dave Brubeck Quartet - Take Five",
+      "level": {
+        "lufs": -15.9,
+        "peak": 1.0302
+      },
+      "builtin": true
+    },
+    {
+      "id": "tre-04",
+      "artist": "Fleetwood Mac",
+      "title": "Dreams",
+      "album": "Rumours",
+      "year": 1977,
+      "category": "treble",
+      "also": [
+        "vocals"
+      ],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "063 - Fleetwood Mac - Dreams",
+      "level": {
+        "lufs": -12.35,
+        "peak": 1.5317
+      }
+    },
+    {
+      "id": "tre-05",
+      "artist": "Michael Jackson",
+      "title": "Billie Jean",
+      "album": "Thriller",
+      "year": 1982,
+      "category": "treble",
+      "also": [
+        "bass"
+      ],
+      "genre": "pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "064 - Michael Jackson - Billie Jean",
+      "level": {
+        "lufs": -14.15,
+        "peak": 1.1674
+      }
+    },
+    {
+      "id": "tre-06",
+      "artist": "Radiohead",
+      "title": "Weird Fishes/Arpeggi",
+      "album": "In Rainbows",
+      "year": 2007,
+      "category": "treble",
+      "also": [
+        "stage"
+      ],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "065 - Radiohead - Weird Fishes-Arpeggi",
+      "level": {
+        "lufs": -15.63,
+        "peak": 0.5835
+      }
+    },
+    {
+      "id": "tre-08",
+      "artist": "Jennifer Warnes",
+      "title": "Bird on a Wire",
+      "album": "Famous Blue Raincoat",
+      "year": 1987,
+      "category": "treble",
+      "also": [
+        "vocals"
+      ],
+      "genre": "folk",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "066 - Jennifer Warnes - Bird on a Wire",
+      "level": {
+        "lufs": -14.73,
+        "peak": 1.191
+      }
+    },
+    {
+      "id": "tre-09",
+      "artist": "Max Richter",
+      "title": "Summer 3",
+      "album": "Recomposed by Max Richter: Vivaldi - The Four Seasons",
+      "year": 2012,
+      "category": "treble",
+      "also": [
+        "acoustic"
+      ],
+      "genre": "classical",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "067 - Max Richter - Summer 3",
+      "level": {
+        "lufs": -13.33,
+        "peak": 1.076
+      }
+    },
+    {
+      "id": "tre-10",
+      "artist": "Nils Frahm",
+      "title": "Says",
+      "album": "Spaces",
+      "year": 2013,
+      "category": "treble",
+      "also": [
+        "stage"
+      ],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "068 - Nils Frahm - Says",
+      "level": {
+        "lufs": -11.76,
+        "peak": 1.1058
+      }
+    },
+    {
+      "id": "tre-11",
+      "artist": "Bon Iver",
+      "title": "Holocene",
+      "album": "Bon Iver, Bon Iver",
+      "year": 2011,
+      "category": "treble",
+      "also": [
+        "stage"
+      ],
+      "genre": "indie",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "069 - Bon Iver - Holocene",
+      "level": {
+        "lufs": -13.3,
+        "peak": 1.016
+      }
+    },
+    {
+      "id": "tre-12",
+      "artist": "Imogen Heap",
+      "title": "Hide and Seek",
+      "album": "Speak for Yourself",
+      "year": 2005,
+      "category": "treble",
+      "also": [
+        "vocals"
+      ],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "070 - Imogen Heap - Hide and Seek",
+      "level": {
+        "lufs": -10.79,
+        "peak": 1.0572
+      }
+    },
+    {
+      "id": "tre-13",
+      "artist": "Radiohead",
+      "title": "Reckoner",
+      "album": "In Rainbows",
+      "year": 2007,
+      "category": "treble",
+      "also": [
+        "stage"
+      ],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "071 - Radiohead - Reckoner",
+      "level": {
+        "lufs": -8.18,
+        "peak": 1.276
+      }
+    },
+    {
+      "id": "tre-14",
+      "artist": "Kanye West",
+      "title": "Flashing Lights",
+      "album": "Graduation",
+      "year": 2007,
+      "category": "treble",
+      "also": [
+        "vocals"
+      ],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "072 - Kanye West - Flashing Lights",
+      "level": {
+        "lufs": -9.12,
+        "peak": 1.1771
+      }
+    },
+    {
+      "id": "s-073",
+      "artist": "Akitaka Tohyama",
+      "title": "Tekken Tag Tournament Piano Intro (Massive Mix)",
+      "album": "TEKKEN TAG TOURNAMENT 2 (Original Soundtrack)",
+      "year": 2012,
+      "category": "busy",
+      "also": [],
+      "genre": "soundtrack",
+      "from": "Tekken",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "073 - Akitaka Tohyama - Tekken Tag Tournament Piano Intro (Massive Mix)",
+      "auto": true,
+      "level": {
+        "lufs": -7.07,
+        "peak": 1.3285
+      }
+    },
+    {
+      "id": "s-074",
+      "artist": "Nami Nakagawa",
+      "title": "Heat Haze Shadow 2",
+      "album": "TEKKEN 7 (Original Soundtrack)",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "soundtrack",
+      "from": "Tekken",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "074 - Nami Nakagawa - Heat Haze Shadow 2",
+      "auto": true,
+      "level": {
+        "lufs": -5.65,
+        "peak": 1.2722
+      }
+    },
+    {
+      "id": "tre-15",
+      "artist": "Hanasaka Yui (CV: M·A·O)",
+      "title": "Harumachi Clover",
+      "album": "",
+      "year": null,
+      "category": "treble",
+      "also": [
+        "vocals"
+      ],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "from": "osu!",
+      "fileName": "075 - Hanasaka Yui (CV - M·A·O) - Harumachi Clover",
+      "level": {
+        "lufs": -6.01,
+        "peak": 1.3414
+      }
+    },
+    {
+      "id": "tre-16",
+      "artist": "siromaru + cranky",
+      "title": "conflict",
+      "album": "",
+      "year": null,
+      "category": "treble",
+      "also": [
+        "stage"
+      ],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "from": "maimai / CHUNITHM",
+      "fileName": "076 - siromaru + cranky - conflict",
+      "level": {
+        "lufs": -7.45,
+        "peak": 1.1865
+      }
+    },
+    {
+      "id": "tre-17",
+      "artist": "DECO*27 feat. Hatsune Miku",
+      "title": "Hibana",
+      "album": "",
+      "year": 2017,
+      "category": "treble",
+      "also": [
+        "busy"
+      ],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "from": "Project Sekai",
+      "fileName": "077 - DECO＊27 feat. Hatsune Miku - Hibana",
+      "level": {
+        "lufs": -5.71,
+        "peak": 1.2705
+      }
+    },
+    {
+      "id": "s-078",
+      "artist": "Hoshimachi Suisei",
+      "title": "Bibbidiba",
+      "album": "",
+      "year": 2024,
+      "category": "busy",
+      "also": [],
+      "genre": "j-pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "078 - Hoshimachi Suisei - Bibbidiba",
+      "auto": true,
+      "level": {
+        "lufs": -9.55,
+        "peak": 1.2293
+      }
+    },
+    {
+      "id": "s-079",
+      "artist": "Kocchi no Kento",
+      "title": "Hai Yorokonde",
+      "album": "",
+      "year": 2024,
+      "category": "vocals",
+      "also": [],
+      "genre": "j-pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "079 - Kocchi no Kento - Hai Yorokonde",
+      "auto": true,
+      "level": {
+        "lufs": -15.22,
+        "peak": 0.9329
+      }
+    },
+    {
+      "id": "s-080",
+      "artist": "YOASOBI",
+      "title": "The Brave (Yuusha)",
+      "album": "",
+      "year": 2023,
+      "category": "bass",
+      "also": [],
+      "genre": "j-pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "080 - YOASOBI - The Brave (Yuusha)",
+      "auto": true,
+      "level": {
+        "lufs": -7.38,
+        "peak": 1.2567
+      }
+    },
+    {
+      "id": "s-081",
+      "artist": "Ado",
+      "title": "Show (唱)",
+      "album": "",
+      "year": 2023,
+      "category": "busy",
+      "also": [],
+      "genre": "j-pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "081 - Ado - Show (唱)",
+      "auto": true,
+      "level": {
+        "lufs": -9.58,
+        "peak": 0.77
+      }
+    },
+    {
+      "id": "s-082",
+      "artist": "Ado",
+      "title": "Ashura-chan",
+      "album": "Kyougen",
+      "year": 2021,
+      "category": "busy",
+      "also": [],
+      "genre": "j-pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "082 - Ado - Ashura-chan",
+      "auto": true,
+      "level": {
+        "lufs": -7.67,
+        "peak": 1.1374
+      }
+    },
+    {
+      "id": "s-083",
+      "artist": "Aimer",
+      "title": "Zankyosanka",
+      "album": "",
+      "year": 2022,
+      "category": "busy",
+      "also": [],
+      "genre": "j-pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "083 - Aimer - Zankyosanka",
+      "auto": true,
+      "level": {
+        "lufs": -8.49,
+        "peak": 0.9551
+      }
+    },
+    {
+      "id": "s-084",
+      "artist": "RADWIMPS",
+      "title": "Zenzenzense (movie ver.)",
+      "album": "Your Name.",
+      "year": 2016,
+      "category": "treble",
+      "also": [],
+      "genre": "j-rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "084 - RADWIMPS - Zenzenzense (movie ver.)",
+      "auto": true,
+      "level": {
+        "lufs": -6.98,
+        "peak": 1.3184
+      }
+    },
+    {
+      "id": "s-085",
+      "artist": "Yorushika",
+      "title": "Dakara Boku wa Ongaku wo Yameta",
+      "album": "",
+      "year": 2019,
+      "category": "vocals",
+      "also": [],
+      "genre": "j-rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "085 - Yorushika - Dakara Boku wa Ongaku wo Yameta",
+      "auto": true,
+      "level": {
+        "lufs": -10.61,
+        "peak": 1.067
+      }
+    },
+    {
+      "id": "s-086",
+      "artist": "Eve",
+      "title": "Kaikai Kitan",
+      "album": "",
+      "year": 2020,
+      "category": "busy",
+      "also": [],
+      "genre": "j-rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "086 - Eve - Kaikai Kitan",
+      "auto": true,
+      "level": {
+        "lufs": -5.84,
+        "peak": 1.4202
+      }
+    },
+    {
+      "id": "s-087",
+      "artist": "yama",
+      "title": "Haru wo Tsugeru",
+      "album": "",
+      "year": 2020,
+      "category": "busy",
+      "also": [],
+      "genre": "j-pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "087 - yama - Haru wo Tsugeru",
+      "auto": true,
+      "level": {
+        "lufs": -10.82,
+        "peak": 0.8605
+      }
+    },
+    {
+      "id": "s-088",
+      "artist": "HIMEHINA",
+      "title": "Hello, Hologram",
+      "album": "Chouchin Ankou",
+      "year": 2022,
+      "category": "busy",
+      "also": [],
+      "genre": "j-pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "088 - HIMEHINA - Hello, Hologram",
+      "auto": true,
+      "level": {
+        "lufs": -8.72,
+        "peak": 1.2027
+      }
+    },
+    {
+      "id": "s-089",
+      "artist": "Sasuke Haraguchi feat. Kasane Teto",
+      "title": "Igaku",
+      "album": "",
+      "year": 2024,
+      "category": "bass",
+      "also": [],
+      "genre": "j-pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "089 - Sasuke Haraguchi feat. Kasane Teto - Igaku",
+      "auto": true,
+      "level": {
+        "lufs": -3.13,
+        "peak": 1.8569
+      }
+    },
+    {
+      "id": "s-090",
+      "artist": "Chinozo feat. FloweR",
+      "title": "Goodbye Sengen",
+      "album": "",
+      "year": 2020,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Project Sekai",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "090 - Chinozo feat. FloweR - Goodbye Sengen",
+      "auto": true,
+      "level": {
+        "lufs": -8.58,
+        "peak": 1.066
+      }
+    },
+    {
+      "id": "s-091",
+      "artist": "Satsuki feat. Hatsune Miku",
+      "title": "Mani Mani",
+      "album": "",
+      "year": 2023,
+      "category": "stage",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Project Sekai",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "091 - Satsuki feat. Hatsune Miku - Mani Mani",
+      "auto": true,
+      "level": {
+        "lufs": -6.63,
+        "peak": 1.285
+      }
+    },
+    {
+      "id": "tre-18",
+      "artist": "Neru feat. Kagamine Rin",
+      "title": "Lost One's Weeping",
+      "album": "",
+      "year": 2012,
+      "category": "treble",
+      "also": [
+        "busy"
+      ],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "from": "Project Sekai",
+      "fileName": "092 - Neru feat. Kagamine Rin - Lost One's Weeping",
+      "level": {
+        "lufs": -4.92,
+        "peak": 1.3093
+      }
+    },
+    {
+      "id": "s-094",
+      "artist": "dj-Nate",
+      "title": "Thermodynamix",
+      "album": "",
+      "year": null,
+      "category": "bass",
+      "also": [
+        "busy"
+      ],
+      "genre": "rhythm-game",
+      "from": "Geometry Dash",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "094 - dj-Nate - Thermodynamix",
+      "auto": true,
+      "level": {
+        "lufs": -9.13,
+        "peak": 1.2203
+      }
+    },
+    {
+      "id": "s-095",
+      "artist": "dj-Nate",
+      "title": "Final Theory",
+      "album": "",
+      "year": null,
+      "category": "bass",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Geometry Dash",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "095 - dj-Nate - Final Theory",
+      "auto": true,
+      "level": {
+        "lufs": -7.49,
+        "peak": 1.4037
+      }
+    },
+    {
+      "id": "s-096",
+      "artist": "Dimrain47",
+      "title": "At the Speed of Light",
+      "album": "",
+      "year": null,
+      "category": "treble",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Geometry Dash",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "096 - Dimrain47 - At the Speed of Light",
+      "auto": true,
+      "level": {
+        "lufs": -9.38,
+        "peak": 1.1213
+      }
+    },
+    {
+      "id": "s-097",
+      "artist": "Camellia",
+      "title": "Flamewall",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "osu!",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "097 - Camellia - Flamewall",
+      "auto": true,
+      "level": {
+        "lufs": -3.66,
+        "peak": 1.4904
+      }
+    },
+    {
+      "id": "s-098",
+      "artist": "Dion Timmer",
+      "title": "Shiawase (VIP)",
+      "album": "Shiawase",
+      "year": 2020,
+      "category": "busy",
+      "also": [
+        "bass"
+      ],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "098 - Dion Timmer - Shiawase (VIP)",
+      "auto": true,
+      "level": {
+        "lufs": -3.56,
+        "peak": 1.7333
+      }
+    },
+    {
+      "id": "s-099",
+      "artist": "Blksmiith",
+      "title": "SR20DET",
+      "album": "",
+      "year": 2023,
+      "category": "bass",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "099 - Blksmiith - SR20DET",
+      "auto": true,
+      "level": {
+        "lufs": -7.52,
+        "peak": 1.1939
+      }
+    },
+    {
+      "id": "s-100",
+      "artist": "plenka",
+      "title": "When You Find Me",
+      "album": "Angle",
+      "year": 2020,
+      "category": "busy",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "100 - plenka - When You Find Me",
+      "auto": true,
+      "level": {
+        "lufs": -8.85,
+        "peak": 1.186
+      }
+    },
+    {
+      "id": "s-101",
+      "artist": "F-777",
+      "title": "Sonic Blaster (HJFod Remix)",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [
+        "bass"
+      ],
+      "genre": "rhythm-game",
+      "from": "Geometry Dash",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "101 - F-777 - Sonic Blaster (HJFod Remix)",
+      "auto": true,
+      "level": {
+        "lufs": -8.75,
+        "peak": 1.2018
+      }
+    },
+    {
+      "id": "s-102",
+      "artist": "Dr.Phonics",
+      "title": "Code Red",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [
+        "bass"
+      ],
+      "genre": "rhythm-game",
+      "from": "Geometry Dash",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "102 - Dr.Phonics - Code Red",
+      "auto": true,
+      "level": {
+        "lufs": -6.2,
+        "peak": 1.3251
+      }
+    },
+    {
+      "id": "s-103",
+      "artist": "Dom & Roland",
+      "title": "Thunder",
+      "album": "",
+      "year": null,
+      "category": "bass",
+      "also": [
+        "busy"
+      ],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "103 - Dom & Roland - Thunder",
+      "auto": true,
+      "level": {
+        "lufs": -8.42,
+        "peak": 1.2361
+      }
+    },
+    {
+      "id": "s-104",
+      "artist": "Himawari (cover)",
+      "title": "Fragile",
+      "album": "",
+      "year": 2017,
+      "category": "treble",
+      "also": [],
+      "genre": "j-pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "104 - Himawari (cover) - Fragile",
+      "auto": true,
+      "level": {
+        "lufs": -13.31,
+        "peak": 0.6673
+      }
+    },
+    {
+      "id": "s-105",
+      "artist": "Creo",
+      "title": "Dimension",
+      "album": "",
+      "year": null,
+      "category": "bass",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Geometry Dash",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "105 - Creo - Dimension",
+      "auto": true,
+      "level": {
+        "lufs": -5.6,
+        "peak": 1.3643
+      }
+    },
+    {
+      "id": "s-106",
+      "artist": "False Noise",
+      "title": "Shiver",
+      "album": "Shiver",
+      "year": 2018,
+      "category": "bass",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "106 - False Noise - Shiver",
+      "auto": true,
+      "level": {
+        "lufs": -8.38,
+        "peak": 1.2798
+      }
+    },
+    {
+      "id": "aco-01",
+      "artist": "Eagles",
+      "title": "Hotel California (live)",
+      "album": "Hell Freezes Over",
+      "year": 1994,
+      "category": "acoustic",
+      "also": [
+        "stage"
+      ],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "107 - Eagles - Hotel California (live)",
+      "level": {
+        "lufs": -10.29,
+        "peak": 1.0306
+      },
+      "builtin": true
+    },
+    {
+      "id": "aco-02",
+      "artist": "Tracy Chapman",
+      "title": "Fast Car",
+      "album": "Tracy Chapman",
+      "year": 1988,
+      "category": "acoustic",
+      "also": [
+        "vocals"
+      ],
+      "genre": "folk",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "108 - Tracy Chapman - Fast Car",
+      "level": {
+        "lufs": -12.01,
+        "peak": 1.2144
+      },
+      "builtin": true
+    },
+    {
+      "id": "aco-04",
+      "artist": "Yo-Yo Ma",
+      "title": "Cello Suite No. 1 in G major, BWV 1007: Prelude",
+      "album": "any recording",
+      "year": null,
+      "category": "acoustic",
+      "also": [],
+      "genre": "classical",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "109 - Yo-Yo Ma - Cello Suite No. 1 in G major, BWV 1007 - Prelude",
+      "level": {
+        "lufs": -16.73,
+        "peak": 0.9518
+      }
+    },
+    {
+      "id": "aco-05",
+      "artist": "Ludovico Einaudi",
+      "title": "Nuvole Bianche",
+      "album": "Una Mattina",
+      "year": 2004,
+      "category": "acoustic",
+      "also": [],
+      "genre": "classical",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "110 - Ludovico Einaudi - Nuvole Bianche",
+      "level": {
+        "lufs": -22.16,
+        "peak": 0.5235
+      }
+    },
+    {
+      "id": "s-111",
+      "artist": "Yiruma",
+      "title": "River Flows in You",
+      "album": "First Love",
+      "year": 2001,
+      "category": "acoustic",
+      "also": [],
+      "genre": "classical",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "111 - Yiruma - River Flows in You",
+      "auto": true,
+      "level": {
+        "lufs": -15.42,
+        "peak": 0.9076
+      }
+    },
+    {
+      "id": "aco-06",
+      "artist": "Bill Evans Trio",
+      "title": "Waltz for Debby",
+      "album": "Waltz for Debby",
+      "year": 1961,
+      "category": "acoustic",
+      "also": [
+        "stage"
+      ],
+      "genre": "jazz",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "112 - Bill Evans Trio - Waltz for Debby",
+      "level": {
+        "lufs": -15.21,
+        "peak": 0.9965
+      }
+    },
+    {
+      "id": "aco-07",
+      "artist": "Miles Davis",
+      "title": "So What",
+      "album": "Kind of Blue",
+      "year": 1959,
+      "category": "acoustic",
+      "also": [
+        "stage"
+      ],
+      "genre": "jazz",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "113 - Miles Davis - So What",
+      "level": {
+        "lufs": -18.49,
+        "peak": 1.042
+      }
+    },
+    {
+      "id": "aco-08",
+      "artist": "Nick Drake",
+      "title": "Pink Moon",
+      "album": "Pink Moon",
+      "year": 1972,
+      "category": "acoustic",
+      "also": [
+        "vocals"
+      ],
+      "genre": "folk",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "114 - Nick Drake - Pink Moon",
+      "level": {
+        "lufs": -16.85,
+        "peak": 0.9501
+      }
+    },
+    {
+      "id": "aco-09",
+      "artist": "Simon & Garfunkel",
+      "title": "The Boxer",
+      "album": "Bridge over Troubled Water",
+      "year": 1970,
+      "category": "acoustic",
+      "also": [
+        "vocals"
+      ],
+      "genre": "folk",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "115 - Simon & Garfunkel - The Boxer",
+      "level": {
+        "lufs": -16.11,
+        "peak": 0.7905
+      }
+    },
+    {
+      "id": "aco-10",
+      "artist": "Johnny Cash",
+      "title": "Hurt",
+      "album": "American IV: The Man Comes Around",
+      "year": 2002,
+      "category": "acoustic",
+      "also": [
+        "vocals"
+      ],
+      "genre": "country",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "116 - Johnny Cash - Hurt",
+      "level": {
+        "lufs": -11.42,
+        "peak": 1.023
+      }
+    },
+    {
+      "id": "stg-01",
+      "artist": "Yosi Horikawa",
+      "title": "Bubbles",
+      "album": "Vapor",
+      "year": 2013,
+      "category": "stage",
+      "also": [
+        "treble"
+      ],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "117 - Yosi Horikawa - Bubbles",
+      "level": {
+        "lufs": -8.78,
+        "peak": 1.2193
+      },
+      "builtin": true
+    },
+    {
+      "id": "s-120",
+      "artist": "Ludwig Göransson",
+      "title": "Can You Hear the Music",
+      "album": "Oppenheimer",
+      "year": 2023,
+      "category": "stage",
+      "also": [],
+      "genre": "soundtrack",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "120 - Ludwig Göransson - Can You Hear the Music",
+      "auto": true,
+      "level": {
+        "lufs": -12.87,
+        "peak": 1.0004
+      }
+    },
+    {
+      "id": "stg-05",
+      "artist": "Roger Waters",
+      "title": "Perfect Sense, Part I",
+      "album": "Amused to Death",
+      "year": 1992,
+      "category": "stage",
+      "also": [
+        "vocals"
+      ],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "123 - Roger Waters - Perfect Sense, Part I",
+      "level": {
+        "lufs": -20.45,
+        "peak": 0.6824
+      }
+    },
+    {
+      "id": "stg-06",
+      "artist": "Gustav Holst",
+      "title": "The Planets: Mars, the Bringer of War",
+      "album": "any recording",
+      "year": null,
+      "category": "stage",
+      "also": [
+        "busy"
+      ],
+      "genre": "classical",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "124 - Gustav Holst - The Planets - Mars, the Bringer of War",
+      "level": {
+        "lufs": -11.34,
+        "peak": 1.1748
+      }
+    },
+    {
+      "id": "stg-09",
+      "artist": "Ennio Morricone",
+      "title": "The Ecstasy of Gold",
+      "album": "The Good, the Bad and the Ugly (soundtrack)",
+      "year": 1966,
+      "category": "stage",
+      "also": [
+        "vocals"
+      ],
+      "genre": "soundtrack",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "125 - Ennio Morricone - The Ecstasy of Gold",
+      "level": {
+        "lufs": -12.65,
+        "peak": 0.9608
+      }
+    },
+    {
+      "id": "stg-10",
+      "artist": "ODESZA",
+      "title": "A Moment Apart",
+      "album": "A Moment Apart",
+      "year": 2017,
+      "category": "stage",
+      "also": [
+        "bass"
+      ],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "126 - ODESZA - A Moment Apart",
+      "level": {
+        "lufs": -8.65,
+        "peak": 1.068
+      }
+    },
+    {
+      "id": "stg-11",
+      "artist": "Joe Hisaishi",
+      "title": "One Summer's Day",
+      "album": "Spirited Away (soundtrack)",
+      "year": 2001,
+      "category": "stage",
+      "also": [
+        "acoustic"
+      ],
+      "genre": "soundtrack",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "127 - Joe Hisaishi - One Summer's Day",
+      "level": {
+        "lufs": -23.86,
+        "peak": 0.4879
+      }
+    },
+    {
+      "id": "stg-12",
+      "artist": "Dead Can Dance",
+      "title": "The Host of Seraphim",
+      "album": "The Serpent's Egg",
+      "year": 1988,
+      "category": "stage",
+      "also": [
+        "vocals"
+      ],
+      "genre": "darkwave",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "128 - Dead Can Dance - The Host of Seraphim",
+      "level": {
+        "lufs": -14.12,
+        "peak": 0.9746
+      }
+    },
+    {
+      "id": "s-129",
+      "artist": "Kanye West",
+      "title": "Devil in a New Dress",
+      "album": "My Beautiful Dark Twisted Fantasy",
+      "year": 2010,
+      "category": "bass",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "129 - Kanye West - Devil in a New Dress",
+      "auto": true,
+      "level": {
+        "lufs": -8.24,
+        "peak": 1.2671
+      }
+    },
+    {
+      "id": "stg-14",
+      "artist": "Kanye West",
+      "title": "Runaway",
+      "album": "My Beautiful Dark Twisted Fantasy",
+      "year": 2010,
+      "category": "stage",
+      "also": [
+        "bass"
+      ],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "130 - Kanye West - Runaway",
+      "level": {
+        "lufs": -6.95,
+        "peak": 1.2633
+      }
+    },
+    {
+      "id": "s-131",
+      "artist": "Sakuzyo",
+      "title": "Altale",
+      "album": "",
+      "year": 2014,
+      "category": "stage",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "G2R2014",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "131 - Sakuzyo - Altale",
+      "auto": true,
+      "level": {
+        "lufs": -7.18,
+        "peak": 1.3179
+      }
+    },
+    {
+      "id": "s-132",
+      "artist": "Sakuzyo",
+      "title": "Altale (Duo Rework)",
+      "album": "",
+      "year": 2021,
+      "category": "stage",
+      "also": [],
+      "genre": "classical",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "132 - Sakuzyo - Altale (Duo Rework)",
+      "auto": true,
+      "level": {
+        "lufs": -10.58,
+        "peak": 0.9811
+      }
+    },
+    {
+      "id": "stg-15",
+      "artist": "Sakuzyo",
+      "title": "Pandora Paradoxxx",
+      "album": "",
+      "year": null,
+      "category": "stage",
+      "also": [
+        "busy"
+      ],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "from": "maimai",
+      "fileName": "133 - Sakuzyo - Pandora Paradoxxx",
+      "level": {
+        "lufs": -10.08,
+        "peak": 1.2336
+      }
+    },
+    {
+      "id": "stg-16",
+      "artist": "ONE OK ROCK",
+      "title": "The Beginning",
+      "album": "Jinsei×Boku=",
+      "year": 2013,
+      "category": "stage",
+      "also": [
+        "busy"
+      ],
+      "genre": "j-rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "134 - ONE OK ROCK - The Beginning",
+      "level": {
+        "lufs": -7.22,
+        "peak": 1.2241
+      }
+    },
+    {
+      "id": "s-135",
+      "artist": "Wuthering Waves",
+      "title": "To Hold You on the Moon",
+      "album": "At Dream's Edge (Original Game Soundtrack)",
+      "year": 2026,
+      "category": "busy",
+      "also": [],
+      "genre": "soundtrack",
+      "from": "Wuthering Waves",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "135 - Wuthering Waves - To Hold You on the Moon",
+      "auto": true,
+      "level": {
+        "lufs": -6.85,
+        "peak": 1.2345
+      }
+    },
+    {
+      "id": "bsy-01",
+      "artist": "Queen",
+      "title": "Bohemian Rhapsody",
+      "album": "A Night at the Opera",
+      "year": 1975,
+      "category": "busy",
+      "also": [
+        "vocals",
+        "stage"
+      ],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "136 - Queen - Bohemian Rhapsody",
+      "level": {
+        "lufs": -11.71,
+        "peak": 1.1841
+      }
+    },
+    {
+      "id": "bsy-03",
+      "artist": "Tool",
+      "title": "Schism",
+      "album": "Lateralus",
+      "year": 2001,
+      "category": "busy",
+      "also": [
+        "bass"
+      ],
+      "genre": "metal",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "137 - Tool - Schism",
+      "level": {
+        "lufs": -11.2,
+        "peak": 1.1133
+      }
+    },
+    {
+      "id": "bsy-04",
+      "artist": "Snarky Puppy",
+      "title": "Lingus",
+      "album": "We Like It Here",
+      "year": 2014,
+      "category": "busy",
+      "also": [
+        "stage"
+      ],
+      "genre": "jazz",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "138 - Snarky Puppy - Lingus",
+      "level": {
+        "lufs": -12.35,
+        "peak": 1.0668
+      }
+    },
+    {
+      "id": "bsy-05",
+      "artist": "Buddy Rich",
+      "title": "Channel One Suite",
+      "album": "Mercy, Mercy",
+      "year": 1968,
+      "category": "busy",
+      "also": [
+        "treble"
+      ],
+      "genre": "jazz",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "139 - Buddy Rich - Channel One Suite",
+      "level": {
+        "lufs": -13.75,
+        "peak": 1.1077
+      }
+    },
+    {
+      "id": "bsy-06",
+      "artist": "Daft Punk",
+      "title": "Contact",
+      "album": "Random Access Memories",
+      "year": 2013,
+      "category": "busy",
+      "also": [
+        "stage"
+      ],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "140 - Daft Punk - Contact",
+      "level": {
+        "lufs": -10.35,
+        "peak": 1.028
+      }
+    },
+    {
+      "id": "s-141",
+      "artist": "Daft Punk",
+      "title": "Aerodynamic",
+      "album": "Discovery",
+      "year": 2001,
+      "category": "bass",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "141 - Daft Punk - Aerodynamic",
+      "auto": true,
+      "level": {
+        "lufs": -11.31,
+        "peak": 1.2474
+      }
+    },
+    {
+      "id": "bsy-07",
+      "artist": "Dream Theater",
+      "title": "The Dance of Eternity",
+      "album": "Metropolis Pt. 2: Scenes from a Memory",
+      "year": 1999,
+      "category": "busy",
+      "also": [],
+      "genre": "metal",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "142 - Dream Theater - The Dance of Eternity",
+      "level": {
+        "lufs": -9.07,
+        "peak": 1.2826
+      }
+    },
+    {
+      "id": "bsy-09",
+      "artist": "Animals as Leaders",
+      "title": "CAFO",
+      "album": "Animals as Leaders",
+      "year": 2009,
+      "category": "busy",
+      "also": [],
+      "genre": "metal",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "143 - Animals as Leaders - CAFO",
+      "level": {
+        "lufs": -9.08,
+        "peak": 1.1807
+      }
+    },
+    {
+      "id": "bsy-11",
+      "artist": "Polyphia",
+      "title": "G.O.A.T.",
+      "album": "New Levels New Devils",
+      "year": 2018,
+      "category": "busy",
+      "also": [
+        "treble"
+      ],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "144 - Polyphia - G.O.A.T",
+      "level": {
+        "lufs": -7.74,
+        "peak": 1.1597
+      }
+    },
+    {
+      "id": "bsy-12",
+      "artist": "Seatbelts",
+      "title": "Tank!",
+      "album": "Cowboy Bebop (soundtrack)",
+      "year": 1998,
+      "category": "busy",
+      "also": [
+        "treble"
+      ],
+      "genre": "jazz",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "145 - Seatbelts - Tank!",
+      "level": {
+        "lufs": -10.96,
+        "peak": 1.1251
+      }
+    },
+    {
+      "id": "bsy-08",
+      "artist": "Gojira",
+      "title": "Stranded",
+      "album": "Magma",
+      "year": 2016,
+      "category": "busy",
+      "also": [
+        "bass"
+      ],
+      "genre": "metal",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "146 - Gojira - Stranded",
+      "level": {
+        "lufs": -17.12,
+        "peak": 0.481
+      }
+    },
+    {
+      "id": "bsy-10",
+      "artist": "Muse",
+      "title": "Knights of Cydonia",
+      "album": "Black Holes and Revelations",
+      "year": 2006,
+      "category": "busy",
+      "also": [
+        "stage"
+      ],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "147 - Muse - Knights of Cydonia",
+      "level": {
+        "lufs": -8.65,
+        "peak": 1.1266
+      }
+    },
+    {
+      "id": "s-148",
+      "artist": "DragonForce",
+      "title": "Through the Fire and Flames",
+      "album": "Inhuman Rampage",
+      "year": 2006,
+      "category": "busy",
+      "also": [],
+      "genre": "metal",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "148 - DragonForce - Through the Fire and Flames",
+      "auto": true,
+      "level": {
+        "lufs": -7.53,
+        "peak": 1.1916
+      }
+    },
+    {
+      "id": "bsy-14",
+      "artist": "Kanye West",
+      "title": "Power",
+      "album": "My Beautiful Dark Twisted Fantasy",
+      "year": 2010,
+      "category": "busy",
+      "also": [
+        "bass"
+      ],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "149 - Kanye West - Power",
+      "level": {
+        "lufs": -7.34,
+        "peak": 1.2783
+      }
+    },
+    {
+      "id": "s-150",
+      "artist": "Kanye West",
+      "title": "All of the Lights",
+      "album": "My Beautiful Dark Twisted Fantasy",
+      "year": 2010,
+      "category": "bass",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "150 - Kanye West - All of the Lights",
+      "auto": true,
+      "level": {
+        "lufs": -5.39,
+        "peak": 1.3067
+      }
+    },
+    {
+      "id": "bsy-15",
+      "artist": "xi",
+      "title": "FREEDOM DiVE",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [
+        "treble"
+      ],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "from": "osu!",
+      "fileName": "151 - xi - FREEDOM DiVE",
+      "level": {
+        "lufs": -7.09,
+        "peak": 1.2169
+      }
+    },
+    {
+      "id": "bsy-16",
+      "artist": "xi",
+      "title": "Blue Zenith",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [
+        "treble"
+      ],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "from": "osu!",
+      "fileName": "152 - xi - Blue Zenith",
+      "level": {
+        "lufs": -6.38,
+        "peak": 1.2301
+      }
+    },
+    {
+      "id": "s-153",
+      "artist": "xi",
+      "title": "Ascension to Heaven",
+      "album": "Parousia",
+      "year": 2011,
+      "category": "stage",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "osu!",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "153 - xi - Ascension to Heaven",
+      "auto": true,
+      "level": {
+        "lufs": -7.2,
+        "peak": 1.1739
+      }
+    },
+    {
+      "id": "s-154",
+      "artist": "xi",
+      "title": "Halcyon",
+      "album": "Parousia",
+      "year": 2011,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "osu!",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "154 - xi - Halcyon",
+      "auto": true,
+      "level": {
+        "lufs": -7.67,
+        "peak": 1.2578
+      }
+    },
+    {
+      "id": "s-155",
+      "artist": "xi",
+      "title": "Zauberkugel",
+      "album": "Agartha",
+      "year": 2013,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "155 - xi - Zauberkugel",
+      "auto": true,
+      "level": {
+        "lufs": -7.72,
+        "peak": 1.2039
+      }
+    },
+    {
+      "id": "bsy-18",
+      "artist": "Kurokotei",
+      "title": "Galaxy Collapse",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [
+        "bass"
+      ],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "from": "osu!",
+      "fileName": "157 - Kurokotei - Galaxy Collapse",
+      "level": {
+        "lufs": -5.88,
+        "peak": 1.3345
+      }
+    },
+    {
+      "id": "s-158",
+      "artist": "t+pazolite",
+      "title": "CENSORED!!",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Touhou arrange",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "158 - t+pazolite - CENSORED!!",
+      "auto": true,
+      "level": {
+        "lufs": -7.34,
+        "peak": 1.1644
+      }
+    },
+    {
+      "id": "bsy-19",
+      "artist": "t+pazolite",
+      "title": "Oshama Scramble!",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [
+        "treble"
+      ],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "from": "maimai / CHUNITHM",
+      "fileName": "159 - t+pazolite - Oshama Scramble!",
+      "level": {
+        "lufs": -6.29,
+        "peak": 1.3604
+      }
+    },
+    {
+      "id": "s-160",
+      "artist": "t+pazolite",
+      "title": "QZKago Requiem",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "maimai",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "160 - t+pazolite - QZKago Requiem",
+      "auto": true,
+      "level": {
+        "lufs": -15.44,
+        "peak": 0.7038
+      }
+    },
+    {
+      "id": "s-161",
+      "artist": "t+pazolite",
+      "title": "Tempestissimo",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Arcaea",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "161 - t+pazolite - Tempestissimo",
+      "auto": true,
+      "level": {
+        "lufs": -5.62,
+        "peak": 1.3184
+      }
+    },
+    {
+      "id": "s-162",
+      "artist": "t+pazolite",
+      "title": "Garakuta Doll Play",
+      "album": "Ponko2 Girlish",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "maimai",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "162 - t+pazolite - Garakuta Doll Play",
+      "auto": true,
+      "level": {
+        "lufs": -6.61,
+        "peak": 1.2707
+      }
+    },
+    {
+      "id": "s-163",
+      "artist": "t+pazolite",
+      "title": "You are the Miserable",
+      "album": "See you again, HOLLOWood",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "163 - t+pazolite - You are the Miserable",
+      "auto": true,
+      "level": {
+        "lufs": -7.19,
+        "peak": 1.2286
+      }
+    },
+    {
+      "id": "s-164",
+      "artist": "Team Grimoire",
+      "title": "Sheriruth",
+      "album": "Arcaea Sound Collection: Memories of Conflict",
+      "year": 2019,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Arcaea",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "164 - Team Grimoire - Sheriruth",
+      "auto": true,
+      "level": {
+        "lufs": -6.68,
+        "peak": 1.2745
+      }
+    },
+    {
+      "id": "s-166",
+      "artist": "Team Grimoire & Laur",
+      "title": "Grievous Lady -nothing is but what is not-",
+      "album": "Arcaea Sound Collection: Memories of Conflict",
+      "year": 2019,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Arcaea",
+      "clip": {
+        "start": 205,
+        "end": 345
+      },
+      "fileName": "166 - Team Grimoire & Laur - Grievous Lady -nothing is but what is not-",
+      "auto": true,
+      "level": {
+        "lufs": -6.89,
+        "peak": 1.6419
+      }
+    },
+    {
+      "id": "s-167",
+      "artist": "Team Grimoire",
+      "title": "Rrhar'il",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [
+        "bass"
+      ],
+      "genre": "rhythm-game",
+      "from": "Phigros",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "167 - Team Grimoire - Rrhar'il",
+      "auto": true,
+      "level": {
+        "lufs": -10.78,
+        "peak": 1.1753
+      }
+    },
+    {
+      "id": "s-168",
+      "artist": "Team Grimoire",
+      "title": "Astaroth",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Lanota",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "168 - Team Grimoire - Astaroth",
+      "auto": true,
+      "level": {
+        "lufs": -6.86,
+        "peak": 1.4913
+      }
+    },
+    {
+      "id": "s-169",
+      "artist": "Team Grimoire",
+      "title": "Dantalion",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Arcaea",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "169 - Team Grimoire - Dantalion",
+      "auto": true,
+      "level": {
+        "lufs": -6.31,
+        "peak": 1.5303
+      }
+    },
+    {
+      "id": "bsy-21",
+      "artist": "wowaka feat. Hatsune Miku",
+      "title": "Rolling Girl",
+      "album": "",
+      "year": 2010,
+      "category": "busy",
+      "also": [
+        "vocals"
+      ],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "from": "Project Sekai",
+      "fileName": "170 - wowaka feat. Hatsune Miku - Rolling Girl",
+      "level": {
+        "lufs": -5.57,
+        "peak": 1.2198
+      }
+    },
+    {
+      "id": "s-171",
+      "artist": "Siinamota",
+      "title": "Young Girl A",
+      "album": "",
+      "year": 2012,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Project Sekai",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "171 - Siinamota - Young Girl A",
+      "auto": true,
+      "level": {
+        "lufs": -6.89,
+        "peak": 1.2113
+      }
+    },
+    {
+      "id": "s-172",
+      "artist": "The Larping Tombstone",
+      "title": "Looping the Rooms (Remix)",
+      "album": "",
+      "year": 2026,
+      "category": "bass",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "172 - The Larping Tombstone - Looping the Rooms (Remix)",
+      "auto": true,
+      "level": {
+        "lufs": -8.39,
+        "peak": 1.1647
+      }
+    },
+    {
+      "id": "s-173",
+      "artist": "YOASOBI",
+      "title": "Racing into the Night",
+      "album": "",
+      "year": 2019,
+      "category": "bass",
+      "also": [],
+      "genre": "j-pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "173 - YOASOBI - Racing into the Night",
+      "auto": true,
+      "level": {
+        "lufs": -10.59,
+        "peak": 1.0033
+      }
+    },
+    {
+      "id": "bsy-22",
+      "artist": "YOASOBI",
+      "title": "Idol",
+      "album": "",
+      "year": 2023,
+      "category": "busy",
+      "also": [
+        "vocals"
+      ],
+      "genre": "j-pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "174 - YOASOBI - Idol",
+      "level": {
+        "lufs": -11.77,
+        "peak": 0.8455
+      }
+    },
+    {
+      "id": "s-175",
+      "artist": "Stardust",
+      "title": "Music Sounds Better With You",
+      "album": "",
+      "year": 1998,
+      "category": "bass",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "175 - Stardust - Music Sounds Better With You",
+      "auto": true,
+      "level": {
+        "lufs": -8.91,
+        "peak": 1.2017
+      }
+    },
+    {
+      "id": "s-176",
+      "artist": "Earth, Wind & Fire",
+      "title": "Let's Groove",
+      "album": "Raise!",
+      "year": 1981,
+      "category": "vocals",
+      "also": [],
+      "genre": "funk",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "176 - Earth, Wind & Fire - Let's Groove",
+      "auto": true,
+      "level": {
+        "lufs": -13.56,
+        "peak": 1.1126
+      }
+    },
+    {
+      "id": "s-177",
+      "artist": "Nujabes feat. Cise Starr & Akin",
+      "title": "Feather",
+      "album": "Modal Soul",
+      "year": 2005,
+      "category": "bass",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "177 - Nujabes feat. Cise Starr & Akin - Feather",
+      "auto": true,
+      "level": {
+        "lufs": -5.79,
+        "peak": 1.1572
+      }
+    },
+    {
+      "id": "s-178",
+      "artist": "Nujabes feat. Shing02",
+      "title": "Luv(sic)",
+      "album": "",
+      "year": 2001,
+      "category": "bass",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "178 - Nujabes feat. Shing02 - Luv(sic)",
+      "auto": true,
+      "level": {
+        "lufs": -9.02,
+        "peak": 1.1049
+      }
+    },
+    {
+      "id": "s-179",
+      "artist": "Nujabes feat. Shing02",
+      "title": "Luv(sic) Part 3",
+      "album": "Modal Soul",
+      "year": 2005,
+      "category": "treble",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "179 - Nujabes feat. Shing02 - Luv(sic) Part 3",
+      "auto": true,
+      "level": {
+        "lufs": -9.87,
+        "peak": 1.1285
+      }
+    },
+    {
+      "id": "s-180",
+      "artist": "Travis Scott feat. Kacy Hill",
+      "title": "90210",
+      "album": "Rodeo",
+      "year": 2015,
+      "category": "bass",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "180 - Travis Scott feat. Kacy Hill - 90210",
+      "auto": true,
+      "level": {
+        "lufs": -7.93,
+        "peak": 1.2679
+      }
+    },
+    {
+      "id": "s-181",
+      "artist": "Childish Gambino",
+      "title": "I. The Worst Guys",
+      "album": "Because the Internet",
+      "year": 2013,
+      "category": "bass",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "181 - Childish Gambino - I. The Worst Guys",
+      "auto": true,
+      "level": {
+        "lufs": -10.16,
+        "peak": 1.3127
+      }
+    },
+    {
+      "id": "s-182",
+      "artist": "Childish Gambino",
+      "title": "3005",
+      "album": "Because the Internet",
+      "year": 2013,
+      "category": "bass",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "182 - Childish Gambino - 3005",
+      "auto": true,
+      "level": {
+        "lufs": -9.62,
+        "peak": 1.1831
+      }
+    },
+    {
+      "id": "s-183",
+      "artist": "Childish Gambino",
+      "title": "3005 (Beach Picnic Version)",
+      "album": "",
+      "year": 2014,
+      "category": "bass",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "183 - Childish Gambino - 3005 (Beach Picnic Version)",
+      "auto": true,
+      "level": {
+        "lufs": -11.72,
+        "peak": 1.1033
+      }
+    },
+    {
+      "id": "s-184",
+      "artist": "Richi303",
+      "title": "Monochrome x Big D Randy 1 + 2 (Mashup)",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "184 - Richi303 - Monochrome x Big D Randy 1 + 2 (Mashup)",
+      "auto": true,
+      "level": {
+        "lufs": -12.71,
+        "peak": 1.0098
+      }
+    },
+    {
+      "id": "s-185",
+      "artist": "David Bowie",
+      "title": "Heroes",
+      "album": "\"Heroes\"",
+      "year": 1977,
+      "category": "busy",
+      "also": [],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "185 - David Bowie - Heroes",
+      "auto": true,
+      "level": {
+        "lufs": -9.78,
+        "peak": 1.153
+      }
+    },
+    {
+      "id": "s-186",
+      "artist": "Fleetwood Mac",
+      "title": "The Chain",
+      "album": "Rumours",
+      "year": 1977,
+      "category": "treble",
+      "also": [],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "186 - Fleetwood Mac - The Chain",
+      "auto": true,
+      "level": {
+        "lufs": -12.22,
+        "peak": 1.2061
+      }
+    },
+    {
+      "id": "s-187",
+      "artist": "Shadrow",
+      "title": "Never Be Alone",
+      "album": "",
+      "year": null,
+      "category": "bass",
+      "also": [],
+      "genre": "electronic",
+      "from": "Five Nights at Freddy's 4",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "187 - Shadrow - Never Be Alone",
+      "auto": true,
+      "level": {
+        "lufs": -12.02,
+        "peak": 1.0351
+      }
+    },
+    {
+      "id": "s-188",
+      "artist": "Ken Ashcorp",
+      "title": "Absolute Territory",
+      "album": "",
+      "year": 2013,
+      "category": "bass",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "188 - Ken Ashcorp - Absolute Territory",
+      "auto": true,
+      "level": {
+        "lufs": -7.38,
+        "peak": 1.2869
+      }
+    },
+    {
+      "id": "s-189",
+      "artist": "Kenichi Tokoi",
+      "title": "Planet Wisp Act 1",
+      "album": "Sonic Colors Original Soundtrack",
+      "year": 2010,
+      "category": "treble",
+      "also": [],
+      "genre": "soundtrack",
+      "from": "Sonic Colors",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "189 - Kenichi Tokoi - Planet Wisp Act 1",
+      "auto": true,
+      "level": {
+        "lufs": -11.77,
+        "peak": 1.0848
+      }
+    },
+    {
+      "id": "s-190",
+      "artist": "Tomoya Ohtani",
+      "title": "Aquarium Park Act 1",
+      "album": "Sonic Colors Original Soundtrack",
+      "year": 2010,
+      "category": "busy",
+      "also": [],
+      "genre": "soundtrack",
+      "from": "Sonic Colors",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "190 - Tomoya Ohtani - Aquarium Park Act 1",
+      "auto": true,
+      "level": {
+        "lufs": -11.61,
+        "peak": 1.0934
+      }
+    },
+    {
+      "id": "s-191",
+      "artist": "Feint feat. Laura Brehm",
+      "title": "Words",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "191 - Feint feat. Laura Brehm - Words",
+      "auto": true,
+      "level": {
+        "lufs": -6.19,
+        "peak": 1.3825
+      }
+    },
+    {
+      "id": "s-192",
+      "artist": "Stratus",
+      "title": "You Must Follow",
+      "album": "",
+      "year": 2005,
+      "category": "bass",
+      "also": [
+        "busy"
+      ],
+      "genre": "electronic",
+      "from": "Need for Speed: Most Wanted",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "192 - Stratus - You Must Follow",
+      "auto": true,
+      "level": {
+        "lufs": -11.91,
+        "peak": 1.1157
+      }
+    },
+    {
+      "id": "s-193",
+      "artist": "THE SIXTH LIE",
+      "title": "Setsuna",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "j-rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "193 - THE SIXTH LIE - Setsuna",
+      "auto": true,
+      "level": {
+        "lufs": -5.74,
+        "peak": 1.3236
+      }
+    },
+    {
+      "id": "s-194",
+      "artist": "Nighthawk22",
+      "title": "Isolation",
+      "album": "",
+      "year": null,
+      "category": "bass",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "194 - Nighthawk22 - Isolation",
+      "auto": true,
+      "level": {
+        "lufs": -4.54,
+        "peak": 1.306
+      }
+    },
+    {
+      "id": "s-195",
+      "artist": "Robert Miles",
+      "title": "Children (Dream Version)",
+      "album": "Dreamland",
+      "year": 1996,
+      "category": "stage",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "195 - Robert Miles - Children (Dream Version)",
+      "auto": true,
+      "level": {
+        "lufs": -13.29,
+        "peak": 1.0559
+      }
+    },
+    {
+      "id": "s-196",
+      "artist": "Porter Robinson",
+      "title": "Language",
+      "album": "",
+      "year": 2012,
+      "category": "busy",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "196 - Porter Robinson - Language",
+      "auto": true,
+      "level": {
+        "lufs": -8.36,
+        "peak": 1.2482
+      }
+    },
+    {
+      "id": "s-197",
+      "artist": "Porter Robinson & Madeon",
+      "title": "Shelter",
+      "album": "",
+      "year": 2016,
+      "category": "bass",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "197 - Porter Robinson & Madeon - Shelter",
+      "auto": true,
+      "level": {
+        "lufs": -6.86,
+        "peak": 1.3647
+      }
+    },
+    {
+      "id": "s-198",
+      "artist": "Daiki Kasho",
+      "title": "All My Life (Opening Version)",
+      "album": "",
+      "year": 2013,
+      "category": "busy",
+      "also": [],
+      "genre": "soundtrack",
+      "from": "Gran Turismo 6",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "198 - Daiki Kasho - All My Life (Opening Version)",
+      "auto": true,
+      "level": {
+        "lufs": -7.9,
+        "peak": 1.1514
+      }
+    },
+    {
+      "id": "s-199",
+      "artist": "Depeche Mode",
+      "title": "Enjoy the Silence",
+      "album": "Violator",
+      "year": 1990,
+      "category": "vocals",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "199 - Depeche Mode - Enjoy the Silence",
+      "auto": true,
+      "level": {
+        "lufs": -12.93,
+        "peak": 1.07
+      }
+    },
+    {
+      "id": "s-200",
+      "artist": "Linkin Park",
+      "title": "Somewhere I Belong",
+      "album": "Meteora",
+      "year": 2003,
+      "category": "busy",
+      "also": [],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "200 - Linkin Park - Somewhere I Belong",
+      "auto": true,
+      "level": {
+        "lufs": -6.33,
+        "peak": 1.3015
+      }
+    },
+    {
+      "id": "s-201",
+      "artist": "REDALiCE & USAO",
+      "title": "最強STRONGER",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "201 - REDALiCE & USAO - 最強STRONGER",
+      "auto": true,
+      "level": {
+        "lufs": -5.09,
+        "peak": 1.4408
+      }
+    },
+    {
+      "id": "s-202",
+      "artist": "hkmori",
+      "title": "anybody can find love (except you.) (Glitch Cat Remix)",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "202 - hkmori - anybody can find love (except you.) (Glitch Cat Remix)",
+      "auto": true,
+      "level": {
+        "lufs": -11.79,
+        "peak": 1.1308
+      }
+    },
+    {
+      "id": "s-203",
+      "artist": "Freddie Gibbs & The Alchemist",
+      "title": "Ensalada (feat. Anderson .Paak)",
+      "album": "Alfredo 2",
+      "year": 2025,
+      "category": "bass",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "203 - Freddie Gibbs & The Alchemist - Ensalada (feat. Anderson .Paak)",
+      "auto": true,
+      "level": {
+        "lufs": -11.34,
+        "peak": 1.173
+      }
+    },
+    {
+      "id": "s-204",
+      "artist": "Kendrick Lamar",
+      "title": "Wesley's Theory (feat. George Clinton & Thundercat)",
+      "album": "To Pimp a Butterfly",
+      "year": 2015,
+      "category": "bass",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "204 - Kendrick Lamar - Wesley's Theory (feat. George Clinton & Thundercat)",
+      "auto": true,
+      "level": {
+        "lufs": -7.59,
+        "peak": 1.2901
+      }
+    },
+    {
+      "id": "s-206",
+      "artist": "Tyler, The Creator",
+      "title": "St. Chroma (feat. Daniel Caesar)",
+      "album": "CHROMAKOPIA",
+      "year": 2024,
+      "category": "vocals",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "206 - Tyler, The Creator - St. Chroma (feat. Daniel Caesar)",
+      "auto": true,
+      "level": {
+        "lufs": -6.82,
+        "peak": 1.1902
+      }
+    },
+    {
+      "id": "s-207",
+      "artist": "Tyler, The Creator",
+      "title": "NEW MAGIC WAND",
+      "album": "IGOR",
+      "year": 2019,
+      "category": "bass",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "207 - Tyler, The Creator - NEW MAGIC WAND",
+      "auto": true,
+      "level": {
+        "lufs": -9.52,
+        "peak": 1.235
+      }
+    },
+    {
+      "id": "s-208",
+      "artist": "Nas",
+      "title": "N.Y. State of Mind",
+      "album": "Illmatic",
+      "year": 1994,
+      "category": "bass",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "208 - Nas - N.Y. State of Mind",
+      "auto": true,
+      "level": {
+        "lufs": -8.77,
+        "peak": 1.0418
+      }
+    },
+    {
+      "id": "s-209",
+      "artist": "Manuel",
+      "title": "Gas Gas Gas",
+      "album": "Super Eurobeat",
+      "year": 1998,
+      "category": "treble",
+      "also": [],
+      "genre": "eurobeat",
+      "from": "Initial D",
+      "clip": {
+        "start": 0,
+        "end": 138
+      },
+      "fileName": "209 - Manuel - Gas Gas Gas",
+      "auto": true,
+      "level": {
+        "lufs": -6.65,
+        "peak": 1.5241
+      }
+    },
+    {
+      "id": "s-210",
+      "artist": "Dave Rodgers",
+      "title": "Deja Vu",
+      "album": "Super Eurobeat",
+      "year": 1998,
+      "category": "busy",
+      "also": [],
+      "genre": "eurobeat",
+      "from": "Initial D",
+      "clip": {
+        "start": 25,
+        "end": 158
+      },
+      "fileName": "210 - Dave Rodgers - Deja Vu",
+      "auto": true,
+      "level": {
+        "lufs": -8.14,
+        "peak": 1.3099
+      }
+    },
+    {
+      "id": "s-211",
+      "artist": "m.o.v.e",
+      "title": "Gamble Rumble",
+      "album": "Initial D Fourth Stage",
+      "year": 2004,
+      "category": "bass",
+      "also": [],
+      "genre": "eurobeat",
+      "from": "Initial D",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "211 - m.o.v.e - Gamble Rumble",
+      "auto": true,
+      "level": {
+        "lufs": -8.05,
+        "peak": 1.2995
+      }
+    },
+    {
+      "id": "s-212",
+      "artist": "Max Coveri",
+      "title": "Running in the 90's",
+      "album": "Super Eurobeat",
+      "year": 1997,
+      "category": "busy",
+      "also": [],
+      "genre": "eurobeat",
+      "from": "Initial D",
+      "clip": {
+        "start": 0,
+        "end": 138
+      },
+      "fileName": "212 - Max Coveri - Running in the 90's",
+      "auto": true,
+      "level": {
+        "lufs": -8.1,
+        "peak": 1.3844
+      }
+    },
+    {
+      "id": "s-213",
+      "artist": "SOUND HOLIC feat. Nana Takahashi",
+      "title": "ALBA -黎明- (Album edit.)",
+      "album": "Eurobeat Holic",
+      "year": 2014,
+      "category": "busy",
+      "also": [],
+      "genre": "eurobeat",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "213 - SOUND HOLIC feat. Nana Takahashi - ALBA -黎明- (Album edit.)",
+      "auto": true,
+      "level": {
+        "lufs": -6,
+        "peak": 1.2917
+      }
+    },
+    {
+      "id": "s-214",
+      "artist": "A-One",
+      "title": "Starbow Break",
+      "album": "Touhou Eurobeat",
+      "year": 2012,
+      "category": "busy",
+      "also": [],
+      "genre": "eurobeat",
+      "from": "Touhou arrange",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "214 - A-One - Starbow Break",
+      "auto": true,
+      "level": {
+        "lufs": -5.82,
+        "peak": 1.3203
+      }
+    },
+    {
+      "id": "s-215",
+      "artist": "Turbo",
+      "title": "Säkkijärven Polkka (Eurobeat Remix)",
+      "album": "",
+      "year": 2021,
+      "category": "busy",
+      "also": [],
+      "genre": "eurobeat",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "215 - Turbo - Säkkijärven Polkka (Eurobeat Remix)",
+      "auto": true,
+      "level": {
+        "lufs": -9.53,
+        "peak": 1.1084
+      }
+    },
+    {
+      "id": "s-216",
+      "artist": "Yuzo Koshiro",
+      "title": "Avatar of Speed",
+      "album": "Wangan Midnight Maximum Tune 5 Soundtrack",
+      "year": 2016,
+      "category": "bass",
+      "also": [],
+      "genre": "racing-game",
+      "from": "Wangan Midnight Maximum Tune 5",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "216 - Yuzo Koshiro - Avatar of Speed",
+      "auto": true,
+      "level": {
+        "lufs": -10.55,
+        "peak": 1.1801
+      }
+    },
+    {
+      "id": "s-217",
+      "artist": "Yuzo Koshiro",
+      "title": "Burning Away",
+      "album": "Wangan Midnight Maximum Tune 6 Soundtrack",
+      "year": 2018,
+      "category": "bass",
+      "also": [],
+      "genre": "racing-game",
+      "from": "Wangan Midnight Maximum Tune 6",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "217 - Yuzo Koshiro - Burning Away",
+      "auto": true,
+      "level": {
+        "lufs": -7.02,
+        "peak": 1.2938
+      }
+    },
+    {
+      "id": "s-218",
+      "artist": "Yuzo Koshiro",
+      "title": "Taillight",
+      "album": "Wangan Midnight Maximum Tune 4 Soundtrack",
+      "year": 2011,
+      "category": "stage",
+      "also": [],
+      "genre": "racing-game",
+      "from": "Wangan Midnight Maximum Tune 4",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "218 - Yuzo Koshiro - Taillight",
+      "auto": true,
+      "level": {
+        "lufs": -8.77,
+        "peak": 1.2267
+      }
+    },
+    {
+      "id": "s-219",
+      "artist": "Yuzo Koshiro",
+      "title": "Phantom of Blue",
+      "album": "Wangan Midnight Maximum Tune 3 Soundtrack",
+      "year": 2007,
+      "category": "stage",
+      "also": [],
+      "genre": "racing-game",
+      "from": "Wangan Midnight Maximum Tune 3",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "219 - Yuzo Koshiro - Phantom of Blue",
+      "auto": true,
+      "level": {
+        "lufs": -10.67,
+        "peak": 1.0498
+      }
+    },
+    {
+      "id": "s-220",
+      "artist": "Yuzo Koshiro",
+      "title": "Stream of Tears",
+      "album": "Wangan Midnight Maximum Tune Soundtrack",
+      "year": 2004,
+      "category": "busy",
+      "also": [],
+      "genre": "racing-game",
+      "from": "Wangan Midnight Maximum Tune",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "220 - Yuzo Koshiro - Stream of Tears",
+      "auto": true,
+      "level": {
+        "lufs": -9.2,
+        "peak": 1.1589
+      }
+    },
+    {
+      "id": "s-221",
+      "artist": "Tokyo Xtreme Racer",
+      "title": "Let Me Go (Vocal)",
+      "album": "Shutokou Battle 0 Soundtrack",
+      "year": 2001,
+      "category": "busy",
+      "also": [],
+      "genre": "racing-game",
+      "from": "Tokyo Xtreme Racer Zero",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "221 - Tokyo Xtreme Racer - Let Me Go (Vocal)",
+      "auto": true,
+      "level": {
+        "lufs": -9.87,
+        "peak": 1.078
+      }
+    },
+    {
+      "id": "s-222",
+      "artist": "Camellia",
+      "title": "Blackmagik Blazing",
+      "album": "Blackmagik Blazing",
+      "year": 2020,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "osu!",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "222 - Camellia - Blackmagik Blazing",
+      "auto": true,
+      "level": {
+        "lufs": -3.58,
+        "peak": 1.5154
+      }
+    },
+    {
+      "id": "s-223",
+      "artist": "Sakuzyo",
+      "title": "Fracture Ray",
+      "album": "Arcaea",
+      "year": 2017,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Arcaea",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "223 - Sakuzyo - Fracture Ray",
+      "auto": true,
+      "level": {
+        "lufs": -6.77,
+        "peak": 1.4032
+      }
+    },
+    {
+      "id": "s-224",
+      "artist": "Æsir",
+      "title": "CHAOS",
+      "album": "",
+      "year": 2016,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "osu!",
+      "clip": {
+        "start": 65,
+        "end": 205
+      },
+      "fileName": "224 - Æsir - CHAOS",
+      "auto": true,
+      "level": {
+        "lufs": -7.31,
+        "peak": 1.207
+      }
+    },
+    {
+      "id": "s-225",
+      "artist": "PSYQUI",
+      "title": "Hype (feat. Such)",
+      "album": "",
+      "year": 2019,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "225 - PSYQUI - Hype (feat. Such)",
+      "auto": true,
+      "level": {
+        "lufs": -6.86,
+        "peak": 1.4105
+      }
+    },
+    {
+      "id": "s-226",
+      "artist": "Laur",
+      "title": "Sound Chimera",
+      "album": "",
+      "year": 2018,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Arcaea",
+      "clip": {
+        "start": 0,
+        "end": 142
+      },
+      "fileName": "226 - Laur - Sound Chimera",
+      "auto": true,
+      "level": {
+        "lufs": -4.24,
+        "peak": 1.612
+      }
+    },
+    {
+      "id": "s-227",
+      "artist": "ginkiha",
+      "title": "Oriens",
+      "album": "",
+      "year": 2016,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "osu!",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "227 - ginkiha - Oriens",
+      "auto": true,
+      "level": {
+        "lufs": -5.73,
+        "peak": 1.3698
+      }
+    },
+    {
+      "id": "s-228",
+      "artist": "Silentroom",
+      "title": "Rainbow Frontier (この星の上で)",
+      "album": "",
+      "year": 2019,
+      "category": "bass",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "228 - Silentroom - Rainbow Frontier (この星の上で)",
+      "auto": true,
+      "level": {
+        "lufs": -7.92,
+        "peak": 1.2284
+      }
+    },
+    {
+      "id": "s-229",
+      "artist": "Jamie Christopherson",
+      "title": "Rules of Nature (Platinum Mix)",
+      "album": "Metal Gear Rising: Revengeance Vocal Tracks",
+      "year": 2013,
+      "category": "busy",
+      "also": [],
+      "genre": "soundtrack",
+      "from": "Metal Gear Rising: Revengeance",
+      "clip": {
+        "start": 0,
+        "end": 150
+      },
+      "fileName": "229 - Jamie Christopherson - Rules of Nature (Platinum Mix)",
+      "auto": true,
+      "level": {
+        "lufs": -6.82,
+        "peak": 1.2374
+      }
+    },
+    {
+      "id": "s-230",
+      "artist": "Casey Edwards feat. Victor Borba",
+      "title": "Bury the Light",
+      "album": "Devil May Cry 5 Special Edition",
+      "year": 2020,
+      "category": "busy",
+      "also": [],
+      "genre": "soundtrack",
+      "from": "Devil May Cry 5",
+      "clip": {
+        "start": 102,
+        "end": 237
+      },
+      "fileName": "230 - Casey Edwards feat. Victor Borba - Bury the Light",
+      "auto": true,
+      "level": {
+        "lufs": -6.92,
+        "peak": 1.2547
+      }
+    },
+    {
+      "id": "s-231",
+      "artist": "Shoji Meguro & Lyn",
+      "title": "Rivers in the Desert",
+      "album": "Persona 5 Original Soundtrack",
+      "year": 2016,
+      "category": "treble",
+      "also": [],
+      "genre": "soundtrack",
+      "from": "Persona 5",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "231 - Shoji Meguro & Lyn - Rivers in the Desert",
+      "auto": true,
+      "level": {
+        "lufs": -10.34,
+        "peak": 1.1216
+      }
+    },
+    {
+      "id": "s-233",
+      "artist": "Yuka Kitamura",
+      "title": "Slave Knight Gael",
+      "album": "Dark Souls III: The Ringed City",
+      "year": 2017,
+      "category": "stage",
+      "also": [],
+      "genre": "soundtrack",
+      "from": "Dark Souls III",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "233 - Yuka Kitamura - Slave Knight Gael",
+      "auto": true,
+      "level": {
+        "lufs": -9.81,
+        "peak": 1.0932
+      }
+    },
+    {
+      "id": "s-234",
+      "artist": "Mick Gordon",
+      "title": "The Only Thing They Fear Is You",
+      "album": "DOOM Eternal (Original Game Soundtrack)",
+      "year": 2020,
+      "category": "bass",
+      "also": [],
+      "genre": "soundtrack",
+      "from": "DOOM Eternal",
+      "clip": {
+        "start": 13,
+        "end": 148
+      },
+      "fileName": "234 - Mick Gordon - The Only Thing They Fear Is You",
+      "auto": true,
+      "level": {
+        "lufs": -8.75,
+        "peak": 1.1981
+      }
+    },
+    {
+      "id": "s-235",
+      "artist": "Keiki Kobayashi",
+      "title": "Daredevil",
+      "album": "Ace Combat 7: Skies Unknown Original Soundtrack",
+      "year": 2019,
+      "category": "stage",
+      "also": [],
+      "genre": "soundtrack",
+      "from": "Ace Combat 7",
+      "clip": {
+        "start": 140,
+        "end": 280
+      },
+      "fileName": "235 - Keiki Kobayashi - Daredevil",
+      "auto": true,
+      "level": {
+        "lufs": -10.91,
+        "peak": 1.0308
+      }
+    },
+    {
+      "id": "s-236",
+      "artist": "Lorien Testard",
+      "title": "Une vie à t'aimer",
+      "album": "Clair Obscur: Expedition 33 (Original Soundtrack)",
+      "year": 2025,
+      "category": "busy",
+      "also": [],
+      "genre": "soundtrack",
+      "from": "Clair Obscur: Expedition 33",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "236 - Lorien Testard - Une vie à t'aimer",
+      "auto": true,
+      "level": {
+        "lufs": -7.3,
+        "peak": 1.1709
+      }
+    },
+    {
+      "id": "s-237",
+      "artist": "HOYO-MiX & Chevy",
+      "title": "If I Can Stop One Heart From Breaking",
+      "album": "Honkai: Star Rail 2.0",
+      "year": 2024,
+      "category": "treble",
+      "also": [],
+      "genre": "soundtrack",
+      "from": "Honkai: Star Rail",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "237 - HOYO-MiX & Chevy - If I Can Stop One Heart From Breaking",
+      "auto": true,
+      "level": {
+        "lufs": -9.87,
+        "peak": 1.268
+      }
+    },
+    {
+      "id": "s-238",
+      "artist": "Cynthia Harrell",
+      "title": "Snake Eater",
+      "album": "Metal Gear Solid 3: Snake Eater Original Soundtrack",
+      "year": 2004,
+      "category": "stage",
+      "also": [],
+      "genre": "soundtrack",
+      "from": "Metal Gear Solid 3",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "238 - Cynthia Harrell - Snake Eater",
+      "auto": true,
+      "level": {
+        "lufs": -9.19,
+        "peak": 1.085
+      }
+    },
+    {
+      "id": "s-239",
+      "artist": "Pendulum",
+      "title": "Propane Nightmares",
+      "album": "In Silico",
+      "year": 2008,
+      "category": "busy",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "239 - Pendulum - Propane Nightmares",
+      "auto": true,
+      "level": {
+        "lufs": -7.32,
+        "peak": 1.2095
+      }
+    },
+    {
+      "id": "s-240",
+      "artist": "The Prodigy",
+      "title": "Invaders Must Die",
+      "album": "Invaders Must Die",
+      "year": 2009,
+      "category": "bass",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "240 - The Prodigy - Invaders Must Die",
+      "auto": true,
+      "level": {
+        "lufs": -20.04,
+        "peak": 0.3508
+      }
+    },
+    {
+      "id": "s-241",
+      "artist": "Porter Robinson",
+      "title": "Goodbye to a World",
+      "album": "Worlds",
+      "year": 2014,
+      "category": "bass",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "241 - Porter Robinson - Goodbye to a World",
+      "auto": true,
+      "level": {
+        "lufs": -8.5,
+        "peak": 1.2864
+      }
+    },
+    {
+      "id": "s-242",
+      "artist": "Caravan Palace",
+      "title": "Lone Digger",
+      "album": "<I°_°I>",
+      "year": 2015,
+      "category": "busy",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "242 - Caravan Palace - Lone Digger",
+      "auto": true,
+      "level": {
+        "lufs": -7.57,
+        "peak": 1.3596
+      }
+    },
+    {
+      "id": "s-243",
+      "artist": "Sabaton",
+      "title": "Shiroyama",
+      "album": "The Last Stand",
+      "year": 2016,
+      "category": "busy",
+      "also": [],
+      "genre": "metal",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "243 - Sabaton - Shiroyama",
+      "auto": true,
+      "level": {
+        "lufs": -8.2,
+        "peak": 1.1682
+      }
+    },
+    {
+      "id": "s-244",
+      "artist": "Arctic Monkeys",
+      "title": "Brianstorm",
+      "album": "Favourite Worst Nightmare",
+      "year": 2007,
+      "category": "busy",
+      "also": [],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "244 - Arctic Monkeys - Brianstorm",
+      "auto": true,
+      "level": {
+        "lufs": -11.23,
+        "peak": 0.7998
+      }
+    },
+    {
+      "id": "s-245",
+      "artist": "Rammstein",
+      "title": "Sonne",
+      "album": "Mutter",
+      "year": 2001,
+      "category": "busy",
+      "also": [],
+      "genre": "metal",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "245 - Rammstein - Sonne",
+      "auto": true,
+      "level": {
+        "lufs": -8.39,
+        "peak": 1.1979
+      }
+    },
+    {
+      "id": "s-246",
+      "artist": "Bring Me The Horizon feat. BABYMETAL",
+      "title": "Kingslayer",
+      "album": "Post Human: Survival Horror",
+      "year": 2020,
+      "category": "busy",
+      "also": [],
+      "genre": "metal",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "246 - Bring Me The Horizon feat. BABYMETAL - Kingslayer",
+      "auto": true,
+      "level": {
+        "lufs": -5.87,
+        "peak": 1.2078
+      }
+    },
+    {
+      "id": "s-247",
+      "artist": "Booker T. & the M.G.'s",
+      "title": "Green Onions",
+      "album": "Green Onions",
+      "year": 1962,
+      "category": "vocals",
+      "also": [],
+      "genre": "soul",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "247 - Booker T. & the M.G.'s - Green Onions",
+      "auto": true,
+      "level": {
+        "lufs": -13.99,
+        "peak": 1.0492
+      }
+    },
+    {
+      "id": "s-248",
+      "artist": "Marty Robbins",
+      "title": "Big Iron",
+      "album": "Gunfighter Ballads and Trail Songs",
+      "year": 1959,
+      "category": "acoustic",
+      "also": [],
+      "genre": "country",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "248 - Marty Robbins - Big Iron",
+      "auto": true,
+      "level": {
+        "lufs": -12.36,
+        "peak": 1.0885
+      }
+    },
+    {
+      "id": "s-249",
+      "artist": "ZUTOMAYO",
+      "title": "秒針を噛む (Byoushin wo Kamu)",
+      "album": "正しい偽りからの起床",
+      "year": 2018,
+      "category": "treble",
+      "also": [],
+      "genre": "j-pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "249 - ZUTOMAYO - 秒針を噛む (Byoushin wo Kamu)",
+      "auto": true,
+      "level": {
+        "lufs": -6.68,
+        "peak": 1.2187
+      }
+    },
+    {
+      "id": "s-250",
+      "artist": "Kenshi Yonezu",
+      "title": "IRIS OUT",
+      "album": "IRIS OUT",
+      "year": 2025,
+      "category": "bass",
+      "also": [],
+      "genre": "j-pop",
+      "from": "Chainsaw Man – The Movie: Reze Arc",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "250 - Kenshi Yonezu - IRIS OUT",
+      "auto": true,
+      "level": {
+        "lufs": -7.76,
+        "peak": 1.2619
+      }
+    },
+    {
+      "id": "s-251",
+      "artist": "Kaneko Ayano",
+      "title": "ロマンス宣言 (Romance Sengen)",
+      "album": "燦々",
+      "year": 2019,
+      "category": "vocals",
+      "also": [],
+      "genre": "j-rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "251 - Kaneko Ayano - ロマンス宣言 (Romance Sengen)",
+      "auto": true,
+      "level": {
+        "lufs": -12.3,
+        "peak": 1.0917
+      }
+    },
+    {
+      "id": "s-252",
+      "artist": "Modjo",
+      "title": "Lady (Hear Me Tonight)",
+      "album": "Modjo",
+      "year": 2000,
+      "category": "bass",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "252 - Modjo - Lady (Hear Me Tonight)",
+      "auto": true,
+      "level": {
+        "lufs": -8.77,
+        "peak": 1.2048
+      }
+    },
+    {
+      "id": "s-253",
+      "artist": "Nujabes feat. Shing02",
+      "title": "Luv(sic) Part 2",
+      "album": "",
+      "year": null,
+      "category": "bass",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "253 - Nujabes feat. Shing02 - Luv(sic) Part 2",
+      "auto": true,
+      "level": {
+        "lufs": -7.08,
+        "peak": 1.1918
+      }
+    },
+    {
+      "id": "s-254",
+      "artist": "xi",
+      "title": "Anima",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": 0,
+        "end": 128
+      },
+      "fileName": "254 - xi - Anima",
+      "auto": true,
+      "level": {
+        "lufs": -8.26,
+        "peak": 1.2176
+      }
+    },
+    {
+      "id": "s-255",
+      "artist": "KASAI HARCORES",
+      "title": "サイクルヒット (Cycle Hit)",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": 175,
+        "end": 310
+      },
+      "fileName": "255 - KASAI HARCORES - サイクルヒット (Cycle Hit)",
+      "auto": true,
+      "level": {
+        "lufs": -4.24,
+        "peak": 1.5233
+      }
+    },
+    {
+      "id": "s-256",
+      "artist": "Silentroom",
+      "title": "Protoflicker",
+      "album": "Rainbow Frontier",
+      "year": 2019,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": 34,
+        "end": 166
+      },
+      "fileName": "256 - Silentroom - Protoflicker",
+      "auto": true,
+      "level": {
+        "lufs": -8.21,
+        "peak": 1.1919
+      }
+    },
+    {
+      "id": "s-257",
+      "artist": "Silentroom",
+      "title": "Angel Echo",
+      "album": "Rainbow Frontier",
+      "year": 2019,
+      "category": "bass",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "257 - Silentroom - Angel Echo",
+      "auto": true,
+      "level": {
+        "lufs": -7.64,
+        "peak": 1.2665
+      }
+    },
+    {
+      "id": "s-258",
+      "artist": "Silentroom",
+      "title": "Nhelv",
+      "album": "Rainbow Frontier",
+      "year": 2019,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "258 - Silentroom - Nhelv",
+      "auto": true,
+      "level": {
+        "lufs": -6.64,
+        "peak": 1.351
+      }
+    },
+    {
+      "id": "s-259",
+      "artist": "Silentroom × Shun",
+      "title": "驟雨の狭間 (Rainshower)",
+      "album": "",
+      "year": null,
+      "category": "bass",
+      "also": [
+        "busy"
+      ],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "259 - Silentroom × Shun - 驟雨の狭間 (Rainshower)",
+      "auto": true,
+      "level": {
+        "lufs": -6.35,
+        "peak": 1.3731
+      }
+    },
+    {
+      "id": "s-260",
+      "artist": "Silentroom",
+      "title": "Aegleseeker",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Arcaea",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "260 - Silentroom - Aegleseeker",
+      "auto": true,
+      "level": {
+        "lufs": -8.03,
+        "peak": 1.3384
+      }
+    },
+    {
+      "id": "s-261",
+      "artist": "M2U",
+      "title": "Magnolia",
+      "album": "",
+      "year": null,
+      "category": "treble",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Deemo",
+      "clip": {
+        "start": 0,
+        "end": 150
+      },
+      "fileName": "261 - M2U - Magnolia",
+      "auto": true,
+      "level": {
+        "lufs": -9.98,
+        "peak": 1.0469
+      }
+    },
+    {
+      "id": "s-262",
+      "artist": "M2U & Nicode",
+      "title": "Myosotis",
+      "album": "",
+      "year": null,
+      "category": "treble",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Deemo",
+      "clip": {
+        "start": 0,
+        "end": 154
+      },
+      "fileName": "262 - M2U & Nicode - Myosotis",
+      "auto": true,
+      "level": {
+        "lufs": -6.4,
+        "peak": 1.2668
+      }
+    },
+    {
+      "id": "s-263",
+      "artist": "M2U",
+      "title": "Marigold (feat. Guriri)",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": 0,
+        "end": 152
+      },
+      "fileName": "263 - M2U - Marigold (feat. Guriri)",
+      "auto": true,
+      "level": {
+        "lufs": -4.92,
+        "peak": 1.4293
+      }
+    },
+    {
+      "id": "s-264",
+      "artist": "Persona",
+      "title": "Area184",
+      "album": "",
+      "year": null,
+      "category": "bass",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Cytus",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "264 - Persona - Area184",
+      "auto": true,
+      "level": {
+        "lufs": -9.99,
+        "peak": 1.0321
+      }
+    },
+    {
+      "id": "s-265",
+      "artist": "Sta",
+      "title": "The Ricochet - The Long Years",
+      "album": "",
+      "year": null,
+      "category": "bass",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "265 - Sta - The Ricochet - The Long Years",
+      "auto": true,
+      "level": {
+        "lufs": -6.51,
+        "peak": 1.2522
+      }
+    },
+    {
+      "id": "s-266",
+      "artist": "NeLiME",
+      "title": "CODE NAME : ZERO",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "266 - NeLiME - CODE NAME  ZERO",
+      "auto": true,
+      "level": {
+        "lufs": -7.31,
+        "peak": 1.25
+      }
+    },
+    {
+      "id": "s-267",
+      "artist": "Eminem feat. Dido",
+      "title": "Stan",
+      "album": "The Marshall Mathers LP",
+      "year": 2000,
+      "category": "bass",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "267 - Eminem feat. Dido - Stan",
+      "auto": true,
+      "level": {
+        "lufs": -8.23,
+        "peak": 1.2841
+      }
+    },
+    {
+      "id": "s-268",
+      "artist": "J. Cole",
+      "title": "39 Intro",
+      "album": "",
+      "year": null,
+      "category": "bass",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "268 - J. Cole - 39 Intro",
+      "auto": true,
+      "level": {
+        "lufs": -9.99,
+        "peak": 1.1908
+      }
+    },
+    {
+      "id": "s-269",
+      "artist": "ICE",
+      "title": "Entrance (Deemo Version)",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Cytus x Deemo",
+      "clip": {
+        "start": 0,
+        "end": 112
+      },
+      "fileName": "269 - ICE - Entrance (Deemo Version)",
+      "auto": true,
+      "level": {
+        "lufs": -10.6,
+        "peak": 1.2032
+      }
+    },
+    {
+      "id": "s-270",
+      "artist": "NeLiME",
+      "title": "Leviathan",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "270 - NeLiME - Leviathan",
+      "auto": true,
+      "level": {
+        "lufs": -6.8,
+        "peak": 1.3776
+      }
+    },
+    {
+      "id": "s-271",
+      "artist": "NeLiME",
+      "title": "GATORIX",
+      "album": "",
+      "year": null,
+      "category": "bass",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "271 - NeLiME - GATORIX",
+      "auto": true,
+      "level": {
+        "lufs": -7.78,
+        "peak": 1.1704
+      }
+    },
+    {
+      "id": "s-272",
+      "artist": "Rave Cyanide & Lunatic Sounds",
+      "title": "Lost in the nowhere",
+      "album": "",
+      "year": null,
+      "category": "stage",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Deemo",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "272 - Rave Cyanide & Lunatic Sounds - Lost in the nowhere",
+      "auto": true,
+      "level": {
+        "lufs": -6.07,
+        "peak": 1.2182
+      }
+    },
+    {
+      "id": "s-273",
+      "artist": "Haloweak",
+      "title": "Bass Telekinesis",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "273 - Haloweak - Bass Telekinesis",
+      "auto": true,
+      "level": {
+        "lufs": -7.82,
+        "peak": 1.2833
+      }
+    },
+    {
+      "id": "s-274",
+      "artist": "Morimori Atsushi",
+      "title": "PUPA",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": 0,
+        "end": 126
+      },
+      "fileName": "274 - Morimori Atsushi - PUPA",
+      "auto": true,
+      "level": {
+        "lufs": -6.17,
+        "peak": 1.2723
+      }
+    },
+    {
+      "id": "s-275",
+      "artist": "Chaos City Niigata",
+      "title": "浮世絵横丁 (Ukiyoe Yokocho)",
+      "album": "",
+      "year": null,
+      "category": "treble",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "275 - Chaos City Niigata - 浮世絵横丁 (Ukiyoe Yokocho)",
+      "auto": true,
+      "level": {
+        "lufs": -7.1,
+        "peak": 1.3022
+      }
+    },
+    {
+      "id": "s-276",
+      "artist": "Sakuzyo",
+      "title": "Imprinting",
+      "album": "",
+      "year": null,
+      "category": "bass",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "276 - Sakuzyo - Imprinting",
+      "auto": true,
+      "level": {
+        "lufs": -6.32,
+        "peak": 1.3979
+      }
+    },
+    {
+      "id": "s-277",
+      "artist": "SUi",
+      "title": "Wish upon a shooting star",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Deemo",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "277 - SUi - Wish upon a shooting star",
+      "auto": true,
+      "level": {
+        "lufs": -7.06,
+        "peak": 1.2468
+      }
+    },
+    {
+      "id": "s-278",
+      "artist": "Camellia",
+      "title": "Exit This Earth's Atomosphere",
+      "album": "PLANET//SHAPER",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": 180,
+        "end": 315
+      },
+      "fileName": "278 - Camellia - Exit This Earth's Atomosphere",
+      "auto": true,
+      "level": {
+        "lufs": -4.74,
+        "peak": 1.7205
+      }
+    },
+    {
+      "id": "s-279",
+      "artist": "Camellia",
+      "title": "THE WORLD REVOLVING (Camellia Remix)",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Deltarune",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "279 - Camellia - THE WORLD REVOLVING (Camellia Remix)",
+      "auto": true,
+      "level": {
+        "lufs": -4.87,
+        "peak": 1.4377
+      }
+    },
+    {
+      "id": "s-280",
+      "artist": "Camellia",
+      "title": "MEGALOVANIA (Camellia Remix)",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Undertale",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "280 - Camellia - MEGALOVANIA (Camellia Remix)",
+      "auto": true,
+      "level": {
+        "lufs": -3.24,
+        "peak": 1.6752
+      }
+    },
+    {
+      "id": "s-281",
+      "artist": "Camellia",
+      "title": "Quaoar",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "281 - Camellia - Quaoar",
+      "auto": true,
+      "level": {
+        "lufs": -8.04,
+        "peak": 1.3294
+      }
+    },
+    {
+      "id": "s-282",
+      "artist": "C-Show",
+      "title": "GIMME DA BLOOD",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "from": "Arcaea",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "282 - C-Show - GIMME DA BLOOD",
+      "auto": true,
+      "level": {
+        "lufs": -4.65,
+        "peak": 1.4067
+      }
+    },
+    {
+      "id": "s-283",
+      "artist": "Akira Complex",
+      "title": "Ether Strike",
+      "album": "",
+      "year": null,
+      "category": "busy",
+      "also": [],
+      "genre": "rhythm-game",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "283 - Akira Complex - Ether Strike",
+      "auto": true,
+      "level": {
+        "lufs": -7.11,
+        "peak": 1.3394
+      }
+    },
+    {
+      "id": "s-284",
+      "artist": "Kendrick Lamar",
+      "title": "King Kunta",
+      "album": "To Pimp a Butterfly",
+      "year": 2015,
+      "category": "bass",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "284 - Kendrick Lamar - King Kunta",
+      "auto": true,
+      "level": {
+        "lufs": -12.43,
+        "peak": 0.8837
+      }
+    },
+    {
+      "id": "s-285",
+      "artist": "Tyler, The Creator",
+      "title": "EARFQUAKE",
+      "album": "IGOR",
+      "year": 2019,
+      "category": "bass",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "285 - Tyler, The Creator - EARFQUAKE",
+      "auto": true,
+      "level": {
+        "lufs": -9.31,
+        "peak": 1.1854
+      }
+    },
+    {
+      "id": "s-286",
+      "artist": "Nas",
+      "title": "The World Is Yours",
+      "album": "Illmatic",
+      "year": 1994,
+      "category": "bass",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "286 - Nas - The World Is Yours",
+      "auto": true,
+      "level": {
+        "lufs": -8.38,
+        "peak": 1.2264
+      }
+    },
+    {
+      "id": "s-287",
+      "artist": "Nujabes",
+      "title": "Aruarian Dance",
+      "album": "Samurai Champloo Music Record: Departure",
+      "year": 2004,
+      "category": "vocals",
+      "also": [],
+      "genre": "hip-hop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "287 - Nujabes - Aruarian Dance",
+      "auto": true,
+      "level": {
+        "lufs": -9.11,
+        "peak": 1.1258
+      }
+    },
+    {
+      "id": "s-288",
+      "artist": "The Beatles",
+      "title": "Let It Be",
+      "album": "Let It Be",
+      "year": 1970,
+      "category": "vocals",
+      "also": [],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "288 - The Beatles - Let It Be",
+      "auto": true,
+      "level": {
+        "lufs": -11.75,
+        "peak": 1.0642
+      }
+    },
+    {
+      "id": "s-289",
+      "artist": "Cyndi Lauper",
+      "title": "True Colors",
+      "album": "True Colors",
+      "year": 1986,
+      "category": "acoustic",
+      "also": [],
+      "genre": "pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "289 - Cyndi Lauper - True Colors",
+      "auto": true,
+      "level": {
+        "lufs": -14.87,
+        "peak": 0.9582
+      }
+    },
+    {
+      "id": "s-290",
+      "artist": "Seal",
+      "title": "Kiss From a Rose",
+      "album": "Seal",
+      "year": 1994,
+      "category": "vocals",
+      "also": [],
+      "genre": "pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "290 - Seal - Kiss From a Rose",
+      "auto": true,
+      "level": {
+        "lufs": -10.48,
+        "peak": 1.1174
+      }
+    },
+    {
+      "id": "s-291",
+      "artist": "MGMT",
+      "title": "Little Dark Age",
+      "album": "Little Dark Age",
+      "year": 2017,
+      "category": "treble",
+      "also": [],
+      "genre": "indie",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "291 - MGMT - Little Dark Age",
+      "auto": true,
+      "level": {
+        "lufs": -9.21,
+        "peak": 1.0784
+      }
+    },
+    {
+      "id": "s-292",
+      "artist": "Arctic Monkeys",
+      "title": "R U Mine?",
+      "album": "AM",
+      "year": 2012,
+      "category": "treble",
+      "also": [],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "292 - Arctic Monkeys - R U Mine",
+      "auto": true,
+      "level": {
+        "lufs": -6.01,
+        "peak": 1.2278
+      }
+    },
+    {
+      "id": "s-293",
+      "artist": "Owl City",
+      "title": "Fireflies",
+      "album": "Ocean Eyes",
+      "year": 2009,
+      "category": "treble",
+      "also": [],
+      "genre": "pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "293 - Owl City - Fireflies",
+      "auto": true,
+      "level": {
+        "lufs": -8.81,
+        "peak": 1.2948
+      }
+    },
+    {
+      "id": "s-294",
+      "artist": "Strawberry Guy",
+      "title": "F Song",
+      "album": "",
+      "year": null,
+      "category": "vocals",
+      "also": [],
+      "genre": "indie",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "294 - Strawberry Guy - F Song",
+      "auto": true,
+      "level": {
+        "lufs": -13.29,
+        "peak": 1.0168
+      }
+    },
+    {
+      "id": "s-295",
+      "artist": "Akira Yamaoka",
+      "title": "Promise (Reprise)",
+      "album": "Silent Hill 2 Original Soundtrack",
+      "year": 2001,
+      "category": "acoustic",
+      "also": [],
+      "genre": "soundtrack",
+      "from": "Silent Hill 2",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "295 - Akira Yamaoka - Promise (Reprise)",
+      "auto": true,
+      "level": {
+        "lufs": -14.81,
+        "peak": 0.9367
+      }
+    },
+    {
+      "id": "s-296",
+      "artist": "Shoji Meguro & Lyn",
+      "title": "Beneath the Mask -rain-",
+      "album": "Persona 5 Original Soundtrack",
+      "year": 2016,
+      "category": "vocals",
+      "also": [],
+      "genre": "soundtrack",
+      "from": "Persona 5",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "296 - Shoji Meguro & Lyn - Beneath the Mask -rain-",
+      "auto": true,
+      "level": {
+        "lufs": -16.64,
+        "peak": 0.794
+      }
+    },
+    {
+      "id": "s-297",
+      "artist": "Jamie Christopherson",
+      "title": "It Has to Be This Way",
+      "album": "Metal Gear Rising: Revengeance Vocal Tracks",
+      "year": 2013,
+      "category": "busy",
+      "also": [],
+      "genre": "soundtrack",
+      "from": "Metal Gear Rising: Revengeance",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "297 - Jamie Christopherson - It Has to Be This Way",
+      "auto": true,
+      "level": {
+        "lufs": -7.38,
+        "peak": 1.195
+      }
+    },
+    {
+      "id": "s-298",
+      "artist": "Casey Edwards feat. Ali Edwards",
+      "title": "Devil Trigger",
+      "album": "Devil May Cry 5 Original Soundtrack",
+      "year": 2019,
+      "category": "busy",
+      "also": [],
+      "genre": "soundtrack",
+      "from": "Devil May Cry 5",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "298 - Casey Edwards feat. Ali Edwards - Devil Trigger",
+      "auto": true,
+      "level": {
+        "lufs": -6.25,
+        "peak": 1.3313
+      }
+    },
+    {
+      "id": "s-299",
+      "artist": "m.o.v.e",
+      "title": "Rage Your Dream",
+      "album": "",
+      "year": 1998,
+      "category": "busy",
+      "also": [],
+      "genre": "eurobeat",
+      "from": "Initial D",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "299 - m.o.v.e - Rage Your Dream",
+      "auto": true,
+      "level": {
+        "lufs": -6.35,
+        "peak": 1.2471
+      }
+    },
+    {
+      "id": "s-301",
+      "artist": "Infected Mushroom",
+      "title": "The Pretender",
+      "album": "Legend of the Black Shawarma",
+      "year": 2009,
+      "category": "bass",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "301 - Infected Mushroom - The Pretender",
+      "auto": true,
+      "level": {
+        "lufs": -6.53,
+        "peak": 1.4388
+      }
+    },
+    {
+      "id": "s-302",
+      "artist": "Orangestar feat. IA",
+      "title": "アスノヨゾラ哨戒班 (Asu no Yozora Shoukaihan)",
+      "album": "",
+      "year": 2014,
+      "category": "busy",
+      "also": [],
+      "genre": "j-pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "302 - Orangestar feat. IA - アスノヨゾラ哨戒班 (Asu no Yozora Shoukaihan)",
+      "auto": true,
+      "level": {
+        "lufs": -7.35,
+        "peak": 1.2222
+      }
+    },
+    {
+      "id": "s-303",
+      "artist": "Mili",
+      "title": "Nine Point Eight",
+      "album": "Miracle Milk",
+      "year": 2016,
+      "category": "busy",
+      "also": [],
+      "genre": "j-pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "303 - Mili - Nine Point Eight",
+      "auto": true,
+      "level": {
+        "lufs": -7.86,
+        "peak": 1.2411
+      }
+    },
+    {
+      "id": "s-304",
+      "artist": "Donna Burke",
+      "title": "Heavens Divide",
+      "album": "Metal Gear Solid: Peace Walker",
+      "year": 2010,
+      "category": "stage",
+      "also": [],
+      "genre": "soundtrack",
+      "from": "Metal Gear Solid",
+      "clip": {
+        "start": 100,
+        "end": 235
+      },
+      "fileName": "304 - Donna Burke - Heavens Divide",
+      "auto": true,
+      "level": {
+        "lufs": -15.23,
+        "peak": 0.8474
+      }
+    },
+    {
+      "id": "s-305",
+      "artist": "Lotus Juice & Azumi Takahashi",
+      "title": "It's Going Down Now",
+      "album": "Persona 3 Reload Original Soundtrack",
+      "year": 2024,
+      "category": "busy",
+      "also": [],
+      "genre": "soundtrack",
+      "from": "Persona 3 Reload",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "305 - Lotus Juice & Azumi Takahashi - It's Going Down Now",
+      "auto": true,
+      "level": {
+        "lufs": -8.01,
+        "peak": 1.1031
+      }
+    },
+    {
+      "id": "s-306",
+      "artist": "arian",
+      "title": "フォニイ (Phony) [6+α chorus]",
+      "album": "",
+      "year": 2021,
+      "category": "busy",
+      "also": [],
+      "genre": "j-pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "306 - arian - フォニイ (Phony) [6+α chorus]",
+      "auto": true,
+      "level": {
+        "lufs": -8.26,
+        "peak": 1.177
+      }
+    },
+    {
+      "id": "s-307",
+      "artist": "RADWIMPS",
+      "title": "Sparkle (Original Version)",
+      "album": "Your Name.",
+      "year": 2016,
+      "category": "vocals",
+      "also": [],
+      "genre": "j-rock",
+      "from": "Your Name",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "307 - RADWIMPS - Sparkle (Original Version)",
+      "auto": true,
+      "level": {
+        "lufs": -7.78,
+        "peak": 1.1923
+      }
+    },
+    {
+      "id": "s-308",
+      "artist": "RADWIMPS",
+      "title": "Grand Escape (feat. Toko Miura)",
+      "album": "Weathering With You",
+      "year": 2019,
+      "category": "vocals",
+      "also": [],
+      "genre": "j-rock",
+      "from": "Weathering With You",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "308 - RADWIMPS - Grand Escape (feat. Toko Miura)",
+      "auto": true,
+      "level": {
+        "lufs": -9.27,
+        "peak": 1.2292
+      }
+    },
+    {
+      "id": "s-310",
+      "artist": "Edo Boys",
+      "title": "No One Sleep in Tokyo",
+      "album": "Super Eurobeat",
+      "year": 1998,
+      "category": "busy",
+      "also": [],
+      "genre": "eurobeat",
+      "from": "Initial D",
+      "clip": {
+        "start": 15,
+        "end": 150
+      },
+      "fileName": "310 - Edo Boys - No One Sleep in Tokyo",
+      "auto": true,
+      "level": {
+        "lufs": -10.8,
+        "peak": 1.0549
+      }
+    },
+    {
+      "id": "s-311",
+      "artist": "GO2",
+      "title": "Don't Turn It Off (Energize Version)",
+      "album": "Super Eurobeat",
+      "year": 2009,
+      "category": "busy",
+      "also": [],
+      "genre": "eurobeat",
+      "from": "Initial D",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "311 - GO2 - Don't Turn It Off (Energize Version)",
+      "auto": true,
+      "level": {
+        "lufs": -5.18,
+        "peak": 1.4077
+      }
+    },
+    {
+      "id": "s-312",
+      "artist": "Lotus Juice & Azumi Takahashi",
+      "title": "Color Your Night",
+      "album": "Persona 3 Reload Original Soundtrack",
+      "year": 2024,
+      "category": "vocals",
+      "also": [],
+      "genre": "soundtrack",
+      "from": "Persona 3 Reload",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "312 - Lotus Juice & Azumi Takahashi - Color Your Night",
+      "auto": true,
+      "level": {
+        "lufs": -9.89,
+        "peak": 1.0363
+      }
+    },
+    {
+      "id": "s-313",
+      "artist": "Pendulum",
+      "title": "Witchcraft (Nightcore)",
+      "album": "Immersion",
+      "year": 2010,
+      "category": "busy",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "313 - Pendulum - Witchcraft (Nightcore)",
+      "auto": true,
+      "level": {
+        "lufs": -14.82,
+        "peak": 0.5258
+      }
+    },
+    {
+      "id": "s-314",
+      "artist": "Walter Egan",
+      "title": "Magnet and Steel",
+      "album": "Not Shy",
+      "year": 1978,
+      "category": "vocals",
+      "also": [
+        "stage"
+      ],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "314 - Walter Egan - Magnet and Steel"
+    },
+    {
+      "id": "s-315",
+      "artist": "Röyksopp feat. Susanne Sundfør",
+      "title": "Oh, Lover",
+      "album": "Profound Mysteries II",
+      "year": 2022,
+      "category": "stage",
+      "also": [
+        "bass"
+      ],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "315 - Röyksopp feat. Susanne Sundfør - Oh, Lover"
+    },
+    {
+      "id": "s-316",
+      "artist": "Röyksopp feat. Jamie Irrepressible",
+      "title": "Sorry",
+      "album": "Profound Mysteries",
+      "year": 2022,
+      "category": "vocals",
+      "also": [],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "316 - Röyksopp feat. Jamie Irrepressible - Sorry"
+    },
+    {
+      "id": "s-317",
+      "artist": "haer",
+      "title": "Sugar",
+      "album": "Sugar",
+      "year": 2020,
+      "category": "vocals",
+      "also": [],
+      "genre": "pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "317 - haer - Sugar"
+    },
+    {
+      "id": "s-318",
+      "artist": "Keane",
+      "title": "We Might As Well Be Strangers",
+      "album": "Hopes and Fears",
+      "year": 2004,
+      "category": "vocals",
+      "also": [
+        "stage"
+      ],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "318 - Keane - We Might As Well Be Strangers"
+    },
+    {
+      "id": "s-319",
+      "artist": "slenderbodies",
+      "title": "lucid",
+      "album": "lucid",
+      "year": 2017,
+      "category": "stage",
+      "also": [
+        "vocals"
+      ],
+      "genre": "indie",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "319 - slenderbodies - lucid"
+    },
+    {
+      "id": "s-320",
+      "artist": "Yael Naim",
+      "title": "Daddy",
+      "album": "nightsongs",
+      "year": 2020,
+      "category": "acoustic",
+      "also": [
+        "vocals"
+      ],
+      "genre": "folk",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "320 - Yael Naim - Daddy"
+    },
+    {
+      "id": "s-321",
+      "artist": "Mr FijiWiji feat. Openwater",
+      "title": "Growing Up",
+      "album": "Growing Up EP",
+      "year": 2015,
+      "category": "bass",
+      "also": [
+        "treble"
+      ],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "321 - Mr FijiWiji feat. Openwater - Growing Up"
+    },
+    {
+      "id": "s-322",
+      "artist": "Tunng",
+      "title": "The Pioneers",
+      "album": "Comments of the Inner Chorus",
+      "year": 2006,
+      "category": "acoustic",
+      "also": [
+        "stage"
+      ],
+      "genre": "folk",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "322 - Tunng - The Pioneers"
+    },
+    {
+      "id": "s-323",
+      "artist": "A Perfect Circle",
+      "title": "Weak and Powerless",
+      "album": "Thirteenth Step",
+      "year": 2003,
+      "category": "busy",
+      "also": [
+        "bass"
+      ],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "323 - A Perfect Circle - Weak and Powerless"
+    },
+    {
+      "id": "s-324",
+      "artist": "Plini",
+      "title": "Ona / 1154",
+      "album": "Impulse Voices",
+      "year": 2020,
+      "category": "busy",
+      "also": [
+        "stage"
+      ],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "324 - Plini - Ona - 1154"
+    },
+    {
+      "id": "s-325",
+      "artist": "Chuck Mangione",
+      "title": "The XIth Commandment",
+      "album": "Feels So Good",
+      "year": 1977,
+      "category": "treble",
+      "also": [
+        "acoustic"
+      ],
+      "genre": "jazz",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "325 - Chuck Mangione - The XIth Commandment"
+    },
+    {
+      "id": "s-326",
+      "artist": "Idealism",
+      "title": "how many stars are there",
+      "album": "rainy evening",
+      "year": 2016,
+      "category": "stage",
+      "also": [
+        "bass"
+      ],
+      "genre": "lo-fi",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "326 - Idealism - how many stars are there"
+    },
+    {
+      "id": "s-327",
+      "artist": "Gotye feat. Kimbra",
+      "title": "Somebody That I Used to Know",
+      "album": "Making Mirrors",
+      "year": 2011,
+      "category": "stage",
+      "also": [
+        "vocals"
+      ],
+      "genre": "indie",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "327 - Gotye feat. Kimbra - Somebody That I Used to Know"
+    },
+    {
+      "id": "s-328",
+      "artist": "HUNTR/X",
+      "title": "Golden",
+      "album": "KPop Demon Hunters (Soundtrack)",
+      "year": 2025,
+      "category": "vocals",
+      "also": [
+        "treble"
+      ],
+      "genre": "k-pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "328 - HUNTR-X - Golden"
+    },
+    {
+      "id": "s-329",
+      "artist": "K/DA",
+      "title": "POP/STARS",
+      "album": "POP/STARS",
+      "year": 2018,
+      "category": "bass",
+      "also": [
+        "vocals"
+      ],
+      "genre": "k-pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "329 - K-DA - POP-STARS"
+    },
+    {
+      "id": "s-330",
+      "artist": "Norah Jones",
+      "title": "Don't Know Why",
+      "album": "Come Away with Me",
+      "year": 2002,
+      "category": "acoustic",
+      "also": [
+        "vocals"
+      ],
+      "genre": "jazz",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "330 - Norah Jones - Don't Know Why"
+    },
+    {
+      "id": "s-331",
+      "artist": "Agnes Obel",
+      "title": "Riverside",
+      "album": "Philharmonics",
+      "year": 2010,
+      "category": "acoustic",
+      "also": [
+        "vocals"
+      ],
+      "genre": "folk",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "331 - Agnes Obel - Riverside"
+    },
+    {
+      "id": "s-332",
+      "artist": "José González",
+      "title": "Heartbeats",
+      "album": "Veneer",
+      "year": 2003,
+      "category": "acoustic",
+      "also": [],
+      "genre": "folk",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "332 - José González - Heartbeats"
+    },
+    {
+      "id": "s-333",
+      "artist": "Damien Rice",
+      "title": "The Blower's Daughter",
+      "album": "O",
+      "year": 2002,
+      "category": "acoustic",
+      "also": [
+        "vocals"
+      ],
+      "genre": "folk",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "333 - Damien Rice - The Blower's Daughter"
+    },
+    {
+      "id": "s-334",
+      "artist": "Alison Krauss",
+      "title": "Ghost in This House",
+      "album": "Forget About It",
+      "year": 1999,
+      "category": "acoustic",
+      "also": [
+        "vocals"
+      ],
+      "genre": "country",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "334 - Alison Krauss - Ghost in This House"
+    },
+    {
+      "id": "s-335",
+      "artist": "Kings of Convenience",
+      "title": "I'd Rather Dance with You",
+      "album": "Riot on an Empty Street",
+      "year": 2004,
+      "category": "acoustic",
+      "also": [
+        "stage"
+      ],
+      "genre": "folk",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "335 - Kings of Convenience - I'd Rather Dance with You"
+    },
+    {
+      "id": "s-336",
+      "artist": "Jack Johnson",
+      "title": "Better Together",
+      "album": "In Between Dreams",
+      "year": 2005,
+      "category": "acoustic",
+      "also": [],
+      "genre": "folk",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "336 - Jack Johnson - Better Together"
+    },
+    {
+      "id": "s-337",
+      "artist": "Iron & Wine",
+      "title": "Naked as We Came",
+      "album": "Our Endless Numbered Days",
+      "year": 2004,
+      "category": "acoustic",
+      "also": [
+        "vocals"
+      ],
+      "genre": "folk",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "337 - Iron & Wine - Naked as We Came"
+    },
+    {
+      "id": "s-338",
+      "artist": "Rodrigo y Gabriela",
+      "title": "Tamacun",
+      "album": "Rodrigo y Gabriela",
+      "year": 2006,
+      "category": "acoustic",
+      "also": [
+        "busy"
+      ],
+      "genre": "folk",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "338 - Rodrigo y Gabriela - Tamacun"
+    },
+    {
+      "id": "s-339",
+      "artist": "Paco de Lucía",
+      "title": "Entre dos aguas",
+      "album": "Fuente y caudal",
+      "year": 1973,
+      "category": "acoustic",
+      "also": [
+        "busy"
+      ],
+      "genre": "flamenco",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "339 - Paco de Lucía - Entre dos aguas"
+    },
+    {
+      "id": "s-340",
+      "artist": "Hozier",
+      "title": "Take Me to Church",
+      "album": "Hozier",
+      "year": 2014,
+      "category": "vocals",
+      "also": [
+        "bass"
+      ],
+      "genre": "indie",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "340 - Hozier - Take Me to Church"
+    },
+    {
+      "id": "s-341",
+      "artist": "Sade",
+      "title": "No Ordinary Love",
+      "album": "Love Deluxe",
+      "year": 1992,
+      "category": "vocals",
+      "also": [
+        "bass"
+      ],
+      "genre": "soul",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "341 - Sade - No Ordinary Love"
+    },
+    {
+      "id": "s-342",
+      "artist": "Jeff Buckley",
+      "title": "Hallelujah",
+      "album": "Grace",
+      "year": 1994,
+      "category": "vocals",
+      "also": [
+        "acoustic"
+      ],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "342 - Jeff Buckley - Hallelujah"
+    },
+    {
+      "id": "s-343",
+      "artist": "Lana Del Rey",
+      "title": "Video Games",
+      "album": "Born to Die",
+      "year": 2012,
+      "category": "vocals",
+      "also": [
+        "stage"
+      ],
+      "genre": "pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "343 - Lana Del Rey - Video Games"
+    },
+    {
+      "id": "s-344",
+      "artist": "Lianne La Havas",
+      "title": "Bittersweet",
+      "album": "Lianne La Havas",
+      "year": 2020,
+      "category": "vocals",
+      "also": [],
+      "genre": "soul",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "344 - Lianne La Havas - Bittersweet"
+    },
+    {
+      "id": "s-345",
+      "artist": "Billie Eilish",
+      "title": "when the party's over",
+      "album": "WHEN WE ALL FALL ASLEEP, WHERE DO WE GO?",
+      "year": 2019,
+      "category": "vocals",
+      "also": [
+        "stage"
+      ],
+      "genre": "pop",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "345 - Billie Eilish - when the party's over"
+    },
+    {
+      "id": "s-346",
+      "artist": "Etta James",
+      "title": "At Last",
+      "album": "At Last!",
+      "year": 1960,
+      "category": "vocals",
+      "also": [],
+      "genre": "soul",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "346 - Etta James - At Last"
+    },
+    {
+      "id": "s-347",
+      "artist": "Pink Floyd",
+      "title": "Time",
+      "album": "The Dark Side of the Moon",
+      "year": 1973,
+      "category": "stage",
+      "also": [
+        "busy"
+      ],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "347 - Pink Floyd - Time"
+    },
+    {
+      "id": "s-348",
+      "artist": "Hans Zimmer",
+      "title": "Time",
+      "album": "Inception (Music from the Motion Picture)",
+      "year": 2010,
+      "category": "stage",
+      "also": [
+        "bass"
+      ],
+      "genre": "soundtrack",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "348 - Hans Zimmer - Time"
+    },
+    {
+      "id": "s-349",
+      "artist": "Sigur Rós",
+      "title": "Hoppípolla",
+      "album": "Takk...",
+      "year": 2005,
+      "category": "stage",
+      "also": [
+        "busy"
+      ],
+      "genre": "indie",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "349 - Sigur Rós - Hoppípolla"
+    },
+    {
+      "id": "s-350",
+      "artist": "Mazzy Star",
+      "title": "Fade Into You",
+      "album": "So Tonight That I Might See",
+      "year": 1993,
+      "category": "stage",
+      "also": [
+        "vocals"
+      ],
+      "genre": "indie",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "350 - Mazzy Star - Fade Into You"
+    },
+    {
+      "id": "s-351",
+      "artist": "Björk",
+      "title": "Jóga",
+      "album": "Homogenic",
+      "year": 1997,
+      "category": "stage",
+      "also": [
+        "bass"
+      ],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "351 - Björk - Jóga"
+    },
+    {
+      "id": "s-352",
+      "artist": "Peter Gabriel",
+      "title": "Mercy Street",
+      "album": "So",
+      "year": 1986,
+      "category": "stage",
+      "also": [],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "352 - Peter Gabriel - Mercy Street"
+    },
+    {
+      "id": "s-353",
+      "artist": "Daft Punk",
+      "title": "Giorgio by Moroder",
+      "album": "Random Access Memories",
+      "year": 2013,
+      "category": "stage",
+      "also": [
+        "busy"
+      ],
+      "genre": "electronic",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "353 - Daft Punk - Giorgio by Moroder"
+    },
+    {
+      "id": "s-354",
+      "artist": "The Alan Parsons Project",
+      "title": "Eye in the Sky",
+      "album": "Eye in the Sky",
+      "year": 1982,
+      "category": "stage",
+      "also": [],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "354 - The Alan Parsons Project - Eye in the Sky"
+    },
+    {
+      "id": "s-355",
+      "artist": "Fleet Foxes",
+      "title": "Mykonos",
+      "album": "Sun Giant",
+      "year": 2008,
+      "category": "stage",
+      "also": [
+        "vocals"
+      ],
+      "genre": "folk",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "355 - Fleet Foxes - Mykonos"
+    },
+    {
+      "id": "s-356",
+      "artist": "Toto",
+      "title": "Rosanna",
+      "album": "Toto IV",
+      "year": 1982,
+      "category": "treble",
+      "also": [
+        "busy"
+      ],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "356 - Toto - Rosanna"
+    },
+    {
+      "id": "s-357",
+      "artist": "Rush",
+      "title": "Tom Sawyer",
+      "album": "Moving Pictures",
+      "year": 1981,
+      "category": "treble",
+      "also": [
+        "busy"
+      ],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "357 - Rush - Tom Sawyer"
+    },
+    {
+      "id": "s-358",
+      "artist": "Art Blakey & The Jazz Messengers",
+      "title": "Moanin'",
+      "album": "Moanin'",
+      "year": 1959,
+      "category": "treble",
+      "also": [
+        "stage"
+      ],
+      "genre": "jazz",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "358 - Art Blakey & The Jazz Messengers - Moanin'"
+    },
+    {
+      "id": "s-359",
+      "artist": "The Police",
+      "title": "Message in a Bottle",
+      "album": "Reggatta de Blanc",
+      "year": 1979,
+      "category": "treble",
+      "also": [],
+      "genre": "rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "359 - The Police - Message in a Bottle"
+    },
+    {
+      "id": "s-360",
+      "artist": "Herbie Hancock",
+      "title": "Chameleon",
+      "album": "Head Hunters",
+      "year": 1973,
+      "category": "treble",
+      "also": [
+        "bass"
+      ],
+      "genre": "funk",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "360 - Herbie Hancock - Chameleon"
+    },
+    {
+      "id": "s-361",
+      "artist": "Vulfpeck",
+      "title": "Dean Town",
+      "album": "The Beautiful Game",
+      "year": 2016,
+      "category": "treble",
+      "also": [
+        "bass"
+      ],
+      "genre": "funk",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "361 - Vulfpeck - Dean Town"
+    },
+    {
+      "id": "s-362",
+      "artist": "Steve Reich",
+      "title": "Music for 18 Musicians: Pulses",
+      "album": "Music for 18 Musicians",
+      "year": 1978,
+      "category": "treble",
+      "also": [
+        "stage"
+      ],
+      "genre": "classical",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "362 - Steve Reich - Music for 18 Musicians Pulses"
+    },
+    {
+      "id": "s-363",
+      "artist": "Weather Report",
+      "title": "Birdland",
+      "album": "Heavy Weather",
+      "year": 1977,
+      "category": "treble",
+      "also": [
+        "busy"
+      ],
+      "genre": "jazz-rock",
+      "clip": {
+        "start": null,
+        "end": null
+      },
+      "fileName": "363 - Weather Report - Birdland"
+    }
+  ]
+}

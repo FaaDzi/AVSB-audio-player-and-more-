@@ -1,0 +1,496 @@
+{
+ "_note": "2026-10-24: 32 songs new in the YouTube playlist (PLWEhSC-Y_KK0) + 20 picked from the user's music folder, taking the pool to 300. Input to scripts/add_songs.py. Playlist uploads that are already official/Topic keep their playlist 'url'; fan uploads have none, so --pick searches for an official one.",
+ "songs": [
+  {
+   "artist": "Modjo",
+   "title": "Lady (Hear Me Tonight)",
+   "album": "Modjo",
+   "year": 2000,
+   "genre": "electronic",
+   "query": "Modjo Lady Hear Me Tonight",
+   "url": "https://www.youtube.com/watch?v=mMfxI3r_LyA",
+   "channel": "ModjoOfficial",
+   "yt_title": "Modjo - Lady (Hear Me Tonight) (Official Video)",
+   "yt_duration": 222
+  },
+  {
+   "artist": "Nujabes feat. Shing02",
+   "title": "Luv(sic) Part 2",
+   "album": "",
+   "genre": "hip-hop",
+   "url": "https://www.youtube.com/watch?v=fQejNoTkv-0"
+  },
+  {
+   "artist": "xi",
+   "title": "Anima",
+   "album": "",
+   "genre": "rhythm-game",
+   "url": "https://www.youtube.com/watch?v=FQs9cV0jycg"
+  },
+  {
+   "artist": "KASAI HARCORES",
+   "title": "サイクルヒット (Cycle Hit)",
+   "album": "",
+   "genre": "rhythm-game",
+   "url": "https://www.youtube.com/watch?v=mcIX5ps6RaA"
+  },
+  {
+   "artist": "Silentroom",
+   "title": "Protoflicker",
+   "album": "Rainbow Frontier",
+   "year": 2019,
+   "genre": "rhythm-game",
+   "url": "https://www.youtube.com/watch?v=blm6DPvUcwA"
+  },
+  {
+   "artist": "Silentroom",
+   "title": "Angel Echo",
+   "album": "Rainbow Frontier",
+   "year": 2019,
+   "genre": "rhythm-game",
+   "url": "https://www.youtube.com/watch?v=khajp4-lGPk"
+  },
+  {
+   "artist": "Silentroom",
+   "title": "Nhelv",
+   "album": "Rainbow Frontier",
+   "year": 2019,
+   "genre": "rhythm-game",
+   "url": "https://www.youtube.com/watch?v=TV7BskPrCPg"
+  },
+  {
+   "artist": "Silentroom × Shun",
+   "title": "驟雨の狭間 (Rainshower)",
+   "album": "",
+   "genre": "rhythm-game",
+   "url": "https://www.youtube.com/watch?v=tLL8cqRmaNE"
+  },
+  {
+   "artist": "Silentroom",
+   "title": "Aegleseeker",
+   "album": "",
+   "genre": "rhythm-game",
+   "from": "Arcaea",
+   "url": "https://www.youtube.com/watch?v=wq7BdtAFU5w"
+  },
+  {
+   "artist": "M2U",
+   "title": "Magnolia",
+   "album": "",
+   "genre": "rhythm-game",
+   "from": "Deemo",
+   "query": "M2U Magnolia Deemo",
+   "url": "https://www.youtube.com/watch?v=TcXQETKMEsg",
+   "channel": "Release - Topic",
+   "yt_title": "Magnolia",
+   "yt_duration": 151
+  },
+  {
+   "artist": "M2U & Nicode",
+   "title": "Myosotis",
+   "album": "",
+   "genre": "rhythm-game",
+   "from": "Deemo",
+   "query": "M2U Nicode Myosotis",
+   "url": "https://www.youtube.com/watch?v=XZga5c9aJlQ"
+  },
+  {
+   "artist": "M2U",
+   "title": "Marigold (feat. Guriri)",
+   "album": "",
+   "genre": "rhythm-game",
+   "url": "https://www.youtube.com/watch?v=4RiT4xPgRZo"
+  },
+  {
+   "artist": "Persona",
+   "title": "Area184",
+   "album": "",
+   "genre": "rhythm-game",
+   "from": "Cytus",
+   "query": "Persona Area 184 Platinum Mix Cytus",
+   "url": "https://www.youtube.com/watch?v=D4ROuXaDE2c",
+   "channel": "Persona - Topic",
+   "yt_title": "Area184",
+   "yt_duration": 129
+  },
+  {
+   "artist": "Sta",
+   "title": "The Ricochet - The Long Years",
+   "album": "",
+   "genre": "rhythm-game",
+   "url": "https://www.youtube.com/watch?v=lel6zQ-xsRE"
+  },
+  {
+   "artist": "NeLiME",
+   "title": "CODE NAME : ZERO",
+   "album": "",
+   "genre": "rhythm-game",
+   "url": "https://www.youtube.com/watch?v=26nQsUdhBNQ"
+  },
+  {
+   "artist": "Eminem feat. Dido",
+   "title": "Stan",
+   "album": "The Marshall Mathers LP",
+   "year": 2000,
+   "genre": "hip-hop",
+   "query": "Eminem Stan feat Dido",
+   "url": "https://www.youtube.com/watch?v=7u1Jj6aRIec"
+  },
+  {
+   "artist": "J. Cole",
+   "title": "39 Intro",
+   "album": "",
+   "genre": "hip-hop",
+   "url": "https://www.youtube.com/watch?v=d7csQEozIMg"
+  },
+  {
+   "artist": "ICE",
+   "title": "Entrance (Deemo Version)",
+   "album": "",
+   "genre": "rhythm-game",
+   "from": "Cytus x Deemo",
+   "query": "Ice Entrance Cytus Deemo piano",
+   "url": "https://www.youtube.com/watch?v=tMplZMbQmjI"
+  },
+  {
+   "artist": "NeLiME",
+   "title": "Leviathan",
+   "album": "",
+   "genre": "rhythm-game",
+   "url": "https://www.youtube.com/watch?v=k_XVi7gE_Gs"
+  },
+  {
+   "artist": "NeLiME",
+   "title": "GATORIX",
+   "album": "",
+   "genre": "rhythm-game",
+   "url": "https://www.youtube.com/watch?v=VphkBDMysiY"
+  },
+  {
+   "artist": "Rave Cyanide & Lunatic Sounds",
+   "title": "Lost in the nowhere",
+   "album": "",
+   "genre": "rhythm-game",
+   "from": "Deemo",
+   "query": "Lost in the nowhere Rave Cyanide Lunatic Sounds",
+   "url": "https://www.youtube.com/watch?v=6vlIYl_dBwA",
+   "channel": "Music Game Garden",
+   "yt_title": "[Deemo] Lost in the nowhere -  Rave Cyanide & Lunatic Sounds (HQ)",
+   "yt_duration": 151
+  },
+  {
+   "artist": "Haloweak",
+   "title": "Bass Telekinesis",
+   "album": "",
+   "genre": "rhythm-game",
+   "url": "https://www.youtube.com/watch?v=Y9tJOQLIOKQ"
+  },
+  {
+   "artist": "Morimori Atsushi",
+   "title": "PUPA",
+   "album": "",
+   "genre": "rhythm-game",
+   "url": "https://www.youtube.com/watch?v=WCX3p7eHycI"
+  },
+  {
+   "artist": "Chaos City Niigata",
+   "title": "浮世絵横丁 (Ukiyoe Yokocho)",
+   "album": "",
+   "genre": "rhythm-game",
+   "url": "https://www.youtube.com/watch?v=5LLvgHBKwUI"
+  },
+  {
+   "artist": "Sakuzyo",
+   "title": "Imprinting",
+   "album": "",
+   "genre": "rhythm-game",
+   "url": "https://www.youtube.com/watch?v=vp72Pjixh7E"
+  },
+  {
+   "artist": "SUi",
+   "title": "Wish upon a shooting star",
+   "album": "",
+   "genre": "rhythm-game",
+   "from": "Deemo",
+   "query": "SUi Wish upon a shooting star Deemo",
+   "url": "https://www.youtube.com/watch?v=EAPQMwsT4PE",
+   "channel": "Music Game Music",
+   "yt_title": "Deemo 2.4 - SUi - Wish upon a shooting star",
+   "yt_duration": 151
+  },
+  {
+   "artist": "Camellia",
+   "title": "Exit This Earth's Atomosphere",
+   "album": "PLANET//SHAPER",
+   "genre": "rhythm-game",
+   "url": "https://www.youtube.com/watch?v=QsuAKlNe_rI"
+  },
+  {
+   "artist": "Camellia",
+   "title": "THE WORLD REVOLVING (Camellia Remix)",
+   "album": "",
+   "genre": "rhythm-game",
+   "from": "Deltarune",
+   "url": "https://www.youtube.com/watch?v=p9ex56FXdSE"
+  },
+  {
+   "artist": "Camellia",
+   "title": "MEGALOVANIA (Camellia Remix)",
+   "album": "",
+   "genre": "rhythm-game",
+   "from": "Undertale",
+   "url": "https://www.youtube.com/watch?v=9X7I3bW49S8"
+  },
+  {
+   "artist": "Camellia",
+   "title": "Quaoar",
+   "album": "",
+   "genre": "rhythm-game",
+   "url": "https://www.youtube.com/watch?v=yjQmZBvi3WE"
+  },
+  {
+   "artist": "C-Show",
+   "title": "GIMME DA BLOOD",
+   "album": "",
+   "genre": "rhythm-game",
+   "from": "Arcaea",
+   "url": "https://www.youtube.com/watch?v=PuRuwdVVj0U"
+  },
+  {
+   "artist": "Akira Complex",
+   "title": "Ether Strike",
+   "album": "",
+   "genre": "rhythm-game",
+   "url": "https://www.youtube.com/watch?v=et1jmYJedKg"
+  },
+  {
+   "artist": "Kendrick Lamar",
+   "title": "King Kunta",
+   "album": "To Pimp a Butterfly",
+   "year": 2015,
+   "genre": "hip-hop",
+   "query": "Kendrick Lamar King Kunta",
+   "url": "https://www.youtube.com/watch?v=hRK7PVJFbS8",
+   "channel": "Kendrick Lamar",
+   "yt_title": "Kendrick Lamar - King Kunta",
+   "yt_duration": 238
+  },
+  {
+   "artist": "Tyler, The Creator",
+   "title": "EARFQUAKE",
+   "album": "IGOR",
+   "year": 2019,
+   "genre": "hip-hop",
+   "query": "Tyler The Creator EARFQUAKE",
+   "url": "https://www.youtube.com/watch?v=HmAsUQEFYGI",
+   "channel": "Tyler, The Creator",
+   "yt_title": "EARFQUAKE",
+   "yt_duration": 267
+  },
+  {
+   "artist": "Nas",
+   "title": "The World Is Yours",
+   "album": "Illmatic",
+   "year": 1994,
+   "genre": "hip-hop",
+   "query": "Nas The World Is Yours",
+   "url": "https://www.youtube.com/watch?v=U_u6mqary2A"
+  },
+  {
+   "artist": "Nujabes",
+   "title": "Aruarian Dance",
+   "album": "Samurai Champloo Music Record: Departure",
+   "year": 2004,
+   "genre": "hip-hop",
+   "query": "Nujabes Aruarian Dance",
+   "url": "https://www.youtube.com/watch?v=qYcoJpqCha4",
+   "channel": "Nujabes",
+   "yt_title": "aruarian dance",
+   "yt_duration": 251
+  },
+  {
+   "artist": "The Beatles",
+   "title": "Let It Be",
+   "album": "Let It Be",
+   "year": 1970,
+   "genre": "rock",
+   "query": "The Beatles Let It Be Remastered 2009",
+   "url": "https://www.youtube.com/watch?v=QDYfEBY9NM4",
+   "channel": "The Beatles",
+   "yt_title": "Let It Be (Remastered 2009)",
+   "yt_duration": 244
+  },
+  {
+   "artist": "Cyndi Lauper",
+   "title": "True Colors",
+   "album": "True Colors",
+   "year": 1986,
+   "genre": "pop",
+   "query": "Cyndi Lauper True Colors",
+   "url": "https://www.youtube.com/watch?v=VGF95YnQQHk"
+  },
+  {
+   "artist": "Seal",
+   "title": "Kiss From a Rose",
+   "album": "Seal",
+   "year": 1994,
+   "genre": "pop",
+   "query": "Seal Kiss From a Rose",
+   "url": "https://www.youtube.com/watch?v=3-Yh6rnOchs"
+  },
+  {
+   "artist": "MGMT",
+   "title": "Little Dark Age",
+   "album": "Little Dark Age",
+   "year": 2017,
+   "genre": "indie",
+   "query": "MGMT Little Dark Age",
+   "url": "https://www.youtube.com/watch?v=rtL5oMyBHPs",
+   "channel": "MGMT",
+   "yt_title": "MGMT - Little Dark Age (Official Video)",
+   "yt_duration": 311
+  },
+  {
+   "artist": "Arctic Monkeys",
+   "title": "R U Mine?",
+   "album": "AM",
+   "year": 2012,
+   "genre": "rock",
+   "query": "Arctic Monkeys R U Mine",
+   "url": "https://www.youtube.com/watch?v=voH0S0e01vs"
+  },
+  {
+   "artist": "Owl City",
+   "title": "Fireflies",
+   "album": "Ocean Eyes",
+   "year": 2009,
+   "genre": "pop",
+   "query": "Owl City Fireflies",
+   "url": "https://www.youtube.com/watch?v=psuRGfAaju4",
+   "channel": "Owl City",
+   "yt_title": "Owl City - Fireflies (Official Music Video)",
+   "yt_duration": 233
+  },
+  {
+   "artist": "Strawberry Guy",
+   "title": "F Song",
+   "album": "",
+   "genre": "indie",
+   "query": "Strawberry Guy F Song",
+   "url": "https://www.youtube.com/watch?v=0qlvKgm-WXM",
+   "channel": "Strawberry Guy",
+   "yt_title": "F Song",
+   "yt_duration": 225
+  },
+  {
+   "artist": "Akira Yamaoka",
+   "title": "Promise (Reprise)",
+   "album": "Silent Hill 2 Original Soundtrack",
+   "year": 2001,
+   "genre": "soundtrack",
+   "from": "Silent Hill 2",
+   "query": "Silent Hill 2 Promise Reprise Akira Yamaoka",
+   "url": "https://www.youtube.com/watch?v=ZwLvcaDMhU8",
+   "channel": "AKIRA YAMAOKA",
+   "yt_title": "Promise (Reprise)",
+   "yt_duration": 105
+  },
+  {
+   "artist": "Shoji Meguro & Lyn",
+   "title": "Beneath the Mask -rain-",
+   "album": "Persona 5 Original Soundtrack",
+   "year": 2016,
+   "genre": "soundtrack",
+   "from": "Persona 5",
+   "query": "Persona 5 Beneath the Mask Lyn",
+   "url": "https://www.youtube.com/watch?v=U2Qd9TRY1Ro",
+   "channel": "Lyn - Topic",
+   "yt_title": "Beneath the Mask -rain-",
+   "yt_duration": 279
+  },
+  {
+   "artist": "Jamie Christopherson",
+   "title": "It Has to Be This Way",
+   "album": "Metal Gear Rising: Revengeance Vocal Tracks",
+   "year": 2013,
+   "genre": "soundtrack",
+   "from": "Metal Gear Rising: Revengeance",
+   "query": "Metal Gear Rising It Has to Be This Way Jamie Christopherson",
+   "url": "https://www.youtube.com/watch?v=rOmD2CQGgt4",
+   "channel": "Jamie Christopherson",
+   "yt_title": "It Has to Be This Way (Platinum Mix) | Metal Gear Rising: Revengeance (Soundtrack)",
+   "yt_duration": 176
+  },
+  {
+   "artist": "Casey Edwards feat. Ali Edwards",
+   "title": "Devil Trigger",
+   "album": "Devil May Cry 5 Original Soundtrack",
+   "year": 2019,
+   "genre": "soundtrack",
+   "from": "Devil May Cry 5",
+   "query": "Devil Trigger Casey Edwards Ali Edwards Devil May Cry 5",
+   "url": "https://www.youtube.com/watch?v=eICijnr1k_I",
+   "channel": "Casey Edwards",
+   "yt_title": "Devil Trigger - Nero's battle theme from Devil May Cry 5 [OFFICIAL AUDIO]",
+   "yt_duration": 406
+  },
+  {
+   "artist": "m.o.v.e",
+   "title": "Rage Your Dream",
+   "album": "",
+   "year": 1998,
+   "genre": "eurobeat",
+   "from": "Initial D",
+   "query": "m.o.v.e Rage Your Dream",
+   "url": "https://www.youtube.com/watch?v=ECwKc39xj5k",
+   "channel": "m.o.v.e - Topic",
+   "yt_title": "Rage your dream",
+   "yt_duration": 273
+  },
+  {
+   "artist": "Pendulum",
+   "title": "Witchcraft",
+   "album": "Immersion",
+   "year": 2010,
+   "genre": "electronic",
+   "query": "Pendulum Witchcraft",
+   "url": "https://www.youtube.com/watch?v=ogMNV33AhCY",
+   "channel": "pendulumlive",
+   "yt_title": "Pendulum - Witchcraft (Official Video)",
+   "yt_duration": 236
+  },
+  {
+   "artist": "Infected Mushroom",
+   "title": "The Pretender",
+   "album": "Legend of the Black Shawarma",
+   "year": 2009,
+   "genre": "electronic",
+   "query": "Infected Mushroom The Pretender",
+   "url": "https://www.youtube.com/watch?v=_oAutLYMOgk",
+   "channel": "Infected Mushroom",
+   "yt_title": "The Pretender",
+   "yt_duration": 395
+  },
+  {
+   "artist": "Orangestar feat. IA",
+   "title": "アスノヨゾラ哨戒班 (Asu no Yozora Shoukaihan)",
+   "album": "",
+   "year": 2014,
+   "genre": "j-pop",
+   "query": "Orangestar アスノヨゾラ哨戒班 IA",
+   "url": "https://www.youtube.com/watch?v=DgGC2RM2wGk"
+  },
+  {
+   "artist": "Mili",
+   "title": "Nine Point Eight",
+   "album": "Miracle Milk",
+   "year": 2016,
+   "genre": "j-pop",
+   "query": "Mili Nine Point Eight",
+   "url": "https://www.youtube.com/watch?v=Le5nXTvNYJc",
+   "channel": "Mili",
+   "yt_title": "Mili - Nine Point Eight",
+   "yt_duration": 193
+  }
+ ]
+}

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">AVSB</string>
+    <string name="title_activity_main">AVSB</string>
+    <string name="package_name">com.iemdreambracket.app</string>
+    <string name="custom_url_scheme">com.iemdreambracket.app</string>
+</resources>

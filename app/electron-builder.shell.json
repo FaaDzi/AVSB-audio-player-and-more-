@@ -1,0 +1,47 @@
+{
+  "appId": "local.music-preferences",
+  "productName": "AVSB",
+  "npmRebuild": false,
+  "extraMetadata": {
+    "name": "avsb",
+    "author": "AVSB",
+    "main": "electron/shell-main.cjs"
+  },
+  "directories": {
+    "output": "release/shell"
+  },
+  "files": [
+    "dist-shell/**",
+    "electron/shell-main.cjs",
+    "electron/shell-preload.cjs",
+    "electron/meta-proxy.cjs",
+    "electron/ffmpeg.cjs",
+    "electron/link-worker.cjs",
+    "electron/library-scan.bundle.mjs",
+    "electron/link.bundle.mjs",
+    "public/icon.ico",
+    "package.json",
+    "!node_modules/**",
+    "node_modules/@number0/iroh/index.js",
+    "node_modules/@number0/iroh/package.json",
+    "node_modules/@number0/iroh-win32-x64-msvc/**"
+  ],
+  "extraResources": [
+    {
+      "from": "../tools/ffmpeg/bin/ffmpeg.exe",
+      "to": "ffmpeg/bin/ffmpeg.exe"
+    },
+    {
+      "from": "../tools/ffmpeg/LICENSE.txt",
+      "to": "ffmpeg/LICENSE.txt"
+    }
+  ],
+  "win": {
+    "target": "dir",
+    "icon": "public/icon.ico",
+    "signAndEditExecutable": true
+  },
+  "asarUnpack": [
+    "node_modules/@number0/**/*.node"
+  ]
+}

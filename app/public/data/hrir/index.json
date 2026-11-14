@@ -1,0 +1,98 @@
+[
+ {
+  "id": "generic",
+  "name": "Generic (HUTUBS pp1)",
+  "source": "HUTUBS (TU Berlin), CC BY 4.0; subject pp1, measured, diffuse-field equalised",
+  "group": "generic"
+ },
+ {
+  "id": "hutubs-94",
+  "name": "HUTUBS pp94",
+  "source": "HUTUBS (TU Berlin), CC BY 4.0; subject pp94, measured, diffuse-field equalised",
+  "group": "hutubs-94"
+ },
+ {
+  "id": "hutubs-7",
+  "name": "HUTUBS pp7",
+  "source": "HUTUBS (TU Berlin), CC BY 4.0; subject pp7, measured, diffuse-field equalised",
+  "group": "hutubs-7"
+ },
+ {
+  "id": "hutubs-14",
+  "name": "HUTUBS pp14",
+  "source": "HUTUBS (TU Berlin), CC BY 4.0; subject pp14, measured, diffuse-field equalised",
+  "group": "hutubs-14"
+ },
+ {
+  "id": "hutubs-81",
+  "name": "HUTUBS pp81",
+  "source": "HUTUBS (TU Berlin), CC BY 4.0; subject pp81, measured, diffuse-field equalised",
+  "group": "hutubs-94"
+ },
+ {
+  "id": "hutubs-36",
+  "name": "HUTUBS pp36",
+  "source": "HUTUBS (TU Berlin), CC BY 4.0; subject pp36, measured, diffuse-field equalised",
+  "group": "hutubs-94"
+ },
+ {
+  "id": "hutubs-74",
+  "name": "HUTUBS pp74",
+  "source": "HUTUBS (TU Berlin), CC BY 4.0; subject pp74, measured, diffuse-field equalised",
+  "group": "hutubs-14"
+ },
+ {
+  "id": "hutubs-17",
+  "name": "HUTUBS pp17",
+  "source": "HUTUBS (TU Berlin), CC BY 4.0; subject pp17, measured, diffuse-field equalised",
+  "group": "hutubs-14"
+ },
+ {
+  "id": "hutubs-39",
+  "name": "HUTUBS pp39",
+  "source": "HUTUBS (TU Berlin), CC BY 4.0; subject pp39, measured, diffuse-field equalised",
+  "group": "hutubs-94"
+ },
+ {
+  "id": "hutubs-8",
+  "name": "HUTUBS pp8",
+  "source": "HUTUBS (TU Berlin), CC BY 4.0; subject pp8, measured, diffuse-field equalised",
+  "group": "hutubs-7"
+ },
+ {
+  "id": "hutubs-26",
+  "name": "HUTUBS pp26",
+  "source": "HUTUBS (TU Berlin), CC BY 4.0; subject pp26, measured, diffuse-field equalised",
+  "group": "hutubs-7"
+ },
+ {
+  "id": "hutubs-65",
+  "name": "HUTUBS pp65",
+  "source": "HUTUBS (TU Berlin), CC BY 4.0; subject pp65, measured, diffuse-field equalised",
+  "group": "generic"
+ },
+ {
+  "id": "hutubs-54",
+  "name": "HUTUBS pp54",
+  "source": "HUTUBS (TU Berlin), CC BY 4.0; subject pp54, measured, diffuse-field equalised",
+  "group": "hutubs-14"
+ },
+ {
+  "id": "hutubs-6",
+  "name": "HUTUBS pp6",
+  "source": "HUTUBS (TU Berlin), CC BY 4.0; subject pp6, measured, diffuse-field equalised",
+  "group": "hutubs-7"
+ },
+ {
+  "id": "hutubs-47",
+  "name": "HUTUBS pp47",
+  "source": "HUTUBS (TU Berlin), CC BY 4.0; subject pp47, measured, diffuse-field equalised",
+  "group": "generic"
+ },
+ {
+  "id": "hutubs-57",
+  "name": "HUTUBS pp57",
+  "source": "HUTUBS (TU Berlin), CC BY 4.0; subject pp57, measured, diffuse-field equalised",
+  "group": "generic"
+ }
+]

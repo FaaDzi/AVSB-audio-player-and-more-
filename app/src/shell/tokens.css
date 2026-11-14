@@ -1,0 +1,81 @@
+/* Sizes come from Mornye's app_tokens.dart, desktop_navigation.dart and desktop_player_bar.dart.
+   Colours were sampled from reference captures of its dark Material theme. */
+@font-face {
+  font-family: 'Google Sans Flex';
+  src: url('./fonts/GoogleSansFlex.ttf') format('truetype');
+  font-weight: 100 1000;
+  font-display: swap;
+}
+
+:root {
+  --radius-badge: 6px;
+  --radius-thumb: 8px;
+  --radius-cover: 12px;
+  --radius-control: 16px;
+  --radius-card: 20px;
+  --radius-sheet: 28px;
+  --gap-xs: 4px;
+  --gap-sm: 8px;
+  --gap-md: 12px;
+  --gap-lg: 16px;
+  --gap-xl: 24px;
+
+  --sidebar-width: 220px;
+  --rail-width: 96px;
+  --player-height: 80px;
+  --inspector-width: 340px;
+  --topbar-height: 52px;
+  --page-max: 1248px;
+
+  --ink: 255 255 255;
+  --font-ui: 'Google Sans Flex', system-ui, sans-serif;
+  --page: #000000;
+  --chrome: #161616;
+  --player: #1f1f1f;
+  --field: #1f1f1f;
+  --control: #1d1d1d;
+  --control-hover: #2a2a2a;
+  --menu: #242424;
+  --outline: #43474e;
+  --text: #e3e2e6;
+  --text-strong: #ffffff;
+  --text-dim: #c3c6cf;
+  --text-faint: #8d9199;
+  --accent: #a4c9fe;
+  --on-accent: #00315c;
+  --accent-container: #1f4876;
+  --on-accent-container: #d3e4ff;
+  /* album pages take their accent from the cover in Mornye; this is one fixed example until that's built */
+  --pink: #f0b0e6;
+  --pink-container: #553d52;
+  --nav-selected: #3c4758;
+  --tab-selected: #0d1014;
+  --chip: #2a2a2a;
+  --scrim: rgba(0, 0, 0, 0.6);
+
+  --motion-fast: 150ms;
+  --motion-medium: 250ms;
+  --motion-slow: 400ms;
+
+  /* Mornye's Material motion on Windows. The springs are the material_3_expressive tokens sampled at 25 points;
+     the settle times are calculated, they aren't constants in its source. */
+  --spring-spatial: linear(0, 0.0571, 0.1864, 0.3421, 0.496, 0.6331, 0.7465, 0.8353, 0.9012, 0.9477, 0.9787, 0.998, 1.0088, 1.0138, 1.0152, 1.0143, 1.0124, 1.01, 1.0077, 1.0056, 1.0039, 1.0025, 1.0015, 1.0008, 1); /* 380/0.8 */
+  --spatial-ms: 460ms;
+  --spring-effects: linear(0, 0.0652, 0.2008, 0.3518, 0.4921, 0.6117, 0.7086, 0.7843, 0.8422, 0.8856, 0.9177, 0.9412, 0.9582, 0.9704, 0.9792, 0.9854, 0.9898, 0.9929, 0.995, 0.9966, 0.9976, 0.9984, 0.9989, 0.9992, 1); /* 1600/1 */
+  --effects-ms: 248ms;
+  --spring-effects-fast: linear(0, 0.0709, 0.2159, 0.374, 0.5179, 0.6382, 0.7335, 0.8065, 0.8612, 0.9013, 0.9304, 0.9513, 0.9661, 0.9765, 0.9838, 0.9888, 0.9923, 0.9948, 0.9964, 0.9976, 0.9984, 0.9989, 0.9992, 0.9995, 1); /* 3800/1 */
+  --spring-press: linear(0, 0.0491, 0.1599, 0.2939, 0.4284, 0.5512, 0.6568, 0.7438, 0.8131, 0.8668, 0.9074, 0.9373, 0.9589, 0.9741, 0.9845, 0.9915, 0.996, 0.9987, 1.0003, 1.0011, 1.0015, 1.0015, 1.0014, 1.0012, 1); /* 1400/0.9 */
+  --press-ms: 223ms;
+  --ease-out-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --ease-in-cubic: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  --ease-in-out-cubic: cubic-bezier(0.645, 0.045, 0.355, 1);
+  --fast-out-slow-in: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Registered so they can transition: the rail and Now Playing derive every moving size from one progress value, as Mornye does. */
+@property --cover-primary { syntax: '<color>'; inherits: true; initial-value: #ffffff; }
+@property --cover-on-primary { syntax: '<color>'; inherits: true; initial-value: #000000; }
+@property --cover-container { syntax: '<color>'; inherits: true; initial-value: #474747; }
+@property --cover-tile { syntax: '<color>'; inherits: true; initial-value: #474747; }
+@property --rail-t { syntax: '<number>'; inherits: true; initial-value: 0; }
+@property --np-t { syntax: '<number>'; inherits: true; initial-value: 0; }

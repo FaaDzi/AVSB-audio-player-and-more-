@@ -1,0 +1,596 @@
+[
+ {
+  "a": "Ultrasone Edition 8",
+  "b": "Ultrasone Edition 8 Palladium",
+  "idA": "hp-ultrasone-edition-8",
+  "idB": "hp-ultrasone-edition-8-palladium",
+  "rms": 0.0,
+  "sim": 0.64,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Modhouse Tungsten DS V2",
+  "b": "Modhouse Tungsten DS V2 mods",
+  "idA": "hp-modhouse-tungsten-ds-v2",
+  "idB": "hp-modhouse-tungsten-ds-v2-mods",
+  "rms": 0.57,
+  "sim": 0.85,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "AKG K612",
+  "b": "AKG K612pro (K612 with K702 pads)",
+  "idA": "hp-akg-k612",
+  "idB": "hp-akg-k612pro-k612-with-k702-pads",
+  "rms": 0.77,
+  "sim": 0.73,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Sennheiser HD 6XX",
+  "b": "Sennheiser HD6XX (2021)",
+  "idA": "hp-sennheiser-hd-6xx",
+  "idB": "hp-sennheiser-hd6xx-2021",
+  "rms": 0.8,
+  "sim": 0.91,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Sennheiser HD 560S",
+  "b": "Sennheiser HD560S (HD560S (2022) with aftermarket HD5 series pads)",
+  "idA": "hp-sennheiser-hd-560s",
+  "idB": "hp-sennheiser-hd560s-hd560s-2022-with-aftermarket-hd5-series-pads",
+  "rms": 0.87,
+  "sim": 0.92,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Sennheiser HD 650",
+  "b": "Sennheiser HD650 (2020)",
+  "idA": "hp-sennheiser-hd-650",
+  "idB": "hp-sennheiser-hd650-2020",
+  "rms": 0.9,
+  "sim": 0.91,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "FiiO Jadeaudio JT7",
+  "b": "FiiO JT7",
+  "idA": "hp-fiio-jadeaudio-jt7",
+  "idB": "hp-fiio-jt7",
+  "rms": 0.96,
+  "sim": 0.38,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Denon AH-D5200",
+  "b": "Denon D5200",
+  "idA": "hp-denon-ah-d5200",
+  "idB": "hp-denon-d5200",
+  "rms": 0.99,
+  "sim": 0.77,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Koss KPH30i",
+  "b": "Koss KPH30i Clear",
+  "idA": "hp-koss-kph30i",
+  "idB": "hp-koss-kph30i-clear",
+  "rms": 0.99,
+  "sim": 0.67,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Audio-Technica ATH-R70x",
+  "b": "Audio-Technica ATH-R70x Refine",
+  "idA": "hp-audio-technica-ath-r70x",
+  "idB": "hp-audio-technica-ath-r70x-refine",
+  "rms": 1.02,
+  "sim": 0.7,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Fostex TH900mk2",
+  "b": "Fostex TH900mk2 Sapphire Blue",
+  "idA": "hp-fostex-th900mk2",
+  "idB": "hp-fostex-th900mk2-sapphire-blue",
+  "rms": 1.03,
+  "sim": 0.53,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "HEDD Audio D1",
+  "b": "HEDD Audio HEDDphone D1",
+  "idA": "hp-hedd-audio-d1",
+  "idB": "hp-hedd-audio-heddphone-d1",
+  "rms": 1.03,
+  "sim": 0.29,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Fostex TH900mk2",
+  "b": "Fostex TH900mk2 OG Red",
+  "idA": "hp-fostex-th900mk2",
+  "idB": "hp-fostex-th900mk2-og-red",
+  "rms": 1.09,
+  "sim": 0.7,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Mirph Designs Mirph-1",
+  "b": "MIRPH MIRPH-1",
+  "idA": "hp-mirph-designs-mirph-1",
+  "idB": "hp-mirph-mirph-1",
+  "rms": 1.1,
+  "sim": 0.64,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Akg k 612pro (k 612pro bm)",
+  "b": "AKG K612",
+  "idA": "hp-akg-k-612pro-k-612pro-bm",
+  "idB": "hp-akg-k612",
+  "rms": 1.13,
+  "sim": 0.67,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "AKG K612 Pro",
+  "b": "AKG K612pro (K612 with K702 pads)",
+  "idA": "hp-akg-k612-pro",
+  "idB": "hp-akg-k612pro-k612-with-k702-pads",
+  "rms": 1.14,
+  "sim": 0.93,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Polk Audio UltraFocus 8000",
+  "b": "Polk Audio UltraFocus 8000 NC",
+  "idA": "hp-polk-audio-ultrafocus-8000",
+  "idB": "hp-polk-audio-ultrafocus-8000-nc",
+  "rms": 1.15,
+  "sim": 0.91,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Sennheiser HD 600 (2020)",
+  "b": "Sennheiser HD600 (BS)",
+  "idA": "hp-sennheiser-hd-600-2020",
+  "idB": "hp-sennheiser-hd600-bs",
+  "rms": 1.15,
+  "sim": 0.91,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Sennheiser HD 800",
+  "b": "Sennheiser HD800 (4xxxx)",
+  "idA": "hp-sennheiser-hd-800",
+  "idB": "hp-sennheiser-hd800-4xxxx",
+  "rms": 1.15,
+  "sim": 0.91,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Akg k 612pro (k 612pro bm)",
+  "b": "AKG K612 Pro",
+  "idA": "hp-akg-k-612pro-k-612pro-bm",
+  "idB": "hp-akg-k612-pro",
+  "rms": 1.2,
+  "sim": 0.88,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Koss KPH40",
+  "b": "Koss KPH40 Utility",
+  "idA": "hp-koss-kph40",
+  "idB": "hp-koss-kph40-utility",
+  "rms": 1.2,
+  "sim": 0.56,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Sennheiser HD 660 S",
+  "b": "Sennheiser HD 660S (Dekoni Fenestrated Sheepskin Earpads)",
+  "idA": "hp-sennheiser-hd-660-s",
+  "idB": "hp-sennheiser-hd-660s-dekoni-fenestrated-sheepskin-earpads",
+  "rms": 1.29,
+  "sim": 0.93,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Philips Fidelio X2HR",
+  "b": "Philips x2hr",
+  "idA": "hp-philips-fidelio-x2hr",
+  "idB": "hp-philips-x2hr",
+  "rms": 1.29,
+  "sim": 0.5,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Takstar Pro 82",
+  "b": "Takstar Pro82 (Pro82 bass-1 with 75 ohms adapter)",
+  "idA": "hp-takstar-pro-82",
+  "idB": "hp-takstar-pro82-pro82-bass-1-with-75-ohms-adapter",
+  "rms": 1.3,
+  "sim": 0.91,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Denon AH-D7200",
+  "b": "Denon D7200",
+  "idA": "hp-denon-ah-d7200",
+  "idB": "hp-denon-d7200",
+  "rms": 1.3,
+  "sim": 0.77,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "HiFiMan HE400se V1",
+  "b": "HiFiMan HE400se V1 Super Grills mod",
+  "idA": "hp-hifiman-he400se-v1",
+  "idB": "hp-hifiman-he400se-v1-super-grills-mod",
+  "rms": 1.36,
+  "sim": 0.54,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "FiiO FT1 Pro",
+  "b": "FiiO FT1 Pro pad-rolling",
+  "idA": "hp-fiio-ft1-pro",
+  "idB": "hp-fiio-ft1-pro-pad-rolling",
+  "rms": 1.36,
+  "sim": 0.54,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Audeze LCD-2",
+  "b": "Audeze LCD-2 Classic",
+  "idA": "hp-audeze-lcd-2",
+  "idB": "hp-audeze-lcd-2-classic",
+  "rms": 1.39,
+  "sim": 0.56,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Akg k 612pro (k 612pro bm)",
+  "b": "AKG K612pro (K612 with K702 pads)",
+  "idA": "hp-akg-k-612pro-k-612pro-bm",
+  "idB": "hp-akg-k612pro-k612-with-k702-pads",
+  "rms": 1.44,
+  "sim": 0.93,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "FiiO JT7",
+  "b": "FiiO JT7 pad-rolling",
+  "idA": "hp-fiio-jt7",
+  "idB": "hp-fiio-jt7-pad-rolling",
+  "rms": 1.54,
+  "sim": 0.33,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Sennheiser HD 580",
+  "b": "Sennheiser HD580 (BS)",
+  "idA": "hp-sennheiser-hd-580",
+  "idB": "hp-sennheiser-hd580-bs",
+  "rms": 1.55,
+  "sim": 0.91,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "FiiO FT7",
+  "b": "FiiO FT7 pad-rolling",
+  "idA": "hp-fiio-ft7",
+  "idB": "hp-fiio-ft7-pad-rolling",
+  "rms": 1.58,
+  "sim": 0.33,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Sennheiser HD 560 S (Sennheiser HD 560S (505P))",
+  "b": "Sennheiser HD 560S",
+  "idA": "hp-sennheiser-hd-560-s-sennheiser-hd-560s-505p",
+  "idB": "hp-sennheiser-hd-560s",
+  "rms": 1.59,
+  "sim": 0.93,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Verum 2",
+  "b": "Verum Audio Verum 2",
+  "idA": "hp-verum-2",
+  "idB": "hp-verum-audio-verum-2",
+  "rms": 1.59,
+  "sim": 0.25,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Beyerdynamic TYGR 300",
+  "b": "beyerdynamic TYGR 300R",
+  "idA": "hp-beyerdynamic-tygr-300",
+  "idB": "hp-beyerdynamic-tygr-300r",
+  "rms": 1.62,
+  "sim": 0.94,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Fostex TH900mk2",
+  "b": "Fostex TH900mk2 Pearl White",
+  "idA": "hp-fostex-th900mk2",
+  "idB": "hp-fostex-th900mk2-pearl-white",
+  "rms": 1.63,
+  "sim": 0.57,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Sennheiser HD 518",
+  "b": "Sennheiser HD518 (HD518 aftermarket HD5 series pads)",
+  "idA": "hp-sennheiser-hd-518",
+  "idB": "hp-sennheiser-hd518-hd518-aftermarket-hd5-series-pads",
+  "rms": 1.66,
+  "sim": 0.91,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "AKG Q701",
+  "b": "AKG Q701 Quincy Jones",
+  "idA": "hp-akg-q701",
+  "idB": "hp-akg-q701-quincy-jones",
+  "rms": 1.69,
+  "sim": 0.38,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Beyerdynamic DT 900 Pro X",
+  "b": "Beyerdynamic DT900 ProX (DT900 proX (sample 2) with aftermarket imitation pads)",
+  "idA": "hp-beyerdynamic-dt-900-pro-x",
+  "idB": "hp-beyerdynamic-dt900-prox-dt900-prox-sample-2-with-aftermarket-imitation-pads",
+  "rms": 1.7,
+  "sim": 0.91,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Sennheiser HD 560 S (Sennheiser HD 560S (505P))",
+  "b": "Sennheiser HD560S (HD560S (2022) with aftermarket HD5 series pads)",
+  "idA": "hp-sennheiser-hd-560-s-sennheiser-hd-560s-505p",
+  "idB": "hp-sennheiser-hd560s-hd560s-2022-with-aftermarket-hd5-series-pads",
+  "rms": 1.71,
+  "sim": 0.86,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "*MOD Hifiman HE4XX Fazor Mod (Modded by Nerin)",
+  "b": "HIFIMAN HE4XX",
+  "idA": "hp-mod-hifiman-he4xx-fazor-mod-modded-by-nerin",
+  "idB": "hp-hifiman-he4xx",
+  "rms": 1.71,
+  "sim": 0.5,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Beyerdynamic DT 1990 (analytic earpads)",
+  "b": "Beyerdynamic DT1990 (Dekoni Elite velour earpads)",
+  "idA": "hp-beyerdynamic-dt-1990-analytic-earpads",
+  "idB": "hp-beyerdynamic-dt1990-dekoni-elite-velour-earpads",
+  "rms": 1.72,
+  "sim": 0.92,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "AKG K361",
+  "b": "AKG K361BT",
+  "idA": "hp-akg-k361",
+  "idB": "hp-akg-k361bt",
+  "rms": 1.74,
+  "sim": 0.8,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Grado HF1",
+  "b": "Grado HF1 Prototype",
+  "idA": "hp-grado-hf1",
+  "idB": "hp-grado-hf1-prototype",
+  "rms": 1.76,
+  "sim": 0.38,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Sennheiser HD 800 S (Dekoni fenestrated sheepskin earpads)",
+  "b": "Sennheiser HD 800S (Sennheiser HD800S Dekoni Elite Hybrid)",
+  "idA": "hp-sennheiser-hd-800-s-dekoni-fenestrated-sheepskin-earpads",
+  "idB": "hp-sennheiser-hd-800s-sennheiser-hd800s-dekoni-elite-hybrid",
+  "rms": 1.78,
+  "sim": 0.93,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "AKG K553",
+  "b": "AKG K553 MKII",
+  "idA": "hp-akg-k553",
+  "idB": "hp-akg-k553-mkii",
+  "rms": 1.81,
+  "sim": 0.62,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Sennheiser HD 490 Pro (490 Pro (Tweed))",
+  "b": "Sennheiser HD490 Pro",
+  "idA": "hp-sennheiser-hd-490-pro-490-pro-tweed",
+  "idB": "hp-sennheiser-hd490-pro",
+  "rms": 1.82,
+  "sim": 0.95,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Sennheiser HD 620S (HD 620S (2025 sample, fresh stock pads, realistic seal))",
+  "b": "Sennheiser HD620S (HD620S with Aide cooling gel pleather pads)",
+  "idA": "hp-sennheiser-hd-620s-hd-620s-2025-sample-fresh-stock-pads-realistic-seal",
+  "idB": "hp-sennheiser-hd620s-hd620s-with-aide-cooling-gel-pleather-pads",
+  "rms": 1.82,
+  "sim": 0.92,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Sennheiser HD 280 Pro",
+  "b": "Sennheiser hd 280pro (hd 280pro 2023)",
+  "idA": "hp-sennheiser-hd-280-pro",
+  "idB": "hp-sennheiser-hd-280pro-hd-280pro-2023",
+  "rms": 1.83,
+  "sim": 0.95,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Sennheiser HD 400 Pro",
+  "b": "Sennheiser HD400 Pro (HD400pro aftermarket HD5 series pads)",
+  "idA": "hp-sennheiser-hd-400-pro",
+  "idB": "hp-sennheiser-hd400-pro-hd400pro-aftermarket-hd5-series-pads",
+  "rms": 1.86,
+  "sim": 0.95,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "beyerdynamic DT 1990 Pro (250 ohm)",
+  "b": "beyerdynamic DT 1990 Pro MKII",
+  "idA": "hp-beyerdynamic-dt-1990-pro-250-ohm",
+  "idB": "hp-beyerdynamic-dt-1990-pro-mkii",
+  "rms": 1.87,
+  "sim": 0.81,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "beyerdynamic DT 1990 Pro (250 ohm)",
+  "b": "Beyerdynamic DT1990 Pro",
+  "idA": "hp-beyerdynamic-dt-1990-pro-250-ohm",
+  "idB": "hp-beyerdynamic-dt1990-pro",
+  "rms": 1.9,
+  "sim": 0.95,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Sennheiser HD 550",
+  "b": "Sennheiser HD550 (HD550 with Aide cooling gel mesh pads)",
+  "idA": "hp-sennheiser-hd-550",
+  "idB": "hp-sennheiser-hd550-hd550-with-aide-cooling-gel-mesh-pads",
+  "rms": 1.91,
+  "sim": 0.91,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "HIFIMAN HE1000",
+  "b": "HIFIMAN HE1000 Unveiled",
+  "idA": "hp-hifiman-he1000",
+  "idB": "hp-hifiman-he1000-unveiled",
+  "rms": 1.91,
+  "sim": 0.57,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Beyerdynamic DT 990 Pro",
+  "b": "Beyerdynamic DT990 Pro (250Ω)",
+  "idA": "hp-beyerdynamic-dt-990-pro",
+  "idB": "hp-beyerdynamic-dt990-pro-250",
+  "rms": 1.93,
+  "sim": 0.95,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Sennheiser PXC 550 Wireless (wired, ANC on)",
+  "b": "Sennheiser PXC 550-II Wireless",
+  "idA": "hp-sennheiser-pxc-550-wireless-wired-anc-on",
+  "idB": "hp-sennheiser-pxc-550-ii-wireless",
+  "rms": 1.94,
+  "sim": 0.91,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Beyerdynamic DJX-1",
+  "b": "Beyerdynamic T1",
+  "idA": "hp-beyerdynamic-djx-1",
+  "idB": "hp-beyerdynamic-t1",
+  "rms": 1.94,
+  "sim": 0.29,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Beyerdynamic DT 770 Pro",
+  "b": "Beyerdynamic DT770 Pro (DT770 80 ohms with aftermarket imitation pads)",
+  "idA": "hp-beyerdynamic-dt-770-pro",
+  "idB": "hp-beyerdynamic-dt770-pro-dt770-80-ohms-with-aftermarket-imitation-pads",
+  "rms": 1.95,
+  "sim": 0.95,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Beyerdynamic DT 900 Pro X",
+  "b": "Beyerdynamic DT900 Pro X (Beyerdynamic DT900 Pro X Dekoni Elite Velour)",
+  "idA": "hp-beyerdynamic-dt-900-pro-x",
+  "idB": "hp-beyerdynamic-dt900-pro-x-beyerdynamic-dt900-pro-x-dekoni-elite-velour",
+  "rms": 2.01,
+  "sim": 0.96,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Sennheiser hdb 630",
+  "b": "Sennheiser HDB630 (HDB630 (neutral ANC ON, pushed back on head))",
+  "idA": "hp-sennheiser-hdb-630",
+  "idB": "hp-sennheiser-hdb630-hdb630-neutral-anc-on-pushed-back-on-head",
+  "rms": 2.33,
+  "sim": 0.92,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Beyerdynamic DT 700 Pro X",
+  "b": "Beyerdynamic DT700 Pro X (Beyerdynamic DT700 Pro X Dekoni Elite Velour)",
+  "idA": "hp-beyerdynamic-dt-700-pro-x",
+  "idB": "hp-beyerdynamic-dt700-pro-x-beyerdynamic-dt700-pro-x-dekoni-elite-velour",
+  "rms": 2.41,
+  "sim": 0.96,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Sennheiser HD 800S (Sennheiser HD800S Dekoni Elite Hybrid)",
+  "b": "Sennheiser HD800S (1xxxx)",
+  "idA": "hp-sennheiser-hd-800s-sennheiser-hd800s-dekoni-elite-hybrid",
+  "idB": "hp-sennheiser-hd800s-1xxxx",
+  "rms": 2.48,
+  "sim": 0.92,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Sennheiser HD 800 S (Dekoni fenestrated sheepskin earpads)",
+  "b": "Sennheiser HD800S (1xxxx)",
+  "idA": "hp-sennheiser-hd-800-s-dekoni-fenestrated-sheepskin-earpads",
+  "idB": "hp-sennheiser-hd800s-1xxxx",
+  "rms": 2.54,
+  "sim": 0.86,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Koss Porta Pro",
+  "b": "Koss PortaPro (PortaPro Yaxi Pads)",
+  "idA": "hp-koss-porta-pro",
+  "idB": "hp-koss-portapro-portapro-yaxi-pads",
+  "rms": 2.65,
+  "sim": 0.94,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Sennheiser HD 505",
+  "b": "Sennheiser HD505 (HD505 with aftermarket fabric pads)",
+  "idA": "hp-sennheiser-hd-505",
+  "idB": "hp-sennheiser-hd505-hd505-with-aftermarket-fabric-pads",
+  "rms": 2.82,
+  "sim": 0.91,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "beyerdynamic DT 770 Pro X Limited Edition (beyerdynamic DT 770 Pro X Limited Edition (WC Freeze))",
+  "b": "Beyerdynamic DT770 Pro X Limited Edition",
+  "idA": "hp-beyerdynamic-dt-770-pro-x-limited-edition-beyerdynamic-dt-770-pro-x-limited-edition-wc-freeze",
+  "idB": "hp-beyerdynamic-dt770-pro-x-limited-edition",
+  "rms": 2.84,
+  "sim": 0.98,
+  "why": "same model, spacing/brand spelling"
+ }
+]

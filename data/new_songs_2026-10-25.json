@@ -1,0 +1,32 @@
+{
+ "_note": "2026-10-25: 4 swaps asked for by the user (out: Private Investigations, These Walls, The Big Black, Pendulum Witchcraft -> its nightcore). Input to scripts/add_songs.py.",
+ "songs": [
+  {
+   "artist": "Lotus Juice & Azumi Takahashi",
+   "title": "Color Your Night",
+   "album": "Persona 3 Reload Original Soundtrack",
+   "year": 2024,
+   "genre": "soundtrack",
+   "from": "Persona 3 Reload",
+   "url": "https://www.youtube.com/watch?v=j9Sn1nFGQQ8"
+  },
+  {
+   "artist": "Edo Boys",
+   "title": "No One Sleep in Tokyo",
+   "album": "Super Eurobeat",
+   "year": 1998,
+   "genre": "eurobeat",
+   "from": "Initial D",
+   "url": "https://www.youtube.com/watch?v=TQz5gZkCEJI"
+  },
+  {
+   "artist": "GO2",
+   "title": "Don't Turn It Off (Energize Version)",
+   "album": "Super Eurobeat",
+   "year": 2009,
+   "genre": "eurobeat",
+   "from": "Initial D",
+   "url": "https://www.youtube.com/watch?v=VRlMM5qO6h8"
+  }
+ ]
+}

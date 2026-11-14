@@ -1,0 +1,2249 @@
+{
+  "reviewer": "Crinacle",
+  "sourceType": "ranking-list",
+  "sourceUrl": "https://crinacle.com/rankings/headphones/",
+  "accessed": "2026-10-23",
+  "gradeScale": "Letter grades from S down to F; separate grades for Tone and Technical performance; value stars up to 3 stars.",
+  "entries": [
+    {
+      "name": "Sennheiser HE 1 Orpheus 2",
+      "rawName": "Sennheiser HE-1",
+      "nameConfidence": "high",
+      "grade": "S",
+      "verdict": "Crinacle ranks it S (tone S+, technicalities S) with a harman neutral signature (Open Circumaural) (MSRP $59000).",
+      "quote": "Mostly neutral, slight bass lift, highly resolving and natural both in tone and timbre. The world's best headphone.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Hifiman Susvara",
+      "rawName": "Hifiman Susvara",
+      "nameConfidence": "high",
+      "grade": "S",
+      "verdict": "Crinacle ranks it S (tone S, technicalities S, ★ value) with a neutral signature (Open Circumaural) (MSRP $6000).",
+      "quote": "Subtle refinements to the already-great HE1000 makes this arguably the best planar in the world.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "HIFIMAN HE1000 V2",
+      "rawName": "Hifiman HE1000 (V2)",
+      "nameConfidence": "high",
+      "grade": "S-",
+      "verdict": "Crinacle ranks it S- (tone S, technicalities S-) with a neutral signature (Open Circumaural) (MSRP $3000 (HE1000)).",
+      "quote": "A planar that comes unnervingly close estat speed, but not quite. Solid technicalities with excellent tone.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Focal Utopia",
+      "rawName": "Focal Utopia",
+      "nameConfidence": "high",
+      "grade": "S-",
+      "verdict": "Crinacle ranks it S- (tone S, technicalities S-, ★ value) with a neutral signature (Open Circumaural) (MSRP $4000).",
+      "quote": "Solid tuning with close to top-tier resolution. An inoffensive all-rounder that lives up to its reputation.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Focal Clear",
+      "rawName": "Focal Clear",
+      "nameConfidence": "high",
+      "grade": "A+",
+      "verdict": "Crinacle ranks it A+ (tone S-, technicalities A+) with a warm neutral signature (Open Circumaural) (MSRP $Discontinued 1500 (Replaced by Clear Mg)).",
+      "quote": "A decent Utopia alternative for thinner wallets. Slightly warmer sound may be more pleasant for some.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "HIFIMAN HE1000se",
+      "rawName": "Hifiman HE1000se",
+      "nameConfidence": "high",
+      "grade": "A+",
+      "verdict": "Crinacle ranks it A+ (tone A+, technicalities S-) with a bright neutral signature (Open Circumaural) (MSRP $3500).",
+      "quote": "Basically a brighter and slightly shoutier version of the OG; may be a little too intense for some.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "HIFIMAN Arya",
+      "rawName": "Hifiman Arya",
+      "nameConfidence": "high",
+      "grade": "A+",
+      "verdict": "Crinacle ranks it A+ (tone A+, technicalities S-, ★ value) with a bright neutral signature (Open Circumaural) (MSRP $1600).",
+      "quote": "High resolution planar that may be a little peaky in the treble for some.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Hifiman Shangri La Jr",
+      "rawName": "Hifiman Shangri-La Jr",
+      "nameConfidence": "high",
+      "grade": "A+",
+      "verdict": "Crinacle ranks it A+ (tone A, technicalities S) with a bright neutral signature (Open Circumaural) (MSRP $8000).",
+      "quote": "A tad too shouty for my tastes, but far less offensive tonal characteristics than the average estat.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "HIFIMAN Jade II",
+      "rawName": "Hifiman Jade II",
+      "nameConfidence": "high",
+      "grade": "A",
+      "verdict": "Crinacle ranks it A (tone A, technicalities S-) with a bass-rolled neutral signature (Open Circumaural) (MSRP $2500).",
+      "quote": "Suffers from typical estat timbre and bass extension issues, but otherwise a very resolving and well-tuned headphone.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Stax SR-007",
+      "rawName": "Stax SR-007 (Mk2.5)",
+      "nameConfidence": "high",
+      "grade": "A",
+      "verdict": "Crinacle ranks it A (tone A-, technicalities S+) with a warm neutral signature (Open Circumaural) (MSRP $2100+975 (SRM-353X)).",
+      "quote": "Arguably the least wonky-sounding of the mainstream Staxes, with resolution just shy of the flagship 009.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "HEDD Audio HEDDphone D1",
+      "rawName": "HEDDphone",
+      "nameConfidence": "high",
+      "grade": "A",
+      "verdict": "Crinacle ranks it A (tone A, technicalities A+, ★ value) with a warm neutral signature (Open Circumaural) (MSRP $1900).",
+      "quote": "An interesting in-between of DD and estat timbre, though tuning around the lower midrange may be off.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Aurorus Borealis",
+      "rawName": "Aurorus Borealis",
+      "nameConfidence": "high",
+      "grade": "A",
+      "verdict": "Crinacle ranks it A (tone A+, technicalities A, ★★ value) with a neutral signature (Open Circumaural) (MSRP $900).",
+      "quote": "Sounds like an odd mashup of the HD600 and the Clear, in a good way.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Nectar Hive",
+      "rawName": "Nectar Hive",
+      "nameConfidence": "high",
+      "grade": "A",
+      "verdict": "Crinacle ranks it A (tone A, technicalities A, ★ value) with a bright neutral signature (Open Circumaural) (MSRP $600+975 (SRM-353X)).",
+      "quote": "Some spiciness in the treble that is HD800-esque, but with a better midrange presentation.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "HIFIMAN Edition X V2",
+      "rawName": "Hifiman Edition X V2",
+      "nameConfidence": "high",
+      "grade": "A-",
+      "verdict": "Crinacle ranks it A- (tone S, technicalities B+) with a neutral signature (Open Circumaural) (MSRP $1300 (Edition X V2)).",
+      "quote": "Excellent tonal balance though limited by blunted notes and resolution.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Stax SR-Lambda Pro",
+      "rawName": "Stax SR-Lambda Pro",
+      "nameConfidence": "high",
+      "grade": "A-",
+      "verdict": "Crinacle ranks it A- (tone B+, technicalities S-) with a neutral signature (Open Circumaural) (MSRP $700 (SR-Lambda Pro)).",
+      "quote": "One of the original Lambda models, and arguably the best tuned of the Lambda-styled Staxes.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sennheiser HD 600",
+      "rawName": "Sennheiser HD600",
+      "nameConfidence": "high",
+      "grade": "A-",
+      "verdict": "Crinacle ranks it A- (tone S-, technicalities B+, ★★ value) with a neutral signature (Open Circumaural) (MSRP $400).",
+      "quote": "The legendary neutral reference. Slightly better clarity and imaging than the HD650.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audio-Technica ATH-R70x",
+      "rawName": "Audio Technica ATH-R70x",
+      "nameConfidence": "high",
+      "grade": "A-",
+      "verdict": "Crinacle ranks it A- (tone A+, technicalities B+, ★★ value) with a warm neutral signature (Open Circumaural) (MSRP $350).",
+      "quote": "Excellent imaging. Mostly neutral/flat tuning with an ever-so-slight tilt towards warmth.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Stax SR-404",
+      "rawName": "Stax SR-404 Stax SR-404 Limited",
+      "nameConfidence": "high",
+      "grade": "B+",
+      "verdict": "Crinacle ranks it B+ (tone B, technicalities S-) with a neutral signature (Open Circumaural) (MSRP $500 (SR-404)).",
+      "quote": "Similar tuning to that of the Lambda Pro. Sonically identical between 404 and 404LE.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Stax SR-507",
+      "rawName": "Stax SR-507",
+      "nameConfidence": "high",
+      "grade": "B+",
+      "verdict": "Crinacle ranks it B+ (tone B, technicalities S-) with a neutral signature (Open Circumaural) (MSRP $830 (SR-507)).",
+      "quote": "Similar tuning to that of the Lambda Pro.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "HIFIMAN HE6",
+      "rawName": "Hifiman HE6",
+      "nameConfidence": "high",
+      "grade": "B+",
+      "verdict": "Crinacle ranks it B+ (tone B, technicalities S-) with a bright neutral signature (Open Circumaural) (MSRP $1300 (HE6)).",
+      "quote": "Clean, resolving yet intense sound scratches the detail itch but is a little too edgy for long listens.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Stax SR-4070",
+      "rawName": "Stax SR-4070",
+      "nameConfidence": "low",
+      "grade": "B+",
+      "verdict": "Crinacle ranks it B+ (tone B, technicalities S-) with a mid-centric signature (Closed Circumaural) (MSRP $1700 (SR-4070)).",
+      "quote": "Surprisingly wide and spacious soundstage for a closed-back. Good low-end extension but rather shouty.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "ZMF Auteur",
+      "rawName": "ZMF Auteur (Teak) (pref. lambskin Auteur pads)",
+      "nameConfidence": "high",
+      "grade": "B+",
+      "verdict": "Crinacle ranks it B+ (tone A, technicalities B+) with a bright neutral signature (Open Circumaural) (MSRP $1600).",
+      "quote": "Very pleasant tonality but lacking that last bit of definition for true top-tier status.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "HIFIMAN Ananda",
+      "rawName": "Hifiman Ananda",
+      "nameConfidence": "high",
+      "grade": "B+",
+      "verdict": "Crinacle ranks it B+ (tone S-, technicalities B, ★ value) with a neutral signature (Open Circumaural) (MSRP $700).",
+      "quote": "One of the best tuned headphones available, only limited by its raw resolving ability.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "AKG K612 Pro",
+      "rawName": "AKG K612 Pro",
+      "nameConfidence": "high",
+      "grade": "B+",
+      "verdict": "Crinacle ranks it B+ (tone S-, technicalities B, ★★★ value) with a neutral signature (Open Circumaural) (MSRP $200).",
+      "quote": "Basically dead-neutral tuning, emphasis on \"dead\". Strong all-rounder whose only fault is not having that \"wow-factor\".",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "HIFIMAN Sundara",
+      "rawName": "Hifiman Sundara",
+      "nameConfidence": "high",
+      "grade": "B+",
+      "verdict": "Crinacle ranks it B+ (tone A+, technicalities B, ★★ value) with a neutral signature (Open Circumaural) (MSRP $350).",
+      "quote": "Solid tuning with a little treble spiciness for the daring. One of the better midrange planars out there.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sennheiser HD 650",
+      "rawName": "Sennheiser HD650 /HD6XX",
+      "nameConfidence": "high",
+      "grade": "B+",
+      "verdict": "Crinacle ranks it B+ (tone A+, technicalities B, ★★★ value) with a warm neutral signature (Open Circumaural) (MSRP $220 (HD6XX)).",
+      "quote": "The legendary neutral reference. \"Veiled\" with a warm tilt (in comparison to HD600), and pretty terrible at imaging.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Fostex TH610",
+      "rawName": "Fostex TH610",
+      "nameConfidence": "high",
+      "grade": "B+",
+      "verdict": "Crinacle ranks it B+ (tone B+, technicalities A-, ★ value) with a mild v-shape signature (Closed Circumaural) (MSRP $600).",
+      "quote": "The most neutral of the Foster biodyna models. If you want a little more balance than the Teaks.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "E-Mu Teak",
+      "rawName": "E-MU Teak",
+      "nameConfidence": "high",
+      "grade": "B+",
+      "verdict": "Crinacle ranks it B+ (tone B+, technicalities A-, ★ value) with a v-shaped signature (Semi-open Circumaural) (MSRP $400).",
+      "quote": "Excellent dynamics with one of the best bass I've heard in a headphone, though the midrange can be a little harsh.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sennheiser HD 800",
+      "rawName": "Sennheiser HD800 / HD800S",
+      "nameConfidence": "high",
+      "grade": "B+",
+      "verdict": "Crinacle ranks it B+ (tone B-, technicalities S) with a bright neutral signature (Open Circumaural) (MSRP $1700 (HD800S)).",
+      "quote": "Arguably the king of soundstage and raw detail, though at the cost of its infamous treble spike.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Beyerdynamic T70",
+      "rawName": "Beyerdynamic T70",
+      "nameConfidence": "high",
+      "grade": "B+",
+      "verdict": "Crinacle ranks it B+ (tone A, technicalities B) with a bright neutral signature (Closed Circumaural) (MSRP $600 (T70)).",
+      "quote": "Treble peak may offend some, but otherwise very well balanced and natural tonality with decent technicalities.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "MrSpeakers Ether C",
+      "rawName": "MrSpeakers Ether C",
+      "nameConfidence": "low",
+      "grade": "B+",
+      "verdict": "Crinacle ranks it B+ (tone A, technicalities B) with a df-neutral signature (Closed Circumaural) (MSRP $Discontinued 1500 (Replaced by Ether C Flow)).",
+      "quote": "Forward, in-your-face sound that's shouty and thin at the same time. A good reference for \"true DF neutral\".",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Shure SRH1540",
+      "rawName": "Shure SRH1540",
+      "nameConfidence": "high",
+      "grade": "B+",
+      "verdict": "Crinacle ranks it B+ (tone A, technicalities B, ★ value) with a neutral with bass boost signature (Closed Circumaural) (MSRP $500).",
+      "quote": "Almost \"Harman\" tuning with some undesirable mid-bass bloat.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "AKG K702",
+      "rawName": "AKG K702",
+      "nameConfidence": "high",
+      "grade": "B+",
+      "verdict": "Crinacle ranks it B+ (tone A, technicalities B, ★★ value) with a mid-centric signature (Open Circumaural) (MSRP $350).",
+      "quote": "Slightly more upper-mid-forward (read: shoutier) version of the K612.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Stax SR-L500",
+      "rawName": "Stax SR-L500",
+      "nameConfidence": "high",
+      "grade": "B+",
+      "verdict": "Crinacle ranks it B+ (tone B-, technicalities S-) with a neutral signature (Open Circumaural) (MSRP $792+975 (SRM-353X)).",
+      "quote": "Generally pleasing tuning with a little honkiness in the centre-midrange.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Shure SRH840",
+      "rawName": "Shure SRH840",
+      "nameConfidence": "high",
+      "grade": "B+",
+      "verdict": "Crinacle ranks it B+ (tone A+, technicalities B-, ★★★ value) with a v-shaped signature (Closed Circumaural) (MSRP $150).",
+      "quote": "Extremely well-executed V-shaped tuning with no erronous peaks or dips. More mid-bassy than sub-bassy.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Stax SR-L300",
+      "rawName": "Stax SR-L300",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B, technicalities A-) with a neutral signature (Open Circumaural) (MSRP $430+975 (SRM-353X)).",
+      "quote": "Generally pleasing tuning, though a little honky and fatiguing in the treble.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "ZMF Aeolus",
+      "rawName": "ZMF Aeolus (Pref. suede Universe pads)",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B, technicalities A-) with a bright neutral signature (Open Circumaural) (MSRP $1200).",
+      "quote": "Tonally, a vast improvement over the Aeolus with stock pads, bringing in extra clarity and bite.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "AKG K701",
+      "rawName": "AKG K701",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone A-, technicalities B, ★ value) with a bright neutral signature (Open Circumaural) (MSRP $450).",
+      "quote": "The brightest and arguably harshest of the K7-- lineup, but still very competent overall.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "HIFIMAN HE6se",
+      "rawName": "Hifiman HE6se",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B-, technicalities A) with a neutral signature (Open Circumaural) (MSRP $1100 (HE6se)).",
+      "quote": "Comes with an odd midrange dip. It's no HE6 replacement for sure.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "HIFIMAN HE560",
+      "rawName": "Hifiman HE560 (V1)",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B-, technicalities A) with a neutral signature (Open Circumaural) (MSRP $950 (HE560)).",
+      "quote": "Slight wonkiness around the lower midrange, but otherwise a capable planar headphone.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Final D8000 Pro",
+      "rawName": "Final D8000 Pro",
+      "nameConfidence": "low",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B-, technicalities A) with a bright signature (Open Circumaural) (MSRP $4300).",
+      "quote": "Highly resolving headphone with solid imaging capabilities, limited by its somewhat wonky tonality.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Final Audio D8000 Pro Edition",
+      "rawName": "Final Audio D8000",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B-, technicalities A) with a bright signature (Open Circumaural) (MSRP $4000).",
+      "quote": "High treble-to-midrange contrast makes things sound shrill and borderline-sibilant.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "RAAL-requisite SR1a",
+      "rawName": "RAAL-requisite SR1a",
+      "nameConfidence": "low",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B-, technicalities A) with a neutral signature (Earspeaker) (MSRP $4000 (Jotunheim R bundle)).",
+      "quote": "Weak, limp bass is the killing blow for what is an otherwise highly resolving and decently-tuned earspeaker.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sennheiser HD 560S",
+      "rawName": "Sennheiser HD560S",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone A, technicalities B-, ★ value) with a neutral signature (Open Circumaural) (MSRP $200).",
+      "quote": "Well-balanced tonality with good bass extension, just slightly hot in the upper-mids and treble.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "AKG K371",
+      "rawName": "AKG K371",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone A, technicalities B-, ★★ value) with a harman signature (Closed Circumaural) (MSRP $150).",
+      "quote": "Expectedly Harman tuning but lacks a bit of bite in the upper midrange for \"true Harman\".",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Focal Stellia",
+      "rawName": "Focal Stellia",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone C+, technicalities S-) with a neutral with bass boost signature (Closed Circumaural) (MSRP $3000).",
+      "quote": "\"Harman-inspired\" tuning works decently well, though a myriad of small quirks ultimately screws its tonal balance.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Stax SR-L700",
+      "rawName": "Stax SR-L700",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone C+, technicalities S-) with a neutral signature (Open Circumaural) (MSRP $1570+975 (SRM-353X)).",
+      "quote": "Probably the most balanced tuning of the L-series, with the usual e-stat technicalities.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "ZMF Verite Closed",
+      "rawName": "ZMF Verite Closed (Hybrid Universe pads)",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone C+, technicalities S-) with a neutral with bass boost signature (Closed Circumaural) (MSRP $2500).",
+      "quote": "Far more tonally balanced than its open counterpart, whilst retaining its reverberant staging.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audio-Technica ATH-ADX5000",
+      "rawName": "Audio Technica ATH-ADX5000",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone C+, technicalities S-) with a bright neutral signature (Open Circumaural) (MSRP $2000).",
+      "quote": "Clean, open sound reminsicent of the HD800, with a bit of midbass bloat and upper midrange shoutiness.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "STAX SR-L300 Limited",
+      "rawName": "Stax SR-L300 Limited",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone C+, technicalities S-) with a neutral signature (Open Circumaural) (MSRP $900+975 (SRM-353X)).",
+      "quote": "Honkier version of the standard L300.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "HIFIMAN Deva (wired)",
+      "rawName": "Hifiman Deva",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone S-, technicalities C+, ★ value) with a neutral signature (Open Circumaural) (MSRP $300).",
+      "quote": "Probably the most \"mellow\" of the Hifiman planars with the least resolving ability.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Shure SRH440",
+      "rawName": "Shure SRH440",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone S-, technicalities C+, ★★★ value) with a harman signature (Closed Circumaural) (MSRP $100).",
+      "quote": "Closest thing to Harman thus far. Comes with a small upper treble spike and lacking raw resolution.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sony MDR-SA5000",
+      "rawName": "Sony MDR-SA5000 (w/ AliExpress replacement pads)",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B, technicalities B+) with a bass-rolled neutral signature (Open Circumaural) (MSRP $400 (MDR-SA5000)).",
+      "quote": "Surprisingly competent for a decades-old set. Midrange is a little uneven but beats out many other modern TOTLs.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "HIFIMAN HE-5",
+      "rawName": "Hifiman HE5",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B+, technicalities B) with a neutral signature (Open Circumaural) (MSRP $600 (HE5)).",
+      "quote": "The original Hifiman. Midrange is a little too scooped out but remains competitive even today.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Denon AH-D5000",
+      "rawName": "Denon AH-D5000",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B, technicalities B+) with a v-shaped signature (Semi-open Circumaural) (MSRP $480 (AH-D5000)).",
+      "quote": "The usual \"Foster biodyna dynamics\" are at play here, with a somewhat fatiguing treble spike.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Kennerton Odin",
+      "rawName": "Kennerton Odin",
+      "nameConfidence": "low",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B+, technicalities B) with a warm neutral signature (Open Circumaural) (MSRP $3600 (Bog Oak)).",
+      "quote": "Generally \"okay\" tonality with some odd dips here and there. Lacking serious extension for a planar.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Kennerton Thror mk2",
+      "rawName": "Kennerton Thror",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B+, technicalities B) with a warm neutral signature (Open Circumaural) (MSRP $3600 (Bog Oak)).",
+      "quote": "Kind of a \"nothing headphone\"; not bad, not great, just good enough to be okay.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Focal Radiance",
+      "rawName": "Focal Radiance",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B+, technicalities B) with a harman neutral signature (Closed Circumaural) (MSRP $1300).",
+      "quote": "Probably the best of the closed-back Focals. Some tuning refinements over the Stellia, though technically limited.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sennheiser HD 660 S",
+      "rawName": "Sennheiser HD660S",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B, technicalities B+, ★ value) with a warm neutral signature (Open Circumaural) (MSRP $400).",
+      "quote": "An even darker HD6X0. A comparatively muffled mess just barely propped up by its decent resolving ability.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Beyerdynamic DT 880",
+      "rawName": "Beyerdynamic DT880 Pro (32Ω)",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B+, technicalities B, ★ value) with a warm v-shape signature (Open Circumaural) (MSRP $350).",
+      "quote": "Certainly a \"mini-HD800\" in terms of tonality only, however still far inferior in technical ability.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "HarmonicDyne ZEUS",
+      "rawName": "HarmonicDyne Zeus",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B+, technicalities B, ★ value) with a warm signature (Open Circumaural) (MSRP $350).",
+      "quote": "A rare combination of a warm-focused tonality with decent technicalities.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Focal Clear Mg",
+      "rawName": "Focal Clear Mg",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B-, technicalities A-) with a warm neutral signature (Open Circumaural) (MSRP $1500).",
+      "quote": "Lacks upper mids and resolution compared to its predecessor.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audeze LCD-XC",
+      "rawName": "Audeze LCD-XC",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B-, technicalities A-) with a \"balanced\" signature (Closed Circumaural) (MSRP $1300).",
+      "quote": "Definitely the least Audeze-sounding Audeze. A little quirky tonally, but nothing too offensive.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Focal Elear",
+      "rawName": "Focal Elear",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B-, technicalities A-) with a warm neutral signature (Open Circumaural) (MSRP $1000).",
+      "quote": "Subdued upper midrange with the odd treble spike makes this a weird headphone to listen to.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sennheiser Momentum 3 Wireless",
+      "rawName": "Sennheiser Momentum 3 Wireless",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone A-, technicalities B-, ★ value) with a u-shaped signature (Closed Circumaural) (MSRP $350).",
+      "quote": "A massive improvement over its predecessor. Limited resolution and potentially intense tonality.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Meze Empyrean",
+      "rawName": "Meze Empyrean",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B, technicalities B) with a warm signature (Open Circumaural) (MSRP $3000).",
+      "quote": "Bland and unexciting tuning with compressed staging and generally underperforming technicalities.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Beyerdynamic DT990 Pro (250Ω)",
+      "rawName": "Beyerdynamic DT990 Pro (250Ω)",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B, technicalities B, ★ value) with a v-shaped signature (Open Circumaural) (MSRP $200).",
+      "quote": "Pretty bog-standard V-shaped response with forward upper-midrange and decently high resolution.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "beyerdynamic TYGR 300R",
+      "rawName": "Beyerdynamic TYGR 300 R",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B, technicalities B, ★ value) with a v-shaped signature (Open Circumaural) (MSRP $200).",
+      "quote": "Very reminiscent of the DT990.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "HIFIMAN HE400i (2020)",
+      "rawName": "Hifiman HE400i (2020)",
+      "nameConfidence": "high",
+      "grade": "B",
+      "verdict": "Crinacle ranks it B (tone B, technicalities B, ★★ value) with a neutral signature (Open Circumaural) (MSRP $170).",
+      "quote": "Well-executed reference-ish tuning with a slight treble emphasis.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "HIFIMAN HE-500",
+      "rawName": "Hifiman HE500 (w/ FocusPad-A)",
+      "nameConfidence": "high",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone B+, technicalities B-) with a warm neutral signature (Open Circumaural) (MSRP $900 (HE500)).",
+      "quote": "Perhaps the warmest of the Hifiman lineup. Not the most resolving.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sivga Phoenix",
+      "rawName": "Sivga Phoenix",
+      "nameConfidence": "high",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone B+, technicalities B-, ★ value) with a warm neutral signature (Open Circumaural) (MSRP $300).",
+      "quote": "A fairly competent warm-neutral monitor slightly held back by limited detail retrieval.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audeze LCD-24",
+      "rawName": "Audeze LCD-24",
+      "nameConfidence": "high",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone C, technicalities S-) with a warm neutral signature (Open Circumaural) (MSRP $3500).",
+      "quote": "A slight tonal improvement over the LCD-4, but also comes with a slight hit in resolution.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Abyss Diana V2",
+      "rawName": "Abyss Diana Phi Abyss Diana V2",
+      "nameConfidence": "high",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone C, technicalities A+) with a warm signature (Open Circumaural) (MSRP $3000 (V2) 4000 (Phi)).",
+      "quote": "Needs a little more upper midrange to balance out the honkiness. Good dynamic performance especially in the bass.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audeze LCD-X (2021)",
+      "rawName": "Audeze LCD-X (2021)",
+      "nameConfidence": "high",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone C, technicalities A+) with a warm neutral signature (Open Circumaural) (MSRP $1200).",
+      "quote": "Tonally, a massive improvement over the previous version(s) though with the usual pitfalls of the Audeze house sound.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Denon AH-D5200",
+      "rawName": "Denon AH-D5200",
+      "nameConfidence": "high",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone B-, technicalities B) with a warm neutral signature (Closed Circumaural) (MSRP $700).",
+      "quote": "Probably the least wonky of the new Denons. Suffers from some mid-bass bloat.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Beyerdynamic DT1990 Pro",
+      "rawName": "Beyerdynamic DT1990 Pro (Balanced pads)",
+      "nameConfidence": "high",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone B-, technicalities B) with a warm v-shape signature (Open Circumaural) (MSRP $600).",
+      "quote": "An intense sound given its significant treble boost, but countered by a smooth lower-midrange bump.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audio-Technica ATH-M70x",
+      "rawName": "Audio Technica ATH-M70x",
+      "nameConfidence": "high",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone B, technicalities B-, ★ value) with a neutral signature (Closed Circumaural) (MSRP $300).",
+      "quote": "The most neutral of the M-series. Good tonality but still suffers from narrow imaging.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sennheiser HD25",
+      "rawName": "Sennheiser HD25 Plus",
+      "nameConfidence": "high",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone B, technicalities B-, ★ value) with a u-shaped signature (Closed Supra-aural) (MSRP $200).",
+      "quote": "Punchy, energetic sound with decently balanced tonality. A pretty good beat-tracking monitor.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audeze LCD-GX",
+      "rawName": "Audeze LCD-GX",
+      "nameConfidence": "high",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone C, technicalities A) with a warm neutral signature (Open Circumaural) (MSRP $900).",
+      "quote": "As a gaming headphone, possibly the best technically though with the usual pitfalls of the Audeze house sound.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audeze LCD-2 Closed Back",
+      "rawName": "Audeze LCD-2 Closed-back",
+      "nameConfidence": "high",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone C, technicalities A) with a warm v-shape signature (Closed Circumaural) (MSRP $900).",
+      "quote": "Not the worst Audeze in terms of tonality, but its tuning still doesn't live up to its technical capabilities.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audeze LCD-2 Classic",
+      "rawName": "Audeze LCD-2 Classic",
+      "nameConfidence": "high",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone C, technicalities A) with a warm signature (Open Circumaural) (MSRP $800).",
+      "quote": "Classic Audeze combo of solid resolution with a confusing lack of upper midrange.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "BLON B20",
+      "rawName": "BLON B20",
+      "nameConfidence": "high",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone A, technicalities C, ★ value) with a warm neutral signature (Open Circumaural) (MSRP $450).",
+      "quote": "Basically a darker planar HD6X0, with equally closed-in staging and lacking the final resolving edge.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Koss ESP95X",
+      "rawName": "Massdrop x Koss ESP/95X",
+      "nameConfidence": "high",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone C, technicalities A, ★ value) with a mid-centric signature (Open Circumaural) (MSRP $450).",
+      "quote": "Good resolving ability and imaging, marred by its odd and honky midrange.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Koss KSC75",
+      "rawName": "Koss KSC75",
+      "nameConfidence": "high",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone A, technicalities C, ★★★ value) with a bass-rolled neutral signature (Open Clip-on) (MSRP $20).",
+      "quote": "Non-existent sub-bass and poor resolution. But it's so well-tuned you may not even care.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Apple AirPods Max",
+      "rawName": "Apple AirPods Max",
+      "nameConfidence": "high",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone B+, technicalities C+) with a u-shaped signature (Closed Circumaural) (MSRP $550).",
+      "quote": "Great tonality, sub-focused bass emphasis, bassy without being muddy. Average imaging and resolution.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "ASTRO A40 TR",
+      "rawName": "ASTRO A40 TR",
+      "nameConfidence": "low",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone B+, technicalities C+, ★ value) with a warm v-shape signature (Closed Circumaural) (MSRP $150).",
+      "quote": "Middling technicalities, but for a gaming headphone its tonality is surprisingly balanced.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "ZMF Verite",
+      "rawName": "ZMF Verite (Pref. lambskin Verite pads)",
+      "nameConfidence": "high",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone C-, technicalities S-) with a warm signature (Open Circumaural) (MSRP $2500).",
+      "quote": "Excellent resolution unfortunately marred by suppressed harmonics and a harsh upper-midrange.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "ES Lab ES-1a",
+      "rawName": "ES Lab ES-1a",
+      "nameConfidence": "low",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone C-, technicalities S-) with a bright neutral signature (Open Circumaural) (MSRP $2050).",
+      "quote": "Seems inspired by the tuning of the SR-009 with some minor improvements, though not enough to call it \"good\".",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audio-Technica ATH-M40x",
+      "rawName": "Audio Technica ATH-M40x",
+      "nameConfidence": "high",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone A-, technicalities C, ★ value) with a neutral with bass boost signature (Closed Circumaural) (MSRP $100).",
+      "quote": "Well-balanced tonality with disappointing detailing and claustrophobic imaging.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Moondrop Void",
+      "rawName": "Moondrop Void",
+      "nameConfidence": "high",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone A-, technicalities C, ★ value) with a warm neutral signature (Open Circumaural) (MSRP $200).",
+      "quote": "Slightly midbass/lower-mid emphasised with good tonal balance, if rather \"cheap\"-sounding.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Fostex TR80",
+      "rawName": "Fostex TR80",
+      "nameConfidence": "low",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone A+, technicalities C-) with a neutral with bass boost signature (Open Circumaural) (MSRP $220 (TR80)).",
+      "quote": "A very well-tuned monitor-style headphone, if heavily bottlenecked by narrow imaging and blunt hits.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "E-Mu Walnut",
+      "rawName": "E-MU Walnut",
+      "nameConfidence": "high",
+      "grade": "B-",
+      "verdict": "Crinacle ranks it B- (tone B-, technicalities B-, ★ value) with a \"balanced\" signature (Closed Circumaural) (MSRP $100).",
+      "quote": "Tonality is somewhat off with peaks and dips here and there, but overall not a bad sounding headphone.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Acoustic Research AR-H1",
+      "rawName": "Acoustic Research AR-H1",
+      "nameConfidence": "high",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone C+, technicalities B) with a neutral signature (Open Circumaural) (MSRP $600 (AR-H1)).",
+      "quote": "A tempered, almost bright-leaning planar (but not quite). Decent tonality and technical ability.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Beyerdynamic T5p",
+      "rawName": "Beyerdynamic T5p (1st Gen)",
+      "nameConfidence": "high",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone C+, technicalities B) with a v-shaped signature (Closed Circumaural) (MSRP $750 (T5P)).",
+      "quote": "Choppy midrange response is its biggest turnoff, but otherwise a decent V-shaped headphone.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Timsok TS-1024",
+      "rawName": "Timsok TS-1024",
+      "nameConfidence": "low",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone C+, technicalities B) with a warm v-shape signature (Open Circumaural) (MSRP $2000).",
+      "quote": "Somewhat warm midrange plagued with sharp and offensive treble.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sendy Aiva",
+      "rawName": "Sendy Aiva",
+      "nameConfidence": "high",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone B, technicalities C+) with a warm neutral signature (Open Circumaural) (MSRP $600).",
+      "quote": "A slightly worse-tuned B20, kinda.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "AKG K712 PRO",
+      "rawName": "AKG K712 Pro",
+      "nameConfidence": "high",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone C+, technicalities B) with a warm signature (Open Circumaural) (MSRP $500).",
+      "quote": "Sizeable mid-bass bloat that's barely reigned in by an equally sizeable upper-midrange emphasis.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sennheiser HD 599",
+      "rawName": "Sennheiser HD599",
+      "nameConfidence": "high",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone B, technicalities C+, ★ value) with a v-shaped signature (Open Circumaural) (MSRP $200).",
+      "quote": "A little too sharp, a little too midbassy, but overall not the most offensive headphone out there.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "AKG K7XX",
+      "rawName": "Massdrop x AKG K7XX",
+      "nameConfidence": "high",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone C+, technicalities B, ★ value) with a warm signature (Open Circumaural) (MSRP $200).",
+      "quote": "A more bloated-sounding K712.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "HarmonicDyne Helios",
+      "rawName": "HarmonicDyne Helios",
+      "nameConfidence": "low",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone B, technicalities C+, ★ value) with a v-shaped signature (Open Circumaural) (MSRP $180).",
+      "quote": "Lack of bass extension is its biggest dealbreaker of what would be an otherwise solid headphone.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Fostex TH7",
+      "rawName": "Fostex TH7",
+      "nameConfidence": "low",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone B+, technicalities C) with a neutral signature (Closed Circumaural) (MSRP $80 (TH7)).",
+      "quote": "Fairly neutral monitor-style headphone with poor imaging and detail retrieval.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sony MDR-Z1R",
+      "rawName": "Sony MDR-Z1R",
+      "nameConfidence": "high",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone C, technicalities B+) with a v-shaped signature (Closed Circumaural) (MSRP $1800).",
+      "quote": "Holes in the midrange. Big spike in the treble. Strangely disjointed soundstage. Decently resolving.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Fostex TH900",
+      "rawName": "Fostex TH900",
+      "nameConfidence": "high",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone C-, technicalities A) with a v-shaped signature (Closed Circumaural) (MSRP $1600).",
+      "quote": "Spicy sibilance and bloated bass are disappointments in what is otherwise an extremely dynamic headphone.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "DCA Aeon 2 Closed",
+      "rawName": "DCA Aeon 2 Closed",
+      "nameConfidence": "low",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone B+, technicalities C) with a u-shaped signature (Closed Circumaural) (MSRP $900).",
+      "quote": "Passable tonality with dulled and blunted transients make for lacklustre detailing.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Stax SR-009",
+      "rawName": "Stax SR-009 / SR-009S",
+      "nameConfidence": "high",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone D+, technicalities S+) with a bright neutral signature (Open Circumaural) (MSRP $4325+975 (SRM-353X)).",
+      "quote": "Detail and resolution worthy of being called \"the best\", marred by the tonally-off midrange.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audeze LCD-4",
+      "rawName": "Audeze LCD-4",
+      "nameConfidence": "high",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone D+, technicalities S) with a warm signature (Open Circumaural) (MSRP $4000+3000 (GS-X mk2)).",
+      "quote": "A classic example of a highly resolving yet wonky sounding headphone. Needs more upper midrange.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sony MDR-MA900",
+      "rawName": "Sony MDR-MA900",
+      "nameConfidence": "high",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone C+, technicalities B-) with a bass-rolled neutral signature (Earspeaker) (MSRP $200 (MDR-MA900)).",
+      "quote": "Imaging as expected of an earspeaker configuration; surprisingly good tonality and expected bad extension.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Fostex TH909",
+      "rawName": "Fostex TH909",
+      "nameConfidence": "high",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone C-, technicalities A-) with a v-shaped signature (Open Circumaural) (MSRP $1800).",
+      "quote": "A slightly more balanced TH900 with similar sibilance issues.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Neumann NDH20",
+      "rawName": "Neumann NDH 20",
+      "nameConfidence": "high",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone C+, technicalities B-) with a neutral with bass boost signature (Closed Circumaural) (MSRP $500).",
+      "quote": "Feels like an attempt at Harman but ultimately missing the mark in the midrange tuning.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "1MORE MK801",
+      "rawName": "1MORE MK801",
+      "nameConfidence": "high",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone A-, technicalities C-, ★ value) with a neutral with bass boost signature (Closed Circumaural) (MSRP $80).",
+      "quote": "Smooth, generally pleasing tonality throughout with no offensive characteristics.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Rosson RAD-0",
+      "rawName": "Rosson RAD-0",
+      "nameConfidence": "low",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone C, technicalities B) with a warm neutral signature (Open Circumaural) (MSRP $2600).",
+      "quote": "Middling technicalities with suppressed upper midrange.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sony MDR-1AM2",
+      "rawName": "Sony MDR-1AM2",
+      "nameConfidence": "high",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone B, technicalities C) with a warm u-shape signature (Closed Circumaural) (MSRP $300).",
+      "quote": "Harman-ish tuning with a strong mid-bass presence and piercing upper treble response.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sennheiser HD579",
+      "rawName": "Sennheiser HD579",
+      "nameConfidence": "low",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone B, technicalities C, ★ value) with a warm neutral signature (Open Circumaural) (MSRP $200).",
+      "quote": "More or less a HD599 with slightly worse resolution.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Abyss AB-1266",
+      "rawName": "Abyss AB-1266 Phi CC Abyss AB-1266 Phi",
+      "nameConfidence": "high",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone D+, technicalities A+) with a \"balanced\" signature (Open Circumaural) (MSRP $Replaced with TC).",
+      "quote": "Sinfully addictive bass and treble reponse, but the midrange tonality needs a lot of work.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audeze LCD-MX4",
+      "rawName": "Audeze LCD-MX4",
+      "nameConfidence": "high",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone D+, technicalities A+) with a warm signature (Open Circumaural) (MSRP $3000).",
+      "quote": "Classic Audeze combo of solid resolution with a confusing lack of upper midrange.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "HIFIMAN HE-5",
+      "rawName": "Hifiman HE5SE",
+      "nameConfidence": "high",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone D+, technicalities A) with a v-shaped signature (Open Circumaural) (MSRP $700).",
+      "quote": "Strong contender for an excellent headphone, if not for the inexplicable hole in the mids.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sony MDR-CD380",
+      "rawName": "Sony MDR-CD380",
+      "nameConfidence": "low",
+      "grade": "C+",
+      "verdict": "Crinacle ranks it C+ (tone C+, technicalities C+) with a df-neutral signature (Closed Circumaural) (MSRP $50 (MDR-CD380)).",
+      "quote": "Shouty and thin-sounding, though surprisingly competent imaging ability.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Stax SR-X Mk2",
+      "rawName": "Stax SR-X Mk2",
+      "nameConfidence": "low",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C, technicalities B-) with a bass-rolled neutral signature (Open Circumaural) (MSRP $Discontinued).",
+      "quote": "Surprisingly good tonal balance marred by its complete absence of bass response.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audio-Technica ATH-A900X",
+      "rawName": "Audio Technica ATH-A900X",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C, technicalities B-) with a warm with bass boost signature (Closed Circumaural) (MSRP $Discontinued 300 (Replaced by A990Z)).",
+      "quote": "Subdued upper mids and enhanced mid-bass. If anything else, this is a headphone that wouldn't fatigue.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Beyerdynamic DT860",
+      "rawName": "Beyerdynamic DT860",
+      "nameConfidence": "low",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone B-, technicalities C) with a bright signature (Open Circumaural) (MSRP $Discontinued 250 (Replaced by DT880)).",
+      "quote": "Upwards-sloping bright and lean sound.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Focal Celestee",
+      "rawName": "Focal Celestee",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone B-, technicalities C) with a neutral with bass boost signature (Closed Circumaural) (MSRP $1000 (Celestee)).",
+      "quote": "Thin and uneven mids with narrow, congested staging.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "AudioQuest NightHawk",
+      "rawName": "AudioQuest NightHawk",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C, technicalities B-) with a warm bassy signature (Open Circumaural) (MSRP $600 (Nighthawk)).",
+      "quote": "Thick, grand, heavy... muddy.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audio Technica ATH-AWAS",
+      "rawName": "Audio Technica ATH-AWAS",
+      "nameConfidence": "low",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C, technicalities B-) with a mid-centric signature (Closed Circumaural) (MSRP $1400).",
+      "quote": "Rolled off bass with somewhat suppressed treble. Not the worst but far from being tonally balanced.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "DCA Aeon 2 Noire",
+      "rawName": "DCA Aeon 2 Open DCA Aeon 2 Noire",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone B-, technicalities C) with a warm v-shape signature (Open Circumaural) (MSRP $900).",
+      "quote": "Arguably the best tuned DCA headphone with a slightly thick midrange and least offensive treble.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "beyerdynamic DT 1770 Pro MKII",
+      "rawName": "Beyerdynamic DT1770 Pro",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C, technicalities B-) with a u-shaped signature (Closed Circumaural) (MSRP $600).",
+      "quote": "A slightly more balanced version of the old DT770.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Bose QuietComfort 35 II (passive)",
+      "rawName": "Bose QuietComfort 35 II (QC35)",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone B-, technicalities C) with a v-shaped signature (Closed Circumaural) (MSRP $350).",
+      "quote": "The typical mainstream V-shape response with middling technicalities.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Harman Kardon FLY ANC",
+      "rawName": "Harman Kardon FLY ANC",
+      "nameConfidence": "low",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone B-, technicalities C) with a neutral with bass boost signature (Closed Circumaural) (MSRP $250).",
+      "quote": "Peaky, mid-bassy attempt at a Harman tuning.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Koss SP540",
+      "rawName": "Koss SP540",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone B-, technicalities C) with a v-shaped signature (Closed Circumaural) (MSRP $150).",
+      "quote": "The typical mainstream V-shape response with middling technicalities.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audio Technica ATH-AD1000X",
+      "rawName": "Audio Technica ATH-AD1000X",
+      "nameConfidence": "low",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C-, technicalities B) with a \"balanced\" signature (Open Circumaural) (MSRP $500 (ATH-AD1000X)).",
+      "quote": "Quirky tuning with imbalanced upper harmonics. Similar to that of the AD2000.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audio-Technica ATH-AD2000X",
+      "rawName": "Audio Technica ATH-AD2000",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C-, technicalities B) with a \"balanced\" signature (Open Circumaural) (MSRP $750 (AD2000)).",
+      "quote": "Quirky tuning with imbalanced upper harmonics. Similar to that of the AD1000X.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "AKG K872",
+      "rawName": "AKG K872 Pro",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C-, technicalities B) with a \"balanced\" signature (Closed Circumaural) (MSRP $1500).",
+      "quote": "Strange pad shape makes for wildly-varying bass. Generally a tonally weird headphone.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "ZMF Atticus",
+      "rawName": "ZMF Atticus (Suede Eikon pads)",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C-, technicalities B) with a bassy signature (Semi-open Circumaural) (MSRP $1100).",
+      "quote": "Bloated bass with wonky midrange, a killer combination.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sony MDR-Z7M2",
+      "rawName": "Sony MDR-Z7M2",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C-, technicalities B) with a u-shaped signature (Closed Circumaural) (MSRP $900).",
+      "quote": "Sounds like a \"Z1R-lite\", with arguably better bass response but peakier treble.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audeze LCD-3",
+      "rawName": "Audeze LCD-3",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone D, technicalities A+) with a mid-centric signature (Open Circumaural) (MSRP $1950).",
+      "quote": "Classic Audeze combo of solid resolution with a confusing lack of upper midrange. Now with extra honk.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audeze LCD-1",
+      "rawName": "Audeze LCD-1",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone B+, technicalities D+) with a neutral signature (Open Circumaural) (MSRP $400).",
+      "quote": "The best tuned Audeze headphone with the worst resolution.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Fostex TH500RP",
+      "rawName": "Fostex TH500 (w/ worn pads)",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C, technicalities C+) with a \"balanced\" signature (Open Circumaural) (MSRP $700 (TH500)).",
+      "quote": "An interesting oldschool planar, vastly outpaced by today's market.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Philips SHP9500",
+      "rawName": "Philips SHP9500",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C, technicalities C+) with a bright signature (Open Circumaural) (MSRP $Discontinued 80 (Replaced by SHP9600)).",
+      "quote": "Decent imaging chops held back by its intensely bright presentation and below-average resolution.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "DCA Ether C Flow 1.1",
+      "rawName": "DCA Ether C Flow 1.1",
+      "nameConfidence": "low",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C, technicalities C+) with a neutral with bass boost signature (Open Circumaural) (MSRP $1600).",
+      "quote": "Sounds like something went wrong with the upper-midrange tuning.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Campfire Cascade",
+      "rawName": "Campfire Cascade",
+      "nameConfidence": "low",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C+, technicalities C) with a bassy signature (Closed Circumaural) (MSRP $800).",
+      "quote": "Competent midrange tuning let down by a loose, bloated bass response.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Grado The Hemp Headphone",
+      "rawName": "Grado The Hemp Headphone",
+      "nameConfidence": "low",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C, technicalities C+) with a bass-rolled neutral signature (Open Circumaural) (MSRP $420).",
+      "quote": "Nothing much different from your average Grado; paid extra for the novelty, not the sonic improvements.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Bose Noise Cancelling Headphones 700",
+      "rawName": "Bose Noise Cancelling Headphones 700",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C+, technicalities C) with a neutral with bass boost signature (Closed Circumaural) (MSRP $400).",
+      "quote": "More subdued presentation compared to its precedessor, almost to the point of being boring.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audeze Mobius (default preset)",
+      "rawName": "Audeze Mobius (Default preset)",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C, technicalities C+) with a warm neutral signature (Closed Circumaural) (MSRP $300).",
+      "quote": "Not the total lack of upper midrange I expected, but a hole in the upper mids nonetheless.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Grado GW100",
+      "rawName": "Grado GW100",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C, technicalities C+) with a \"balanced\" signature (Open Supra-aural) (MSRP $250).",
+      "quote": "Not the worst Grado, but you could still do better than Grado.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Master &amp; Dynamic MH40",
+      "rawName": "Master &amp; Dynamic MH40",
+      "nameConfidence": "low",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C, technicalities C+) with a bassy signature (Closed Circumaural) (MSRP $250).",
+      "quote": "Too much bass, and not the good kind either.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Beyerdynamic DT 770 Pro",
+      "rawName": "Beyerdynamic DT770 Pro",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C, technicalities C+) with a u-shaped signature (Closed Circumaural) (MSRP $160).",
+      "quote": "Sounds like a parody of Harman with its excessive 200Hz notch and overblown treble.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "AKG K240 Studio",
+      "rawName": "AKG K240 Studio",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C, technicalities C+) with a mid-centric signature (Open Circumaural) (MSRP $70).",
+      "quote": "Abysmal bass extension with overly-boosted lower mids makes for a strange listening experience.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Meze 99 Classics",
+      "rawName": "Meze 99 Classics",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C-, technicalities B-) with a bassy signature (Closed Circumaural) (MSRP $310).",
+      "quote": "Just excessive bass that unfortunately screws with the tonality of the mids.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audio Technica ATH-A2000X",
+      "rawName": "Audio Technica ATH-A2000X",
+      "nameConfidence": "low",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone D+, technicalities B) with a \"balanced\" signature (Closed Circumaural) (MSRP $500 (ATH-A2000X)).",
+      "quote": "Somewhat mid-centric runing that's far too coloured for its own good.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Denon AH-D9200",
+      "rawName": "Denon AH-D9200",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone D+, technicalities B) with a mid-centric signature (Closed Circumaural) (MSRP $1600).",
+      "quote": "Generally weird and wonky tuning that can also get rather harsh at times.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "ZMF Eikon",
+      "rawName": "ZMF Eikon (Lambskin Eikon pads)",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone D+, technicalities B) with a bright signature (Semi-open Circumaural) (MSRP $1400).",
+      "quote": "Hole in the mids with a sharp piercing peak in the treble.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Denon AH-D7200",
+      "rawName": "Denon AH-D7200",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone D+, technicalities B) with a mid-centric signature (Closed Circumaural) (MSRP $1000).",
+      "quote": "Generally weird and wonky tuning that can also get rather harsh at times.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "MrSpeakers Aeon Flow",
+      "rawName": "MrSpeakers Aeon Flow",
+      "nameConfidence": "low",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C, technicalities C) with a warm signature (Open Circumaural) (MSRP $Discontinued 800 (Replaced by Aeon 2)).",
+      "quote": "Reminds of the NightHawk a bit, except with far worse resolution.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "DCA Ether 2",
+      "rawName": "DCA Ether 2",
+      "nameConfidence": "low",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C, technicalities C) with a \"balanced\" signature (Open Circumaural) (MSRP $2300).",
+      "quote": "Hard to explain what exactly this sounds like, but the first thing you'd hear is probably the treble roll-off.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "DCA Ether Flow 1.1",
+      "rawName": "DCA Ether Flow 1.1",
+      "nameConfidence": "low",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C, technicalities C) with a warm v-shape signature (Open Circumaural) (MSRP $1800).",
+      "quote": "Has elements of the DT880/HD800 tuning, with extra note thickness and more piercing treble.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audeze SINE DX",
+      "rawName": "Audeze Sine DX",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C, technicalities C) with a mid-centric signature (Closed Supra-aural) (MSRP $600).",
+      "quote": "Decent bass extension, honky midrange presentation.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "B&amp;W PX",
+      "rawName": "B&amp;W PX",
+      "nameConfidence": "low",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C, technicalities C) with a warm signature (Closed Circumaural) (MSRP $400).",
+      "quote": "Warm, bloated sound with a largely muffled midrange.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "V-MODA Crossfade 2 Wireless",
+      "rawName": "V-MODA Crossfade 2 Wireless",
+      "nameConfidence": "low",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C, technicalities C) with a v-shaped signature (Closed Circumaural) (MSRP $330).",
+      "quote": "The typical mainstream V-shape response with middling technicalities.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audio-Technica ATH-MSR7b",
+      "rawName": "Audio Technica ATH-MSR7b",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C, technicalities C) with a v-shaped signature (Closed Circumaural) (MSRP $250).",
+      "quote": "Thin-sounding yet bloated at the same time. Intense upper midrange.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Koss Porta Pro",
+      "rawName": "Koss Portapro",
+      "nameConfidence": "high",
+      "grade": "C",
+      "verdict": "Crinacle ranks it C (tone C, technicalities C) with a bass-rolled warm signature (Open Supra-aural) (MSRP $80).",
+      "quote": "The KSC75 is better.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Stax SR-3",
+      "rawName": "Stax SR-3",
+      "nameConfidence": "high",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone C+, technicalities C-) with a bass-rolled neutral signature (Open Circumaural) (MSRP $500 (SR-3)).",
+      "quote": "Similarly tuned to the SR-X, albeit with a much more blunted presentation.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audio Technica ATH-A1000Z",
+      "rawName": "Audio Technica ATH-A1000Z",
+      "nameConfidence": "low",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone C-, technicalities C+) with a neutral with bass boost signature (Closed Circumaural) (MSRP $400 (ATH-1000Z)).",
+      "quote": "Odd upper-midrange tuning results in a scratchy, uneven presentation.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audio-Technica ATH-A2000Z",
+      "rawName": "Audio Technica ATH-A2000Z",
+      "nameConfidence": "high",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone C-, technicalities C+) with a neutral with bass boost signature (Closed Circumaural) (MSRP $650 (ATH-A2000Z)).",
+      "quote": "Odd upper-midrange tuning results in a scratchy, uneven presentation.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audeze LCD-X",
+      "rawName": "Audeze LCD-X (Pre-20201)",
+      "nameConfidence": "high",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone D-, technicalities A+) with a neutral signature (Open Circumaural) (MSRP $1700).",
+      "quote": "Probably the worst tuned Audeze available. At least, this specific unit is.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audio-Technica ATH-M50x",
+      "rawName": "Audio Technica ATH-M50x",
+      "nameConfidence": "high",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone C+, technicalities C-) with a neutral with bass boost signature (Closed Circumaural) (MSRP $150).",
+      "quote": "The headphone that the elites love to hate... isn't that bad. An alright starter headphone, if generally overrated.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Grado SR60",
+      "rawName": "Grado SR60e / SR80e",
+      "nameConfidence": "high",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone C-, technicalities C+) with a bright neutral signature (Open Supra-aural) (MSRP $80 (SR60e)).",
+      "quote": "Forward, almost nasally midrange with an intense treble response.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sony MDR-V6",
+      "rawName": "Sony MDR-V6",
+      "nameConfidence": "high",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone B+, technicalities D) with a df-neutral with bass boost signature (Closed Supra-aural) (MSRP $Discontinued 200 (Replaced by M1ST)).",
+      "quote": "Somewhat thin-sound and shouty but overall a very well-tuned set, if extremely blunted and narrow in imaging.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "AKG K812",
+      "rawName": "AKG K812",
+      "nameConfidence": "high",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone D+, technicalities B-) with a bright signature (Open Circumaural) (MSRP $1500).",
+      "quote": "Sharp, shrill, piercing, sibilant, and all other synonyms.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Focal Elegia",
+      "rawName": "Focal Elegia",
+      "nameConfidence": "high",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone D+, technicalities B-) with a neutral with bass boost signature (Closed Circumaural) (MSRP $900).",
+      "quote": "Severe lack of upper midrange and treble results in a muffled, dulled tone.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "DCA Voce",
+      "rawName": "DCA Voce",
+      "nameConfidence": "high",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone D-, technicalities A) with a \"balanced\" signature (Open Circumaural) (MSRP $3300).",
+      "quote": "Wonky, honky, whatever you want to call it. Probably the worst e-stat I've heard.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Oppo PM3",
+      "rawName": "Oppo PM-3",
+      "nameConfidence": "high",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone B, technicalities D) with a v-shaped signature (Closed Circumaural) (MSRP $500 (PM-3)).",
+      "quote": "Fairly well-tuned, if very technically limited in both resolution and imaging performance.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "QUAD Era-1",
+      "rawName": "Quad ERA-1",
+      "nameConfidence": "high",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone D, technicalities B) with a mid-centric signature (Open Circumaural) (MSRP $800).",
+      "quote": "Kind of a \"nothing headphone\"; not the worst thing in the world but no praises either.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Stax SR-40 Electret SR4 Adapter",
+      "rawName": "Stax SR-40",
+      "nameConfidence": "high",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone C-, technicalities C) with a bass-rolled neutral signature (Open Circumaural) (MSRP $Discontinued).",
+      "quote": "One of the few Stax electrets out there. Not great in tonality nor technical performance.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Shure AONIC 50",
+      "rawName": "Shure Aonic 50",
+      "nameConfidence": "high",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone C-, technicalities C) with a v-shaped signature (Closed Circumaural) (MSRP $400).",
+      "quote": "A parody of the V-shaped response. Scooped mids, hollow sound.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Precide Ergo 2",
+      "rawName": "Precide ERGO 2",
+      "nameConfidence": "high",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone C-, technicalities C) with a bass-rolled neutral signature (Earspeaker) (MSRP $250).",
+      "quote": "Sounds exactly like what it is: a headphone with a broken seal.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audio Technica ATH-M30X",
+      "rawName": "Audio Technica ATH-M30X",
+      "nameConfidence": "low",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone C, technicalities C-) with a neutral with bass boost signature (Closed Circumaural) (MSRP $70).",
+      "quote": "Scooped upper midrange with below average technicalities.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Logitech G Pro X",
+      "rawName": "Logitech G PRO X",
+      "nameConfidence": "high",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone C+, technicalities D+) with a bassy signature (Closed Circumaural) (MSRP $130).",
+      "quote": "Too much bloat going on in the bass, which is a shame given that the rest of the mids are alright.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sony MDR-CD900ST",
+      "rawName": "Sony MDR-CD900ST",
+      "nameConfidence": "high",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone B-, technicalities D) with a warm neutral signature (Closed Supra-aural) (MSRP $Discontinued 200 (Replaced by M1ST)).",
+      "quote": "Solid dark-ish reference tuning, with the usual V6/7506-esque absence of soundstage.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Stax SR-84",
+      "rawName": "Stax SR-84",
+      "nameConfidence": "low",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone B-, technicalities D) with a bass-rolled neutral signature (Open Supra-aural) (MSRP $500 (SR-84)).",
+      "quote": "Surprisingly coherent tuning for what is effectively an unsealed electret. Lacks too much resolution.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audio Technica ATH-L5000",
+      "rawName": "Audio Technica ATH-L5000",
+      "nameConfidence": "low",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone D, technicalities B-) with a \"balanced\" signature (Closed Circumaural) (MSRP $4000).",
+      "quote": "Quirkiness not unexpected of an Audio Technica; arguably their worst closed-back. Sure took an L on this one.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audio-Technica ATH-AWKT",
+      "rawName": "Audio Technica ATH-AWKT",
+      "nameConfidence": "high",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone D, technicalities B-) with a bright signature (Closed Circumaural) (MSRP $1900).",
+      "quote": "AWKT, more like AWKward... I'll leave now.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Koss PRO DJ 100",
+      "rawName": "Koss PRO DJ100",
+      "nameConfidence": "high",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone B-, technicalities D) with a df-neutral with bass boost signature (Closed Supra-aural) (MSRP $80).",
+      "quote": "Good tuning but unfortunately weird pad shape that makes it hard to get the proper bass response.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sony WH-1000XM4",
+      "rawName": "Sony WH-1000XM4",
+      "nameConfidence": "high",
+      "grade": "C-",
+      "verdict": "Crinacle ranks it C- (tone C-, technicalities C-) with a bassy signature (Closed Circumaural) (MSRP $350).",
+      "quote": "Consumer-friendly heavy bass unfortunately bleeds into the mids, but otherwise fine.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Pioneer Monitor 10 II",
+      "rawName": "Pioneer Monitor 10",
+      "nameConfidence": "high",
+      "grade": "D+",
+      "verdict": "Crinacle ranks it D+ (tone D+, technicalities C) with a \"balanced\" signature (Closed Circumaural) (MSRP $150 (Monitor 10)).",
+      "quote": "Slightly honky midrange, weird uneven treble, and hard to get a proper seal.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Klipsch HP3",
+      "rawName": "Klipsch HP3",
+      "nameConfidence": "low",
+      "grade": "D+",
+      "verdict": "Crinacle ranks it D+ (tone D+, technicalities C) with a warm v-shape signature (Open Circumaural) (MSRP $1200).",
+      "quote": "Lots of bass bloat, way too thick-sounding and lacking definition.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Beyerdynamic Amiron Home",
+      "rawName": "Beyerdynamic Amiron Home",
+      "nameConfidence": "high",
+      "grade": "D+",
+      "verdict": "Crinacle ranks it D+ (tone D+, technicalities C) with a warm v-shape signature (Open Circumaural) (MSRP $750).",
+      "quote": "Mid-bass bloated and shouty at the same time.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Logitech G933s",
+      "rawName": "Logitech G933s",
+      "nameConfidence": "low",
+      "grade": "D+",
+      "verdict": "Crinacle ranks it D+ (tone C, technicalities D+) with a bassy signature (Closed Circumaural) (MSRP $200).",
+      "quote": "Too much bloat going on in the bass, which is a shame given that the rest of the mids are alright.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Pioneer SE-Master1",
+      "rawName": "Pioneer SE-Master1",
+      "nameConfidence": "high",
+      "grade": "D+",
+      "verdict": "Crinacle ranks it D+ (tone D, technicalities C+) with a bright signature (Open Circumaural) (MSRP $2500).",
+      "quote": "Treble daggers applied directly into ear.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Beyerdynamic T5 (3rd Gen)",
+      "rawName": "Beyerdynamic T5 (3rd Gen)",
+      "nameConfidence": "high",
+      "grade": "D+",
+      "verdict": "Crinacle ranks it D+ (tone D, technicalities C+) with a bassy signature (Closed Circumaural) (MSRP $1000).",
+      "quote": "Wibbly-wobbly midrange with far too liberal a bass boost makes for a terrible sound.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Drop + THX Panda",
+      "rawName": "Drop + THX Panda",
+      "nameConfidence": "low",
+      "grade": "D+",
+      "verdict": "Crinacle ranks it D+ (tone B-, technicalities D-) with a warm signature (Closed Circumaural) (MSRP $400).",
+      "quote": "Well-tuned but with overpowering mid-bass and extremely dulled transients.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sennheiser HD 559",
+      "rawName": "Sennheiser HD559",
+      "nameConfidence": "high",
+      "grade": "D+",
+      "verdict": "Crinacle ranks it D+ (tone D+, technicalities C-) with a warm signature (Open Circumaural) (MSRP $150).",
+      "quote": "Big, thick sound that muffles everything but the most surface level details.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sony MDR-7510",
+      "rawName": "Sony MDR-7510",
+      "nameConfidence": "low",
+      "grade": "D+",
+      "verdict": "Crinacle ranks it D+ (tone C, technicalities D) with a neutral with bass boost signature (Closed Supra-aural) (MSRP $130 (MDR-7510)).",
+      "quote": "Everything just sounds strange and oddly sharp in tone, but extremely blunted in transients.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "iBasso SR1",
+      "rawName": "iBasso SR1",
+      "nameConfidence": "low",
+      "grade": "D+",
+      "verdict": "Crinacle ranks it D+ (tone D, technicalities C) with a \"balanced\" signature (Open Circumaural) (MSRP $500).",
+      "quote": "Wonky midrange is one thing, but dying after 6kHz is another.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audio-Technica ATH-AD900",
+      "rawName": "Audio Technica ATH-AD900X",
+      "nameConfidence": "high",
+      "grade": "D+",
+      "verdict": "Crinacle ranks it D+ (tone D, technicalities C) with a \"balanced\" signature (Open Circumaural) (MSRP $300).",
+      "quote": "Extremely uneven tuning, mediocre resolution, not a great choice unless you only want a wide soundstage.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audio Technica ATH-A990Z",
+      "rawName": "Audio Technica ATH-A990Z",
+      "nameConfidence": "low",
+      "grade": "D+",
+      "verdict": "Crinacle ranks it D+ (tone D, technicalities C) with a v-shaped signature (Closed Circumaural) (MSRP $220).",
+      "quote": "Odd cup resonance results in wonky imaging. Prefer the original A900X.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Beyerdynamic DT 250 (250 Ohm)",
+      "rawName": "Beyerdynamic DT250",
+      "nameConfidence": "high",
+      "grade": "D+",
+      "verdict": "Crinacle ranks it D+ (tone C, technicalities D) with a mid-centric signature (Closed Circumaural) (MSRP $200).",
+      "quote": "Horrible treble extension and a honkiness that gets worse the longer you listen.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "V-MODA Crossfade LP2",
+      "rawName": "V-MODA Crossfade LP2",
+      "nameConfidence": "high",
+      "grade": "D+",
+      "verdict": "Crinacle ranks it D+ (tone D, technicalities C) with a bassy signature (Closed Circumaural) (MSRP $200).",
+      "quote": "Big bass, bad bass, no treble extension.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Beyerdynamic DT 1350",
+      "rawName": "Beyerdynamic DT1350",
+      "nameConfidence": "high",
+      "grade": "D",
+      "verdict": "Crinacle ranks it D (tone D, technicalities C-) with a warm signature (Closed Circumaural) (MSRP $500 (DT1350)).",
+      "quote": "Muffled, narrow-sounding, and lacking surface-level detail.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Logitech G431",
+      "rawName": "Logitech G431",
+      "nameConfidence": "low",
+      "grade": "D",
+      "verdict": "Crinacle ranks it D (tone C-, technicalities D) with a warm signature (Closed Circumaural) (MSRP $Discontinued 130 (Replaced by G432)).",
+      "quote": "Bloated bass like the rest, but further exacerbated by the recessed midrange.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sennheiser Amperior",
+      "rawName": "Sennheiser Amperior",
+      "nameConfidence": "high",
+      "grade": "D",
+      "verdict": "Crinacle ranks it D (tone D, technicalities C-) with a mid-centric signature (Closed Supra-aural) (MSRP $300 (Amperior)).",
+      "quote": "Extremely nasally vocals and lacks weight in the mids.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "B&amp;O BeoPlay H7",
+      "rawName": "B&amp;O BeoPlay H7",
+      "nameConfidence": "low",
+      "grade": "D",
+      "verdict": "Crinacle ranks it D (tone D, technicalities C-) with a \"balanced\" signature (Closed Circumaural) (MSRP $450).",
+      "quote": "Wonky, honky midrange. Not great.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audio-Technica ATH-AD700X",
+      "rawName": "Audio Technica ATH-AD700X",
+      "nameConfidence": "high",
+      "grade": "D",
+      "verdict": "Crinacle ranks it D (tone D, technicalities C-) with a warm signature (Open Circumaural) (MSRP $200).",
+      "quote": "Extremely uneven tuning, mediocre resolution, not a great choice unless you only want a wide soundstage.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audio-Technica ATH-AD500X",
+      "rawName": "Audio Technica ATH-AD500X",
+      "nameConfidence": "high",
+      "grade": "D",
+      "verdict": "Crinacle ranks it D (tone D, technicalities C-) with a warm signature (Open Circumaural) (MSRP $170).",
+      "quote": "Suppressed and uneven upper-mids, mediocre resolution, not a great choice unless you only want a wide soundstage.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "iBasso SR2",
+      "rawName": "iBasso SR2",
+      "nameConfidence": "low",
+      "grade": "D",
+      "verdict": "Crinacle ranks it D (tone D-, technicalities C) with a bright signature (Open Circumaural) (MSRP $550).",
+      "quote": "Shouty, shrill and lacking the proper heft in the bass region.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Koss Pro4S",
+      "rawName": "Koss Pro4S",
+      "nameConfidence": "high",
+      "grade": "D",
+      "verdict": "Crinacle ranks it D (tone D-, technicalities C) with a v-shaped signature (Closed Circumaural) (MSRP $150).",
+      "quote": "Horrible lower-midrange scoop screws with every instrument.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Audio Technica ATH-EW9",
+      "rawName": "Audio Technica ATH-EW9",
+      "nameConfidence": "low",
+      "grade": "D",
+      "verdict": "Crinacle ranks it D (tone D+, technicalities D) with a mid-centric signature (Open Clip-on) (MSRP $330).",
+      "quote": "Forget shout; this thing screams.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Focal Listen Professional",
+      "rawName": "Focal Listen Professional",
+      "nameConfidence": "high",
+      "grade": "D",
+      "verdict": "Crinacle ranks it D (tone D, technicalities D) with a \"balanced\" signature (Closed Circumaural) (MSRP $300).",
+      "quote": "Not sure if this is supposed to seal, but in the event that it isn't: why?",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sennheiser HD 4",
+      "rawName": "Sennheiser HD400S",
+      "nameConfidence": "high",
+      "grade": "D",
+      "verdict": "Crinacle ranks it D (tone D, technicalities D) with a \"balanced\" signature (Closed Circumaural) (MSRP $70).",
+      "quote": "At least it's not the Momentum 2.0 Wireless.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Yamaha HP-50S",
+      "rawName": "Yamaha HP-50S",
+      "nameConfidence": "low",
+      "grade": "D-",
+      "verdict": "Crinacle ranks it D- (tone D+, technicalities D-) with a warm signature (Closed Circumaural) (MSRP $60 (HP-50S)).",
+      "quote": "Bloated, lacking resolution, narrow imaging. Just a bad headphone all around.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "AudioQuest NightOwl",
+      "rawName": "AudioQuest NightOwl",
+      "nameConfidence": "high",
+      "grade": "D-",
+      "verdict": "Crinacle ranks it D- (tone D-, technicalities D+) with a dark signature (Closed Circumaural) (MSRP $700 (Nightowl)).",
+      "quote": "Heavily downsloped response makes the upper harmonics completely disappear.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Shure SRH240",
+      "rawName": "Shure SRH240A",
+      "nameConfidence": "high",
+      "grade": "D-",
+      "verdict": "Crinacle ranks it D- (tone D+, technicalities D-) with a v-shaped signature (Closed Circumaural) (MSRP $60).",
+      "quote": "Compressed, honky and lacking all but the most surface-level of detailing.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sennheiser HD 820",
+      "rawName": "Sennheiser HD820",
+      "nameConfidence": "high",
+      "grade": "E",
+      "verdict": "Crinacle ranks it E (tone E, technicalities B) with a v-shaped signature (Closed Circumaural) (MSRP $2400).",
+      "quote": "The mystical acoustic properties of Gorilla Glass could not save this monstrosity.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Beyerdynamic T1 (3rd Gen)",
+      "rawName": "Beyerdynamic T1 (3rd Gen)",
+      "nameConfidence": "high",
+      "grade": "E",
+      "verdict": "Crinacle ranks it E (tone E, technicalities B-) with a warm v-shape signature (Open Circumaural) (MSRP $1000).",
+      "quote": "When you answer \"yes\" to the question \"how much lower mids do you want?\"",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sennheiser Momentum 2.0 (wireless)",
+      "rawName": "Sennheiser Momentum 2.0 Wireless",
+      "nameConfidence": "high",
+      "grade": "E",
+      "verdict": "Crinacle ranks it E (tone E, technicalities C+) with a unique signature (Closed Circumaural) (MSRP $180).",
+      "quote": "Probably the worst headphone Sennheiser has ever made. Yes, even the HD820.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Final Sonorous VIII",
+      "rawName": "Final Sonorous VIII",
+      "nameConfidence": "low",
+      "grade": "E",
+      "verdict": "Crinacle ranks it E (tone E, technicalities C) with a unique signature (Closed Circumaural) (MSRP $3000 (Sonorous VIII)).",
+      "quote": "Quirky artisanal Japanese handiwork so quirky that they forgot that it's supposed to play music.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Final Sonorous X",
+      "rawName": "Final Sonorous X",
+      "nameConfidence": "low",
+      "grade": "E",
+      "verdict": "Crinacle ranks it E (tone E, technicalities C) with a unique signature (Closed Circumaural) (MSRP $5000 (Sonorous X)).",
+      "quote": "Quirky artisanal Japanese handiwork so quirky that they forgot that it's supposed to play music.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Spirit Torino Radiante",
+      "rawName": "Spirit Torino Radiante",
+      "nameConfidence": "low",
+      "grade": "E",
+      "verdict": "Crinacle ranks it E (tone E, technicalities C) with a unique signature (Closed Circumaural) (MSRP $2250).",
+      "quote": "Humps for days. Wouldn't be a stretch to call this \"ꟿ-shaped\".",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "AKG K92",
+      "rawName": "AKG K92",
+      "nameConfidence": "high",
+      "grade": "E",
+      "verdict": "Crinacle ranks it E (tone E, technicalities D) with a v-shaped signature (Closed Circumaural) (MSRP $60).",
+      "quote": "Hole in the bass, hole in the mids, hole in the treble. AKG's struck a turkey.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "AKG K72",
+      "rawName": "AKG K72",
+      "nameConfidence": "high",
+      "grade": "E",
+      "verdict": "Crinacle ranks it E (tone E, technicalities D) with a v-shaped signature (Closed Circumaural) (MSRP $50).",
+      "quote": "Hole in the bass, hole in the mids, hole in the treble. AKG's struck a turkey.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "AKG K52",
+      "rawName": "AKG K52",
+      "nameConfidence": "high",
+      "grade": "E",
+      "verdict": "Crinacle ranks it E (tone E, technicalities D) with a v-shaped signature (Closed Circumaural) (MSRP $35).",
+      "quote": "Hole in the bass, hole in the mids, hole in the treble. AKG's struck a turkey.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "FiiO EH3",
+      "rawName": "FiiO EH3",
+      "nameConfidence": "low",
+      "grade": "E",
+      "verdict": "Crinacle ranks it E (tone E, technicalities E) with a bassy signature (Closed Circumaural) (MSRP $200).",
+      "quote": "Sounds as if the ANC is trying to cancel out its own sound.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "EKSA E900 Pro",
+      "rawName": "EKSA E900 Pro",
+      "nameConfidence": "low",
+      "grade": "E",
+      "verdict": "Crinacle ranks it E (tone E, technicalities E) with a dark signature (Closed Circumaural) (MSRP $50).",
+      "quote": "Typical cheaply-made headphone that's all bass with zero technical ability. A waste of any money.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Yamaha HP3",
+      "rawName": "Yamaha HP-300",
+      "nameConfidence": "high",
+      "grade": "F",
+      "verdict": "Crinacle ranks it F (tone F, technicalities F) with a complete failure signature (Semi-open Circumaural) (MSRP $Discontinued).",
+      "quote": "Virtually no records of this exist on the internet, and maybe it's better that way.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Pioneer SE-2P",
+      "rawName": "Pioneer SE-2P",
+      "nameConfidence": "low",
+      "grade": "F",
+      "verdict": "Crinacle ranks it F (tone F, technicalities F) with a complete failure signature (Closed Circumaural) (MSRP $20 (SE-2P)).",
+      "quote": "The pads look like toilet plungers. Sounds like one too.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    },
+    {
+      "name": "Sansui SS100",
+      "rawName": "Sansui SS-10",
+      "nameConfidence": "high",
+      "grade": "F",
+      "verdict": "Crinacle ranks it F (tone F, technicalities F) with a complete failure signature (Closed Circumaural) (MSRP $340 (SS-10)).",
+      "quote": "A simulation of how it's like to have hearing damage.",
+      "quoteVerified": true,
+      "url": "https://crinacle.com/rankings/headphones/"
+    }
+  ]
+}

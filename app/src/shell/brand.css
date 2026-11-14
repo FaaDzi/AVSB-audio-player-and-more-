@@ -1,0 +1,829 @@
+/* Our own look on top of the Mornye layout (§64, §71.G, §73.D).
+   <html data-style> is "clean" (Material) or "gameshow" (active Game Show stage), and
+   <html data-style-scope> is "clean" | "gameshow" | "gameshow-tournament", set by theme.ts.
+   The rainbow never sits under body text: it's a wash at the top of the sidebar and behind
+   page headings, plus a rainbow edge on the selected sidebar item and the play button. */
+:root {
+  --rainbow: linear-gradient(90deg, #ff5f6d, #ffb347, #ffe66d, #5ee6a8, #4fc3ff, #8b7bff, #ff6ad5);
+  --rainbow-wash:
+    radial-gradient(60% 120% at 8% 0%, #ff6a8a, transparent 70%),
+    radial-gradient(50% 110% at 34% 0%, #ffc15e, transparent 70%),
+    radial-gradient(50% 110% at 58% 0%, #6fe3b0, transparent 70%),
+    radial-gradient(50% 110% at 80% 0%, #5cc8ff, transparent 70%),
+    radial-gradient(45% 110% at 100% 0%, #a98bff, transparent 70%);
+  --wash-opacity: 0.16;
+  /* the edge: the same colours, softened toward the surface so it reads as a tint, not a stripe */
+  --rainbow-soft: linear-gradient(90deg, #ff5f6d99, #ffb34799, #ffe66d99, #5ee6a899, #4fc3ff99, #8b7bff99, #ff6ad599);
+  /* set live by rainbowPulse.ts while music plays */
+  --wash-energy: 0;
+  --wash-hue: 0deg;
+  --gs-gold: #ffd166;
+  --gs-amber: #f97316;
+  --gs-berry: #1a0624;
+  --gs-wine: #380d42;
+}
+:root[data-theme='dark'] { --wash-opacity: 0.2; }
+
+/* sidebar: wash at the top */
+.ms-rail { position: relative; isolation: isolate; }
+.ms-rail::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 260px;
+  background: var(--rainbow-wash);
+  background-size: 100% 100%;
+  opacity: calc(var(--wash-opacity) * (0.7 + var(--wash-energy) * 1.8));
+  filter: blur(18px) hue-rotate(var(--wash-hue));
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* pages: wash behind the heading area, under the page's own content */
+.ms-layer::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 200px;
+  background: var(--rainbow-wash);
+  opacity: calc(var(--wash-opacity) * (0.55 + var(--wash-energy) * 1.5));
+  filter: blur(24px) hue-rotate(var(--wash-hue));
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(#000, transparent);
+  mask-image: linear-gradient(#000, transparent);
+}
+
+/* selected sidebar item and the play button: a thin, soft rainbow edge (every pill keeps the border, so selecting
+   doesn't shift it) */
+.ms-dest-pill { border: 1px solid transparent; padding-left: 15px; }
+.ms-rail-row.on { padding-left: 15px; }
+.ms-dest.on .ms-dest-pill,
+.ms-rail-row.on {
+  border: 1px solid transparent;
+  background: linear-gradient(var(--nav-selected), var(--nav-selected)) padding-box, var(--rainbow-soft) border-box;
+}
+.ms-player .ms-play,
+.ms-play-btn {
+  border: 1.5px solid transparent;
+  background: linear-gradient(var(--cover-primary, var(--accent)), var(--cover-primary, var(--accent))) padding-box, var(--rainbow-soft) border-box;
+}
+
+/* ---------------------------------------------------------------- Game show (§71.G & §73.D) ----
+   G1 & D2: Stage Backdrop & Frosted Glass — deep berry/wine (#1a0624) to warm amber/coral (#f97316)
+   atmospheric stage lighting in dark mode, crisp sky-glass in light mode, frosted translucent panels
+   (backdrop-filter: blur(18px)) with thin specular outline, and chunky game-show display headings. */
+:root[data-style='gameshow'] {
+  --top-contrast-text: #ffffff;
+  --top-text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
+  --wash-opacity: 0.36;
+  --gs-rail: #1b0d26;
+  --gs-player: #1b0d26;
+  --gs-backdrop: linear-gradient(160deg, #2b0e36 0%, #4c1340 24%, #781c4d 50%, #e6623b 84%, #f49b42 100%);
+  --gs-card-cream: #fff8eb;
+  --gs-card-cream-text: #210f2c;
+  --gs-gold: #f5b335;
+}
+
+:root[data-style='gameshow'] .ms-topbar {
+  background: transparent !important;
+}
+
+:root[data-style='gameshow'] .ms-topbar,
+:root[data-style='gameshow'] .ms-topbar .ms-iconbtn,
+:root[data-style='gameshow'] .ms-topbar-title,
+:root[data-style='gameshow'] .ms-layer .ms-h1 {
+  color: var(--top-contrast-text, #ffffff);
+  text-shadow: var(--top-text-shadow, 0 1px 4px rgba(0, 0, 0, 0.7));
+  transition: color 180ms ease, text-shadow 180ms ease;
+}
+
+:root[data-style='gameshow'] body {
+  background: var(--gs-backdrop) !important;
+  background-attachment: fixed !important;
+}
+
+:root[data-style='gameshow'] .ms-rail {
+  background: var(--gs-rail) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+:root[data-style='gameshow'] .ms-player {
+  background: var(--gs-player) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+:root[data-style='gameshow'] .ms-player-title {
+  color: #ffffff !important;
+  font-weight: 700;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+}
+
+:root[data-style='gameshow'] .ms-player-artist {
+  color: #d1c5db !important;
+  font-weight: 500;
+}
+
+:root[data-style='gameshow'] .ms-player .ms-time {
+  color: #d1c5db !important;
+}
+
+:root[data-style='gameshow'] .ms-dest.on .ms-dest-pill,
+:root[data-style='gameshow'] .ms-rail-row.on {
+  background: var(--gs-card-cream) !important;
+  color: var(--gs-card-cream-text) !important;
+  border-radius: 28px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+  border: none !important;
+}
+
+:root[data-style='gameshow'] .ms-dest.on .ms-dest-pill .ms-icon,
+:root[data-style='gameshow'] .ms-dest.on .ms-dest-label,
+:root[data-style='gameshow'] .ms-rail-row.on b,
+:root[data-style='gameshow'] .ms-rail-row.on .ms-icon {
+  color: var(--gs-card-cream-text) !important;
+  font-weight: 700 !important;
+}
+
+:root[data-style='gameshow'] .ms-dest .ms-dest-label,
+:root[data-style='gameshow'] .ms-rail-row b {
+  color: #c7b8d4;
+  font-weight: 600;
+}
+
+:root[data-style='gameshow'] .ms-brand-logo,
+:root[data-style='gameshow'] .ms-brand {
+  color: var(--gs-gold) !important;
+  font-family: 'Fredoka', var(--font-ui) !important;
+  font-weight: 700 !important;
+}
+
+:root[data-style='gameshow'] .ms-rail-group {
+  color: var(--gs-gold) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.8px;
+}
+
+:root[data-style='gameshow'] .ms-topbar .ms-iconbtn {
+  background: var(--gs-card-cream) !important;
+  color: var(--gs-card-cream-text) !important;
+  border-radius: 50% !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+}
+
+:root[data-style='gameshow'] .ms-topbar .ms-iconbtn .ms-icon {
+  color: var(--gs-card-cream-text) !important;
+}
+
+:root[data-style='gameshow'] .ms-topbar .ms-btn {
+  background: var(--gs-card-cream) !important;
+  color: var(--gs-card-cream-text) !important;
+  border-radius: 20px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+}
+
+:root[data-style='gameshow'] .ms-card-box,
+:root[data-style='gameshow'] .ms-sr-song {
+  background: rgba(27, 13, 38, 0.55);
+  -webkit-backdrop-filter: blur(18px) saturate(1.3);
+  backdrop-filter: blur(18px) saturate(1.3);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 26px -10px rgba(0, 0, 0, 0.45);
+}
+
+:root[data-style='gameshow'] .ms-card {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  padding: 0 !important;
+}
+
+:root[data-style='gameshow'] .ms-tabs {
+  border-bottom: none !important;
+}
+
+:root[data-style='gameshow'] .ms-card-title,
+:root[data-style='gameshow'] .ms-card b {
+  color: #ffffff;
+  font-weight: 700;
+  text-align: center !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+  margin-top: 8px !important;
+  width: 100% !important;
+}
+
+:root[data-style='gameshow'] .ms-card-sub {
+  color: #d5c8e0;
+  display: block !important;
+  text-align: center !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  width: 100% !important;
+  font-size: 11.5px !important;
+  opacity: 0.9;
+}
+
+:root[data-style='gameshow'] .ms-layer {
+  background: transparent;
+}
+
+/* Settings is hard-locked into the clean, simplistic (Material) theme even in Party Mode */
+:root[data-style='gameshow'] .ms-settings {
+  background: var(--page) !important;
+}
+:root[data-style='gameshow'] .ms-settings-list {
+  background: var(--chrome) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+:root[data-style='gameshow'] .ms-settings-pane {
+  background: var(--page) !important;
+}
+:root[data-style='gameshow'] .ms-set-group {
+  background: var(--field) !important;
+  color: var(--text) !important;
+  border-radius: var(--radius-card) !important;
+  border: 1px solid var(--outline) !important;
+}
+:root[data-style='gameshow'] .ms-set-group .ms-set-row b {
+  color: var(--text-strong) !important;
+}
+:root[data-style='gameshow'] .ms-set-group .ms-set-row small {
+  color: var(--text-dim) !important;
+}
+:root[data-style='gameshow'] .ms-eq-hero {
+  background:
+    radial-gradient(circle at 95% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%),
+    color-mix(in srgb, var(--chrome) 75%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--hairline));
+}
+:root[data-style='gameshow'] .ms-settings-bigtitle {
+  font-family: 'Fredoka', var(--font-ui);
+  letter-spacing: 0.2px;
+}
+:root[data-style='gameshow'][data-outlines='on'] .ms-rail {
+  border-right: 1px solid rgb(var(--ink) / 0.16);
+  box-shadow: inset -1px 0 0 0 rgb(255 255 255 / 0.08);
+}
+:root[data-style='gameshow'][data-outlines='on'] .ms-player {
+  border-top: 1px solid rgb(var(--ink) / 0.18);
+  box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.14);
+}
+:root[data-style='gameshow'][data-outlines='on'] .ms-card {
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Chunky Game-Show Display Headings with warm gold/rainbow edge */
+:root[data-style='gameshow'] .ms-h1,
+:root[data-style='gameshow'] .ms-h2,
+:root[data-style='gameshow'] .ms-settings-bigtitle,
+:root[data-style='gameshow'] .ms-player-title,
+:root[data-style='gameshow'] .ms-song-title {
+  font-family: 'Fredoka', var(--font-ui);
+  font-weight: 700;
+  letter-spacing: 0.25px;
+  text-shadow: 0 2px 12px rgb(249 115 22 / 0.22), 0 1px 0 rgb(0 0 0 / 0.28);
+}
+
+/* Lit "Stage Light" active sidebar pill & Rainbow Ring around Play button (§73.D3) */
+:root[data-style='gameshow'] .ms-dest.on .ms-dest-pill,
+:root[data-style='gameshow'] .ms-rail-row.on {
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--nav-selected) 88%, #ffd166 12%), var(--nav-selected)) padding-box,
+    var(--rainbow) border-box;
+  box-shadow:
+    0 0 18px -2px rgb(255 179 71 / 0.42),
+    inset 0 1px 0 0 rgb(255 255 255 / 0.28);
+}
+:root[data-style='gameshow'] .ms-player .ms-play,
+:root[data-style='gameshow'] .ms-play-btn,
+:root[data-style='gameshow'] .ms-np-play {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--cover-primary, var(--accent)), var(--cover-primary, var(--accent))) padding-box,
+    var(--rainbow) border-box;
+  box-shadow:
+    0 0 0 2px rgb(255 209 102 / 0.22),
+    0 6px 18px -3px rgb(249 115 22 / 0.45);
+  transition: transform 140ms cubic-bezier(0.22, 1.4, 0.36, 1), box-shadow 160ms ease;
+}
+:root[data-style='gameshow'] .ms-player .ms-play:hover,
+:root[data-style='gameshow'] .ms-play-btn:hover {
+  transform: scale(1.06);
+  box-shadow:
+    0 0 0 3px rgb(255 209 102 / 0.36),
+    0 8px 22px -2px rgb(255 95 109 / 0.55);
+}
+:root[data-style='gameshow'] .ms-player .ms-play:active,
+:root[data-style='gameshow'] .ms-play-btn:active,
+:root[data-style='gameshow'] .ms-pill-btn:active {
+  transform: translateY(2px) scale(0.97);
+}
+
+/* G2 & D2: Stage Marquee Banners with warm diagonal stage stripes & carnival bulb dotted borders */
+@keyframes msMarqueeChase {
+  0% { background-position: 0 0, 0 0, 0 0; }
+  100% { background-position: 28px 0, -28px 0, 56px 0; }
+}
+:root[data-style='gameshow'] .ms-hero,
+:root[data-style='gameshow'] .ms-tourney-hero,
+:root[data-style='gameshow'] .ms-rewind,
+:root[data-style='gameshow'] .ms-marquee-banner {
+  position: relative;
+  overflow: hidden;
+  border: 2px dotted rgb(255 209 102 / 0.68);
+  background-image:
+    repeating-linear-gradient(
+      -45deg,
+      rgb(255 209 102 / 0.07) 0px,
+      rgb(255 209 102 / 0.07) 14px,
+      transparent 14px,
+      transparent 28px
+    ),
+    radial-gradient(90% 120% at 0% 0%, rgb(249 115 22 / 0.28), transparent 65%),
+    radial-gradient(80% 100% at 100% 100%, rgb(255 106 213 / 0.25), transparent 65%);
+  box-shadow:
+    0 0 0 1px rgb(249 115 22 / 0.35),
+    0 14px 32px -10px rgb(26 6 36 / 0.58),
+    inset 0 1px 0 0 rgb(255 255 255 / 0.24);
+}
+:root[data-style='gameshow'] .ms-hero::after,
+:root[data-style='gameshow'] .ms-tourney-hero::after,
+:root[data-style='gameshow'] .ms-marquee-banner::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: inherit;
+  border: 2px dotted rgb(255 230 109 / 0.45);
+  pointer-events: none;
+}
+
+/* D1: Vinyl / Turntable Disc Tokens for Artist Avatars & Circular Tokens */
+@keyframes msVinylSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+:root[data-style='gameshow'] .ms-artist-ava,
+:root[data-style='gameshow'] .ms-artist-avatar,
+:root[data-style='gameshow'] .ms-shelf-item.round .ms-cover,
+:root[data-style='gameshow'] .ms-sr-art.round {
+  position: relative;
+  border-radius: 999px;
+  border: 3px solid #191320;
+  background-image:
+    radial-gradient(circle at 50% 50%, transparent 28%, rgb(255 255 255 / 0.08) 29%, transparent 31%),
+    repeating-radial-gradient(
+      circle at 50% 50%,
+      rgb(255 255 255 / 0.05) 0px,
+      rgb(255 255 255 / 0.05) 1.5px,
+      rgb(0 0 0 / 0.18) 2px,
+      rgb(0 0 0 / 0.18) 4px
+    );
+  box-shadow:
+    0 0 0 2px rgb(255 209 102 / 0.48),
+    0 8px 20px -4px rgb(0 0 0 / 0.55),
+    inset 0 0 0 6px rgb(15 10 22 / 0.55);
+}
+:root[data-style='gameshow'] .ms-artist-ava::after,
+:root[data-style='gameshow'] .ms-shelf-item.round .ms-cover::after {
+  content: '';
+  position: absolute;
+  width: 24%;
+  height: 24%;
+  left: 38%;
+  top: 38%;
+  border-radius: 999px;
+  background: radial-gradient(circle, #1a0624 0 32%, #ffd166 35% 62%, rgb(249 115 22 / 0.85) 65% 100%);
+  box-shadow: 0 0 0 1.5px rgb(0 0 0 / 0.55);
+  pointer-events: none;
+}
+
+/* D3: Quick Card Tilt-in Animation on page open */
+@keyframes msCardTiltIn {
+  0% {
+    opacity: 0;
+    transform: perspective(700px) rotateX(6deg) rotateZ(-1.2deg) translateY(10px) scale(0.97);
+  }
+  70% {
+    opacity: 1;
+    transform: perspective(700px) rotateX(-1deg) rotateZ(0.3deg) translateY(-1px) scale(1.005);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(700px) rotateX(0deg) rotateZ(0deg) translateY(0) scale(1);
+  }
+}
+:root[data-style='gameshow'] .ms-layer.in .ms-card,
+:root[data-style='gameshow'] .ms-layer.in .ms-shelf-item,
+:root[data-style='gameshow'] .ms-layer.in .ms-hero {
+  animation: msCardTiltIn 340ms cubic-bezier(0.22, 1.25, 0.36, 1) both;
+}
+:root[data-style='gameshow'] .ms-rail::before,
+:root[data-style='gameshow'] .ms-layer::before {
+  background-size: 200% 100%;
+  animation: brand-drift 18s ease-in-out infinite alternate;
+}
+@keyframes brand-drift {
+  from { background-position: 0% 0%; }
+  to { background-position: 100% 0%; }
+}
+
+/* Tournament-only fallback selectors when data-style-scope is gameshow-tournament */
+:root[data-style-scope='gameshow-tournament'] :is(.ms-tourney, .ms-tz-setup, .ms-tz-questions, .ms-tz-bracket, .ms-tz-matchpage, .ms-tz-results, .ms-tz-quick, .ms-vs) .ms-h1,
+:root[data-style-scope='gameshow-tournament'] :is(.ms-tourney, .ms-tz-setup, .ms-tz-questions, .ms-tz-bracket, .ms-tz-matchpage, .ms-tz-results, .ms-tz-quick, .ms-vs) .ms-h2 {
+  font-family: 'Fredoka', var(--font-ui);
+  font-weight: 700;
+}
+
+/* Respect the app's Reduce motion switch (Settings → Appearance) */
+:root[data-reduce-motion='on'] .ms-rail::before,
+:root[data-reduce-motion='on'] .ms-layer::before,
+:root[data-reduce-motion='on'] .ms-layer.in .ms-card,
+:root[data-reduce-motion='on'] .ms-layer.in .ms-shelf-item,
+:root[data-reduce-motion='on'] .ms-layer.in .ms-hero,
+:root[data-reduce-motion='on'] .ms-artist-ava {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Settings → App Style preview cards */
+.ms-style-preview.gameshow {
+  background:
+    radial-gradient(70% 80% at 10% 0%, #ff6ad5, transparent 70%),
+    radial-gradient(70% 80% at 100% 20%, #4fc3ff, transparent 70%),
+    radial-gradient(80% 80% at 50% 120%, #f97316, transparent 70%),
+    #1a0624;
+}
+.ms-style-preview.gameshow .ms-style-card { font-family: 'Fredoka', var(--font-ui); }
+
+/* ---------------------------------------------------------------- §73.A1–A3 Audio Tools, Spatial & Spectrogram UI ---- */
+.ms-spectrogram-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ms-spectrogram-canvas-box {
+  position: relative;
+  height: 190px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #080510;
+  border: 1px solid rgb(var(--ink) / 0.14);
+}
+.ms-spectrogram-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.ms-spectrogram-axis-y {
+  position: absolute;
+  top: 6px;
+  bottom: 20px;
+  left: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.78);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+  pointer-events: none;
+}
+.ms-spectrogram-axis-x {
+  position: absolute;
+  left: 44px;
+  right: 10px;
+  bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.78);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+  pointer-events: none;
+}
+.ms-spectrogram-legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.ms-spectrogram-colorbar {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #05030a 0%, #2c115f 25%, #721f81 48%, #b73779 68%, #f1605d 84%, #feb078 94%, #fcfdbf 100%);
+  border: 1px solid rgb(var(--ink) / 0.15);
+}
+.ms-hires-verdict {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border: 1px solid rgb(var(--ink) / 0.12);
+  background: color-mix(in srgb, var(--control) 65%, transparent);
+}
+.ms-hires-verdict.genuine {
+  border-color: rgb(94 230 168 / 0.45);
+  background: color-mix(in srgb, #10b981 12%, var(--control));
+}
+.ms-hires-verdict.upsampled {
+  border-color: rgb(255 179 71 / 0.5);
+  background: color-mix(in srgb, #f59e0b 14%, var(--control));
+}
+.ms-hires-verdict.transcode {
+  border-color: rgb(255 95 109 / 0.55);
+  background: color-mix(in srgb, #ef4444 14%, var(--control));
+}
+.ms-audiogram-svg {
+  width: 100%;
+  height: 210px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--field) 65%, transparent);
+  border: 1px solid rgb(var(--ink) / 0.1);
+}
+.ms-song-orig-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* ---- Party Mode Vinyl Record & Circular Artwork ---- */
+@keyframes ms-vinyl-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+:root[data-style='gameshow'] .ms-cover,
+:root[data-style='gameshow'] .ms-cover-placeholder,
+:root[data-style='gameshow'] .ms-player-art,
+:root[data-style='gameshow'] .ms-pmini-art,
+:root[data-style='gameshow'] .ms-np-cover,
+:root[data-style='gameshow'] .ms-np-fullart,
+:root[data-style='gameshow'] .ms-np-slim-art,
+:root[data-style='gameshow'] .ms-card-art,
+:root[data-style='gameshow'] .ms-tile-art,
+:root[data-style='gameshow'] .ms-detail-cover,
+:root[data-style='gameshow'] .ms-order-cover,
+:root[data-style='gameshow'] .ms-thumb,
+:root[data-style='gameshow'] .ms-mini-art,
+:root[data-style='gameshow'] .ms-song-cover,
+:root[data-style='gameshow'] .ms-shelf-item .ms-cover {
+  border-radius: 50% !important;
+  aspect-ratio: 1 / 1 !important;
+  object-fit: cover !important;
+  flex: none;
+}
+
+:root[data-style='gameshow'] .ms-card-art {
+  background: transparent !important;
+  border-radius: 50% !important;
+  overflow: visible !important;
+}
+:root[data-style='gameshow'] .ms-tile-art {
+  background: transparent !important;
+  border-radius: 50% !important;
+  overflow: visible !important;
+}
+
+:root[data-style='gameshow'] .ms-vinyl-disc {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50% !important;
+  aspect-ratio: 1 / 1 !important;
+}
+
+:root[data-style='gameshow'] .ms-vinyl-disc.ms-np-cover {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  flex: none;
+}
+
+:root[data-style='gameshow'] .ms-vinyl-disc.ms-np-fullart {
+  width: 100%;
+  height: 100%;
+  max-width: 380px;
+  max-height: 380px;
+}
+
+:root[data-style='gameshow'] .ms-vinyl-disc .ms-cover-disc,
+:root[data-style='gameshow'] .ms-vinyl-disc .ms-np-cover,
+:root[data-style='gameshow'] .ms-vinyl-disc .ms-np-fullart,
+:root[data-style='gameshow'] .ms-vinyl-disc .ms-cover {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  aspect-ratio: 1 !important;
+  object-fit: cover !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 0 8px #140d1e, 0 0 0 11px rgba(245, 179, 53, 0.4) !important;
+  animation: ms-vinyl-spin 14s linear infinite;
+  animation-play-state: paused;
+}
+
+:root[data-style='gameshow'] .ms-vinyl-disc.playing .ms-cover-disc,
+:root[data-style='gameshow'] .ms-vinyl-disc.playing .ms-np-cover,
+:root[data-style='gameshow'] .ms-vinyl-disc.playing .ms-np-fullart,
+:root[data-style='gameshow'] .ms-vinyl-disc.playing .ms-cover {
+  animation-play-state: running;
+}
+
+:root[data-style='gameshow'] .ms-vinyl-disc::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50% !important;
+  pointer-events: none;
+  background:
+    /* Dual wedge-shaped CD specular reflection lines */
+    conic-gradient(
+      from 35deg at 50% 50%,
+      transparent 0deg,
+      rgba(255, 255, 255, 0.04) 20deg,
+      rgba(255, 255, 255, 0.22) 45deg,
+      rgba(255, 255, 255, 0.04) 70deg,
+      transparent 95deg,
+      transparent 180deg,
+      rgba(255, 255, 255, 0.04) 200deg,
+      rgba(255, 255, 255, 0.22) 225deg,
+      rgba(255, 255, 255, 0.04) 250deg,
+      transparent 275deg,
+      transparent 360deg
+    ),
+    /* Fine semi-transparent white concentric CD/vinyl shine lines */
+    repeating-radial-gradient(
+      circle at 50% 50%,
+      transparent 0px,
+      transparent 5px,
+      rgba(255, 255, 255, 0.09) 6px,
+      rgba(255, 255, 255, 0.02) 7px,
+      transparent 8px,
+      transparent 14px
+    );
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.14), inset 0 0 32px rgba(255, 255, 255, 0.07);
+  z-index: 6;
+}
+
+:root[data-style='gameshow'] .ms-player-art-wrap,
+:root[data-style='gameshow'] .ms-pmini-art-wrap {
+  position: relative;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  aspect-ratio: 1 !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4), 0 0 0 2px rgba(245, 179, 53, 0.3) !important;
+}
+
+:root[data-style='gameshow'] .ms-player-art-wrap::after,
+:root[data-style='gameshow'] .ms-pmini-art-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50% !important;
+  pointer-events: none;
+  background:
+    conic-gradient(
+      from 35deg at 50% 50%,
+      transparent 0deg,
+      rgba(255, 255, 255, 0.16) 45deg,
+      transparent 90deg,
+      transparent 180deg,
+      rgba(255, 255, 255, 0.16) 225deg,
+      transparent 270deg
+    ),
+    repeating-radial-gradient(
+      circle at 50% 50%,
+      transparent 0px,
+      transparent 3px,
+      rgba(255, 255, 255, 0.08) 4px,
+      transparent 5px
+    );
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+  z-index: 6;
+}
+
+:root[data-style='gameshow'] .ms-player-art-wrap .ms-player-art,
+:root[data-style='gameshow'] .ms-pmini-art-wrap .ms-pmini-art {
+  border-radius: 50% !important;
+  aspect-ratio: 1 !important;
+  object-fit: cover !important;
+  animation: ms-vinyl-spin 10s linear infinite;
+  animation-play-state: paused;
+}
+
+:root[data-style='gameshow'] .ms-player-art-wrap.playing .ms-player-art,
+:root[data-style='gameshow'] .ms-pmini-art-wrap.playing .ms-pmini-art {
+  animation-play-state: running;
+}
+
+/* Circular party cover CD shine texture overlay */
+:root[data-style='gameshow'] .ms-cover-placeholder.party::after,
+:root[data-style='gameshow'] .ms-cover.party::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50% !important;
+  pointer-events: none;
+  background:
+    conic-gradient(
+      from 40deg at 50% 50%,
+      transparent 0deg,
+      rgba(255, 255, 255, 0.03) 25deg,
+      rgba(255, 255, 255, 0.14) 45deg,
+      rgba(255, 255, 255, 0.03) 65deg,
+      transparent 90deg,
+      transparent 180deg,
+      rgba(255, 255, 255, 0.03) 205deg,
+      rgba(255, 255, 255, 0.14) 225deg,
+      rgba(255, 255, 255, 0.03) 245deg,
+      transparent 270deg
+    ),
+    repeating-radial-gradient(
+      circle at 50% 50%,
+      transparent 0px,
+      transparent 4px,
+      rgba(255, 255, 255, 0.07) 5px,
+      transparent 6px,
+      transparent 10px
+    );
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  z-index: 2;
+}
+
+.ms-player-art-wrap {
+  border-radius: 8px;
+}
+.ms-pmini-art-wrap {
+  border-radius: 10px;
+}
+
+/* --- Genre cover typography & responsive scaling --- */
+.ms-cover-placeholder {
+  container-type: inline-size;
+}
+
+.ms-cover-placeholder .ms-cover-genre-label {
+  display: inline-block;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: lowercase;
+  font-family: Arial, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  line-height: 1;
+}
+
+/* Thumbs: list rows, mini player (< 55px) */
+.ms-cover-placeholder.ms-cover-thumb .ms-cover-genre-label {
+  font-size: clamp(8px, 20cqi, 11px) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  max-width: 94% !important;
+}
+
+/* Preview / Library / Home / Grid cards (56px to 170px) */
+.ms-cover-placeholder.ms-cover-card .ms-cover-genre-label {
+  font-size: clamp(10px, 14cqi, 16px) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.03em !important;
+  max-width: 88% !important;
+}
+
+/* Big music mode / Hero covers (Now Playing, Fullscreen Player, Song Detail hero) */
+.ms-cover-placeholder.ms-cover-hero .ms-cover-genre-label {
+  font-size: clamp(38px, 22cqi, 76px) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.05em !important;
+  max-width: 82% !important;
+}
+
+
+/* Party + Light (plan §76 H): Party draws its dark stage in every theme, so text sitting straight on the stage takes
+   the light colours too. Measured on the phone: these were dark-on-purple. The selected tab (a white pill) and
+   Settings (kept in the plain theme) are left alone. */
+:root[data-style='gameshow'][data-theme='light'] :is(.ms-h2, .ms-tab:not(.on), .ms-tab:not(.on) .ms-tab-count, .ms-tile-title, .ms-tourney-empty):not(.ms-settings *) {
+  color: #ffffff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+:root[data-style='gameshow'][data-theme='light'] :is(.ms-count, .ms-tile-sub, .ms-link):not(.ms-settings *) {
+  color: rgba(255, 255, 255, 0.82);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+}

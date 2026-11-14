@@ -1,0 +1,885 @@
+{
+ "duplicates": [
+  {
+   "dupId": "7hz-x-crinacle-zero-3",
+   "dupName": "7Hz x Crinacle Zero 3",
+   "keepId": "7hz-salnotes-x-crinacle-zero-3",
+   "keepName": "7Hz Salnotes x Crinacle Zero 3",
+   "reason": "same IEM, 'Salnotes' dropped"
+  },
+  {
+   "dupId": "7hz-x-crinacle-zero-2",
+   "dupName": "7Hz x Crinacle Zero 2",
+   "keepId": "7hz-salnotes-zero-2",
+   "keepName": "7Hz Salnotes Zero:2",
+   "reason": "Zero:2 = Salnotes x Crinacle Zero 2; existing merges split it into two groups"
+  },
+  {
+   "dupId": "7hz-crinacle-zero-2-sample-01",
+   "dupName": "7Hz × Crinacle Zero 2 (sample 01)",
+   "keepId": "7hz-salnotes-zero-2",
+   "keepName": "7Hz Salnotes Zero:2",
+   "reason": "unit label only"
+  },
+  {
+   "dupId": "7hz-salnotes-x-crin-zero-2-set-2",
+   "dupName": "7Hz SALNOTES X CRIN ZERO 2 SET 2",
+   "keepId": "7hz-salnotes-zero-2",
+   "keepName": "7Hz Salnotes Zero:2",
+   "reason": "unit/set label only"
+  },
+  {
+   "dupId": "salnotes-7hz-zero-2",
+   "dupName": "Salnotes (7hz) Zero 2",
+   "keepId": "7hz-salnotes-zero-2",
+   "keepName": "7Hz Salnotes Zero:2",
+   "reason": "brand order"
+  },
+  {
+   "dupId": "salnotes-zero-2",
+   "dupName": "Salnotes Zero 2",
+   "keepId": "7hz-salnotes-zero-2",
+   "keepName": "7Hz Salnotes Zero:2",
+   "reason": "brand dropped"
+  },
+  {
+   "dupId": "aful-5-2",
+   "dupName": "AFUL 5+2",
+   "keepId": "aful-performer-5-2",
+   "keepName": "AFUL Performer 5+2",
+   "reason": "'Performer' dropped"
+  },
+  {
+   "dupId": "aful-p5-2",
+   "dupName": "Aful P5+2",
+   "keepId": "aful-performer-5-2",
+   "keepName": "AFUL Performer 5+2",
+   "reason": "shorthand P5+2"
+  },
+  {
+   "dupId": "aful-performer-p5-2",
+   "dupName": "Aful Performer P5+2",
+   "keepId": "aful-performer-5-2",
+   "keepName": "AFUL Performer 5+2",
+   "reason": "shorthand P5+2"
+  },
+  {
+   "dupId": "aful-audio-performer-5-2-performer-5-2-all-silicone-stock-tips",
+   "dupName": "AFUL Audio Performer 5+2 (Performer 5+2 (all silicone stock tips))",
+   "keepId": "aful-performer-5-2",
+   "keepName": "AFUL Performer 5+2",
+   "reason": "stock tips = base config"
+  },
+  {
+   "dupId": "audiosense-dt600-without-adapter",
+   "dupName": "AUDIOSENSE DT600 without Ω adapter",
+   "keepId": "audiosense-dt600",
+   "keepName": "Audiosense DT600",
+   "reason": "no adapter = stock (rms 0.08)"
+  },
+  {
+   "dupId": "audiosense-dt600-audiosense-dt600-stock",
+   "dupName": "Audiosense DT600 (Audiosense DT600 Stock)",
+   "keepId": "audiosense-dt600",
+   "keepName": "Audiosense DT600",
+   "reason": "stock config label"
+  },
+  {
+   "dupId": "bgvp-bgvp-dm8",
+   "dupName": "BGVP BGVP DM8",
+   "keepId": "bgvp-dm8",
+   "keepName": "BGVP DM8",
+   "reason": "doubled brand"
+  },
+  {
+   "dupId": "blon-03",
+   "dupName": "BLON  03",
+   "keepId": "blon-bl03",
+   "keepName": "Blon BL03",
+   "reason": "BL-03 shorthand"
+  },
+  {
+   "dupId": "blon-03-ii",
+   "dupName": "BLON 03 II",
+   "keepId": "blon-bl03-2",
+   "keepName": "Blon BL03 2",
+   "reason": "BL-03 II shorthand"
+  },
+  {
+   "dupId": "blon-01",
+   "dupName": "BLON 01",
+   "keepId": "blon-bl-01",
+   "keepName": "BLON BL-01",
+   "reason": "BL-01 shorthand"
+  },
+  {
+   "dupId": "blon-05",
+   "dupName": "BLON 05",
+   "keepId": "blon-bl-05",
+   "keepName": "BLON BL-05",
+   "reason": "BL-05 shorthand"
+  },
+  {
+   "dupId": "blon-mini",
+   "dupName": "BLON Mini",
+   "keepId": "blon-bl-mini",
+   "keepName": "Blon ['BL-Mini']",
+   "reason": "BL-Mini shorthand"
+  },
+  {
+   "dupId": "blon-blon-x-hbb-z300",
+   "dupName": "Blon Blon x HBB Z300",
+   "keepId": "blon-x-hbb-z300",
+   "keepName": "BLON x HBB Z300",
+   "reason": "doubled brand"
+  },
+  {
+   "dupId": "blon-x-z-jojo",
+   "dupName": "BLON x Z Jojo",
+   "keepId": "blon-x-zeos-jojo",
+   "keepName": "Blon x Zeos Jojo",
+   "reason": "Z = Zeos (rms 0.09)"
+  },
+  {
+   "dupId": "canpur-622b",
+   "dupName": "Canpur 622B",
+   "keepId": "canpur-cp622b",
+   "keepName": "Canpur CP622B",
+   "reason": "CP prefix dropped"
+  },
+  {
+   "dupId": "cozoy-d1-cozoy-d1-stock-tips",
+   "dupName": "COZOY ['D1'] (COZOY D1 Stock Tips)",
+   "keepId": "cozoy-d1",
+   "keepName": "Cozoy D1",
+   "reason": "stock tips = base"
+  },
+  {
+   "dupId": "dunu-142",
+   "dupName": "DUNU 142",
+   "keepId": "dunu-dn-142",
+   "keepName": "Dunu DN 142",
+   "reason": "DN prefix dropped"
+  },
+  {
+   "dupId": "dunu-242",
+   "dupName": "DUNU 242",
+   "keepId": "dunu-dn242",
+   "keepName": "Dunu DN242",
+   "reason": "DN prefix dropped"
+  },
+  {
+   "dupId": "dunu-dunu-242",
+   "dupName": "DUNU DUNU 242",
+   "keepId": "dunu-dn242",
+   "keepName": "Dunu DN242",
+   "reason": "doubled brand"
+  },
+  {
+   "dupId": "earacoustic-genesis-g318s",
+   "dupName": "EarAcoustic Genesis G318s",
+   "keepId": "earacoustic-audio-elysian-fields-genesis-g318s",
+   "keepName": "EarAcoustic Audio Elysian Fields GENESIS G318s",
+   "reason": "series name dropped"
+  },
+  {
+   "dupId": "earacoustic-audio-genesis-318s",
+   "dupName": "EarAcoustic Audio Genesis 318s",
+   "keepId": "earacoustic-audio-elysian-fields-genesis-g318s",
+   "keepName": "EarAcoustic Audio Elysian Fields GENESIS G318s",
+   "reason": "G dropped"
+  },
+  {
+   "dupId": "earacoustics-genesis-g318s",
+   "dupName": "EARACOUSTICS GENESIS G318s",
+   "keepId": "earacoustic-audio-elysian-fields-genesis-g318s",
+   "keepName": "EarAcoustic Audio Elysian Fields GENESIS G318s",
+   "reason": "brand spelling"
+  },
+  {
+   "dupId": "epz-epz-p40",
+   "dupName": "EPZ EPZ P40",
+   "keepId": "epz-p40",
+   "keepName": "EPZ P40",
+   "reason": "doubled brand"
+  },
+  {
+   "dupId": "etymotic-er2se",
+   "dupName": "Etymotic ER2SE",
+   "keepId": "etymotic-research-er2se",
+   "keepName": "Etymotic Research ER2SE",
+   "reason": "'Research' dropped"
+  },
+  {
+   "dupId": "etymotic-er3xr",
+   "dupName": "Etymotic ER3XR",
+   "keepId": "etymotic-research-er3xr",
+   "keepName": "Etymotic Research ER3XR",
+   "reason": "'Research' dropped"
+  },
+  {
+   "dupId": "etymotic-er4sr",
+   "dupName": "Etymotic ER4SR",
+   "keepId": "etymotic-research-er4sr",
+   "keepName": "Etymotic Research ER4SR",
+   "reason": "'Research' dropped"
+  },
+  {
+   "dupId": "etymotic-er4xr",
+   "dupName": "Etymotic ER4XR",
+   "keepId": "etymotic-research-er4xr",
+   "keepName": "Etymotic Research ER4XR",
+   "reason": "'Research' dropped"
+  },
+  {
+   "dupId": "etymotic-er4s",
+   "dupName": "Etymotic ER4S",
+   "keepId": "etymotic-research-er-4s",
+   "keepName": "Etymotic Research ER-4S",
+   "reason": "'Research' dropped"
+  },
+  {
+   "dupId": "etymotic-ety-kids",
+   "dupName": "Etymotic ETY Kids",
+   "keepId": "etymotic-research-ety-kids",
+   "keepName": "Etymotic Research Ety Kids",
+   "reason": "'Research' dropped"
+  },
+  {
+   "dupId": "etymotic-research-mk5",
+   "dupName": "Etymotic Research mk5",
+   "keepId": "etymotic-mk5-isolator",
+   "keepName": "Etymotic mk5 Isolator",
+   "reason": "'Isolator' dropped"
+  },
+  {
+   "dupId": "final-audio-final-e500",
+   "dupName": "Final Audio Final E500",
+   "keepId": "final-audio-e500",
+   "keepName": "Final Audio E500",
+   "reason": "doubled brand"
+  },
+  {
+   "dupId": "final-audio-e500-fa-e500",
+   "dupName": "Final Audio E500 (FA E500)",
+   "keepId": "final-audio-e500",
+   "keepName": "Final Audio E500",
+   "reason": "label repeats name"
+  },
+  {
+   "dupId": "final-audio-vr3000",
+   "dupName": "Final Audio VR3000",
+   "keepId": "final-audio-vr3000-gaming",
+   "keepName": "Final Audio VR3000 Gaming",
+   "reason": "VR3000 is sold as 'VR3000 for Gaming' (rms 0.54)"
+  },
+  {
+   "dupId": "final-audio-vr3000-final-vr3000",
+   "dupName": "Final Audio VR3000 (Final VR3000)",
+   "keepId": "final-audio-vr3000-gaming",
+   "keepName": "Final Audio VR3000 Gaming",
+   "reason": "label repeats name"
+  },
+  {
+   "dupId": "fir-audio-e10",
+   "dupName": "FIR AUDIO E10",
+   "keepId": "fir-audio-electron-10",
+   "keepName": "Fir Audio Electron 10",
+   "reason": "E10 = Electron 10"
+  },
+  {
+   "dupId": "fir-audio-e12",
+   "dupName": "FIR AUDIO E12",
+   "keepId": "fir-audio-electron-12",
+   "keepName": "Fir Audio Electron 12",
+   "reason": "E12 = Electron 12"
+  },
+  {
+   "dupId": "fir-audio-xenon-xe6",
+   "dupName": "FIR Audio XENON XE6",
+   "keepId": "fir-audio-xenon-6",
+   "keepName": "Fir Audio Xenon 6",
+   "reason": "Xenon 6 = XE6"
+  },
+  {
+   "dupId": "fir-audio-xe6-uiem",
+   "dupName": "FiR Audio XE6 UIEM",
+   "keepId": "fir-audio-xenon-6",
+   "keepName": "Fir Audio Xenon 6",
+   "reason": "XE6 is a universal; UIEM suffix only"
+  },
+  {
+   "dupId": "fir-xe6-fir-xe6-black",
+   "dupName": "FiR XE6 (FiR XE6 Black)",
+   "keepId": "fir-audio-xe6-black-atom",
+   "keepName": "FiR Audio XE6 Black Atom",
+   "reason": "same Black Atom config"
+  },
+  {
+   "dupId": "fir-xe6-fir-xe6-gold",
+   "dupName": "FiR XE6 (FiR XE6 Gold)",
+   "keepId": "fir-audio-xe6-gold-atom",
+   "keepName": "FiR Audio XE6 Gold Atom",
+   "reason": "same Gold Atom config"
+  },
+  {
+   "dupId": "hidizs-hidizs-mm2",
+   "dupName": "Hidizs Hidizs MM2",
+   "keepId": "hidizs-mermaid-mm2",
+   "keepName": "Hidizs Mermaid MM2",
+   "reason": "doubled brand, 'Mermaid' dropped"
+  },
+  {
+   "dupId": "hidizs-mm2",
+   "dupName": "Hidizs MM2",
+   "keepId": "hidizs-mermaid-mm2",
+   "keepName": "Hidizs Mermaid MM2",
+   "reason": "'Mermaid' dropped"
+  },
+  {
+   "dupId": "hidizs-ms1",
+   "dupName": "Hidizs MS1",
+   "keepId": "hidizs-mermaid-ms1",
+   "keepName": "Hidizs Mermaid MS1",
+   "reason": "'Mermaid' dropped (rms 0.09)"
+  },
+  {
+   "dupId": "hisenior-febos-cano-cristales",
+   "dupName": "Hisenior (Febos) Cano Cristales",
+   "keepId": "hisenior-ca-o-cristales",
+   "keepName": "Hisenior Caño Cristales",
+   "reason": "same IEM, official spelling Caño"
+  },
+  {
+   "dupId": "hisenior-cano-cristales",
+   "dupName": "HISENIOR Cano Cristales",
+   "keepId": "hisenior-ca-o-cristales",
+   "keepName": "Hisenior Caño Cristales",
+   "reason": "Cano vs Caño"
+  },
+  {
+   "dupId": "hisenior-cristales",
+   "dupName": "HiSenior Cristales",
+   "keepId": "hisenior-ca-o-cristales",
+   "keepName": "Hisenior Caño Cristales",
+   "reason": "'Caño' dropped"
+  },
+  {
+   "dupId": "hisenior-mega5-est-hisenior-mega5est",
+   "dupName": "Hisenior Mega5-EST (Hisenior Mega5EST)",
+   "keepId": "hisenior-mega-5-est",
+   "keepName": "Hisenior Mega 5 EST",
+   "reason": "label repeats name"
+  },
+  {
+   "dupId": "ikko-oh1s",
+   "dupName": "IKKO OH1S",
+   "keepId": "ikko-gems-oh1s",
+   "keepName": "Ikko Gems OH1s",
+   "reason": "'Gems' dropped"
+  },
+  {
+   "dupId": "ikko-ikko-oh300",
+   "dupName": "IKKO IKKO OH300",
+   "keepId": "ikko-oh300",
+   "keepName": "Ikko OH300",
+   "reason": "doubled brand"
+  },
+  {
+   "dupId": "ikko-oh2",
+   "dupName": "IKKO OH2",
+   "keepId": "ikko-opal-oh2",
+   "keepName": "Ikko Opal OH2",
+   "reason": "'Opal' dropped (rms 0.02)"
+  },
+  {
+   "dupId": "ikko-opal-oh02",
+   "dupName": "Ikko Opal OH02",
+   "keepId": "ikko-opal-oh2",
+   "keepName": "Ikko Opal OH2",
+   "reason": "OH02 = OH2"
+  },
+  {
+   "dupId": "ikko-oh10",
+   "dupName": "Ikko OH10",
+   "keepId": "ikko-oh10-obsidian",
+   "keepName": "Ikko OH10 Obsidian",
+   "reason": "OH10 is named Obsidian"
+  },
+  {
+   "dupId": "juzear-41t",
+   "dupName": "Juzear 41T",
+   "keepId": "juzear-flame-41t",
+   "keepName": "Juzear FLAME/41T",
+   "reason": "'Flame' dropped"
+  },
+  {
+   "dupId": "juzear-41t-juzear-41t",
+   "dupName": "Juzear 41t (Juzear 41t)",
+   "keepId": "juzear-flame-41t",
+   "keepName": "Juzear FLAME/41T",
+   "reason": "label repeats name"
+  },
+  {
+   "dupId": "juzear-juzear-flame-41t",
+   "dupName": "JUZEAR JUZEAR FLAME - 41T",
+   "keepId": "juzear-flame-41t",
+   "keepName": "Juzear FLAME/41T",
+   "reason": "doubled brand"
+  },
+  {
+   "dupId": "juzear-flame",
+   "dupName": "Juzear Flame",
+   "keepId": "juzear-flame-41t",
+   "keepName": "Juzear FLAME/41T",
+   "reason": "41T dropped"
+  },
+  {
+   "dupId": "juzear-61t",
+   "dupName": "Juzear 61T",
+   "keepId": "juzear-butterfly-61t",
+   "keepName": "Juzear Butterfly 61T",
+   "reason": "'Butterfly' dropped"
+  },
+  {
+   "dupId": "juzear-81t",
+   "dupName": "Juzear 81T",
+   "keepId": "juzear-dragonfly-81t",
+   "keepName": "Juzear Dragonfly 81T",
+   "reason": "'Dragonfly' dropped"
+  },
+  {
+   "dupId": "jvc-fw10000",
+   "dupName": "JVC FW10000",
+   "keepId": "jvc-victor-fw10000",
+   "keepName": "JVC Victor FW10000",
+   "reason": "'Victor' dropped"
+  },
+  {
+   "dupId": "kbear-03",
+   "dupName": "KBear 03",
+   "keepId": "kbear-kb03",
+   "keepName": "KBEAR KB03",
+   "reason": "KB prefix dropped"
+  },
+  {
+   "dupId": "kbear-cepheus",
+   "dupName": "KBEAR Cepheus",
+   "keepId": "kbear-kb16-cepheus",
+   "keepName": "KBEAR KB16 Cepheus",
+   "reason": "KB16 dropped"
+  },
+  {
+   "dupId": "kbear-cepheus-kb16-kbear-cepheus-1",
+   "dupName": "KBEar Cepheus KB16 (KBEar Cepheus 1)",
+   "keepId": "kbear-kb16-cepheus",
+   "keepName": "KBEAR KB16 Cepheus",
+   "reason": "word order + unit label"
+  },
+  {
+   "dupId": "kbear-kb16-cepheus-cepheus-any-stock-silicone-tips",
+   "dupName": "KBEAR KB16 (Cepheus) (Cepheus (any stock silicone tips))",
+   "keepId": "kbear-kb16-cepheus",
+   "keepName": "KBEAR KB16 Cepheus",
+   "reason": "stock tips = base"
+  },
+  {
+   "dupId": "celest-pandamon-2-0",
+   "dupName": "Celest Pandamon 2.0",
+   "keepId": "kinera-celest-pandamon-2-0",
+   "keepName": "Kinera Celest Pandamon 2.0",
+   "reason": "brand dropped"
+  },
+  {
+   "dupId": "celest-kinera-pandamon-2-0",
+   "dupName": "Celest (Kinera) Pandamon 2.0",
+   "keepId": "kinera-celest-pandamon-2-0",
+   "keepName": "Kinera Celest Pandamon 2.0",
+   "reason": "brand order"
+  },
+  {
+   "dupId": "celest-kinera-pandamon-2-0-pandamon-2-0-stock-silicone-tips",
+   "dupName": "Celest (Kinera) Pandamon 2.0 (Pandamon 2.0 (stock silicone tips))",
+   "keepId": "kinera-celest-pandamon-2-0",
+   "keepName": "Kinera Celest Pandamon 2.0",
+   "reason": "stock tips = base"
+  },
+  {
+   "dupId": "kinera-pandamon-2-0",
+   "dupName": "Kinera  Pandamon 2.0",
+   "keepId": "kinera-celest-pandamon-2-0",
+   "keepName": "Kinera Celest Pandamon 2.0",
+   "reason": "'Celest' dropped"
+  },
+  {
+   "dupId": "kinera-celest-pandamon-2",
+   "dupName": "Kinera Celest Pandamon 2",
+   "keepId": "kinera-celest-pandamon-2-0",
+   "keepName": "Kinera Celest Pandamon 2.0",
+   "reason": "2 = 2.0"
+  },
+  {
+   "dupId": "celest-pandamon",
+   "dupName": "Celest Pandamon",
+   "keepId": "kinera-celest-pandamon",
+   "keepName": "Kinera Celest Pandamon",
+   "reason": "brand dropped"
+  },
+  {
+   "dupId": "kinera-kinera-pandamon",
+   "dupName": "KINERA KINERA PANDAMON",
+   "keepId": "kinera-celest-pandamon",
+   "keepName": "Kinera Celest Pandamon",
+   "reason": "doubled brand"
+  },
+  {
+   "dupId": "kinera-pandamon",
+   "dupName": "KINERA Pandamon",
+   "keepId": "kinera-celest-pandamon",
+   "keepName": "Kinera Celest Pandamon",
+   "reason": "'Celest' dropped"
+  },
+  {
+   "dupId": "kz-am16-bass",
+   "dupName": "KZ AM16 Bass",
+   "keepId": "kz-am16-bass-enhanced",
+   "keepName": "KZ AM16 Bass Enhanced",
+   "reason": "'Enhanced' dropped"
+  },
+  {
+   "dupId": "kz-z10-pro-2",
+   "dupName": "KZ Z10 Pro 2",
+   "keepId": "kz-zs10-pro-2",
+   "keepName": "KZ ZS10 Pro 2",
+   "reason": "typo Z10 for ZS10"
+  },
+  {
+   "dupId": "kz-kz-pr2",
+   "dupName": "KZ KZ PR2",
+   "keepId": "kz-x-hbb-pr2",
+   "keepName": "KZ x HBB PR2",
+   "reason": "doubled brand; kz-pr2 already merged here"
+  },
+  {
+   "dupId": "kz-krilla-dddd",
+   "dupName": "KZ KRILLA DDDD",
+   "keepId": "kz-krila-dddd",
+   "keepName": "KZ KRILA DDDD",
+   "reason": "Krilla typo, same switch DDDD"
+  },
+  {
+   "dupId": "kz-krilla-dddu",
+   "dupName": "KZ KRILLA DDDU",
+   "keepId": "kz-krila-dddu",
+   "keepName": "KZ KRILA DDDU",
+   "reason": "Krilla typo, same switch DDDU"
+  },
+  {
+   "dupId": "kz-krilla-ddud",
+   "dupName": "KZ KRILLA DDUD",
+   "keepId": "kz-krila-ddud",
+   "keepName": "KZ KRILA DDUD",
+   "reason": "Krilla typo, same switch DDUD"
+  },
+  {
+   "dupId": "kz-krilla-dudd",
+   "dupName": "KZ KRILLA DUDD",
+   "keepId": "kz-krila-dudd",
+   "keepName": "KZ KRILA DUDD",
+   "reason": "Krilla typo, same switch DUDD"
+  },
+  {
+   "dupId": "kz-krilla-uddd",
+   "dupName": "KZ KRILLA UDDD",
+   "keepId": "kz-krila-uddd",
+   "keepName": "KZ KRILA UDDD",
+   "reason": "Krilla typo, same switch UDDD"
+  },
+  {
+   "dupId": "kz-krilla-kz-krilla-ddud",
+   "dupName": "KZ Krilla (KZ Krilla DDUD)",
+   "keepId": "kz-krila-ddud",
+   "keepName": "KZ KRILA DDUD",
+   "reason": "Krilla typo, same switch DDUD"
+  },
+  {
+   "dupId": "kz-krilla-kz-krilla-dudd",
+   "dupName": "KZ Krilla (KZ Krilla DUDD)",
+   "keepId": "kz-krila-dudd",
+   "keepName": "KZ KRILA DUDD",
+   "reason": "Krilla typo, same switch DUDD"
+  },
+  {
+   "dupId": "kz-krilla-kz-krilla-uddd",
+   "dupName": "KZ Krilla (KZ Krilla UDDD)",
+   "keepId": "kz-krila-uddd",
+   "keepName": "KZ KRILA UDDD",
+   "reason": "Krilla typo, same switch UDDD"
+  },
+  {
+   "dupId": "kz-krilla-kz-krilla-uudd",
+   "dupName": "KZ Krilla (KZ Krilla UUDD)",
+   "keepId": "kz-krila-uudd",
+   "keepName": "KZ KRILA UUDD",
+   "reason": "Krilla typo, same switch UUDD"
+  },
+  {
+   "dupId": "kz-krilla-kz-krilla-uuud",
+   "dupName": "KZ Krilla (KZ Krilla UUUD)",
+   "keepId": "kz-krila-uuud",
+   "keepName": "KZ KRILA UUUD",
+   "reason": "Krilla typo, same switch UUUD"
+  },
+  {
+   "dupId": "kz-krila-kz-krila-duuu",
+   "dupName": "KZ Krila (KZ Krila DUUU)",
+   "keepId": "kz-krila-duuu",
+   "keepName": "KZ KRILA DUUU",
+   "reason": "same switch DUUU, other rig"
+  },
+  {
+   "dupId": "kz-krila-kz-krila-uddd",
+   "dupName": "KZ Krila (KZ Krila UDDD)",
+   "keepId": "kz-krila-uddd",
+   "keepName": "KZ KRILA UDDD",
+   "reason": "same switch UDDD, other rig"
+  },
+  {
+   "dupId": "kz-krila-kz-krila-uddu",
+   "dupName": "KZ Krila (KZ Krila UDDU)",
+   "keepId": "kz-krila-uddu",
+   "keepName": "KZ KRILA UDDU",
+   "reason": "same switch UDDU, other rig"
+  },
+  {
+   "dupId": "kz-krila-kz-krila-udud",
+   "dupName": "KZ Krila (KZ Krila UDUD)",
+   "keepId": "kz-krila-udud",
+   "keepName": "KZ KRILA UDUD",
+   "reason": "same switch UDUD, other rig"
+  },
+  {
+   "dupId": "kz-krila-kz-krila-uduu",
+   "dupName": "KZ Krila (KZ Krila UDUU)",
+   "keepId": "kz-krila-uduu",
+   "keepName": "KZ KRILA UDUU",
+   "reason": "same switch UDUU, other rig"
+  },
+  {
+   "dupId": "kz-krila-kz-krila-uudd",
+   "dupName": "KZ Krila (KZ Krila UUDD)",
+   "keepId": "kz-krila-uudd",
+   "keepName": "KZ KRILA UUDD",
+   "reason": "same switch UUDD, other rig"
+  },
+  {
+   "dupId": "kz-krila-kz-krila-uudu",
+   "dupName": "KZ Krila (KZ Krila UUDU)",
+   "keepId": "kz-krila-uudu",
+   "keepName": "KZ KRILA UUDU",
+   "reason": "same switch UUDU, other rig"
+  },
+  {
+   "dupId": "kz-krila-kz-krila-uuud",
+   "dupName": "KZ Krila (KZ Krila UUUD)",
+   "keepId": "kz-krila-uuud",
+   "keepName": "KZ KRILA UUUD",
+   "reason": "same switch UUUD, other rig"
+  },
+  {
+   "dupId": "letshouer-letshuoer-s08",
+   "dupName": "Letshouer Letshuoer S08",
+   "keepId": "letshuoer-s08",
+   "keepName": "Letshuoer S08",
+   "reason": "brand typo"
+  },
+  {
+   "dupId": "letshouer-s08",
+   "dupName": "LETSHOUER S08",
+   "keepId": "letshuoer-s08",
+   "keepName": "Letshuoer S08",
+   "reason": "brand typo"
+  },
+  {
+   "dupId": "letshuoer-s08-s08",
+   "dupName": "Letshuoer S08 (s08)",
+   "keepId": "letshuoer-s08",
+   "keepName": "Letshuoer S08",
+   "reason": "label repeats name"
+  },
+  {
+   "dupId": "letshuoer-ej07-og",
+   "dupName": "Letshuoer EJ07 OG",
+   "keepId": "letshuoer-ej07",
+   "keepName": "Letshuoer EJ07",
+   "reason": "OG = original EJ07"
+  },
+  {
+   "dupId": "letshuoer-ej07m-lava",
+   "dupName": "LetShuoer EJ07M Lava",
+   "keepId": "letshuoer-ej07m-kinda-lava",
+   "keepName": "Letshuoer EJ07M: Kinda Lava",
+   "reason": "'Kinda' dropped"
+  },
+  {
+   "dupId": "letshuoer-hbb-ej07m-kinda-lava",
+   "dupName": "Letshuoer HBB EJ07M Kinda Lava",
+   "keepId": "letshuoer-ej07m-kinda-lava",
+   "keepName": "Letshuoer EJ07M: Kinda Lava",
+   "reason": "HBB collab tag"
+  },
+  {
+   "dupId": "shuoer-ej07m-kinda-lava-edition",
+   "dupName": "Shuoer EJ07M Kinda Lava Edition",
+   "keepId": "letshuoer-ej07m-kinda-lava",
+   "keepName": "Letshuoer EJ07M: Kinda Lava",
+   "reason": "old brand name + 'Edition'"
+  },
+  {
+   "dupId": "letshuoer-s12-2024-edition",
+   "dupName": "Letshuoer S12 2024 Edition",
+   "keepId": "letshuoer-s12-2024-anniversary-edition",
+   "keepName": "Letshuoer S12 2024 Anniversary Edition",
+   "reason": "same 2024 edition"
+  },
+  {
+   "dupId": "letshouer-s12-2024",
+   "dupName": "LetShouer S12 2024",
+   "keepId": "letshuoer-s12-2024-anniversary-edition",
+   "keepName": "Letshuoer S12 2024 Anniversary Edition",
+   "reason": "brand typo, same 2024 edition"
+  }
+ ],
+ "unsure": [
+  {
+   "a": "FIR Audio KRYPTON 5 BLK / SLV / GLD",
+   "b": "Krypton 5",
+   "note": "colour suffixes, rms 0.3-0.5; unsure if just finishes or different ATOM/tuning"
+  },
+  {
+   "a": "Campfire Andromeda 10",
+   "b": "Campfire Audio Andromeda 10 SE / Black Damascus",
+   "note": "low rms (0.44/0.82) but SE and Black Damascus may be separate editions"
+  },
+  {
+   "a": "DDHiFi Memory AL 4.4",
+   "b": "DDHiFi Memory PD 4.4",
+   "note": "rms 0.2; unclear what AL/PD denote"
+  },
+  {
+   "a": "DUNU DK3001 BD",
+   "b": "DUNU DK3001BD Braindance",
+   "note": "BD may stand for Braindance"
+  },
+  {
+   "a": "DUNU SA6",
+   "b": "DUNU SA6 EST",
+   "note": "unclear if EST is a variant/edition"
+  },
+  {
+   "a": "Dunu SA6 mkII",
+   "b": "Dunu SA6 MkII Red/Blue Edition",
+   "note": "colour edition, rms 0.5"
+  },
+  {
+   "a": "DUNU Kima 2",
+   "b": "DUNU Kima 2 Raven Teal",
+   "note": "colour edition or retune?"
+  },
+  {
+   "a": "EPZ 530 / G10",
+   "b": "EPZ 530 new / G10 NEW",
+   "note": "revision vs relabel unknown"
+  },
+  {
+   "a": "EPZ 550",
+   "b": "EPZ 550 Purple Phoenix",
+   "note": "limited edition, maybe same tuning"
+  },
+  {
+   "a": "EPZ P50",
+   "b": "EPZ P50 CLEAR",
+   "note": "rms 0.26, shell colour?"
+  },
+  {
+   "a": "Hidizs ST2 PRO / HIDIZS ST2 Nebula",
+   "b": "Hidizs ST2 Pro Nebula",
+   "note": "Nebula may be the ST2 Pro colourway"
+  },
+  {
+   "a": "IKKO OH5",
+   "b": "IKKO OH5 Asgard",
+   "note": "rms 0.56; not sure Asgard is OH5's name"
+  },
+  {
+   "a": "INAWAKEN Twilight",
+   "b": "Inawaken Twilight DS",
+   "note": "DS could be a separate version"
+  },
+  {
+   "a": "INTUAURA Reference 2019",
+   "b": "INTUAURA Reference 2019 DSP",
+   "note": "rms 0.09 but DSP suggests separate product"
+  },
+  {
+   "a": "Intime Sora Light 2019",
+   "b": "Intime SORA Light 2019 Garnet",
+   "note": "colour edition?"
+  },
+  {
+   "a": "Kinera iDun 2.0",
+   "b": "Kinera IDUN Golden 2.0",
+   "note": "Idun Golden vs Idun 2.0 lineage unclear"
+  },
+  {
+   "a": "Hisenior T2",
+   "b": "Hisenior T2 Classic",
+   "note": "Classic may be a separate tuning"
+  },
+  {
+   "a": "Letshuoer S12",
+   "b": "LetShuoer SB S12",
+   "note": "SB meaning unclear"
+  },
+  {
+   "a": "Catbling Custom",
+   "b": "Catbling Custom RT",
+   "note": "RT meaning unclear"
+  },
+  {
+   "a": "Cozoy D2",
+   "b": "Cozoy D2 evg",
+   "note": "evg meaning unclear"
+  },
+  {
+   "a": "CVJ Shadowblade",
+   "b": "CVJ AUDIO Shadow Blade (CVJ ShadowBlade TBlack)",
+   "note": "TBlack could be tips or a colourway"
+  },
+  {
+   "a": "7th Acoustics Stargazer 3",
+   "b": "7th Acoustic Stargazer 3 SO",
+   "note": "SO meaning unclear"
+  },
+  {
+   "a": "7Hz Timeless 2 GOLD NOZZLE",
+   "b": "7Hz Timeless 2 BIG GOLD NOZZLE",
+   "note": "possibly the same nozzle, rms 0.94"
+  },
+  {
+   "a": "Juzear HARRIER Stock Clear Blue",
+   "b": "Juzear HARRIER Stock Red Black",
+   "note": "colour-coded stock tips, kept separate"
+  },
+  {
+   "a": "BLON x Z Jojo / Blon x Zeos Jojo",
+   "b": "Blon BL-Mini",
+   "note": "existing aliases merge other Jojo rows into blon-bl-mini; unsure Jojo = BL-Mini"
+  },
+  {
+   "a": "Letshuoer S12 2024 (merged into letshuoer-s12)",
+   "b": "Letshuoer S12 2024 Anniversary Edition",
+   "note": "existing merge treats the 2024 edition as S12; check consistency"
+  }
+ ]
+}

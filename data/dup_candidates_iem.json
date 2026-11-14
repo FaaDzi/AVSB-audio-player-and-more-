@@ -1,0 +1,2450 @@
+[
+ {
+  "a": "TRN MT4 Pro",
+  "b": "TRN MT4 PRO Final",
+  "idA": "trn-mt4-pro",
+  "idB": "trn-mt4-pro-final",
+  "rms": 0.08,
+  "sim": 0.7,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "INTUAURA Reference 2019",
+  "b": "INTUAURA Reference 2019 DSP",
+  "idA": "intuaura-reference-2019",
+  "idB": "intuaura-reference-2019-dsp",
+  "rms": 0.09,
+  "sim": 0.88,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Moondrop Kadenz A Nozzle",
+  "b": "Moondrop Kadenz B Nozzle",
+  "idA": "moondrop-kadenz-a-nozzle",
+  "idB": "moondrop-kadenz-b-nozzle",
+  "rms": 0.1,
+  "sim": 0.93,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "DDHiFi Memory AL 4.4",
+  "b": "DDHiFi Memory PD 4.4",
+  "idA": "ddhifi-memory-al-4-4",
+  "idB": "ddhifi-memory-pd-4-4",
+  "rms": 0.2,
+  "sim": 0.85,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "Softears SE6",
+  "b": "Softears SE6 Live",
+  "idA": "softears-se6",
+  "idB": "softears-se6-live",
+  "rms": 0.26,
+  "sim": 0.55,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "EPZ P50",
+  "b": "EPZ P50 CLEAR",
+  "idA": "epz-p50",
+  "idB": "epz-p50-clear",
+  "rms": 0.26,
+  "sim": 0.5,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "NF Audio RG15",
+  "b": "NF RG15 x Assassin's Creed Mirage",
+  "idA": "nf-audio-rg15",
+  "idB": "nf-rg15-x-assassin-s-creed-mirage",
+  "rms": 0.3,
+  "sim": 0.24,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Moondrop DUSK 2 L (3.5)",
+  "b": "Moondrop DUSK 2 R (3.5)",
+  "idA": "moondrop-dusk-2-l-3-5",
+  "idB": "moondrop-dusk-2-r-3-5",
+  "rms": 0.32,
+  "sim": 0.88,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "FIR Audio KRYPTON 5 BLK",
+  "b": "FIR Audio KRYPTON 5 SLV",
+  "idA": "fir-audio-krypton-5-blk",
+  "idB": "fir-audio-krypton-5-slv",
+  "rms": 0.32,
+  "sim": 0.85,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "KZ EDC Pro OFC Cable",
+  "b": "KZ EDC Pro Silver Cable",
+  "idA": "kz-edc-pro-ofc-cable",
+  "idB": "kz-edc-pro-silver-cable",
+  "rms": 0.35,
+  "sim": 0.76,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "HIDIZS ST2 Nebula",
+  "b": "Hidizs ST2 Pro Nebula",
+  "idA": "hidizs-st2-nebula",
+  "idB": "hidizs-st2-pro-nebula",
+  "rms": 0.37,
+  "sim": 0.83,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Tin Hifi T6",
+  "b": "TinHiFi T6 Green Ring Clear",
+  "idA": "tinhifi-t6",
+  "idB": "tinhifi-t6-green-ring-clear",
+  "rms": 0.37,
+  "sim": 0.19,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "INAWAKEN Twilight",
+  "b": "Inawaken Twilight DS",
+  "idA": "inawaken-twilight",
+  "idB": "inawaken-twilight-ds",
+  "rms": 0.38,
+  "sim": 0.84,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "OopusX OP.22 HOLLOW SWITCH SMOOTH",
+  "b": "OopusX OP.22 HOLLOW SWITCH STICKY",
+  "idA": "oopusx-op-22-hollow-switch-smooth",
+  "idB": "oopusx-op-22-hollow-switch-sticky",
+  "rms": 0.4,
+  "sim": 0.85,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "Moondrop Blessing 2 Dusk (dusk bgvp)",
+  "b": "Moondrop x Crinacle Blessing 2 Dusk (Moondrop B2D (Zonie))",
+  "idA": "moondrop-blessing-2-dusk-dusk-bgvp",
+  "idB": "moondrop-x-crinacle-blessing-2-dusk-moondrop-b2d-zonie",
+  "rms": 0.4,
+  "sim": 0.73,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "LetShuoer EJ10",
+  "b": "LETSHUOER EJ10 TI",
+  "idA": "letshuoer-ej10",
+  "idB": "letshuoer-ej10-ti",
+  "rms": 0.41,
+  "sim": 0.73,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "NF RA05",
+  "b": "NFAudio ['RA05'] (NF Audio RA05 MS42)",
+  "idA": "nf-ra05",
+  "idB": "nfaudio-ra05-nf-audio-ra05-ms42",
+  "rms": 0.42,
+  "sim": 0.8,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "Hisenior Mega 5 EST",
+  "b": "HiSenior Mega5 EST Retune",
+  "idA": "hisenior-mega-5-est",
+  "idB": "hisenior-mega5-est-retune",
+  "rms": 0.42,
+  "sim": 0.69,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Fiio FD5",
+  "b": "FIIO FD5 LARGE NOZZLE",
+  "idA": "fiio-fd5",
+  "idB": "fiio-fd5-large-nozzle",
+  "rms": 0.42,
+  "sim": 0.32,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Letshuoer EJ07M Kinda Lava Custom Resin",
+  "b": "Letshuoer EJ07M Kinda Lava Custom Shell",
+  "idA": "letshuoer-ej07m-kinda-lava-custom-resin",
+  "idB": "letshuoer-ej07m-kinda-lava-custom-shell",
+  "rms": 0.43,
+  "sim": 0.86,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "Campfire Andromeda 10",
+  "b": "Campfire Audio Andromeda 10 SE",
+  "idA": "campfire-andromeda-10",
+  "idB": "campfire-audio-andromeda-10-se",
+  "rms": 0.44,
+  "sim": 0.89,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "NICEHCK NX8",
+  "b": "NiceHCK NX8 Ti",
+  "idA": "nicehck-nx8",
+  "idB": "nicehck-nx8ti",
+  "rms": 0.44,
+  "sim": 0.67,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Hisenior Mega5EST 7th - Collection Tips",
+  "b": "Hisenior Mega5EST 7th - Orignal Tips",
+  "idA": "hisenior-mega5est-7th-collection-tips",
+  "idB": "hisenior-mega5est-7th-orignal-tips",
+  "rms": 0.46,
+  "sim": 0.77,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "ThieAudio Valhalla Sancai Wide",
+  "b": "ThieAudio Valhalla Stock White",
+  "idA": "thieaudio-valhalla-sancai-wide",
+  "idB": "thieaudio-valhalla-stock-white",
+  "rms": 0.46,
+  "sim": 0.75,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "TRN MT4 Pro",
+  "b": "TRN MT4 PRO HBB Almost Colab",
+  "idA": "trn-mt4-pro",
+  "idB": "trn-mt4-pro-hbb-almost-colab",
+  "rms": 0.46,
+  "sim": 0.45,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Truthear Crinacle Zero Red (Project Red IMP 2)",
+  "b": "TRUTHEAR CRINACLE ZERO RED IMP",
+  "idA": "truthear-crinacle-zero-red-project-red-imp-2",
+  "idB": "truthear-crinacle-zero-red-imp",
+  "rms": 0.47,
+  "sim": 0.89,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "NF Audio RA15",
+  "b": "NF Audio RA15 Bright",
+  "idA": "nf-audio-ra15",
+  "idB": "nf-audio-ra15-bright",
+  "rms": 0.47,
+  "sim": 0.53,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "EPZ G20",
+  "b": "EPZ G20 Pro",
+  "idA": "epz-g20",
+  "idB": "epz-g20-pro",
+  "rms": 0.48,
+  "sim": 0.6,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "SIMGOT ['EW100 Shark']",
+  "b": "Simgot EW100P Shark",
+  "idA": "simgot-ew100-shark",
+  "idB": "simgot-ew100p-shark",
+  "rms": 0.5,
+  "sim": 0.88,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "TANGZU XUAN WU GATE",
+  "b": "TANGZU XUAN WU GATE SANCAI",
+  "idA": "tangzu-xuan-wu-gate",
+  "idB": "tangzu-xuan-wu-gate-sancai",
+  "rms": 0.5,
+  "sim": 0.77,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "Soratune BI01",
+  "b": "Soratune YI01",
+  "idA": "soratune-bi01",
+  "idB": "soratune-yi01",
+  "rms": 0.5,
+  "sim": 0.75,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "Dunu SA6 mkII",
+  "b": "Dunu SA6 MkII Red/Blue Edition",
+  "idA": "dunu-sa6-mkii",
+  "idB": "dunu-sa6-mkii-red-blue-edition",
+  "rms": 0.5,
+  "sim": 0.48,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "FIR Audio KRYPTON 5 GLD",
+  "b": "FIR Audio KRYPTON 5 SLV",
+  "idA": "fir-audio-krypton-5-gld",
+  "idB": "fir-audio-krypton-5-slv",
+  "rms": 0.51,
+  "sim": 0.85,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "OopusX OP.22 SOLID SWITCH SMOOTH",
+  "b": "OopusX OP.22 SOLID SWITCH STICKY",
+  "idA": "oopusx-op-22-solid-switch-smooth",
+  "idB": "oopusx-op-22-solid-switch-sticky",
+  "rms": 0.52,
+  "sim": 0.84,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "Lime Ears sample",
+  "b": "Lime Ears SampleA",
+  "idA": "lime-ears-sample",
+  "idB": "lime-ears-samplea",
+  "rms": 0.53,
+  "sim": 0.92,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "TANGZU XUAN WU GATE SANCAI",
+  "b": "TANGZU XUAN WU GATE SANCAI WIDE",
+  "idA": "tangzu-xuan-wu-gate-sancai",
+  "idB": "tangzu-xuan-wu-gate-sancai-wide",
+  "rms": 0.53,
+  "sim": 0.88,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "Kinera Celest Wyvern Abyss",
+  "b": "Kinera Celest Wyvern Black",
+  "idA": "kinera-celest-wyvern-abyss",
+  "idB": "kinera-celest-wyvern-black",
+  "rms": 0.53,
+  "sim": 0.79,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "Catbling Custom",
+  "b": "Catbling Custom RT",
+  "idA": "catbling-custom",
+  "idB": "catbling-custom-rt",
+  "rms": 0.54,
+  "sim": 0.8,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "ThieAudio Origin Sancai Regular",
+  "b": "ThieAudio Origin Sancai Wide",
+  "idA": "thieaudio-origin-sancai-regular",
+  "idB": "thieaudio-origin-sancai-wide",
+  "rms": 0.54,
+  "sim": 0.77,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "Rose Technics (ROSESELSA) Quiet Sea II (Quiet Sea II (stock silicone tips))",
+  "b": "Rose Technics (Roseselsa) Quietsea II",
+  "idA": "rose-technics-roseselsa-quiet-sea-ii-quiet-sea-ii-stock-silicone-tips",
+  "idB": "rose-technics-roseselsa-quietsea-ii",
+  "rms": 0.55,
+  "sim": 0.98,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Simgot EW200 DSP",
+  "b": "Simgot EW200 Maze DSP",
+  "idA": "simgot-ew200-dsp",
+  "idB": "simgot-ew200-maze-dsp",
+  "rms": 0.55,
+  "sim": 0.78,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "EPZ 530",
+  "b": "EPZ 530 new",
+  "idA": "epz-530",
+  "idB": "epz-530-new",
+  "rms": 0.55,
+  "sim": 0.6,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Sennheiser IE 600 (AZLA Sedna eartips)",
+  "b": "Sennheiser IE600",
+  "idA": "sennheiser-ie-600-azla-sedna-eartips",
+  "idB": "sennheiser-ie600",
+  "rms": 0.56,
+  "sim": 0.91,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Juzear HARRIER Stock Clear Blue",
+  "b": "Juzear HARRIER Stock Red Black",
+  "idA": "juzear-harrier-stock-clear-blue",
+  "idB": "juzear-harrier-stock-red-black",
+  "rms": 0.56,
+  "sim": 0.77,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "Simgot EM10",
+  "b": "Simgot EM10 DREAM",
+  "idA": "simgot-em10",
+  "idB": "simgot-em10-dream",
+  "rms": 0.56,
+  "sim": 0.57,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "IKKO OH5",
+  "b": "IKKO OH5 Asgard",
+  "idA": "ikko-oh5",
+  "idB": "ikko-oh5-asgard",
+  "rms": 0.56,
+  "sim": 0.46,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Geek Wold GK10",
+  "b": "Geek Wold GK10s",
+  "idA": "geek-wold-gk10",
+  "idB": "geek-wold-gk10s",
+  "rms": 0.57,
+  "sim": 0.95,
+  "why": "similar names, close curves"
+ },
+ {
+  "a": "Tansio Mirai TSMR - 4 Pro",
+  "b": "Tansio Mirai TSMR-4 Pro (on-on-off)",
+  "idA": "tansio-mirai-tsmr-4-pro",
+  "idB": "tansio-mirai-tsmr-4-pro-on-on-off",
+  "rms": 0.58,
+  "sim": 0.94,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "SONY EX800ST",
+  "b": "SONY EX800ST Taped vent",
+  "idA": "sony-ex800st",
+  "idB": "sony-ex800st-taped-vent",
+  "rms": 0.59,
+  "sim": 0.56,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "KZ za12",
+  "b": "KZ ZA12 Silicon",
+  "idA": "kz-za12",
+  "idB": "kz-za12-silicon",
+  "rms": 0.6,
+  "sim": 0.5,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "ThieAudio ['Legacy 3'] (ThieAudio L3 01)",
+  "b": "ThieAudio L3 (Thieaudio L3 (02))",
+  "idA": "thieaudio-legacy-3-thieaudio-l3-01",
+  "idB": "thieaudio-l3-thieaudio-l3-02",
+  "rms": 0.6,
+  "sim": 0.33,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Simgot EM6L (EM6L (TENNMAK SoFoam tips))",
+  "b": "Simgot EM6L Phoenix",
+  "idA": "simgot-em6l-em6l-tennmak-sofoam-tips",
+  "idB": "simgot-em6l-phoenix",
+  "rms": 0.61,
+  "sim": 0.5,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "FiiO FA19 (FiiO FA19 (Switch On))",
+  "b": "FIIO FA19 MONITOR",
+  "idA": "fiio-fa19-fiio-fa19-switch-on",
+  "idB": "fiio-fa19-monitor",
+  "rms": 0.62,
+  "sim": 0.5,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "EPZ P50",
+  "b": "EPZ P50 Custom",
+  "idA": "epz-p50",
+  "idB": "epz-p50-custom",
+  "rms": 0.62,
+  "sim": 0.46,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Shanling ME800",
+  "b": "Shanling ME800 Clear",
+  "idA": "shanling-me800",
+  "idB": "shanling-me800-clear",
+  "rms": 0.64,
+  "sim": 0.62,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Simgot SuperMix 5",
+  "b": "Simgot SUPERMIX 5 Azla Origin",
+  "idA": "simgot-supermix-5",
+  "idB": "simgot-supermix-5-azla-origin",
+  "rms": 0.67,
+  "sim": 0.62,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Shanling ME800",
+  "b": "Shanling ME800 Vocal",
+  "idA": "shanling-me800",
+  "idB": "shanling-me800-vocal",
+  "rms": 0.68,
+  "sim": 0.62,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "MYER-AUDIO  SLIIVO SLT6",
+  "b": "MYER-AUDIO CKLVX SLIIVO SLT6 (on-off)",
+  "idA": "myer-audio-sliivo-slt6",
+  "idB": "myer-audio-cklvx-sliivo-slt6-on-off",
+  "rms": 0.69,
+  "sim": 0.79,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "TIN HiFi T6 Green",
+  "b": "TinHiFi T6 Green Ring Clear",
+  "idA": "tin-hifi-t6-green",
+  "idB": "tinhifi-t6-green-ring-clear",
+  "rms": 0.7,
+  "sim": 0.59,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "EPZ K9",
+  "b": "EPZ K9 Stock Clear Tips",
+  "idA": "epz-k9",
+  "idB": "epz-k9-stock-clear-tips",
+  "rms": 0.72,
+  "sim": 0.19,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Tin Hifi C0 Elf",
+  "b": "TinHiFi C0",
+  "idA": "tin-hifi-c0-elf",
+  "idB": "tinhifi-c0",
+  "rms": 0.73,
+  "sim": 0.5,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Tin HiFi C1",
+  "b": "Tin Hifi T1S (Tin Hifi T1S EQ)",
+  "idA": "tin-hifi-c1",
+  "idB": "tin-hifi-t1s-tin-hifi-t1s-eq",
+  "rms": 0.73,
+  "sim": 0.4,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "NF Audio NA3",
+  "b": "NF Audio NA3 Essentials",
+  "idA": "nf-audio-na3",
+  "idB": "nf-audio-na3-essentials",
+  "rms": 0.73,
+  "sim": 0.35,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "TIN HiFi T6 Black",
+  "b": "TinHiFi T6 Black Ring Clear",
+  "idA": "tin-hifi-t6-black",
+  "idB": "tinhifi-t6-black-ring-clear",
+  "rms": 0.77,
+  "sim": 0.59,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "KBEar Cepheus KB16 (KBEar Cepheus KB16 15 Ohm)",
+  "b": "KBEAR KB16 Cepheus",
+  "idA": "kbear-cepheus-kb16-kbear-cepheus-kb16-15-ohm",
+  "idB": "kbear-kb16-cepheus",
+  "rms": 0.77,
+  "sim": 0.58,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "TIN HiFi T6 Pink",
+  "b": "TinHiFi T6 Pink Ring Clear",
+  "idA": "tin-hifi-t6-pink",
+  "idB": "tinhifi-t6-pink-ring-clear",
+  "rms": 0.77,
+  "sim": 0.56,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "LetShuoer ['D13'] (LetShuoer D13 TrebleN)",
+  "b": "Letshuoer D13",
+  "idA": "letshuoer-d13-letshuoer-d13-treblen",
+  "idB": "letshuoer-d13",
+  "rms": 0.78,
+  "sim": 0.75,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "KZ ZS10 Pro X",
+  "b": "KZ ZS10 PRO X Silicon",
+  "idA": "kz-zs10-pro-x",
+  "idB": "kz-zs10-pro-x-silicon",
+  "rms": 0.79,
+  "sim": 0.71,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "PULA Anvil 114",
+  "b": "PULA ANVIL114 (ANVIL114 (KZ foam tips))",
+  "idA": "pula-anvil-114",
+  "idB": "pula-anvil114-anvil114-kz-foam-tips",
+  "rms": 0.8,
+  "sim": 0.94,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Campfire Andromeda 10",
+  "b": "Campfire Audio Andromeda 10 Black Damascus",
+  "idA": "campfire-andromeda-10",
+  "idB": "campfire-audio-andromeda-10-black-damascus",
+  "rms": 0.82,
+  "sim": 0.62,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Simgot SuperMix 5",
+  "b": "Simgot SUPERMIX 5 Divinus Wide",
+  "idA": "simgot-supermix-5",
+  "idB": "simgot-supermix-5-divinus-wide",
+  "rms": 0.82,
+  "sim": 0.61,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Myer Audio CKLVX D62 (Myer Audio CKLVX D62 15 Ohm)",
+  "b": "MYER CKLVX D62 SANCAI WIDE",
+  "idA": "myer-audio-cklvx-d62-myer-audio-cklvx-d62-15-ohm",
+  "idB": "myer-cklvx-d62-sancai-wide",
+  "rms": 0.82,
+  "sim": 0.6,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Fiio FH9",
+  "b": "Fiio FH9 : Trble Filter",
+  "idA": "fiio-fh9",
+  "idB": "fiio-fh9-trble-filter",
+  "rms": 0.82,
+  "sim": 0.32,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Letshuoer EJ07M Kinda Lava Custom Resin",
+  "b": "Letshuoer EJ07M Resin",
+  "idA": "letshuoer-ej07m-kinda-lava-custom-resin",
+  "idB": "letshuoer-ej07m-resin",
+  "rms": 0.83,
+  "sim": 0.55,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "KBEAR KB16 (Cepheus) (Cepheus (Zhulinniao Zhu Rythme tips))",
+  "b": "KBEAR KB16 Cepheus",
+  "idA": "kbear-kb16-cepheus-cepheus-zhulinniao-zhu-rythme-tips",
+  "idB": "kbear-kb16-cepheus",
+  "rms": 0.83,
+  "sim": 0.5,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "ThieAudio Hype 4 mk2",
+  "b": "ThieAudio Hype 4 MK2 Softears Ultraclear",
+  "idA": "thieaudio-hype-4-mk2",
+  "idB": "thieaudio-hype-4-mk2-softears-ultraclear",
+  "rms": 0.83,
+  "sim": 0.5,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Simgot EW100P",
+  "b": "Simgot EW100P Shark",
+  "idA": "simgot-ew100p",
+  "idB": "simgot-ew100p-shark",
+  "rms": 0.84,
+  "sim": 0.67,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Sennheiser IE 900",
+  "b": "Sennheiser IE900 (IE900 (stock foam tips))",
+  "idA": "sennheiser-ie-900",
+  "idB": "sennheiser-ie900-ie900-stock-foam-tips",
+  "rms": 0.86,
+  "sim": 0.91,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Fiio FX15",
+  "b": "FIIO FX15 EST ON",
+  "idA": "fiio-fx15",
+  "idB": "fiio-fx15-est-on",
+  "rms": 0.86,
+  "sim": 0.53,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "EPZ 550",
+  "b": "EPZ 550 Clear Stock",
+  "idA": "epz-550",
+  "idB": "epz-550-clear-stock",
+  "rms": 0.86,
+  "sim": 0.33,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "WHIZZER H1",
+  "b": "Whizzer HE1",
+  "idA": "whizzer-h1",
+  "idB": "whizzer-he1",
+  "rms": 0.87,
+  "sim": 0.8,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Kinera Celest Ignite X Beast",
+  "b": "Kinera Celest IgniteX Beast (Kinera Celest IgniteX Beast 15 Ohm)",
+  "idA": "kinera-celest-ignite-x-beast",
+  "idB": "kinera-celest-ignitex-beast-kinera-celest-ignitex-beast-15-ohm",
+  "rms": 0.89,
+  "sim": 0.98,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Muse HiFi The East 6",
+  "b": "Muse HiFi The EAST6 (L+R Muse HiFi EAST6 Black nozzle)",
+  "idA": "muse-hifi-the-east-6",
+  "idB": "muse-hifi-the-east6-l-r-muse-hifi-east6-black-nozzle",
+  "rms": 0.89,
+  "sim": 0.95,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "TANGZU Shimin Li",
+  "b": "Tangzu ShiminLi (Tangzu ShiminLi DownUnder)",
+  "idA": "tangzu-shimin-li",
+  "idB": "tangzu-shiminli-tangzu-shiminli-downunder",
+  "rms": 0.89,
+  "sim": 0.94,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Fiio FH5S",
+  "b": "FiiO FH5s Mids",
+  "idA": "fiio-fh5s",
+  "idB": "fiio-fh5s-mids",
+  "rms": 0.89,
+  "sim": 0.62,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "SIMGOT EG280",
+  "b": "Simgot EG280 With DAC",
+  "idA": "simgot-eg280",
+  "idB": "simgot-eg280-with-dac",
+  "rms": 0.9,
+  "sim": 0.53,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Oriveti OH700VB",
+  "b": "Oriveti OH700VB Back Position",
+  "idA": "oriveti-oh700vb",
+  "idB": "oriveti-oh700vb-back-position",
+  "rms": 0.9,
+  "sim": 0.5,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Simgot EW200",
+  "b": "Simgot EW200 Maze",
+  "idA": "simgot-ew200",
+  "idB": "simgot-ew200-maze",
+  "rms": 0.91,
+  "sim": 0.67,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Letshuoer S12 Ultra",
+  "b": "Letshuoer S12 ULTRA Clear",
+  "idA": "letshuoer-s12-ultra",
+  "idB": "letshuoer-s12-ultra-clear",
+  "rms": 0.92,
+  "sim": 0.75,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Moondrop Blessing 2 Dusk (dusk bgvp)",
+  "b": "Moondrop Crinacle Blessing 2 Dusk",
+  "idA": "moondrop-blessing-2-dusk-dusk-bgvp",
+  "idB": "moondrop-crinacle-blessing-2-dusk",
+  "rms": 0.93,
+  "sim": 0.77,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "DUNU 142 (DUNU 142 (Deep Fit))",
+  "b": "Dunu DN 142",
+  "idA": "dunu-142-dunu-142-deep-fit",
+  "idB": "dunu-dn-142",
+  "rms": 0.93,
+  "sim": 0.67,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "EPZ 550",
+  "b": "EPZ 550 Purple Phoenix",
+  "idA": "epz-550",
+  "idB": "epz-550-purple-phoenix",
+  "rms": 0.93,
+  "sim": 0.29,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "7Hz Timeless 2 BIG GOLD NOZZLE",
+  "b": "7Hz Timeless 2 GOLD NOZZLE",
+  "idA": "7hz-timeless-2-big-gold-nozzle",
+  "idB": "7hz-timeless-2-gold-nozzle",
+  "rms": 0.94,
+  "sim": 0.92,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Hisenior Mega 5p",
+  "b": "Hisenior Mega5 P (HiSenior Mega5 P 15 Ohm)",
+  "idA": "hisenior-mega-5p",
+  "idB": "hisenior-mega5-p-hisenior-mega5-p-15-ohm",
+  "rms": 0.94,
+  "sim": 0.86,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Tangzu Wan'er 2 (Tangzu Waner 2 (Deep))",
+  "b": "Tangzu Wan'er SG 2 (Waner 2 C)",
+  "idA": "tangzu-wan-er-2-tangzu-waner-2-deep",
+  "idB": "tangzu-wan-er-sg-2-waner-2-c",
+  "rms": 0.96,
+  "sim": 0.84,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "DUNU SA6 MK II (DUNU SA6 MK II (Switch on))",
+  "b": "Dunu SA6 mkII",
+  "idA": "dunu-sa6-mk-ii-dunu-sa6-mk-ii-switch-on",
+  "idB": "dunu-sa6-mkii",
+  "rms": 0.97,
+  "sim": 0.94,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "iBasso 3T-154",
+  "b": "iBASSO 3T-154 Foam Mod",
+  "idA": "ibasso-3t-154",
+  "idB": "ibasso-3t-154-foam-mod",
+  "rms": 0.97,
+  "sim": 0.57,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "NF ACOUS RA15 (gold nozzle)",
+  "b": "NF Audio RA15",
+  "idA": "nf-acous-ra15-gold-nozzle",
+  "idB": "nf-audio-ra15",
+  "rms": 0.97,
+  "sim": 0.57,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "INM Audio INM8",
+  "b": "INM Audio INM8 Prestige",
+  "idA": "inm-audio-inm8",
+  "idB": "inm-audio-inm8-prestige",
+  "rms": 0.97,
+  "sim": 0.47,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "BGVP NS9 (BGVP NS9 (black tips + no mesh))",
+  "b": "BGVP NS9 DEF FILTER",
+  "idA": "bgvp-ns9-bgvp-ns9-black-tips-no-mesh",
+  "idB": "bgvp-ns9-def-filter",
+  "rms": 0.97,
+  "sim": 0.35,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Letshuoer S15",
+  "b": "LETSHUOER S15 Mod",
+  "idA": "letshuoer-s15",
+  "idB": "letshuoer-s15-mod",
+  "rms": 0.98,
+  "sim": 0.6,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Hisenior Audio T2U",
+  "b": "Hisenior T2",
+  "idA": "hisenior-audio-t2u",
+  "idB": "hisenior-t2",
+  "rms": 1.0,
+  "sim": 0.8,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "SIVGA M100",
+  "b": "SIVGA SM100 (SIVGA SM100 Final E)",
+  "idA": "sivga-m100",
+  "idB": "sivga-sm100-sivga-sm100-final-e",
+  "rms": 1.01,
+  "sim": 0.89,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "LETSHUOER EJ07M Kinda Lava (LETSHUOER EJ07M Kinda Lava Spring)",
+  "b": "Letshuoer EJ07M Kinda Lava Yellow Custom",
+  "idA": "letshuoer-ej07m-kinda-lava-letshuoer-ej07m-kinda-lava-spring",
+  "idB": "letshuoer-ej07m-kinda-lava-yellow-custom",
+  "rms": 1.02,
+  "sim": 0.7,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "KZ AS10 Pro",
+  "b": "KZ AS10 Pro Foam Tips Ignore This Probably Wrong",
+  "idA": "kz-as10-pro",
+  "idB": "kz-as10-pro-foam-tips-ignore-this-probably-wrong",
+  "rms": 1.03,
+  "sim": 0.3,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "TAGO T3-02",
+  "b": "TAGO T3-02 BUCK TICK",
+  "idA": "tago-t3-02",
+  "idB": "tago-t3-02-buck-tick",
+  "rms": 1.04,
+  "sim": 0.5,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Hisenior Mega 5p",
+  "b": "Hisenior MEGA5P (Hisenior MEGA5P (FOAM Eartips))",
+  "idA": "hisenior-mega-5p",
+  "idB": "hisenior-mega5p-hisenior-mega5p-foam-eartips",
+  "rms": 1.05,
+  "sim": 0.92,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "NF Audio RA15",
+  "b": "NF Audio RA15 Warm",
+  "idA": "nf-audio-ra15",
+  "idB": "nf-audio-ra15-warm",
+  "rms": 1.05,
+  "sim": 0.62,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Cozoy D2",
+  "b": "Cozoy D2 evg",
+  "idA": "cozoy-d2",
+  "idB": "cozoy-d2-evg",
+  "rms": 1.05,
+  "sim": 0.5,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Fiio FD5",
+  "b": "FIIO FD5 SMALL NOZZLE",
+  "idA": "fiio-fd5",
+  "idB": "fiio-fd5-small-nozzle",
+  "rms": 1.05,
+  "sim": 0.32,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Simgot Audio ET 142 (short black nozzle)",
+  "b": "Simgot Audio ET142 (black circle nozzle)",
+  "idA": "simgot-audio-et-142-short-black-nozzle",
+  "idB": "simgot-audio-et142-black-circle-nozzle",
+  "rms": 1.06,
+  "sim": 0.91,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Sennheiser IE 900",
+  "b": "Sennheiser IE900 Standard foam",
+  "idA": "sennheiser-ie-900",
+  "idB": "sennheiser-ie900-standard-foam",
+  "rms": 1.06,
+  "sim": 0.4,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Moondrop DUSK 2 DSP",
+  "b": "Moondrop DUSK 2 V DSP",
+  "idA": "moondrop-dusk-2-dsp",
+  "idB": "moondrop-dusk-2-v-dsp",
+  "rms": 1.07,
+  "sim": 0.91,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Blon BL03",
+  "b": "BLON BL03 Foam Mod",
+  "idA": "blon-bl03",
+  "idB": "blon-bl03-foam-mod",
+  "rms": 1.08,
+  "sim": 0.47,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "ikko OH10 (ikko OH10 (1dividedby16 foam))",
+  "b": "Ikko OH10 Modified",
+  "idA": "ikko-oh10-ikko-oh10-1dividedby16-foam",
+  "idB": "ikko-oh10-modified",
+  "rms": 1.08,
+  "sim": 0.47,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Sample 3",
+  "b": "Sample Sim 3 B",
+  "idA": "sample-3",
+  "idB": "sample-sim-3-b",
+  "rms": 1.08,
+  "sim": 0.25,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Final A2000",
+  "b": "Final Audio VR2000",
+  "idA": "final-a2000",
+  "idB": "final-audio-vr2000",
+  "rms": 1.09,
+  "sim": 0.73,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Juzear FLAME/41T",
+  "b": "JUZEAR JUZEAR FLAME - 41T (JUZEAR FLAME - 41T (Final E Tips))",
+  "idA": "juzear-flame-41t",
+  "idB": "juzear-juzear-flame-41t-juzear-flame-41t-final-e-tips",
+  "rms": 1.09,
+  "sim": 0.67,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Tangzu Fudu 2",
+  "b": "TANGZU FUDU 2 Sancai Regular",
+  "idA": "tangzu-fudu-2",
+  "idB": "tangzu-fudu-2-sancai-regular",
+  "rms": 1.09,
+  "sim": 0.44,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "KZ HBB PR2 FILTER MOD",
+  "b": "KZ PR2 (KZ PR2 mesh mod)",
+  "idA": "kz-hbb-pr2-filter-mod",
+  "idB": "kz-pr2-kz-pr2-mesh-mod",
+  "rms": 1.09,
+  "sim": 0.29,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "AFUL Magic One (AFUL Magic One 15 Ohm)",
+  "b": "AFUL MagicOne",
+  "idA": "aful-magic-one-aful-magic-one-15-ohm",
+  "idB": "aful-magicone",
+  "rms": 1.11,
+  "sim": 0.94,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Hisenior Mega5 P (HiSenior Mega5 P 15 Ohm)",
+  "b": "Hisenior MEGA5P (Hisenior MEGA5P (FOAM Eartips))",
+  "idA": "hisenior-mega5-p-hisenior-mega5-p-15-ohm",
+  "idB": "hisenior-mega5p-hisenior-mega5p-foam-eartips",
+  "rms": 1.11,
+  "sim": 0.92,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Moondrop Blessing 2 Dusk (dusk bgvp)",
+  "b": "Moondrop DUSK 2 L (3.5)",
+  "idA": "moondrop-blessing-2-dusk-dusk-bgvp",
+  "idB": "moondrop-dusk-2-l-3-5",
+  "rms": 1.12,
+  "sim": 0.35,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Whizzer HE01",
+  "b": "Whizzer Kylin HE01+",
+  "idA": "whizzer-he01",
+  "idB": "whizzer-kylin-he01",
+  "rms": 1.13,
+  "sim": 0.53,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Truthear Zero Blue 2 (TB2 10)",
+  "b": "Truthear Zero:BLUE2 (Truthear Blue2 5)",
+  "idA": "truthear-zero-blue-2-tb2-10",
+  "idB": "truthear-zero-blue2-truthear-blue2-5",
+  "rms": 1.14,
+  "sim": 0.95,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Softears RSV MK II (Softears RSV MK II (AZLA Mithryl Eartips))",
+  "b": "Softears RSV MkII (Softears RSV MkII 15 Ohm)",
+  "idA": "softears-rsv-mk-ii-softears-rsv-mk-ii-azla-mithryl-eartips",
+  "idB": "softears-rsv-mkii-softears-rsv-mkii-15-ohm",
+  "rms": 1.14,
+  "sim": 0.94,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Moondrop Quark 2",
+  "b": "Moondrop Quark 2 Muse Dash",
+  "idA": "moondrop-quark-2",
+  "idB": "moondrop-quark-2-muse-dash",
+  "rms": 1.15,
+  "sim": 0.58,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Tin Hifi T5S Mars",
+  "b": "TinHiFi T5S",
+  "idA": "tin-hifi-t5s-mars",
+  "idB": "tinhifi-t5s",
+  "rms": 1.15,
+  "sim": 0.55,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "DUNU Kima 2",
+  "b": "DUNU Kima 2 Raven Teal",
+  "idA": "dunu-kima-2",
+  "idB": "dunu-kima-2-raven-teal",
+  "rms": 1.15,
+  "sim": 0.52,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "EPZ G10",
+  "b": "EPZ G10 NEW",
+  "idA": "epz-g10",
+  "idB": "epz-g10-new",
+  "rms": 1.16,
+  "sim": 0.6,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "NF ACOUS RA05 USB-C",
+  "b": "NF RA05",
+  "idA": "nf-acous-ra05-usb-c",
+  "idB": "nf-ra05",
+  "rms": 1.16,
+  "sim": 0.4,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Letshuoer S12",
+  "b": "LetShuoer SB S12",
+  "idA": "letshuoer-s12",
+  "idB": "letshuoer-sb-s12",
+  "rms": 1.17,
+  "sim": 0.67,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "EPZ P50",
+  "b": "EPZ P50 SANCAI WIDE",
+  "idA": "epz-p50",
+  "idB": "epz-p50-sancai-wide",
+  "rms": 1.17,
+  "sim": 0.33,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Letshuoer DX1 TRI CLARION",
+  "b": "Shuoer Dx1",
+  "idA": "letshuoer-dx1-tri-clarion",
+  "idB": "shuoer-dx1",
+  "rms": 1.18,
+  "sim": 0.33,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Tin Audio P2",
+  "b": "Tinhifi T2+ pre-retail",
+  "idA": "tin-audio-p2",
+  "idB": "tinhifi-t2-pre-retail",
+  "rms": 1.18,
+  "sim": 0.12,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "LetShuoer SB S12",
+  "b": "Letshuoer Z12",
+  "idA": "letshuoer-sb-s12",
+  "idB": "letshuoer-z12",
+  "rms": 1.19,
+  "sim": 0.44,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Hidizs ST2 PRO",
+  "b": "Hidizs ST2 Pro Nebula",
+  "idA": "hidizs-st2-pro",
+  "idB": "hidizs-st2-pro-nebula",
+  "rms": 1.2,
+  "sim": 0.67,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Tangzu Fudu 2",
+  "b": "TANGZU FUDU 2 Sancai Wide",
+  "idA": "tangzu-fudu-2",
+  "idB": "tangzu-fudu-2-sancai-wide",
+  "rms": 1.2,
+  "sim": 0.5,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "XENNS Top PRO 1",
+  "b": "XENNS TOP PRO T1",
+  "idA": "xenns-top-pro-1",
+  "idB": "xenns-top-pro-t1",
+  "rms": 1.21,
+  "sim": 0.95,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Hisenior Mega5Est 7th Anniversary",
+  "b": "Hisenior Mega5EST 7th Anniversary Custom UIEM (Hisenior Mega5EST 7th (Velvet, Deep))",
+  "idA": "hisenior-mega5est-7th-anniversary",
+  "idB": "hisenior-mega5est-7th-anniversary-custom-uiem-hisenior-mega5est-7th-velvet-deep",
+  "rms": 1.21,
+  "sim": 0.8,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Tin Hifi T6",
+  "b": "TinHiFi T6 Pink Ring Clear",
+  "idA": "tinhifi-t6",
+  "idB": "tinhifi-t6-pink-ring-clear",
+  "rms": 1.22,
+  "sim": 0.2,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "EPZ ['G20'] (EPZ G20 USB)",
+  "b": "EPZ G20",
+  "idA": "epz-g20-epz-g20-usb",
+  "idB": "epz-g20",
+  "rms": 1.23,
+  "sim": 0.75,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "64 Audio U4s",
+  "b": "64 AUDIO U4S MX",
+  "idA": "64-audio-u4s",
+  "idB": "64-audio-u4s-mx",
+  "rms": 1.23,
+  "sim": 0.67,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Tiandirenhe TD08 (Tiandirenhe TD08 (Blue Filter))",
+  "b": "Tiandirenhe TD08 Odin",
+  "idA": "tiandirenhe-td08-tiandirenhe-td08-blue-filter",
+  "idB": "tiandirenhe-td08-odin",
+  "rms": 1.23,
+  "sim": 0.62,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Moondrop Quark 2",
+  "b": "Moondrop Quark2 (Moondrop Quark2 deep)",
+  "idA": "moondrop-quark-2",
+  "idB": "moondrop-quark2-moondrop-quark2-deep",
+  "rms": 1.24,
+  "sim": 0.92,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Moondrop Blessing 2",
+  "b": "Moondrop Blessing 2 Dusk (dusk bgvp)",
+  "idA": "moondrop-blessing-2",
+  "idB": "moondrop-blessing-2-dusk-dusk-bgvp",
+  "rms": 1.24,
+  "sim": 0.8,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Moondrop Blessing 3",
+  "b": "Moondrop Blessing 3 Aqua",
+  "idA": "moondrop-blessing-3",
+  "idB": "moondrop-blessing-3-aqua",
+  "rms": 1.24,
+  "sim": 0.8,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "LETSHUOER EJ07M Kinda Lava (LETSHUOER EJ07M Kinda Lava Spring)",
+  "b": "Letshuoer EJ07M Kinda Lava Custom Resin",
+  "idA": "letshuoer-ej07m-kinda-lava-letshuoer-ej07m-kinda-lava-spring",
+  "idB": "letshuoer-ej07m-kinda-lava-custom-resin",
+  "rms": 1.24,
+  "sim": 0.71,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Letshuoer DZ4 (Letshuoer DZ4 15 Ohm)",
+  "b": "LetShuoer DZ4 PR pulled blocked",
+  "idA": "letshuoer-dz4-letshuoer-dz4-15-ohm",
+  "idB": "letshuoer-dz4-pr-pulled-blocked",
+  "rms": 1.24,
+  "sim": 0.25,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Geek Wold GK80",
+  "b": "Geek Wold GK80 No MIC",
+  "idA": "geek-wold-gk80",
+  "idB": "geek-wold-gk80-no-mic",
+  "rms": 1.25,
+  "sim": 0.72,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "BGVP DN3",
+  "b": "BGVP DN3 Vocal Tip",
+  "idA": "bgvp-dn3",
+  "idB": "bgvp-dn3-vocal-tip",
+  "rms": 1.25,
+  "sim": 0.38,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "TAGO Studio T3-01",
+  "b": "TAGO Studio T3-01 Historic",
+  "idA": "tago-studio-t3-01",
+  "idB": "tago-studio-t3-01-historic",
+  "rms": 1.27,
+  "sim": 0.73,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "LETSHUOER EJ07M Kinda Lava (LETSHUOER EJ07M Kinda Lava Spring)",
+  "b": "Letshuoer EJ07M Kinda Lava Custom Shell",
+  "idA": "letshuoer-ej07m-kinda-lava-letshuoer-ej07m-kinda-lava-spring",
+  "idB": "letshuoer-ej07m-kinda-lava-custom-shell",
+  "rms": 1.27,
+  "sim": 0.71,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Letshuoer Cadenza 12 Stock White",
+  "b": "Letshuoer S12",
+  "idA": "letshuoer-cadenza-12-stock-white",
+  "idB": "letshuoer-s12",
+  "rms": 1.27,
+  "sim": 0.16,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Sound Rhyme DTE264",
+  "b": "Sound Rhyme DTE264 EST",
+  "idA": "sound-rhyme-dte264",
+  "idB": "sound-rhyme-dte264-est",
+  "rms": 1.29,
+  "sim": 0.86,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Letshuoer DX1 CLEAR",
+  "b": "Shuoer Dx1",
+  "idA": "letshuoer-dx1-clear",
+  "idB": "shuoer-dx1",
+  "rms": 1.29,
+  "sim": 0.5,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "CVJ AUDIO Shadow Blade (CVJ ShadowBlade TBlack)",
+  "b": "CVJ Shadowblade",
+  "idA": "cvj-audio-shadow-blade-cvj-shadowblade-tblack",
+  "idB": "cvj-shadowblade",
+  "rms": 1.31,
+  "sim": 0.96,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Sample Sim 3",
+  "b": "Sample Sim 3 B",
+  "idA": "sample-sim-3",
+  "idB": "sample-sim-3-b",
+  "rms": 1.31,
+  "sim": 0.83,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Moondrop DUSK 2 Harman DSP",
+  "b": "Moondrop DUSK 2 V DSP",
+  "idA": "moondrop-dusk-2-harman-dsp",
+  "idB": "moondrop-dusk-2-v-dsp",
+  "rms": 1.31,
+  "sim": 0.76,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Simgot EM6L (EM6L (TENNMAK SoFoam tips))",
+  "b": "Simgot PHOENIX EM6L (EM6L 400 FILTER)",
+  "idA": "simgot-em6l-em6l-tennmak-sofoam-tips",
+  "idB": "simgot-phoenix-em6l-em6l-400-filter",
+  "rms": 1.31,
+  "sim": 0.5,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Sample 4",
+  "b": "Sample Fatty 4",
+  "idA": "sample-4",
+  "idB": "sample-fatty-4",
+  "rms": 1.31,
+  "sim": 0.25,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "7hz Salnotes Zero 2 (Salnotes Zero 2 Spinfit 2)",
+  "b": "7Hz Zero 2 (7Hz Zero 2 (Divinus Velvet))",
+  "idA": "7hz-salnotes-zero-2-salnotes-zero-2-spinfit-2",
+  "idB": "7hz-zero-2-7hz-zero-2-divinus-velvet",
+  "rms": 1.32,
+  "sim": 0.57,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Letshuoer Cadenza 12 Stock White",
+  "b": "Letshuoer Z12",
+  "idA": "letshuoer-cadenza-12-stock-white",
+  "idB": "letshuoer-z12",
+  "rms": 1.33,
+  "sim": 0.24,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Letshuoer Cadenza 12 Stock Black Green",
+  "b": "Letshuoer S12",
+  "idA": "letshuoer-cadenza-12-stock-black-green",
+  "idB": "letshuoer-s12",
+  "rms": 1.33,
+  "sim": 0.13,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "SIVGA M100",
+  "b": "SIVGA SM100 Azla Sedna Foamax",
+  "idA": "sivga-m100",
+  "idB": "sivga-sm100-azla-sedna-foamax",
+  "rms": 1.34,
+  "sim": 0.3,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "ZiSin 336",
+  "b": "ZiSin 336 Peach Heart Poker",
+  "idA": "zisin-336",
+  "idB": "zisin-336-peach-heart-poker",
+  "rms": 1.34,
+  "sim": 0.25,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Tin Hifi T6",
+  "b": "TinHiFi T6 Black Ring Clear",
+  "idA": "tinhifi-t6",
+  "idB": "tinhifi-t6-black-ring-clear",
+  "rms": 1.34,
+  "sim": 0.19,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Moondrop DUSK 2 DSP",
+  "b": "Moondrop DUSK 2 Harman DSP",
+  "idA": "moondrop-dusk-2-dsp",
+  "idB": "moondrop-dusk-2-harman-dsp",
+  "rms": 1.35,
+  "sim": 0.74,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Tangzu Waner S.G 2",
+  "b": "Tangzu Waner S.G 2 Amethyst Dragon",
+  "idA": "tangzu-waner-s-g-2",
+  "idB": "tangzu-waner-s-g-2-amethyst-dragon",
+  "rms": 1.35,
+  "sim": 0.58,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "FiR Audio Krypton 5",
+  "b": "FIR Audio KRYPTON 5 SLV",
+  "idA": "fir-audio-krypton-5",
+  "idB": "fir-audio-krypton-5-slv",
+  "rms": 1.36,
+  "sim": 0.82,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Letshuoer Cadenza 12 Stock Orange Black",
+  "b": "Letshuoer Z12",
+  "idA": "letshuoer-cadenza-12-stock-orange-black",
+  "idB": "letshuoer-z12",
+  "rms": 1.36,
+  "sim": 0.19,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Softears Studio 2",
+  "b": "Softears Studio2 (Softears Studio2 deep)",
+  "idA": "softears-studio-2",
+  "idB": "softears-studio2-softears-studio2-deep",
+  "rms": 1.37,
+  "sim": 0.93,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "DUNU SA6",
+  "b": "DUNU SA6 EST",
+  "idA": "dunu-sa6",
+  "idB": "dunu-sa6-est",
+  "rms": 1.37,
+  "sim": 0.6,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "ZiiGaat x Fresh Reviews Arete 2",
+  "b": "ZIIGAAT X Fresh Reviews ARETE 2 B",
+  "idA": "ziigaat-x-fresh-reviews-arete-2",
+  "idB": "ziigaat-x-fresh-reviews-arete-2-b",
+  "rms": 1.38,
+  "sim": 0.96,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Hisenior Mega 5 EST",
+  "b": "Hisenior Mega5EST (CP100+ Tips)",
+  "idA": "hisenior-mega-5-est",
+  "idB": "hisenior-mega5est-cp100-tips",
+  "rms": 1.38,
+  "sim": 0.89,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Letshuoer EJ07",
+  "b": "LetShuoer EJ07 Kinda Lava",
+  "idA": "letshuoer-ej07",
+  "idB": "letshuoer-ej07-kinda-lava",
+  "rms": 1.38,
+  "sim": 0.42,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "DUNU 242 (DUNU 242 (Deep Fit))",
+  "b": "Dunu DN242",
+  "idA": "dunu-242-dunu-242-deep-fit",
+  "idB": "dunu-dn242",
+  "rms": 1.39,
+  "sim": 0.75,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Letshuoer Cadenza 12 Stock Orange Black",
+  "b": "Letshuoer S12",
+  "idA": "letshuoer-cadenza-12-stock-orange-black",
+  "idB": "letshuoer-s12",
+  "rms": 1.39,
+  "sim": 0.12,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "7Hz Timeless 2",
+  "b": "7Hz Timeless 2 BIG GOLD NOZZLE",
+  "idA": "7hz-timeless-2",
+  "idB": "7hz-timeless-2-big-gold-nozzle",
+  "rms": 1.41,
+  "sim": 0.56,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Hidizs MD4 (off-off)",
+  "b": "Hidizs MD4 Warm",
+  "idA": "hidizs-md4-off-off",
+  "idB": "hidizs-md4-warm",
+  "rms": 1.41,
+  "sim": 0.55,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "ThieAudio Hype 4",
+  "b": "Thieaudio Hype 4 MKII (Thieaudio Hype 4 MKII (Coffee Eartips))",
+  "idA": "thieaudio-hype-4",
+  "idB": "thieaudio-hype-4-mkii-thieaudio-hype-4-mkii-coffee-eartips",
+  "rms": 1.42,
+  "sim": 0.71,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Fiio FX15",
+  "b": "FIIO FX15 EST OFF",
+  "idA": "fiio-fx15",
+  "idB": "fiio-fx15-est-off",
+  "rms": 1.44,
+  "sim": 0.5,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Zhulinniao Qing Luan Z4 (Qing Luan Z4 (red ring, foam tips) ✓)",
+  "b": "Zhulinniao Qingluan Z4 (z4 red)",
+  "idA": "zhulinniao-qing-luan-z4-qing-luan-z4-red-ring-foam-tips",
+  "idB": "zhulinniao-qingluan-z4-z4-red",
+  "rms": 1.45,
+  "sim": 0.96,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "KBEar Cepheus KB16 (KBEar Cepheus KB16 15 Ohm)",
+  "b": "KBEAR KB16 (Cepheus) (Cepheus (Zhulinniao Zhu Rythme tips))",
+  "idA": "kbear-cepheus-kb16-kbear-cepheus-kb16-15-ohm",
+  "idB": "kbear-kb16-cepheus-cepheus-zhulinniao-zhu-rythme-tips",
+  "rms": 1.45,
+  "sim": 0.5,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "LG HBS 800 (LG HBS800 Bass Boost)",
+  "b": "LG HBS800",
+  "idA": "lg-hbs-800-lg-hbs800-bass-boost",
+  "idB": "lg-hbs800",
+  "rms": 1.46,
+  "sim": 0.92,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Moondrop Crinacle Blessing 2 Dusk",
+  "b": "Moondrop DUSK 2 L (3.5)",
+  "idA": "moondrop-crinacle-blessing-2-dusk",
+  "idB": "moondrop-dusk-2-l-3-5",
+  "rms": 1.47,
+  "sim": 0.25,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "DUNU DK3001 BD",
+  "b": "Dunu DK3001BD (Dunu DK-3001 BD 10ohm)",
+  "idA": "dunu-dk3001-bd",
+  "idB": "dunu-dk3001bd-dunu-dk-3001-bd-10ohm",
+  "rms": 1.48,
+  "sim": 0.94,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Sample Sam 6R",
+  "b": "Sample Sam 6W",
+  "idA": "sample-sam-6r",
+  "idB": "sample-sam-6w",
+  "rms": 1.49,
+  "sim": 0.83,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "7th Acoustics Stargazer 3",
+  "b": "7TH ACOUSTICS STARGAZER 3 PROTOTYPE",
+  "idA": "7th-acoustics-stargazer-3",
+  "idB": "7th-acoustics-stargazer-3-prototype",
+  "rms": 1.49,
+  "sim": 0.69,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "SIVGA SM100 (SIVGA SM100 Final E)",
+  "b": "SIVGA SM100 Azla Sedna Foamax",
+  "idA": "sivga-sm100-sivga-sm100-final-e",
+  "idB": "sivga-sm100-azla-sedna-foamax",
+  "rms": 1.49,
+  "sim": 0.36,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Moondrop DUSK 2 Bass+ DSP",
+  "b": "Moondrop DUSK 2 V DSP",
+  "idA": "moondrop-dusk-2-bass-dsp",
+  "idB": "moondrop-dusk-2-v-dsp",
+  "rms": 1.5,
+  "sim": 0.79,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Sample 3",
+  "b": "Sample Sim 3",
+  "idA": "sample-3",
+  "idB": "sample-sim-3",
+  "rms": 1.5,
+  "sim": 0.33,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Binary Acoustics EP321 MEMS (Binary Acoustics EP321 MEMS (Deep Fit))",
+  "b": "Binary EP321",
+  "idA": "binary-acoustics-ep321-mems-binary-acoustics-ep321-mems-deep-fit",
+  "idB": "binary-ep321",
+  "rms": 1.51,
+  "sim": 0.67,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Dunu DK3001BD (Dunu DK-3001 BD 10ohm)",
+  "b": "DUNU DK3001BD Braindance",
+  "idA": "dunu-dk3001bd-dunu-dk-3001-bd-10ohm",
+  "idB": "dunu-dk3001bd-braindance",
+  "rms": 1.52,
+  "sim": 0.59,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "ooopusX Op.24",
+  "b": "ooopusx op24 (ooopusx op24 bass)",
+  "idA": "ooopusx-op-24",
+  "idB": "ooopusx-op24-ooopusx-op24-bass",
+  "rms": 1.53,
+  "sim": 0.89,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Letshuoer EJ07M Kinda Lava Custom Resin",
+  "b": "Letshuoer EJ07M Kinda Lava Resin",
+  "idA": "letshuoer-ej07m-kinda-lava-custom-resin",
+  "idB": "letshuoer-ej07m-kinda-lava-resin",
+  "rms": 1.53,
+  "sim": 0.86,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "JQ 4Upro",
+  "b": "JQ Audio 4U",
+  "idA": "jq-4upro",
+  "idB": "jq-audio-4u",
+  "rms": 1.53,
+  "sim": 0.57,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Letshuoer Cadenza 12 Stock Black Green",
+  "b": "Letshuoer Z12",
+  "idA": "letshuoer-cadenza-12-stock-black-green",
+  "idB": "letshuoer-z12",
+  "rms": 1.53,
+  "sim": 0.19,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "ACOUSTUNE HS1697 TI",
+  "b": "Acoustune HS1697TI (1697 (Final E))",
+  "idA": "acoustune-hs1697-ti",
+  "idB": "acoustune-hs1697ti-1697-final-e",
+  "rms": 1.54,
+  "sim": 0.94,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "TangZu Zhu Ba Jie",
+  "b": "TANGZU Zhu Bajie (TANGZU Zhu Bajie 10 Ohm FNB)",
+  "idA": "tangzu-zhu-ba-jie",
+  "idB": "tangzu-zhu-bajie-tangzu-zhu-bajie-10-ohm-fnb",
+  "rms": 1.55,
+  "sim": 0.95,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "ThieAudio Legacy 4",
+  "b": "THIEAUDIO LEGACY 4 ALL ON",
+  "idA": "thieaudio-legacy-4",
+  "idB": "thieaudio-legacy-4-all-on",
+  "rms": 1.55,
+  "sim": 0.7,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Zhulinniao Qingluan Z4 (z4 red)",
+  "b": "Zhulinniao Zhulinniao QingLuan Z4",
+  "idA": "zhulinniao-qingluan-z4-z4-red",
+  "idB": "zhulinniao-zhulinniao-qingluan-z4",
+  "rms": 1.56,
+  "sim": 0.67,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Aful Acoustics Performer 5 (Aful Acoustics Performer5 (15 ohm))",
+  "b": "AFUL Performer5",
+  "idA": "aful-acoustics-performer-5-aful-acoustics-performer5-15-ohm",
+  "idB": "aful-performer5",
+  "rms": 1.57,
+  "sim": 0.95,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Final Audio E3000",
+  "b": "Final E3000C",
+  "idA": "final-audio-e3000",
+  "idB": "final-e3000c",
+  "rms": 1.58,
+  "sim": 0.91,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Moondrop DUSK 2 Diffuse Tilt DSP",
+  "b": "Moondrop DUSK 2 DSP",
+  "idA": "moondrop-dusk-2-diffuse-tilt-dsp",
+  "idB": "moondrop-dusk-2-dsp",
+  "rms": 1.59,
+  "sim": 0.61,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "NF Audio NA2 Metal",
+  "b": "NF Audio NA2+",
+  "idA": "nf-audio-na2-metal",
+  "idB": "nf-audio-na2",
+  "rms": 1.59,
+  "sim": 0.46,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Aful Acoustics MiracleOne (Aful MiracleOne deep)",
+  "b": "AFUL Miracle One",
+  "idA": "aful-acoustics-miracleone-aful-miracleone-deep",
+  "idB": "aful-miracle-one",
+  "rms": 1.6,
+  "sim": 0.95,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Truthear Zero Blue 2 (TB2 10)",
+  "b": "Truthear Zero Blue 2 +Bass",
+  "idA": "truthear-zero-blue-2-tb2-10",
+  "idB": "truthear-zero-blue-2-bass",
+  "rms": 1.6,
+  "sim": 0.79,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "LZ ['A6']",
+  "b": "LZ Hi-Fi Audio A6 (black nozzle)",
+  "idA": "lz-a6",
+  "idB": "lz-hi-fi-audio-a6-black-nozzle",
+  "rms": 1.6,
+  "sim": 0.67,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Soranik MEMS-3S",
+  "b": "Soranik MEMS-3S Fuki ver",
+  "idA": "soranik-mems-3s",
+  "idB": "soranik-mems-3s-fuki-ver",
+  "rms": 1.6,
+  "sim": 0.61,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "EPZ Q1 PRO",
+  "b": "EPZ Q1 PRO Tanya Filter",
+  "idA": "epz-q1-pro",
+  "idB": "epz-q1-pro-tanya-filter",
+  "rms": 1.6,
+  "sim": 0.48,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Tangzu Wan'Er S.G 2 Red Lion",
+  "b": "Tangzu Wan'er SG 2 (Waner 2 C)",
+  "idA": "tangzu-wan-er-s-g-2-red-lion",
+  "idB": "tangzu-wan-er-sg-2-waner-2-c",
+  "rms": 1.61,
+  "sim": 0.69,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Simgot EM6L Phoenix",
+  "b": "Simgot PHOENIX EM6L (EM6L 400 FILTER)",
+  "idA": "simgot-em6l-phoenix",
+  "idB": "simgot-phoenix-em6l-em6l-400-filter",
+  "rms": 1.61,
+  "sim": 0.58,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Oriveti OH700VB",
+  "b": "Oriveti OH700VB Forward Position",
+  "idA": "oriveti-oh700vb",
+  "idB": "oriveti-oh700vb-forward-position",
+  "rms": 1.62,
+  "sim": 0.45,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "NF Audio  N2+",
+  "b": "NF Audio NM2",
+  "idA": "nf-audio-n2",
+  "idB": "nf-audio-nm2",
+  "rms": 1.63,
+  "sim": 0.67,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "MUXICBOX STERANKO 40",
+  "b": "MUXICBOX STERANKO 40 NH",
+  "idA": "muxicbox-steranko-40",
+  "idB": "muxicbox-steranko-40-nh",
+  "rms": 1.64,
+  "sim": 0.88,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Shanling ME800",
+  "b": "Shanling ME800 Warm",
+  "idA": "shanling-me800",
+  "idB": "shanling-me800-warm",
+  "rms": 1.65,
+  "sim": 0.67,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "NF ACOUS RG15 USB-C",
+  "b": "NF Audio RG15",
+  "idA": "nf-acous-rg15-usb-c",
+  "idB": "nf-audio-rg15",
+  "rms": 1.65,
+  "sim": 0.4,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Sample 2",
+  "b": "Sample Fatty 2",
+  "idA": "sample-2",
+  "idB": "sample-fatty-2",
+  "rms": 1.65,
+  "sim": 0.25,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "TANGZU TIAN PENG",
+  "b": "TangZu Tianpeng (Tangzu Tian Peng SN 9)",
+  "idA": "tangzu-tian-peng",
+  "idB": "tangzu-tianpeng-tangzu-tian-peng-sn-9",
+  "rms": 1.66,
+  "sim": 0.94,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Simgot Audio EA500 (black nozzle)",
+  "b": "SIMGOT EA500 CLASSIC",
+  "idA": "simgot-audio-ea500-black-nozzle",
+  "idB": "simgot-ea500-classic",
+  "rms": 1.67,
+  "sim": 0.56,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "ikko OH10 (ikko OH10 (1dividedby16 foam))",
+  "b": "Ikko OH10 Obsidian",
+  "idA": "ikko-oh10-ikko-oh10-1dividedby16-foam",
+  "idB": "ikko-oh10-obsidian",
+  "rms": 1.68,
+  "sim": 0.47,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "TRN V90",
+  "b": "TRN V90S",
+  "idA": "trn-v90",
+  "idB": "trn-v90s",
+  "rms": 1.7,
+  "sim": 0.86,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Final Audio A3000",
+  "b": "Final Audio VR3000 Gaming",
+  "idA": "final-audio-a3000",
+  "idB": "final-audio-vr3000-gaming",
+  "rms": 1.7,
+  "sim": 0.44,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Sennheiser IE 300",
+  "b": "Sennheiser IE300 (Sennheiser IE300 (FINAL EARTIPS))",
+  "idA": "sennheiser-ie-300",
+  "idB": "sennheiser-ie300-sennheiser-ie300-final-eartips",
+  "rms": 1.71,
+  "sim": 0.91,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "NF Audio  N2+",
+  "b": "NFAudio (NFAcous) NA2",
+  "idA": "nf-audio-n2",
+  "idB": "nfaudio-nfacous-na2",
+  "rms": 1.72,
+  "sim": 0.67,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "VSonic GR07",
+  "b": "VSonic GR07 Classic",
+  "idA": "vsonic-gr07",
+  "idB": "vsonic-gr07-classic",
+  "rms": 1.72,
+  "sim": 0.5,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Whizzer BS1",
+  "b": "WHIZZER H1",
+  "idA": "whizzer-bs1",
+  "idB": "whizzer-h1",
+  "rms": 1.72,
+  "sim": 0.4,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "DUNU EST 112",
+  "b": "Dunu EST112 (Dunu EST112 (1dividedby16 foam))",
+  "idA": "dunu-est-112",
+  "idB": "dunu-est112-dunu-est112-1dividedby16-foam",
+  "rms": 1.73,
+  "sim": 0.92,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Hisenior T2",
+  "b": "Hisenior T2 Classic",
+  "idA": "hisenior-t2",
+  "idB": "hisenior-t2-classic",
+  "rms": 1.73,
+  "sim": 0.33,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Letshuoer EJ07M Kinda Lava Resin",
+  "b": "Letshuoer EJ07M Resin",
+  "idA": "letshuoer-ej07m-kinda-lava-resin",
+  "idB": "letshuoer-ej07m-resin",
+  "rms": 1.74,
+  "sim": 0.67,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "FiiO FD7",
+  "b": "FiiO FD7 large noz",
+  "idA": "fiio-fd7",
+  "idB": "fiio-fd7-large-noz",
+  "rms": 1.74,
+  "sim": 0.38,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Myer Audio CKLVX CK-D41",
+  "b": "Myer Audio CKLVX D41 (Myer Audio CKLVX D41 15 Ohm)",
+  "idA": "myer-audio-cklvx-ck-d41",
+  "idB": "myer-audio-cklvx-d41-myer-audio-cklvx-d41-15-ohm",
+  "rms": 1.75,
+  "sim": 0.86,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Mystori Audio M-121i",
+  "b": "Mystori Audio M121",
+  "idA": "mystori-audio-m-121i",
+  "idB": "mystori-audio-m121",
+  "rms": 1.75,
+  "sim": 0.8,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Fiio FH15",
+  "b": "FIIO FH15 FILTERLESS",
+  "idA": "fiio-fh15",
+  "idB": "fiio-fh15-filterless",
+  "rms": 1.75,
+  "sim": 0.42,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "ThieAudio Legacy 3",
+  "b": "THIEAUDIO LEGACY 3 ALL ON",
+  "idA": "thieaudio-legacy-3",
+  "idB": "thieaudio-legacy-3-all-on",
+  "rms": 1.76,
+  "sim": 0.7,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Final Audio E500",
+  "b": "Final VR500",
+  "idA": "final-audio-e500",
+  "idB": "final-vr500",
+  "rms": 1.8,
+  "sim": 0.67,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "HiSenior Mega5 EST Retune",
+  "b": "Hisenior Mega5 P (HiSenior Mega5 P 15 Ohm)",
+  "idA": "hisenior-mega5-est-retune",
+  "idB": "hisenior-mega5-p-hisenior-mega5-p-15-ohm",
+  "rms": 1.8,
+  "sim": 0.52,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Campfire Audio Andromeda 2020",
+  "b": "Campfire Audio Andromeda 2020 w IEMatch",
+  "idA": "campfire-audio-andromeda-2020",
+  "idB": "campfire-audio-andromeda-2020-w-iematch",
+  "rms": 1.81,
+  "sim": 0.74,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "DDHiFi Janus 3 (Janus3 (Final E))",
+  "b": "ddHiFi Janus3",
+  "idA": "ddhifi-janus-3-janus3-final-e",
+  "idB": "ddhifi-janus3",
+  "rms": 1.82,
+  "sim": 0.92,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "Sample 6",
+  "b": "Sample Sam 6W",
+  "idA": "sample-6",
+  "idB": "sample-sam-6w",
+  "rms": 1.82,
+  "sim": 0.29,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Moondrop Blessing 2",
+  "b": "Moondrop Crinacle Blessing 2 Dusk",
+  "idA": "moondrop-blessing-2",
+  "idB": "moondrop-crinacle-blessing-2-dusk",
+  "rms": 1.83,
+  "sim": 0.59,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Etymotic ER4XR (Etymotic ER4XR (foam))",
+  "b": "Etymotic Research ER4XR",
+  "idA": "etymotic-er4xr-etymotic-er4xr-foam",
+  "idB": "etymotic-research-er4xr",
+  "rms": 1.83,
+  "sim": 0.53,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Reecho SG-01",
+  "b": "Reecho SG-01 OVA",
+  "idA": "reecho-sg-01",
+  "idB": "reecho-sg-01-ova",
+  "rms": 1.84,
+  "sim": 0.71,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Truthear Blue 2",
+  "b": "Truthear Zero Blue 2 +Bass",
+  "idA": "truthear-blue-2",
+  "idB": "truthear-zero-blue-2-bass",
+  "rms": 1.85,
+  "sim": 0.52,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Simgot Audio EA500 (black nozzle)",
+  "b": "SIMGOT EA500 HARMAN",
+  "idA": "simgot-audio-ea500-black-nozzle",
+  "idB": "simgot-ea500-harman",
+  "rms": 1.86,
+  "sim": 0.59,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Kinera iDun 2.0",
+  "b": "Kinera IDUN Golden 2.0",
+  "idA": "kinera-idun-2-0",
+  "idB": "kinera-idun-golden-2-0",
+  "rms": 1.87,
+  "sim": 0.7,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "NF Audio  N2+",
+  "b": "NFAudio ['NA2+'] (NF Audio NA2+ Balanced)",
+  "idA": "nf-audio-n2",
+  "idB": "nfaudio-na2-nf-audio-na2-balanced",
+  "rms": 1.87,
+  "sim": 0.67,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Tangzu Wan'er SG 2 (Waner 2 C)",
+  "b": "Tangzu Wan'er SG 2 Jade Dragon",
+  "idA": "tangzu-wan-er-sg-2-waner-2-c",
+  "idB": "tangzu-wan-er-sg-2-jade-dragon",
+  "rms": 1.87,
+  "sim": 0.65,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Final Audio A3000",
+  "b": "Final VR3000 Recable",
+  "idA": "final-audio-a3000",
+  "idB": "final-vr3000-recable",
+  "rms": 1.89,
+  "sim": 0.42,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "NF Audio  N2+",
+  "b": "NF Audio NA2 Metal",
+  "idA": "nf-audio-n2",
+  "idB": "nf-audio-na2-metal",
+  "rms": 1.89,
+  "sim": 0.33,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "BQEYZ K2",
+  "b": "BQEYZ KC2",
+  "idA": "bqeyz-k2",
+  "idB": "bqeyz-kc2",
+  "rms": 1.9,
+  "sim": 0.8,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Final Audio A3000",
+  "b": "Final Audio ZE3000",
+  "idA": "final-audio-a3000",
+  "idB": "final-audio-ze3000",
+  "rms": 1.91,
+  "sim": 0.73,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Sony MH755",
+  "b": "Sony MH755 MMCX",
+  "idA": "sony-mh755",
+  "idB": "sony-mh755-mmcx",
+  "rms": 1.91,
+  "sim": 0.67,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "DUNU SA6",
+  "b": "Dunu SA6 mkII",
+  "idA": "dunu-sa6",
+  "idB": "dunu-sa6-mkii",
+  "rms": 1.91,
+  "sim": 0.55,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Tin Audio P1 Max",
+  "b": "TinHiFi P1Max (Tinhifi P1Max Tape)",
+  "idA": "tin-audio-p1-max",
+  "idB": "tinhifi-p1max-tinhifi-p1max-tape",
+  "rms": 1.92,
+  "sim": 0.91,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "NF Audio NA2 Metal",
+  "b": "NFAudio (NFAcous) NA2",
+  "idA": "nf-audio-na2-metal",
+  "idB": "nfaudio-nfacous-na2",
+  "rms": 1.92,
+  "sim": 0.5,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "7th Acoustic Stargazer 3 SO",
+  "b": "7th Acoustics Stargazer 3",
+  "idA": "7th-acoustic-stargazer-3-so",
+  "idB": "7th-acoustics-stargazer-3",
+  "rms": 1.93,
+  "sim": 0.88,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "NF Audio  N2+",
+  "b": "NF Audio NA2+",
+  "idA": "nf-audio-n2",
+  "idB": "nf-audio-na2",
+  "rms": 1.95,
+  "sim": 0.86,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "LETSHUOER EJ07M Kinda Lava (LETSHUOER EJ07M Kinda Lava Spring)",
+  "b": "Letshuoer EJ07M Kinda Lava Resin",
+  "idA": "letshuoer-ej07m-kinda-lava-letshuoer-ej07m-kinda-lava-spring",
+  "idB": "letshuoer-ej07m-kinda-lava-resin",
+  "rms": 1.95,
+  "sim": 0.84,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Tin Hifi P1 (Tin Hifi P1 (vent blocked))",
+  "b": "Tinhifi p1+ mod",
+  "idA": "tin-hifi-p1-tin-hifi-p1-vent-blocked",
+  "idB": "tinhifi-p1-mod",
+  "rms": 1.95,
+  "sim": 0.44,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Intime Sora Light 2019",
+  "b": "Intime SORA Light 2019 Garnet",
+  "idA": "intime-sora-light-2019",
+  "idB": "intime-sora-light-2019-garnet",
+  "rms": 1.96,
+  "sim": 0.81,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Aful Acoustics Performer 8S (Aful Performer 8S deep)",
+  "b": "AFUL Performer 8",
+  "idA": "aful-acoustics-performer-8s-aful-performer-8s-deep",
+  "idB": "aful-performer-8",
+  "rms": 1.97,
+  "sim": 0.96,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Hisenior Mega 5p",
+  "b": "HiSenior Mega5 EST Retune",
+  "idA": "hisenior-mega-5p",
+  "idB": "hisenior-mega5-est-retune",
+  "rms": 1.97,
+  "sim": 0.43,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "FLC 8P",
+  "b": "FLC Technology FLC8P (gold, black, gunmetal)",
+  "idA": "flc-8p",
+  "idB": "flc-technology-flc8p-gold-black-gunmetal",
+  "rms": 1.98,
+  "sim": 0.57,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Tin HiFi C5",
+  "b": "Tin Hifi T5S Mars",
+  "idA": "tin-hifi-c5",
+  "idB": "tin-hifi-t5s-mars",
+  "rms": 1.99,
+  "sim": 0.2,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Letshuoer EJ07M (LETSHUOER EJ07M 75ohm)",
+  "b": "Letshuoer EJ07M Resin",
+  "idA": "letshuoer-ej07m-letshuoer-ej07m-75ohm",
+  "idB": "letshuoer-ej07m-resin",
+  "rms": 2.0,
+  "sim": 0.62,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "Letshuoer D13",
+  "b": "Letshuoer D13 Olina Filter Mod",
+  "idA": "letshuoer-d13",
+  "idB": "letshuoer-d13-olina-filter-mod",
+  "rms": 2.0,
+  "sim": 0.26,
+  "why": "same model number, one name's words inside the other's"
+ },
+ {
+  "a": "TANGZU XUAN WU GATE",
+  "b": "Tangzu Xuanwu Gate (Gate 15)",
+  "idA": "tangzu-xuan-wu-gate",
+  "idB": "tangzu-xuanwu-gate-gate-15",
+  "rms": 2.03,
+  "sim": 0.96,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "QoA Misty Blue",
+  "b": "QoA MistyBlue (MistyBlue (Brown))",
+  "idA": "qoa-misty-blue",
+  "idB": "qoa-mistyblue-mistyblue-brown",
+  "rms": 2.11,
+  "sim": 0.95,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "InEar ProPhile 8 (ProPhile 8 (switch 00, standard foam tips))",
+  "b": "InEar ProPhile8 (InEar Prophile8 01)",
+  "idA": "inear-prophile-8-prophile-8-switch-00-standard-foam-tips",
+  "idB": "inear-prophile8-inear-prophile8-01",
+  "rms": 2.32,
+  "sim": 0.95,
+  "why": "same model, spacing/brand spelling"
+ },
+ {
+  "a": "TRI i ONE",
+  "b": "TRI iOne (TRI iOne MP)",
+  "idA": "tri-i-one",
+  "idB": "tri-ione-tri-ione-mp",
+  "rms": 2.34,
+  "sim": 0.89,
+  "why": "same model, spacing/brand spelling"
+ }
+]

@@ -1,0 +1,1304 @@
+{
+  "accessed": "2026-11-06",
+  "windowsLabelNote": "Windows endpoint names look like 'Headphones (<USB product string>) (<vid:pid>)'. Match regexes (case-insensitive) against the product string. When a USB ID is present, prefer it over the name. outputOhm is the 3.5mm single-ended figure unless the note says otherwise.",
+  "dacs": [
+    {
+      "name": "Apple USB-C to 3.5mm Headphone Jack Adapter",
+      "match": [
+        "usb-c to 3\\.5\\s?mm headphone jack adapter"
+      ],
+      "usb": [
+        "05ac:110a"
+      ],
+      "outputOhm": 0.3,
+      "source": "https://reference-audio-analyzer.pro/en/report/amp/apple-usb-c.php",
+      "note": "Reference Audio Analyzer: 0.3 ohm avg 40Hz-15kHz (A2155). ASR's 0.9 ohm is cited second-hand only. USB ID confirmed at https://linux-hardware.org/?id=usb:05ac-110a"
+    },
+    {
+      "name": "Apple Lightning to 3.5mm Headphone Jack Adapter",
+      "match": [
+        "lightning to 3\\.5\\s?mm"
+      ],
+      "usb": [],
+      "outputOhm": 1.0,
+      "source": "https://archimago.blogspot.com/2018/01/measurements-apples-lightning-to-35mm.html",
+      "note": "Archimago: ~1 ohm at 1 kHz. iPhone-only; it doesn't show up as a Windows device."
+    },
+    {
+      "name": "Google USB-C to 3.5mm Headphone Adapter",
+      "match": [
+        "usb-c to 3\\.5\\s?mm\\s?-?\\s?headphone adapter"
+      ],
+      "usb": [
+        "18d1:5025"
+      ],
+      "outputOhm": 7.0,
+      "source": "https://www.audiosciencereview.com/forum/index.php?threads/measurements-of-google-pixel-3-bundled-dongle-aimp-app.6670/",
+      "note": "ASR forum measurement of the Pixel 3 bundled dongle: ~7 ohm (older revision; newer units may differ). Realtek generic 0bda:4995 uses the same product string, so trust the USB ID over the name. ID from a linux-hardware.org name search."
+    },
+    {
+      "name": "Samsung USB-C to 3.5mm Headphone Jack Adapter (EE-UC10J)",
+      "match": [
+        "samsung.*(usb[- ]?c|type-?c).*(earphone|headphone|adapter)",
+        "ee-uc10j"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://www.samsung.com/sg/mobile-accessories/type-c-to-3-5mm-headphone-jack-adapter-white-ee-uc10juwegww",
+      "note": "No published or measured output impedance found. USB ID not verified."
+    },
+    {
+      "name": "Lenovo USB-C to 3.5mm Adapter",
+      "match": [
+        "usb-c to 3\\.5\\s?mm adapter"
+      ],
+      "usb": [
+        "17ef:7231"
+      ],
+      "outputOhm": null,
+      "source": "https://linux-hardware.org/?view=search&name=3.5mm&typeid=sound",
+      "note": "Only the USB ID is known."
+    },
+    {
+      "name": "EPZ TP35 Pro",
+      "match": [
+        "\\btp35\\s*pro\\b"
+      ],
+      "usb": [
+        "3302:43e6"
+      ],
+      "outputOhm": null,
+      "source": "https://hangout.audio/products/epz-tp35-dac-amplifier",
+      "note": "The user's device. Dual CS43198, 112 mW SE / 262 mW BAL at 32 ohm. No output impedance in EPZ/distributor specs or reviews. The USB ID comes from the user's own Windows label; VID 0x3302 is shared by several unrelated OEMs on linux-hardware.org (TTGK, Bluetrum, Moondrop Quark2, CrinEar...). Simgot DEW4X looks like the same CS43198x2 platform.",
+      "photo": "img/dac/epz-tp35-pro.webp"
+    },
+    {
+      "name": "EPZ TP35",
+      "match": [
+        "\\btp35\\b(?!\\s*pro)"
+      ],
+      "usb": [
+        "2fc6:f092"
+      ],
+      "outputOhm": null,
+      "source": "https://linux-hardware.org/?view=search&name=TP35&typeid=sound",
+      "note": "Original (non-Pro). Comtrue-based, 2fc6:f092 per linux-hardware.org. No output impedance found."
+    },
+    {
+      "name": "EPZ TP20 / TP50 series",
+      "match": [
+        "\\btp(20|50)(\\s*pro)?\\b"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": null
+    },
+    {
+      "name": "FiiO KA1",
+      "match": [
+        "\\b(fiio\\s*)?ka1\\b"
+      ],
+      "usb": [
+        "2972:0051"
+      ],
+      "outputOhm": 1.5,
+      "source": "https://www.fiio.com/ka1_parameters",
+      "note": "<1.5 ohm (32 ohm load). USB ID from linux-hardware.org. Spec is an upper bound ('<' value); the bound is stored.",
+      "photo": "img/dac/fiio-ka1.webp"
+    },
+    {
+      "name": "FiiO KA2",
+      "match": [
+        "\\b(fiio\\s*)?ka2\\b"
+      ],
+      "usb": [],
+      "outputOhm": 0.5,
+      "source": "https://www.fiio.com/ka2_parameters",
+      "note": "<0.5 ohm. Spec is an upper bound ('<' value); the bound is stored.",
+      "photo": "img/dac/fiio-ka2.webp"
+    },
+    {
+      "name": "FiiO KA3",
+      "match": [
+        "\\b(fiio\\s*)?ka3\\b"
+      ],
+      "usb": [],
+      "outputOhm": 0.5,
+      "source": "https://www.fiio.com/ka3_parameters",
+      "note": "SE <0.5 ohm, BAL <0.7 ohm. Spec is an upper bound ('<' value); the bound is stored.",
+      "photo": "img/dac/fiio-ka3.webp"
+    },
+    {
+      "name": "FiiO KA5",
+      "match": [
+        "\\b(fiio\\s*)?ka5\\b"
+      ],
+      "usb": [],
+      "outputOhm": 0.3,
+      "source": "https://www.fiio.com/ka5_parameters",
+      "note": "3.5 <0.3 ohm, 4.4 <0.35 ohm. Spec is an upper bound ('<' value); the bound is stored.",
+      "photo": "img/dac/fiio-ka5.webp"
+    },
+    {
+      "name": "FiiO KA11",
+      "match": [
+        "\\b(fiio\\s*)?ka11\\b"
+      ],
+      "usb": [],
+      "outputOhm": 0.7,
+      "source": "https://www.pragmaticaudio.com/reviews/2024/02/fiio-ka11/",
+      "note": "<0.7 ohm (32 ohm). FiiO spec as reproduced in a review, because the FiiO parameters page returned 404. Spec is an upper bound ('<' value); the bound is stored.",
+      "photo": "img/dac/fiio-ka11.webp"
+    },
+    {
+      "name": "FiiO KA13",
+      "match": [
+        "\\b(fiio\\s*)?ka13\\b"
+      ],
+      "usb": [],
+      "outputOhm": 1.7,
+      "source": "https://www.fiio.com/ka13_parameters",
+      "note": "3.5 <1.7 ohm, 4.4 <1.8 ohm. Spec is an upper bound ('<' value); the bound is stored.",
+      "photo": "img/dac/fiio-ka13.webp"
+    },
+    {
+      "name": "FiiO KA15",
+      "match": [
+        "\\b(fiio\\s*)?ka15\\b"
+      ],
+      "usb": [],
+      "outputOhm": 0.8,
+      "source": "https://www.fiio.com/ka15_parameters",
+      "note": "3.5 <0.8 ohm, 4.4 <1.2 ohm. Spec is an upper bound ('<' value); the bound is stored.",
+      "photo": "img/dac/fiio-ka15.webp"
+    },
+    {
+      "name": "FiiO KA17",
+      "match": [
+        "\\b(fiio\\s*)?ka17\\b"
+      ],
+      "usb": [],
+      "outputOhm": 1.0,
+      "source": "https://www.fiio.com/ka17_parameters",
+      "note": "3.5 <1 ohm, 4.4 <1.5 ohm. Spec is an upper bound ('<' value); the bound is stored.",
+      "photo": "img/dac/fiio-ka17.webp"
+    },
+    {
+      "name": "FiiO JadeAudio JA11",
+      "match": [
+        "\\bja11\\b"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": null
+    },
+    {
+      "name": "Moondrop Dawn (3.5 / 4.4)",
+      "match": [
+        "moondrop\\s*dawn(?!\\s*pro)",
+        "\\bdawn\\s*(3\\.5|4\\.4)\\b"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://moondroplab.com/en/products/dawn-4-4",
+      "note": "Moondrop doesn't publish output impedance.",
+      "photo": "img/dac/moondrop-dawn-3-5-4-4.webp"
+    },
+    {
+      "name": "Moondrop Dawn Pro",
+      "match": [
+        "\\bdawn\\s*pro\\b(?!\\s*2)"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://moondroplab.com/en/products/dawn-pro",
+      "note": "Not in Moondrop's spec sheet.",
+      "photo": "img/dac/moondrop-dawn-pro.webp"
+    },
+    {
+      "name": "Moondrop Dawn Pro 2",
+      "match": [
+        "\\bdawn\\s*pro\\s*2\\b"
+      ],
+      "usb": [],
+      "outputOhm": 0.29,
+      "source": "https://reference-audio-analyzer.pro/en/report/amp/moondrop-dawn-pro-2.php",
+      "note": "RAA measurement: SE 0.29 ohm, BAL 0.33 ohm (https://reference-audio-analyzer.pro/en/user-report-amp.php?id=6634).",
+      "photo": "img/dac/moondrop-dawn-pro-2.webp"
+    },
+    {
+      "name": "Moondrop Moonriver 2 / 2 Ti",
+      "match": [
+        "moon\\s*river(?!\\s*3)"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://moondroplab.com/en-products/moonriver2-ti",
+      "photo": "img/dac/moondrop-moonriver-2-2-ti.webp"
+    },
+    {
+      "name": "Moondrop Quark2 (IEM with USB-C DAC)",
+      "match": [
+        "\\bquark\\s*2\\b"
+      ],
+      "usb": [
+        "3302:12db"
+      ],
+      "outputOhm": null,
+      "source": "https://linux-hardware.org/?view=search&vendorid=3302&typeid=sound",
+      "note": "This is an IEM with a built-in DAC, not a dongle. Listed because it shares VID 3302.",
+      "photo": "img/dac/moondrop-quark2-iem-with-usb-c-dac.webp"
+    },
+    {
+      "name": "Truthear SHIO",
+      "match": [
+        "\\bshio\\b"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://truthear.com/products/shio",
+      "note": "Official specs omit it. Headphonesty lists 0.9/1.22 ohm, but the identical pair appears in its Questyle M15 table, so it's treated as unverified.",
+      "photo": "img/dac/truthear-shio.webp"
+    },
+    {
+      "name": "JCally JM20",
+      "match": [
+        "\\bjm[- ]?20\\b(?!\\s*(pro|max))"
+      ],
+      "usb": [],
+      "outputOhm": 0.1,
+      "source": "https://reference-audio-analyzer.pro/en/report/amp/jcally-jm20.php",
+      "note": "RAA measurement: 0.1 ohm avg 40Hz-15kHz."
+    },
+    {
+      "name": "JCally JM20 Pro / JM20 Max",
+      "match": [
+        "\\bjm[- ]?20\\s*(pro|max)\\b"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://www.pragmaticaudio.com/reviews/2025/07/jcally-jm20pro-usb-c-dongle/",
+      "note": "Review lists JM20 Pro <1 ohm. Not stored because the manufacturer hasn't confirmed it."
+    },
+    {
+      "name": "JCally JM6 Pro / JM6 Pro II",
+      "match": [
+        "\\bjm[- ]?6\\s*pro\\b"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://hangout.audio/products/jcally-jm6-pro-ii",
+      "note": "A retailer lists 0.2 ohm for the JM6 Pro II. Not stored.",
+      "photo": "img/dac/jcally-jm6-pro-jm6-pro-ii.webp"
+    },
+    {
+      "name": "JCally JM7 / JM12 / other JM",
+      "match": [
+        "\\bjcally\\b",
+        "\\bjm[- ]?(7|12)\\b"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": null
+    },
+    {
+      "name": "Hidizs S9 Pro / S9 Pro Plus",
+      "match": [
+        "\\bs9\\s*pro(\\s*plus)?\\b",
+        "hidizs"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://everydaylistening.net/2021/08/31/hidizs-s9-pro-review-rarefied/2/",
+      "note": "Hidizs publishes no output impedance."
+    },
+    {
+      "name": "Hidizs S3 Pro / XO",
+      "match": [
+        "\\bs3\\s*pro\\b",
+        "hidizs\\s*xo"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": null
+    },
+    {
+      "name": "Cayin RU6",
+      "match": [
+        "\\bru6\\b"
+      ],
+      "usb": [],
+      "outputOhm": 0.5,
+      "source": "https://archimago.blogspot.com/2022/01/review-measurements-cayin-ru6-r-2r-usb.html",
+      "note": "Cayin spec 0.5 ohm SE. Archimago measured 0.56 ohm avg.",
+      "photo": "img/dac/cayin-ru6.webp"
+    },
+    {
+      "name": "Cayin RU7",
+      "match": [
+        "\\bru7\\b"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://www.e-earphone.jp/products/358394",
+      "note": "Only a retailer lists 0.5 ohm SE. Not stored.",
+      "photo": "img/dac/cayin-ru7.webp"
+    },
+    {
+      "name": "Cayin RU3",
+      "match": [
+        "\\bru3\\b"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": null,
+      "photo": "img/dac/cayin-ru3.webp"
+    },
+    {
+      "name": "Shanling UA1 / UA1 Plus / UA1 Pro",
+      "match": [
+        "\\bua1(\\s*(plus|pro))?\\b"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://headfonics.com/shanling-ua1-plus-review/2/",
+      "note": "A review spec list gives UA1 Plus 0.5 ohm. Not manufacturer-confirmed, so not stored.",
+      "photo": "img/dac/shanling-ua1-ua1-plus-ua1-pro.webp"
+    },
+    {
+      "name": "Shanling UA2",
+      "match": [
+        "\\bua2\\b"
+      ],
+      "usb": [],
+      "outputOhm": 0.8,
+      "source": "https://en.shanling.com/article-UA2Intro.html",
+      "note": "3.5 SE 0.8 ohm, 2.5 BAL 1.6 ohm (Shanling).",
+      "photo": "img/dac/shanling-ua2.webp"
+    },
+    {
+      "name": "Shanling UA3",
+      "match": [
+        "\\bua3\\b"
+      ],
+      "usb": [],
+      "outputOhm": 0.4,
+      "source": "https://www.soundphilereview.com/reviews/shanling-ua3-review-33434/",
+      "note": "SE 0.4 / BAL 0.8 ohm. Shanling spec as reproduced by two reviews."
+    },
+    {
+      "name": "Shanling UA5",
+      "match": [
+        "\\bua5\\b"
+      ],
+      "usb": [],
+      "outputOhm": 0.8,
+      "source": "https://moonstarreviews.net/shanling-ua5-usb-dac-amp-review/",
+      "note": "SE 0.8 / BAL 1.6 ohm. Shanling spec as reproduced by reviews.",
+      "photo": "img/dac/shanling-ua5.webp"
+    },
+    {
+      "name": "Shanling UA6",
+      "match": [
+        "\\bua6\\b"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": null,
+      "photo": "img/dac/shanling-ua6.webp"
+    },
+    {
+      "name": "iBasso DC03 Pro",
+      "match": [
+        "\\bdc03\\s*pro\\b"
+      ],
+      "usb": [],
+      "outputOhm": 0.12,
+      "source": "https://linsoul.com/products/ibasso-dc03-pro",
+      "note": "<0.12 ohm. iBasso spec via retailers, because ibasso.com shows specs only as images. Spec is an upper bound ('<' value); the bound is stored.",
+      "photo": "img/dac/ibasso-dc03-pro.webp"
+    },
+    {
+      "name": "iBasso DC04 Pro",
+      "match": [
+        "\\bdc04\\s*pro\\b"
+      ],
+      "usb": [],
+      "outputOhm": 0.2,
+      "source": "https://www.audiophonics.fr/en/portable-dac-and-mobile/ibasso-dc04pro-balanced-dac-headphone-amplifier-2x-cs43131-32bit-384khz-dsd256-black-p-17364.html",
+      "note": "SE <0.2, BAL <0.4 ohm (iBasso spec via retailer). Spec is an upper bound ('<' value); the bound is stored.",
+      "photo": "img/dac/ibasso-dc04-pro.webp"
+    },
+    {
+      "name": "iBasso DC05",
+      "match": [
+        "\\bdc05\\b"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": null,
+      "photo": "img/dac/ibasso-dc05.webp"
+    },
+    {
+      "name": "iBasso DC06 Pro",
+      "match": [
+        "\\bdc06\\s*pro\\b"
+      ],
+      "usb": [],
+      "outputOhm": 0.3,
+      "source": "https://bloomaudio.com/products/ibasso-dc06pro",
+      "note": "SE <0.3, BAL <0.5 ohm (iBasso spec via retailer). Spec is an upper bound ('<' value); the bound is stored.",
+      "photo": "img/dac/ibasso-dc06-pro.webp"
+    },
+    {
+      "name": "iBasso DC07 Pro",
+      "match": [
+        "\\bdc07\\s*pro\\b"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://ibasso.com/product/dc07pro/",
+      "photo": "img/dac/ibasso-dc07-pro.webp"
+    },
+    {
+      "name": "iBasso DC-Elite",
+      "match": [
+        "\\bdc[- ]?elite\\b"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://ibasso.com/product/dcelite/",
+      "photo": "img/dac/ibasso-dc-elite.webp"
+    },
+    {
+      "name": "Tanchjim Space / Space Lite / Space II",
+      "match": [
+        "tanchjim[-\\s]*space"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://mobileaudiophile.com/dacs/dongle/tanchjim-space-ii-review/",
+      "note": "A review lists Space II <0.5 ohm. Not stored.",
+      "photo": "img/dac/tanchjim-space-space-lite-space-ii.webp"
+    },
+    {
+      "name": "Questyle M15 / M15C / M15i / M12 / M12i",
+      "match": [
+        "questyle",
+        "\\bm1[25][ci]?\\b"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://www.questyle.com/pages/m15-specification",
+      "note": "Questyle doesn't publish output impedance.",
+      "photo": "img/dac/questyle-m15-m15c-m15i-m12-m12i.webp"
+    },
+    {
+      "name": "ddHiFi TC35 Pro / TC35C / TC44C",
+      "match": [
+        "\\btc(35|44)\\s*(pro|c|b)?\\b",
+        "ddhifi"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://headfonics.com/ddhifi-tc35pro-eye2-mountain2-review/2/",
+      "note": "Not published. Note: the user's 'TP35 Pro' is EPZ, not ddHiFi."
+    },
+    {
+      "name": "HiBy FC1 / FC3 / FC4 / FC5 / FC6",
+      "match": [
+        "\\bhiby\\s*fc\\d\\b",
+        "\\bfc[13456]\\b"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://store.hiby.com/pages/fc4-specs",
+      "note": "HiBy doesn't publish output impedance."
+    },
+    {
+      "name": "Lotoo PAW S1 / S2",
+      "match": [
+        "\\bpaw\\s*s[12]\\b",
+        "lotoo"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://www.headfonia.com/lotoo-paw-s1-review/"
+    },
+    {
+      "name": "Letshuoer DT03 / DT02",
+      "match": [
+        "\\bdt0[23]\\b",
+        "letshuoer"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://headfonics.com/letshuoer-dt03-review/2/",
+      "photo": "img/dac/letshuoer-dt03-dt02.webp"
+    },
+    {
+      "name": "Kiwi Ears Allegro / Allegro Mini / Allegro Pro",
+      "match": [
+        "\\ballegro(\\s*(mini|pro))?\\b"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": null,
+      "note": "Only a deal-site post claims <1 ohm. Not stored.",
+      "photo": "img/dac/kiwi-ears-allegro-allegro-mini-allegro-pro.webp"
+    },
+    {
+      "name": "Simgot DEW4X / DEW6",
+      "match": [
+        "\\bdew\\s*[46]x?\\b",
+        "simgot"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://www.head-fi.org/showcase/simgot-dew4x.26983/"
+    },
+    {
+      "name": "iFi GO link / GO link Max",
+      "match": [
+        "\\bgo\\s*link\\b"
+      ],
+      "usb": [],
+      "outputOhm": 0.4,
+      "source": "https://ifi-audio.com/products/go-link",
+      "note": "GO link <0.4 ohm (iFi). The Max wasn't checked. Spec is an upper bound ('<' value); the bound is stored.",
+      "photo": "img/dac/ifi-go-link-go-link-max.webp"
+    },
+    {
+      "name": "Tempotec Sonata HD Pro",
+      "match": [
+        "sonata\\s*hd"
+      ],
+      "usb": [],
+      "outputOhm": 0.2,
+      "source": "https://www.head-fi.org/showcase/review-reply/420902/",
+      "note": "Reviewer estimate from FR deviation, <0.2 ohm. Lower confidence."
+    },
+    {
+      "name": "Qudelix T71",
+      "match": [
+        "\\bt71\\b",
+        "qudelix[- ]?t71"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://www.qudelix.com/products/copy-of-qudelix-t71-usb-dac"
+    },
+    {
+      "name": "CrinEar Protocol Max",
+      "match": [
+        "protocol\\s*max"
+      ],
+      "usb": [],
+      "outputOhm": 0.3,
+      "source": "https://crinacle.com/2025/10/05/crinear-protocol-max-user-guide-specifications",
+      "note": "3.5 mm < 0.3 ohm, 4.4 mm < 0.6 ohm (CrinEar spec). Dual CS43198, 10-band PEQ.",
+      "photo": "img/dac/crinear-protocol-max.webp"
+    },
+    {
+      "name": "Moondrop Moonriver 3",
+      "match": [
+        "moon\\s*river\\s*3"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://github.com/jeromeof/devicePEQ (USB product name)",
+      "photo": "img/dac/moondrop-moonriver-3.webp"
+    },
+    {
+      "name": "Moondrop Echo A",
+      "match": [
+        "\\becho\\s*a\\b"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://github.com/jeromeof/devicePEQ (USB product name)",
+      "photo": "img/dac/moondrop-echo-a.webp"
+    },
+    {
+      "name": "Moondrop Echo-B",
+      "match": [
+        "\\becho[-\\s]*b\\b"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://github.com/jeromeof/devicePEQ (USB product name)",
+      "photo": "img/dac/moondrop-echo-b.webp"
+    },
+    {
+      "name": "Moondrop Old Fashioned (USB-C)",
+      "match": [
+        "old\\s*fashioned"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://github.com/jeromeof/devicePEQ (USB product name)",
+      "photo": "img/dac/moondrop-old-fashioned-usb-c.webp"
+    },
+    {
+      "name": "Truthear KeyX",
+      "match": [
+        "truthear\\s*keyx",
+        "\\bkey\\s*x\\b"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://github.com/jeromeof/devicePEQ (USB product name)",
+      "photo": "img/dac/truthear-keyx.webp"
+    },
+    {
+      "name": "NiceHCK Octave",
+      "match": [
+        "\\(\\s*octave\\s*\\)"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://github.com/jeromeof/devicePEQ (USB product name)"
+    },
+    {
+      "name": "Letshuoer DT04",
+      "match": [
+        "\\bdt04\\b"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://github.com/jeromeof/devicePEQ (USB product name)"
+    },
+    {
+      "name": "Snowsky Melody / Tiny",
+      "match": [
+        "snowsky\\s*(melody|tiny)"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://github.com/jeromeof/devicePEQ (USB product name)",
+      "photo": "img/dac/snowsky-melody-tiny.webp"
+    },
+    {
+      "name": "JadeAudio JIEZI",
+      "match": [
+        "jiezi"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://github.com/jeromeof/devicePEQ (USB product name)"
+    },
+    {
+      "name": "TANCHJIM Stargate II",
+      "match": [
+        "tanchjim[-\\s]*stargate"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://github.com/jeromeof/devicePEQ (USB product name)",
+      "photo": "img/dac/tanchjim-stargate-ii.webp"
+    },
+    {
+      "name": "AudioQuest DragonFly Black",
+      "match": [
+        "dragon\\s*fly\\s*black"
+      ],
+      "usb": [],
+      "outputOhm": 0.61,
+      "source": "http://archimago.blogspot.com/2019/08/measurements-dragonflies-audioquest.html",
+      "note": "Archimago: 0.61 ohm (2017 unit, 20 ohm load at 1 kHz). Stereophile rounds the Red and Black to 1 ohm."
+    },
+    {
+      "name": "AudioQuest DragonFly Red",
+      "match": [
+        "dragon\\s*fly\\s*red"
+      ],
+      "usb": [],
+      "outputOhm": 0.53,
+      "source": "http://archimago.blogspot.com/2019/08/measurements-dragonflies-audioquest.html",
+      "note": "Archimago: 0.53 ohm. ESS SABRE9601K output driver.",
+      "photo": "img/dac/audioquest-dragonfly-red.webp"
+    },
+    {
+      "name": "AudioQuest DragonFly Cobalt",
+      "match": [
+        "dragon\\s*fly\\s*cobalt"
+      ],
+      "usb": [],
+      "outputOhm": 0.4,
+      "source": "http://archimago.blogspot.com/2019/08/measurements-dragonflies-audioquest.html",
+      "note": "Archimago: 0.40 ohm; Hi-Fi News <0.5 ohm 20 Hz-20 kHz; AudioQuest spec 0.65 ohm.",
+      "photo": "img/dac/audioquest-dragonfly-cobalt.webp"
+    },
+    {
+      "name": "Shanling UA4",
+      "match": [
+        "\bshanling\\s*ua\\s*4\b",
+        "\bua4\b"
+      ],
+      "usb": [],
+      "outputOhm": 0.4,
+      "source": "https://headfonics.com/shanling-ua4-review/2/",
+      "note": "Shanling spec: <0.4 ohm on 3.5 mm, <0.8 ohm on 4.4 mm balanced. ES9069Q + 2x RT6863.",
+      "photo": "img/dac/shanling-ua4.webp"
+    },
+    {
+      "name": "E1DA 9038D / 9038D6K",
+      "match": [
+        "\b9038\\s*d"
+      ],
+      "usb": [],
+      "outputOhm": 0.07,
+      "source": "https://e1dashz.wixsite.com/index/9038d",
+      "note": "E1DA: 0.07 ohm at 1 kHz (Agilent U1733C); Archimago measured <0.1 ohm across the audible range on the 9038D6K.",
+      "photo": "img/dac/e1da-9038d-9038d6k.webp"
+    },
+    {
+      "name": "Questyle M18i",
+      "match": [
+        "\bm18\\s*i\b"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://hear.audio/2025/08/01/questyle-m18i-review/",
+      "note": "Questyle publishes no output impedance (current-mode amplification). Not stored rather than guessed.",
+      "photo": "img/dac/questyle-m18i.webp"
+    },
+    {
+      "name": "Samsung USB-C to 3.5 mm adapter (EE-UC10)",
+      "match": [
+        "\bsamsung\b.*(usb[- ]?c|type[- ]?c|headset jack)",
+        "\bee-?uc10"
+      ],
+      "usb": [],
+      "outputOhm": null,
+      "source": "https://www.samsung.com/us/business/mobile/mobile-accessories/phones/usb-c-headphone-jack-adapter-ee-uc10juwegus",
+      "note": "Samsung lists 24-bit/192 kHz and 100 dB SNR but no output impedance; no bench measurement found. Not stored rather than guessed."
+    }
+  ],
+  "btAdapters": [
+    {
+      "name": "FiiO UTWS1",
+      "match": [
+        "\\butws\\s*1\\b"
+      ],
+      "kind": "ear-hook",
+      "outputOhm": null,
+      "source": "https://fiio.com/utws1",
+      "note": "A Head-Fi user table lists ~11 ohm. Not stored."
+    },
+    {
+      "name": "FiiO UTWS3",
+      "match": [
+        "\\butws\\s*3\\b"
+      ],
+      "kind": "ear-hook",
+      "outputOhm": 0.7,
+      "source": "https://www.fiio.com/utws3_parameters",
+      "note": "'about 0.7 ohm' (FiiO)."
+    },
+    {
+      "name": "FiiO UTWS5",
+      "match": [
+        "\\butws\\s*5\\b"
+      ],
+      "kind": "ear-hook",
+      "outputOhm": 0.4,
+      "source": "https://www.fiio.com/utws5_parameters",
+      "note": "<0.4 ohm (32 ohm). Spec is an upper bound ('<' value); the bound is stored."
+    },
+    {
+      "name": "FiiO UTWS Pro",
+      "match": [
+        "\\butws\\s*pro\\b"
+      ],
+      "kind": "ear-hook",
+      "outputOhm": null,
+      "source": null,
+      "note": "FiiO parameters page 404. No spec found."
+    },
+    {
+      "name": "FiiO LINK TWS / UTWS17",
+      "match": [
+        "\\butws\\s*17\\b",
+        "fiio\\s*link"
+      ],
+      "kind": "ear-hook",
+      "outputOhm": null,
+      "source": "https://mobileaudiophile.com/true-wireless-sound-tws-review/fiio-link-tws-utws17-review-2-pin-or-mmcx-why-not-both/"
+    },
+    {
+      "name": "FiiO BTR3",
+      "match": [
+        "\\bbtr\\s*3\\b(?!k)"
+      ],
+      "kind": "clip-on-dac",
+      "outputOhm": 0.3,
+      "source": "https://www.fiio.com/btr3_parameters",
+      "note": "<0.3 ohm. Spec is an upper bound ('<' value); the bound is stored."
+    },
+    {
+      "name": "FiiO BTR3K",
+      "match": [
+        "\\bbtr\\s*3k\\b"
+      ],
+      "kind": "clip-on-dac",
+      "outputOhm": 0.3,
+      "source": "https://www.fiio.com/btr3k_parameters",
+      "note": "PO <=0.3, BAL <=0.5 ohm."
+    },
+    {
+      "name": "FiiO BTR5",
+      "match": [
+        "\\bbtr\\s*5\\b"
+      ],
+      "kind": "clip-on-dac",
+      "outputOhm": 1.0,
+      "source": "https://www.fiio.com/btr5_parameters",
+      "note": "PO <=1.0, BAL <=2.0 ohm."
+    },
+    {
+      "name": "FiiO BTR7",
+      "match": [
+        "\\bbtr\\s*7\\b"
+      ],
+      "kind": "clip-on-dac",
+      "outputOhm": 1.2,
+      "source": "https://www.fiio.com/btr7_parameters",
+      "note": "PO <1.2, BAL <2.8 ohm. Spec is an upper bound ('<' value); the bound is stored."
+    },
+    {
+      "name": "FiiO BTR11",
+      "match": [
+        "\\bbtr\\s*11\\b"
+      ],
+      "kind": "clip-on-dac",
+      "outputOhm": 0.5,
+      "source": "https://www.fiio.com/btr11_parameters",
+      "note": "<=0.5 ohm."
+    },
+    {
+      "name": "FiiO BTR13",
+      "match": [
+        "\\bbtr\\s*13\\b"
+      ],
+      "kind": "clip-on-dac",
+      "outputOhm": 0.6,
+      "source": "https://www.fiio.com/btr13_parameters",
+      "note": "3.5 <0.6, 4.4 <1 ohm. Spec is an upper bound ('<' value); the bound is stored."
+    },
+    {
+      "name": "FiiO BTR15",
+      "match": [
+        "\\bbtr\\s*15\\b"
+      ],
+      "kind": "clip-on-dac",
+      "outputOhm": 1.0,
+      "source": "https://www.fiio.com/btr15_parameters",
+      "note": "3.5 <1, 4.4 <1.5 ohm. Spec is an upper bound ('<' value); the bound is stored."
+    },
+    {
+      "name": "FiiO BTR17",
+      "match": [
+        "\\bbtr\\s*17\\b"
+      ],
+      "kind": "clip-on-dac",
+      "outputOhm": 1.0,
+      "source": "https://www.fiio.com/btr17_parameters",
+      "note": "3.5 <1, 4.4 <1.5 ohm. Spec is an upper bound ('<' value); the bound is stored."
+    },
+    {
+      "name": "Qudelix 5K",
+      "match": [
+        "qudelix(?![- ]?t71)",
+        "\\bq5k\\b"
+      ],
+      "kind": "clip-on-dac",
+      "outputOhm": null,
+      "source": "https://www.qudelix.com/products/qudelix-5k",
+      "note": "Not on Qudelix's page. Retailers list <1 ohm."
+    },
+    {
+      "name": "EarStudio ES100 / ES100 MK2",
+      "match": [
+        "\\bes100\\b",
+        "earstudio"
+      ],
+      "kind": "clip-on-dac",
+      "outputOhm": 1.0,
+      "source": "https://drop.com/buy/radsone-earstudio-es100/details",
+      "note": "Radsone spec 0.5-1 ohm via the Drop listing. The upper end is stored."
+    },
+    {
+      "name": "HiBy W3 / W3 II",
+      "match": [
+        "\\bhiby\\s*w3\\b"
+      ],
+      "kind": "clip-on-dac",
+      "outputOhm": null,
+      "source": "https://store.hiby.com/products/hiby-w3"
+    },
+    {
+      "name": "HiBy W5",
+      "match": [
+        "\\bhiby\\s*w5\\b"
+      ],
+      "kind": "clip-on-dac",
+      "outputOhm": null,
+      "source": "https://store.hiby.com/products/hiby-w5"
+    },
+    {
+      "name": "Shanling UP4 / UP5",
+      "match": [
+        "\\bup[45]\\b"
+      ],
+      "kind": "clip-on-dac",
+      "outputOhm": null,
+      "source": "https://en.shanling.com/article/101306",
+      "note": "Retailers list UP4 2022 at <1 ohm. UP5 not published. On linux-hardware the UP4 shows as 'Shanling UP4(22)' (0a12:1244, a generic CSR ID)."
+    },
+    {
+      "name": "Shanling MW200",
+      "match": [
+        "\\bmw200\\b"
+      ],
+      "kind": "ear-hook",
+      "outputOhm": null,
+      "source": "https://en.shanling.com/article/101320",
+      "note": "Neckband cable with MMCX."
+    },
+    {
+      "name": "KZ AZ09",
+      "match": [
+        "\\baz09\\b(?!\\s*pro)"
+      ],
+      "kind": "ear-hook",
+      "outputOhm": null,
+      "source": null
+    },
+    {
+      "name": "KZ AZ09 Pro",
+      "match": [
+        "\\baz09\\s*pro\\b"
+      ],
+      "kind": "ear-hook",
+      "outputOhm": null,
+      "source": "https://linsoul.com/products/kz-az09-pro",
+      "note": "QCC3040, BT 5.2."
+    },
+    {
+      "name": "KZ AZ10",
+      "match": [
+        "\\baz10\\b"
+      ],
+      "kind": "ear-hook",
+      "outputOhm": null,
+      "source": null
+    },
+    {
+      "name": "KZ AZ15 / AZ15 Pro",
+      "match": [
+        "\\baz15(\\s*pro)?\\b"
+      ],
+      "kind": "ear-hook",
+      "outputOhm": null,
+      "source": null,
+      "note": "QCC3046."
+    },
+    {
+      "name": "TRN BT20 / BT20 Pro",
+      "match": [
+        "\\bbt20(\\s*pro)?\\b"
+      ],
+      "kind": "ear-hook",
+      "outputOhm": null,
+      "source": "https://www.audiophonics.fr/en/headphones-in-ear-monitors-accessories/trn-bt20-pro-ciem-p-20781.html"
+    },
+    {
+      "name": "TRN BT20S / BT20S Pro",
+      "match": [
+        "\\bbt20s(\\s*pro)?\\b"
+      ],
+      "kind": "ear-hook",
+      "outputOhm": null,
+      "source": "https://linsoul.com/products/trn-bt20s-pro"
+    },
+    {
+      "name": "TRN BT20 XS",
+      "match": [
+        "\\bbt20\\s*xs\\b"
+      ],
+      "kind": "ear-hook",
+      "outputOhm": null,
+      "source": "https://www.linsoul.com/products/trn-bt20-xs"
+    },
+    {
+      "name": "TRN BT30",
+      "match": [
+        "\\bbt30\\b"
+      ],
+      "kind": "ear-hook",
+      "outputOhm": null,
+      "source": "https://drop.com/buy/trn-bt30-bluetooth-earphone-module/questions"
+    },
+    {
+      "name": "Moondrop EVO / EVO II",
+      "match": [
+        "moondrop\\s*evo",
+        "\\bevo\\s*(ii|2)\\b"
+      ],
+      "kind": "ear-hook",
+      "outputOhm": null,
+      "source": "https://hifigo.com/blogs/news/moondrop-evo-ii-is-here-true-high-definition-wireless-ear-hooks-for-iems",
+      "note": "Moondrop's ear-hook adapters. The original EVO is discontinued."
+    },
+    {
+      "name": "CCA BTX",
+      "match": [
+        "\\bcca\\s*btx\\b"
+      ],
+      "kind": "ear-hook",
+      "outputOhm": null,
+      "source": "https://linsoul.com/products/cca-btx",
+      "note": "QCC3040. Same hardware family as the KZ AZ09 Pro."
+    }
+  ],
+  "dsps": [
+    {
+      "name": "Moondrop Chu II DSP cable",
+      "match": [
+        "\\(\\s*chu\\s*2\\s*dsp\\s*\\)",
+        "chu\\s*ii\\s*dsp"
+      ],
+      "usb": [
+        "31b2:0113"
+      ],
+      "chip": "KT Micro",
+      "app": "Moondrop Link",
+      "iems": [
+        "Moondrop Chu II DSP"
+      ],
+      "confirmed": true,
+      "source": "devicePEQ capture (31b2:0113); https://www.pragmaticaudio.com/reviews/2024/04/moondrop-chu-ii-dsp/",
+      "note": "A version of Moondrop's CDSP cable, bundled with the Chu II DSP."
+    },
+    {
+      "name": "Moondrop CDSP",
+      "match": [
+        "\\(\\s*cdsp\\s*\\)"
+      ],
+      "usb": [],
+      "chip": "KT Micro",
+      "app": "Moondrop Link",
+      "iems": [
+        "Sold on its own for 0.78 mm 2-pin IEMs"
+      ],
+      "confirmed": true,
+      "source": "devicePEQ; https://www.head-fi.org/showcase/moondrop-freedsp.27200/"
+    },
+    {
+      "name": "Moondrop FreeDSP",
+      "match": [
+        "free\\s*dsp(?!\\s*(pro|mini))"
+      ],
+      "usb": [],
+      "chip": "ARM SoC",
+      "app": "Moondrop Link",
+      "iems": [
+        "Sold on its own for 0.78 mm 2-pin IEMs"
+      ],
+      "confirmed": true,
+      "source": "devicePEQ; https://hifigo.com/products/moondrop-freedsp"
+    },
+    {
+      "name": "Moondrop FreeDSP Pro",
+      "match": [
+        "free\\s*dsp\\s*pro"
+      ],
+      "usb": [],
+      "chip": "Cirrus CS43198 + second-generation DSP",
+      "app": "Moondrop Link",
+      "iems": [
+        "Sold on its own for 0.78 mm 2-pin IEMs"
+      ],
+      "confirmed": true,
+      "source": "devicePEQ; https://moondroplab.com/en/products/freedsp-pro"
+    },
+    {
+      "name": "Moondrop FreeDSP Mini",
+      "match": [
+        "free\\s*dsp\\s*mini"
+      ],
+      "usb": [],
+      "chip": "Walkplay",
+      "app": "Moondrop Link",
+      "iems": [
+        "Sold on its own for 0.78 mm 2-pin IEMs"
+      ],
+      "confirmed": true,
+      "source": "https://github.com/jeromeof/devicePEQ (USB product name)"
+    },
+    {
+      "name": "Moondrop Quark2 DSP",
+      "match": [
+        "md-qt-042",
+        "\\bquark\\s*2\\b"
+      ],
+      "usb": [
+        "3302:12db"
+      ],
+      "chip": "DSP in the cable",
+      "app": "",
+      "iems": [
+        "Moondrop Quark2 (fixed USB-C cable)"
+      ],
+      "confirmed": true,
+      "source": "devicePEQ; https://www.head-fi.org/showcase/moondrop-quark2-dsp.27460/reviews",
+      "note": "Reviews report it isn't adjustable in Moondrop Link."
+    },
+    {
+      "name": "Moondrop Rays",
+      "match": [
+        "\\(\\s*(ag\\s+)?rays\\s*\\)"
+      ],
+      "usb": [],
+      "chip": "DSP in the cable",
+      "app": "Moondrop Link",
+      "iems": [
+        "Moondrop Rays (gaming IEM, fixed USB-C)"
+      ],
+      "confirmed": true,
+      "source": "devicePEQ; https://moondroplab.com/en-products/rays"
+    },
+    {
+      "name": "Moondrop Marigold",
+      "match": [
+        "marigold"
+      ],
+      "usb": [],
+      "chip": "Second-generation DSP",
+      "app": "Moondrop Link",
+      "iems": [
+        "Moondrop Marigold (fixed USB-C)"
+      ],
+      "confirmed": true,
+      "source": "devicePEQ; https://www.pragmaticaudio.com/reviews/2026/01/moondrop-marigold/"
+    },
+    {
+      "name": "TANCHJIM One DSP cable",
+      "match": [
+        "tanchjim[-\\s]*one\\s*dsp"
+      ],
+      "usb": [],
+      "chip": "KT Micro",
+      "app": "TANCHJIM app",
+      "iems": [
+        "TANCHJIM One DSP"
+      ],
+      "confirmed": true,
+      "source": "devicePEQ; https://www.head-fi.org/showcase/tanchjim-one.26671/reviews"
+    },
+    {
+      "name": "TANCHJIM Bunny DSP cable",
+      "match": [
+        "tanchjim[-\\s]*bunny"
+      ],
+      "usb": [],
+      "chip": "KT Micro",
+      "app": "TANCHJIM app",
+      "iems": [
+        "TANCHJIM Bunny (USB-C version)"
+      ],
+      "confirmed": true,
+      "source": "devicePEQ; https://www.head-fi.org/showcase/tanchjim-bunny.27743/"
+    },
+    {
+      "name": "TANCHJIM DSP plug (Fission)",
+      "match": [
+        "tanchjim[-\\s]*fission"
+      ],
+      "usb": [],
+      "chip": "KT Micro",
+      "app": "TANCHJIM app",
+      "iems": [
+        "TANCHJIM Fission (USB-C plug)",
+        "TANCHJIM Cable X (DSP-S plug)"
+      ],
+      "confirmed": true,
+      "source": "devicePEQ; https://hifigo.com/products/tanchjim-fission; https://linsoul.com/products/tanchjim-cable-x",
+      "note": "Swappable USB-C plug; the Cable X plug's USB name isn't confirmed."
+    },
+    {
+      "name": "TANCHJIM Zero DSP",
+      "match": [
+        "tanchjim[-\\s]*zero"
+      ],
+      "usb": [],
+      "chip": "Dual 24-bit DAC + DSP",
+      "app": "TANCHJIM app",
+      "iems": [
+        "TANCHJIM Zero DSP",
+        "TANCHJIM Zero Ultima (USB-C)"
+      ],
+      "confirmed": false,
+      "source": "https://av.watch.impress.co.jp/docs/news/1466296.html"
+    },
+    {
+      "name": "ddHiFi Memory",
+      "match": [
+        "dd\\s*hifi\\s*dsp\\s*iem"
+      ],
+      "usb": [],
+      "chip": "Cirrus CS43198",
+      "app": "ddHiFi app",
+      "iems": [
+        "ddHiFi Memory (fixed USB-C cable)"
+      ],
+      "confirmed": true,
+      "source": "devicePEQ; https://headfonics.com/ddhifi-memory-review/"
+    },
+    {
+      "name": "ddHiFi DSP cable (Memory series)",
+      "match": [
+        "d(d|idi)\\s*hifi\\s*dsp\\s*cable"
+      ],
+      "usb": [],
+      "chip": "Cirrus CS43198",
+      "app": "ddHiFi app",
+      "iems": [
+        "ddHiFi Memory-series USB-C cables (e.g. M198C)"
+      ],
+      "confirmed": true,
+      "source": "devicePEQ; https://bloomaudio.com/products/ddhifi-m198c",
+      "note": "Which Memory-series cable reports this name isn't confirmed."
+    },
+    {
+      "name": "Kiwi Ears S-Link Type-C",
+      "match": [
+        "s-?link"
+      ],
+      "usb": [],
+      "chip": "KT Micro KT0231H",
+      "app": "Kiwi Ears app",
+      "iems": [
+        "Sold on its own for flat 0.78 mm 2-pin IEMs"
+      ],
+      "confirmed": false,
+      "source": "https://kiwiears.com/products/kiwi-ears-s-link-type-c"
+    },
+    {
+      "name": "FiiO × JadeAudio JD1 (USB-C)",
+      "match": [
+        "\\bjd1\\b"
+      ],
+      "usb": [],
+      "chip": "DSP with 5 onboard sound profiles",
+      "app": "inline remote",
+      "iems": [
+        "FiiO × JadeAudio JD1 (USB-C version)"
+      ],
+      "confirmed": false,
+      "source": "https://linsoul.com/products/fiio-jadeaudio-jd1"
+    }
+  ],
+  "dspNote": "DSP cables and IEMs with a DSP: they hold their own EQ, applied after the app. Checked before the DAC list. confirmed = USB product name seen in devicePEQ's device list."
+}

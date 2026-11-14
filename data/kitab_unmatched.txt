@@ -1,0 +1,173 @@
+headphone            Audio Technica S120C  (NEW GOOD BUDGET)
+headphone            ISK HD 9999
+headphone            Pioneer Se-MS5t
+headphone            Snowsky Nature  (Cheap Monitoring)
+headphone            Sony ZX310AP
+headphone            Tascam TH-02
+headphone            dBe DJ500
+headphone-gaming     Audio Technica  (ATH-AX1is)
+headphone-gaming     Edifier K800
+headphone-gaming     HyperX Cloud 3  (Very good mic)
+headphone-gaming     Sennheiser GSP300/301/302
+headphone-gaming     Sony ZX310AP
+headphone-wireless   Baseus H1i
+headphone-wireless   Baseus H2
+headphone-wireless   Bose QuietComfort 2nd Gen  (Proper ANC with Superb Fit)
+headphone-wireless   Bower Wilkins  (PX7)
+headphone-wireless   Earfun Tune Pro  (Endgame 600ribu)
+headphone-wireless   Earfun Wave Life  (New Basshead)
+headphone-wireless   Earfun Wave Pro  (under 1jt dpt case)
+headphone-wireless   Earfun Wave Pro X  (Best Sound Mid.Budget)
+headphone-wireless   Edifier Stax S3
+headphone-wireless   Edifier Stax S5
+headphone-wireless   Edifier W800bt Pro  (NEW RECOMMENDED)
+headphone-wireless   Edifier W820nb Plus
+headphone-wireless   Edifier W830nb
+headphone-wireless   Edifier WH700nb
+headphone-wireless   Edifier Wh700nb Pro
+headphone-wireless   Fantech Go Flow  (NEW NOT BAD)
+headphone-wireless   JBL Tour One M3  (Superb Fit. Finally Good Sounding Portable Audio from JBL)
+headphone-wireless   JBL510bt
+headphone-wireless   Jlab Rewind 2
+headphone-wireless   Lenovo Thinkplus  (TH10)
+headphone-wireless   Moondrop Edge
+headphone-wireless   Philips TAH2000  (New Affordable ON EAR)
+headphone-wireless   Pioneer SE-S3bt
+headphone-wireless   Roseselsa Cambrian
+headphone-wireless   Sony CH520
+headphone-wireless   Sony WH-CH730N  (YG PENTING SONY MURMER)
+headphone-wireless   Sony Wh-CH720n
+headphone-wireless   Soundcore H30i
+headphone-wireless   Soundcore Q20i
+headphone-wireless   Soundpeats Space
+headphone-wireless   Soundpeats Space Pro  (Harga Digoreng)
+headphone-wireless   Tozo H10
+headphone-wireless   Tozo H100  (BEST BUDGET)
+headphone-wireless   Tozo H20  (Good Under 1jt)
+iem                  Ak6 Pro
+iem                  Euiu - EI05
+iem                  Lafitear LF3
+iem                  Phi Audio 3.14
+iem                  Sony EX15C  (NEW)
+iem                  Yu9 Que Melody  (Smooth Treble lower Uppermids)
+tws                  1More Pistonbuds
+tws                  Airpods 4 ANC
+tws                  Airpods Pro 2
+tws                  Airpods Pro 3  (God Tier Mic on iOS Superb ANC)
+tws                  Audio TEchnica  (ATH-CC500BT2)
+tws                  Audio Technica AC5TW
+tws                  Audio Technica SQ1TW2  (NEW SUPERB MIC)
+tws                  Aukey
+tws                  Baseus BP1 Pro
+tws                  Baseus BP1 Ultra
+tws                  Baseus Bowie M2S
+tws                  Baseus E19
+tws                  Baseus Encok WM02
+tws                  Bose QuietComfort Ultra 2nd Gen  (King of ANC)
+tws                  Bose Ultra Open Earbuds 2nd Gen
+tws                  Devialet Gemini ii  (Immersive Sound)
+tws                  Earfun Air 2
+tws                  Earfun Air Life
+tws                  Earfun Air Pro 3
+tws                  Earfun Air Pro 4i  (BEST 500ribu)
+tws                  Earfun Clip 2
+tws                  Earfun Free 2s
+tws                  Earfun Free Pro 3
+tws                  Earfun Open Jump
+tws                  Edifier Comfo Run
+tws                  Edifier TWS1 Pro 2
+tws                  Edifier X3 Pro
+tws                  Edifier X3s
+tws                  Eggel Energy Buds Pro
+tws                  Fantech Mithril Tx1 Pro
+tws                  Honor Earbuds 2 Lite
+tws                  Huawe Freebuds Neo  (Neutral Under 2jt)
+tws                  Huawei FreeClip
+tws                  Huawei FreeClip 2
+tws                  Huawei Freearc
+tws                  Huawei Freebuds 6i
+tws                  Huawei Freebuds SE
+tws                  Huawei Freebuds SE 2  (King of Mic)
+tws                  Huawei Freebuds SE 4 ANC
+tws                  Huawei Freebuds SE 5 Max
+tws                  JBL Live Flex 3  (Best Sounding Half in Ear)
+tws                  JBL Wave Beam  (Affordable JBL)
+tws                  Jabra Elite 10
+tws                  Jabra Elite 2
+tws                  Jabra Elite 8 Active
+tws                  Lenovo LP1 pro
+tws                  Nakamichi TW018s
+tws                  Nakamichi TWS1xs
+tws                  Nothing CMF Buds Pro  (NEW 500)
+tws                  Oppo Enco Air5s  (Alternatif Airpods)
+tws                  Oppo Enco Buds3S  (New Low Budget)
+tws                  Oppo Enco Clip 2  (Best Sounding Anting)
+tws                  Philips TAQ2000  (Anting Murmer Ok)
+tws                  QCy Buds ANC
+tws                  Rapatech Air Dual ENC ii
+tws                  Realme T110
+tws                  Redmi Buds 3 Pro
+tws                  Redmi Buds 4 Pro
+tws                  Redmi Buds 6 Pro
+tws                  Redmi Buds 8 Lite  (NEW)
+tws                  Redmi buds 6 Lite
+tws                  Robot Flybuds T10
+tws                  Robot Flybuds T50
+tws                  Roseselsa Ceramic Mkii  (NEW Kacang)
+tws                  Sabbat x12 Pro
+tws                  Samsung Buds 3
+tws                  Samsung Buds 3 FE
+tws                  Samsung Galaxy Buds Core
+tws                  Sennheiser Accentum Open  (Best Fit & Default Tonal)
+tws                  Sennheiser Accentum TWS  (2 year warranty)
+tws                  Sennheiser Momentum True Wireless 5  (Replacable Battery Best Mic TWS Kacang)
+tws                  Shokz Openfit Pro  (RAJA OWS Earhook Ada ANC Tipis)
+tws                  Shokz Openfit+ 2
+tws                  Sony C700
+tws                  Sony Floatrun
+tws                  Sony Linkbuds Clip
+tws                  Sony Linkbuds Fit  (GOD TIER FIT)
+tws                  Sony Linkbuds Open
+tws                  Sony WF C510  (Affordable Sony)
+tws                  Sony WF-C710n  (Affordable Sony)
+tws                  Soundcore Aerofit 2  (HIGHLY VALUABLE)
+tws                  Soundcore Aerofit Pro
+tws                  Soundcore K20i
+tws                  Soundcore Liberty 4
+tws                  Soundcore Liberty 5
+tws                  Soundcore Liberty 5 Pro/Max  (King of Mic!)
+tws                  Soundcore Life Note3s
+tws                  Soundcore Life dot3i  (Cheapest GOOD ANC)
+tws                  Soundcore P2i
+tws                  Soundcore P40i
+tws                  Soundcore R100
+tws                  Soundcore R60i NC  (NEW AFFORDABLE MULTIPOINT)
+tws                  Soundcore Space A40  (Turun Harga Shopee)
+tws                  Soundcore V20i  (Budget Starter Kit)
+tws                  Soundcore V30i
+tws                  Soundcore VR P10
+tws                  Soundcore X10
+tws                  Soundcore a20i
+tws                  Soundpeats Air 5
+tws                  Soundpeats Air3
+tws                  Soundpeats Air4 Lite
+tws                  Soundpeats C30  (NEW)
+tws                  Soundpeats Clearpods  (NEW)
+tws                  Soundpeats Go free2 +
+tws                  Soundpeats Pearlclip Pro  (Anting Bagus)
+tws                  Soundpeats Runfree
+tws                  Soundpeats T3 Pro  (NEW)
+tws                  Soundpeats Truefree 2
+tws                  Soundtech s16
+tws                  Tozo A3  (Recommended)
+tws                  Tozo Aerosound 6 Pro  (LOW BAJET SEMI PARAMETRIC EQ King Under 1 juta)
+tws                  Tozo Aerosound Pro (NC9 Pro)
+tws                  Tozo Aersound (NC9)
+tws                  Vyatta Airboom ANC
+tws                  Vyatta Airboom ANC S
+tws                  Vyatta Airboom Pro S
+tws                  Vyatta Airboom Smart
+tws                  Xiaomi Buds 5  (God Tier Value for Quality)
+tws                  Xiaomi OpenWear Stereo Pro  (KING OF OWS MIC)
+tws                  dBe Seikabuds pro/elite
+tws                  dBe TWS10

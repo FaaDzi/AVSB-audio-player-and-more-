@@ -1,0 +1,35 @@
+headphone  Apple Air Pods Max 2
+headphone  Aune AC55
+headphone  DSH Onyx Planar
+headphone  Dan Clark XO
+headphone  FIFINE H19
+headphone  FIFINE x3
+headphone  Fiio FG3
+headphone  HFA Dalhia 2
+headphone  Hyper X Cloud 2 Wireless
+headphone  JM Audio XTC Open
+headphone  Jeecoo V20U
+headphone  Modhouse Tungsten (Double Sided) Ver. 1
+headphone  NF Acous NH20
+headphone  OneOdio A10
+headphone  OneOdio Focus A1 Pro
+headphone  OneOdio Over Ear Headphone
+headphone  OneOdio Studio Max 1
+headphone  Oneodio SuperEQ A200
+headphone  Sendy Audio Apollo Pro
+headphone  Sendy Audio Egret
+headphone  Sennheiser HD 480
+headphone  SoundPEATS Space
+headphone  TRN Atoll
+headphone  Thieaudio Cypher
+iem        Best iem ever (This is theoretical only)
+iem        CCA C12
+iem        CVJ Tenhawk
+iem        EPZ Q5 Pro V2
+iem        KZ Ace10
+iem        MEE audio M6 PRO
+iem        Penon Free iem
+tws        Bose Sport Earbuds
+tws        Geekfly GF 3
+tws        Tanchjim Mino Asano Tanch
+tws        Technics AZ80

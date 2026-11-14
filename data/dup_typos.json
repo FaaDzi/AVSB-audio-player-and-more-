@@ -1,0 +1,486 @@
+[
+ {
+  "kind": "iems",
+  "a": "7Hz Aero",
+  "b": "7Hz Zero",
+  "idA": "7hz-aero",
+  "idB": "7hz-salnotes-zero",
+  "words": [
+   "aero",
+   "zero"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Kinera Celest Plustus Beast",
+  "b": "Kinera Celest Plutus Beast",
+  "idA": "kinera-celest-plustus-beast",
+  "idB": "kinera-celest-plutus-beast",
+  "words": [
+   "plustus",
+   "plutus"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Moondrop KXXS",
+  "b": "Moondrop KXXX",
+  "idA": "moondrop-kxxs",
+  "idB": "moondrop-kxxx",
+  "words": [
+   "kxxs",
+   "kxxx"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Moondrop Variation",
+  "b": "Moondrop Variations",
+  "idA": "moondrop-variation",
+  "idB": "moondrop-variations",
+  "words": [
+   "variation",
+   "variations"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "THIEAUDIO Monarch MKIV",
+  "b": "ThieAudio Monarch MKII",
+  "idA": "thieaudio-monarch-mkiv-thieaudio-monarch-mkiv-switch-on",
+  "idB": "thieaudio-monarch-mkii",
+  "words": [
+   "mkiv",
+   "mkii"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "ThieAudio Monarch MKII",
+  "b": "ThieAudio Monarch MKIII",
+  "idA": "thieaudio-monarch-mkii",
+  "idB": "thieaudio-monarch-mkiii",
+  "words": [
+   "mkii",
+   "mkiii"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "AAW Halcyon",
+  "b": "AAW Halycon",
+  "idA": "aaw-halcyon",
+  "idB": "aaw-halycon",
+  "words": [
+   "halcyon",
+   "halycon"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Campfire Audio HoneDew",
+  "b": "Campfire Audio Honeydew",
+  "idA": "campfire-audio-honedew",
+  "idB": "campfire-audio-honeydew",
+  "words": [
+   "honedew",
+   "honeydew"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "CVJ Gemine",
+  "b": "CVJ Jemine",
+  "idA": "cvj-gemine",
+  "idB": "cvj-jemine",
+  "words": [
+   "gemine",
+   "jemine"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "CVJ Jamine",
+  "b": "CVJ Jemine",
+  "idA": "cvj-jamine",
+  "idB": "cvj-jemine",
+  "words": [
+   "jamine",
+   "jemine"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Elysian Acoustic Labs Pilgrim",
+  "b": "Elysian Acoustical Labs Pilgrim",
+  "idA": "elysian-pilgrim-pilgrim-jbc",
+  "idB": "elysian-acoustical-labs-pilgrim",
+  "words": [
+   "acoustic",
+   "acoustical"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Fir Audio Xeno 6",
+  "b": "Fir Audio Xenon 6",
+  "idA": "fir-audio-xeno-6",
+  "idB": "fir-audio-xenon-6",
+  "words": [
+   "xeno",
+   "xenon"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Hidizs MK12 Turis",
+  "b": "Hidizs MK12 Turris",
+  "idA": "hidizs-mk12-turis",
+  "idB": "hidizs-mk12-turris",
+  "words": [
+   "turis",
+   "turris"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "I/O Volaire",
+  "b": "I/O Volare",
+  "idA": "i-o-volaire",
+  "idB": "i-o-volare",
+  "words": [
+   "volaire",
+   "volare"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Kiwi Ears Halcyon",
+  "b": "Kiwi Ears Halycon",
+  "idA": "kiwi-ears-halcyon",
+  "idB": "kiwi-ears-halycon",
+  "words": [
+   "halcyon",
+   "halycon"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Kiwi Ears Quartet",
+  "b": "Kiwi Ears Quintet",
+  "idA": "kiwi-ears-quartet",
+  "idB": "kiwi-ears-quintet",
+  "words": [
+   "quartet",
+   "quintet"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "KZ Saga Balance",
+  "b": "KZ Saga Balanced",
+  "idA": "kz-saga-balance",
+  "idB": "kz-saga-balanced",
+  "words": [
+   "balance",
+   "balanced"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Lime Ears sample",
+  "b": "Lime Ears SampleA",
+  "idA": "lime-ears-sample",
+  "idB": "lime-ears-samplea",
+  "words": [
+   "sample",
+   "samplea"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "LYEPERTEK LEVI",
+  "b": "LYEPERTEK TEVI",
+  "idA": "lyepertek-levi",
+  "idB": "lyepertek-tevi",
+  "words": [
+   "levi",
+   "tevi"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Lypertek Bevi",
+  "b": "Lypertek MEVI",
+  "idA": "lypertek-bevi",
+  "idB": "lypertek-mevi",
+  "words": [
+   "bevi",
+   "mevi"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Night Oblivion Butastur",
+  "b": "Night Oblivon Butastur",
+  "idA": "night-oblivion-butastur",
+  "idB": "night-oblivon-butastur",
+  "words": [
+   "oblivion",
+   "oblivon"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Oriolus Trailli",
+  "b": "Oriolus Traillii",
+  "idA": "oriolus-trailli",
+  "idB": "oriolus-traillii",
+  "words": [
+   "trailli",
+   "traillii"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Oriolus Trailli JP",
+  "b": "Oriolus Traillii JP",
+  "idA": "oriolus-trailli-jp",
+  "idB": "oriolus-traillii-jp",
+  "words": [
+   "trailli",
+   "traillii"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Oriolus Trailli Ultra",
+  "b": "Oriolus Traillii ULTRA",
+  "idA": "oriolus-trailli-ultra",
+  "idB": "oriolus-traillii-ultra",
+  "words": [
+   "trailli",
+   "traillii"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Oriveti bleaqk Dynabird",
+  "b": "Oriveti bleqk Dynabird",
+  "idA": "oriveti-bleaqk-dynabird",
+  "idB": "oriveti-bleqk-dynabird",
+  "words": [
+   "bleaqk",
+   "bleqk"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Punch Audio Martillo",
+  "b": "Punch Audio Martilo",
+  "idA": "punch-audio-martillo",
+  "idB": "punch-audio-martilo",
+  "words": [
+   "martillo",
+   "martilo"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "QDC Gemini",
+  "b": "QDC Gemni",
+  "idA": "qdc-gemini",
+  "idB": "qdc-gemni",
+  "words": [
+   "gemini",
+   "gemni"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "QKZ ZXDx",
+  "b": "QKZ ZXRx",
+  "idA": "qkz-zxdx",
+  "idB": "qkz-zxrx",
+  "words": [
+   "zxdx",
+   "zxrx"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Quill Acoustics Karma",
+  "b": "Quill Ascoustics Karma",
+  "idA": "quill-acoustics-karma",
+  "idB": "quill-ascoustics-karma",
+  "words": [
+   "acoustics",
+   "ascoustics"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "SeeAudio Mapo Tofu",
+  "b": "SeeAudio Mappo Tofu",
+  "idA": "seeaudio-mapo-tofu",
+  "idB": "seeaudio-mappo-tofu",
+  "words": [
+   "mapo",
+   "mappo"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Tanchjim Cora",
+  "b": "Tanchjim Nora",
+  "idA": "tanchjim-cora",
+  "idB": "tanchjim-nora",
+  "words": [
+   "cora",
+   "nora"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Tangzu Chang Le",
+  "b": "Tangzu Change Le",
+  "idA": "tangzu-chang-le",
+  "idB": "tangzu-change-le",
+  "words": [
+   "chang",
+   "change"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "TinHiFi T2 MKII",
+  "b": "TINHiFi T2 MKIII",
+  "idA": "tinhifi-t2-mkii-tinhifi-t2-mkii-mp",
+  "idB": "tinhifi-t2-mkiii",
+  "words": [
+   "mkii",
+   "mkiii"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Tripowin Piccolo",
+  "b": "Tripowin Picolo",
+  "idA": "tripowin-piccolo",
+  "idB": "tripowin-picolo",
+  "words": [
+   "piccolo",
+   "picolo"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Unique Melody MEXT",
+  "b": "Unique Melody MEST",
+  "idA": "unique-melody-mext-um-mext-foam",
+  "idB": "unique-melody-mest",
+  "words": [
+   "mext",
+   "mest"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "ZiiGaat Cincotres",
+  "b": "ZIIGAAT Cinocotres",
+  "idA": "ziigaat-cincotres",
+  "idB": "ziigaat-cinocotres",
+  "words": [
+   "cincotres",
+   "cinocotres"
+  ]
+ },
+ {
+  "kind": "iems",
+  "a": "Ziigaat Odysey 2",
+  "b": "Ziigaat Odyssey 2",
+  "idA": "ziigaat-odysey-2",
+  "idB": "ziigaat-odyssey-2",
+  "words": [
+   "odysey",
+   "odyssey"
+  ]
+ },
+ {
+  "kind": "headphones",
+  "a": "Capra Audio Oreoboros",
+  "b": "Capra Audio Ouroboros",
+  "idA": "hp-capra-audio-oreoboros-meme-headphone",
+  "idB": "hp-capra-audio-ouroboros",
+  "words": [
+   "oreoboros",
+   "ouroboros"
+  ]
+ },
+ {
+  "kind": "headphones",
+  "a": "Dan Clark Audio Noir X",
+  "b": "Dan Clark Audio Noire X",
+  "idA": "hp-dan-clark-audio-noir-x-sample-3-noir-x-sample-3-2025-sample-fresh-stock-pads-02-lite-pressure",
+  "idB": "hp-dan-clark-audio-noire-x",
+  "words": [
+   "noir",
+   "noire"
+  ]
+ },
+ {
+  "kind": "headphones",
+  "a": "Focal Clear",
+  "b": "Focal Elear",
+  "idA": "hp-focal-clear",
+  "idB": "hp-focal-elear",
+  "words": [
+   "clear",
+   "elear"
+  ]
+ },
+ {
+  "kind": "headphones",
+  "a": "HiFiMAN Sundara",
+  "b": "HiFiMAN Susvara",
+  "idA": "hp-hifiman-sundara",
+  "idB": "hp-hifiman-susvara-3-5mm",
+  "words": [
+   "sundara",
+   "susvara"
+  ]
+ },
+ {
+  "kind": "headphones",
+  "a": "Meze 99 classic",
+  "b": "Meze 99 Classics",
+  "idA": "hp-meze-99-classic",
+  "idB": "hp-meze-99-classics",
+  "words": [
+   "classic",
+   "classics"
+  ]
+ },
+ {
+  "kind": "headphones",
+  "a": "Meze 99 classic v2",
+  "b": "Meze 99 Classics V2",
+  "idA": "hp-meze-99-classic-v2",
+  "idB": "hp-meze-99-classics-v2",
+  "words": [
+   "classic",
+   "classics"
+  ]
+ },
+ {
+  "kind": "headphones",
+  "a": "Nectar Hive",
+  "b": "Nectar HiveX",
+  "idA": "hp-nectar-hive",
+  "idB": "hp-nectar-hivex",
+  "words": [
+   "hive",
+   "hivex"
+  ]
+ }
+]
