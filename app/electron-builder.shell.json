@@ -26,6 +26,12 @@
     "node_modules/@number0/iroh/package.json",
     "node_modules/@number0/iroh-win32-x64-msvc/**"
   ],
+  "extraFiles": [
+    {
+      "from": "../tools/vcruntime/vcruntime140.dll",
+      "to": "vcruntime140.dll"
+    }
+  ],
   "extraResources": [
     {
       "from": "../tools/ffmpeg/bin/ffmpeg.exe",

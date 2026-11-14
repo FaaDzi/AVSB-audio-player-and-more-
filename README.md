@@ -47,7 +47,7 @@ npm run dist       # Windows app -> app/release/shell/win-unpacked/AVSB.exe
 npm run android    # debug APK   -> app/release/AVSB.apk
 ```
 
-The Windows build expects `tools/ffmpeg/bin/ffmpeg.exe` at the repo root (used for low-data streaming to the phone). Any recent FFmpeg build works.
+The Windows build expects `tools/ffmpeg/bin/ffmpeg.exe` (used for low-data streaming to the phone; any recent FFmpeg build works) and `tools/vcruntime/vcruntime140.dll` (copy it from `C:\Windows\System32`; it ships beside the exe so the phone link works on PCs without the Visual C++ runtime).
 
 `app/` is one React + TypeScript app used by both platforms. `app/electron/` is the Windows host and `app/android/` is the Capacitor project with the native Android parts. `scripts/` holds the Python and Node scripts that build the device database.
 
