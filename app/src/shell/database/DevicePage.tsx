@@ -1,3 +1,4 @@
+import '../eqStudio.css'
 import { useMemo, useState } from 'react'
 import { graphOf, priceOf, splitName, type Catalog } from '../../data/catalog'
 import type { Iem } from '../../audio/data'
@@ -5,6 +6,9 @@ import { imgUrl } from '../../reviews/reviews'
 import { messagesFor } from '../../reviews/ReviewThread'
 import { Icon, Menu, TopBar } from '../ui'
 import { DatabaseStatus, useDatabase, usd } from './DatabasePage'
+import type { Database, Model } from './catalog'
+import type { Biquad } from '../../eq/biquad'
+import { getPresets, presetFields, presetFilters, setEq } from '../eqState'
 import { pickersFor, rowForChoice, type ConfigRow } from './configs'
 import { hearDevice, toggleStar, useGear } from '../sound/gear'
 import { setSound, useSound } from '../sound/soundState'
@@ -32,18 +36,21 @@ function centred(grid: number[], values: ArrayLike<number>) {
 
 const pathOf = (grid: number[], values: number[]) => grid.map((hz, i) => `${hzToX(hz).toFixed(1)},${dbToY(values[i]).toFixed(1)}`).join(' ')
 
-export function Graph({ catalog, iem }: { catalog: Catalog; iem: Iem }) {
+/** `base`: the device a custom EQ sits on (§85), drawn thin behind it so the difference shows. */
+export function Graph({ catalog, iem, base }: { catalog: Catalog; iem: Iem; base?: Iem }) {
   const [targetIndex, setTargetIndex] = useState(0)
   const [menu, setMenu] = useState<{ x: number; y: number } | null>(null)
   const graph = useMemo(() => graphOf(catalog, [iem]), [catalog, iem])
   const { grid } = catalog.data
   const target = graph.targets[targetIndex] ?? graph.targets[0]
   const curve = useMemo(() => pathOf(grid, centred(grid, graph.fr(iem))), [grid, graph, iem])
+  const baseLine = useMemo(() => (base ? pathOf(grid, centred(grid, graph.fr(base))) : ''), [grid, graph, base])
   const targetLine = useMemo(() => (target ? pathOf(grid, centred(grid, target.values)) : ''), [grid, target])
   return (
     <section className="ms-db-card">
       <div className="ms-db-card-head">
         <h3>Frequency response</h3>
+        {base && <span className="ms-db-legend"><i className="eq" />With your EQ<i className="base" />As it comes</span>}
         {target && (
           <button type="button" className="ms-db-pill" onClick={(e) => setMenu({ x: e.clientX, y: e.clientY })}>
             <i className="dash" /> {target.name} <Icon name="arrow_drop_down" size={20} />
@@ -55,6 +62,7 @@ export function Graph({ catalog, iem }: { catalog: Catalog; iem: Iem }) {
           {[-20, -10, 0, 10, 20].map((db) => <line key={db} className={db === 0 ? 'zero' : ''} x1="0" x2="1000" y1={dbToY(db)} y2={dbToY(db)} />)}
           {X_MARKS.map((hz) => <line key={hz} x1={hzToX(hz)} x2={hzToX(hz)} y1="0" y2={HEIGHT} />)}
           {targetLine && <polyline className="target" points={targetLine} />}
+          {baseLine && <polyline className="base" points={baseLine} />}
           <polyline className="curve" points={curve} />
         </svg>
         {X_MARKS.slice(1, -1).map((hz) => <span key={hz} style={{ left: `${hzToX(hz) / 10}%` }}>{hz >= 1000 ? `${hz / 1000}k` : hz}</span>)}
@@ -126,6 +134,7 @@ export function DevicePage({ id, back }: { id: string; back: () => void }) {
   const photo = catalog.images[iem.id] ?? (model.photoId ? catalog.images[model.photoId] : null)
   const price = priceOf(catalog, iem.id) ?? model.members.map((m) => priceOf(catalog, m.id)).find(Boolean) ?? null
   const squig = catalog.squig[iem.id]
+  if (model.custom) return <CustomEqPage db={db} model={model} back={back} />
   return (
     <div className="ms-scroll">
       <TopBar title={model.name} back={back} />
@@ -146,6 +155,58 @@ export function DevicePage({ id, back }: { id: string; back: () => void }) {
         </header>
         <Graph catalog={catalog} iem={iem} />
         <Reviews catalog={catalog} id={iem.id} />
+      </div>
+    </div>
+  )
+}
+
+const KIND_WORD: Record<Biquad['kind'], string> = { peak: 'Peak', lowshelf: 'Low shelf', highshelf: 'High shelf' }
+
+/** One of your saved EQs on its device (§85): the device as it comes against the device with the EQ, and the EQ itself. */
+function CustomEqPage({ db, model, back }: { db: Database; model: Model; back: () => void }) {
+  const { go, push, showToast } = useShell()
+  const custom = model.custom!
+  const iem = model.members[0]
+  const base = db.catalog.byId.get(custom.baseId)
+  const preset = getPresets().find((p) => p.name === custom.preset)
+  const photo = model.photoId ? db.catalog.images[model.photoId] : null
+  const filters = useMemo(() => (preset ? presetFilters(preset).filter((f) => f.gain !== 0) : []), [preset])
+  return (
+    <div className="ms-scroll">
+      <TopBar title={model.name} back={back} />
+      <div className="ms-page ms-db-device">
+        <header className="ms-db-hero">
+          <span className="ms-db-hero-photo">{photo ? <img src={imgUrl(photo.src)} alt={custom.baseName} /> : <Icon name="tune" size={56} />}</span>
+          <div className="grow">
+            <h1>{model.name}</h1>
+            <p className="ms-db-facts">
+              <span>Your EQ</span>
+              <a role="button" tabIndex={0} onClick={() => push({ page: 'device', id: db.models.find((m) => m.members.some((x) => x.id === custom.baseId))?.id ?? custom.baseId })}>on <b>{custom.baseName}</b></a>
+              <span><b>{filters.length}</b> {filters.length === 1 ? 'filter' : 'filters'}</span>
+            </p>
+            {preset && (
+              <div className="ms-db-try">
+                <button type="button" className="ms-btn primary" onClick={() => { setEq({ ...presetFields(preset), on: true }); showToast(`Playing with ${preset.name}`) }}>
+                  <Icon name="graphic_eq" size={20} /> Use this EQ
+                </button>
+                <button type="button" className="ms-btn text" onClick={() => { setEq({ ...presetFields(preset), on: true }); go({ page: 'settings', section: 'equalizer' }) }}>
+                  <Icon name="tune" size={20} /> Open in Equalizer
+                </button>
+              </div>
+            )}
+          </div>
+        </header>
+        <Graph catalog={db.catalog} iem={iem} base={base} />
+        <section className="ms-db-card">
+          <h3>Filters <small>{filters.length}</small></h3>
+          {filters.length ? (
+            <ul className="ms-db-filters">
+              {filters.map((f, i) => (
+                <li key={i}><em>{KIND_WORD[f.kind]}</em><b>{f.fc >= 1000 ? `${+(f.fc / 1000).toFixed(2)} kHz` : `${Math.round(f.fc)} Hz`}</b><span className={f.gain > 0 ? 'up' : 'down'}>{f.gain > 0 ? '+' : '−'}{Math.abs(f.gain).toFixed(1)} dB</span><small>Q {f.q.toFixed(2)}</small></li>
+              ))}
+            </ul>
+          ) : <p className="ms-db-none">This EQ is flat.</p>}
+        </section>
       </div>
     </div>
   )

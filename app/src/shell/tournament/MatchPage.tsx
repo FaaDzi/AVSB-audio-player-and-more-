@@ -445,7 +445,10 @@ function Reveal({ names, photos, hideNames, winner, wins, grandFinal, onContinue
     <div className="ms-tz-reveal">
       <div className="ms-tz-reveal-cards">
         {[0, 1].map((side) => (
-          <div key={side} className={`ms-tz-reveal-card${side === winner ? ' won' : ' lost'}`}>
+          // left is the VS screen's corner A and right its corner B, in the same colours (the A/B buttons you
+          // listened with were reshuffled every round, so they say nothing about which corner won)
+          <div key={side} className={`ms-tz-reveal-card ${side ? 'b' : 'a'}${side === winner ? ' won' : ' lost'}`}>
+            <i className="ms-tz-reveal-corner" aria-hidden="true">{side ? 'B' : 'A'}</i>
             <span className="ms-tz-reveal-tag">{side === winner ? 'Winner' : 'Runner-up'} · Corner {side ? 'B' : 'A'}</span>
             <span className="ms-tz-reveal-photo">
               {hideNames || !photos[side] ? <Icon name={hideNames ? 'question_mark' : 'headphones'} size={56} /> : <img src={photos[side]!} alt="" />}

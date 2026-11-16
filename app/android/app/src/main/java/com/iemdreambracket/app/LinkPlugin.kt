@@ -217,6 +217,9 @@ class LinkPlugin : Plugin() {
         return low.contains("not paired") || low.contains("removed") || low.contains("unpaired")
     }
 
+    /** §84 A: our own error("removed") / error("not paired"), not any failure that happens to contain the word. */
+    private fun isOwnUnpairError(message: String?) = message == "removed" || message == "not paired"
+
     override fun load() {
         instance = this
         IrohAndroid.installAndroidContext(context.applicationContext)
@@ -273,9 +276,14 @@ class LinkPlugin : Plugin() {
             val oldConn = conn
             val oldEndpoint = endpointLock.withLock { endpoint.also { endpoint = null } }
             runCatching { oldConn?.close(0L, "network changed".toByteArray()) }
-            if (oldEndpoint != null) runCatching { withTimeout(2000L) { oldEndpoint.shutdown() } }
+            // §84 A: wait for the old endpoint to finish. Two endpoints with one key at once made the relay and the PC
+            // talk to the wrong one ("authentication failed" bursts in the PC log).
+            if (oldEndpoint != null) {
+                runCatching { withTimeout(10_000L) { oldEndpoint.shutdown() } }
+                    .onFailure { Log.w(TAG, "old endpoint slow to shut down: ${it.message}") }
+            }
             connLock.withLock { if (conn === oldConn) conn = null }
-            runCatching { pingAndSync() }
+            runCatching { pingNow() }
         }
     }
 
@@ -421,18 +429,21 @@ class LinkPlugin : Plugin() {
             block(c1)
         } catch (e: Exception) {
             val why1 = runCatching { c1.closeReason()?.toString() ?: withTimeout(400L) { c1.closed().toString() } }.getOrNull() ?: e.message ?: ""
-            if (isUnpairedReason(why1) || isUnpairedReason(e.message) || !paired()) {
+            if (isUnpairedReason(why1) || isOwnUnpairError(e.message) || !paired()) {
                 if (paired()) onPcMasterDisconnect()
                 throw e
             }
-            // a dropped connection (network switch, PC asleep): dial again once
-            connLock.withLock { conn = null }
+            // a dropped connection (network switch, PC asleep): dial again once. The old one is closed, not just
+            // forgotten (the PC kept every forgotten one open until it timed out), and only if it is still the
+            // shared one (another caller may already have dialled a fresh one).
+            runCatching { c1.close(0L, ByteArray(0)) }
+            connLock.withLock { if (conn === c1) conn = null }
             val c2 = connection()
             try {
                 block(c2)
             } catch (e2: Exception) {
                 val why2 = runCatching { c2.closeReason()?.toString() ?: withTimeout(400L) { c2.closed().toString() } }.getOrNull() ?: e2.message ?: ""
-                if (isUnpairedReason(why2) || isUnpairedReason(e2.message)) {
+                if (isUnpairedReason(why2) || isOwnUnpairError(e2.message)) {
                     onPcMasterDisconnect()
                 }
                 throw e2
@@ -487,7 +498,17 @@ class LinkPlugin : Plugin() {
         }
     }
 
+    /** §84 A: the PC's address as of now (sent over the verified link), kept for the next dial away from home. */
+    private fun keepFreshTicket(head: JSONObject) {
+        val fresh = head.optString("ticket", "")
+        if (fresh.isEmpty() || fresh == ticket()) return
+        if (runCatching { EndpointTicket.fromString(fresh) }.isFailure) return
+        savePairedPc(fresh, pcName())
+        Log.i(TAG, "PC address updated")
+    }
+
     private fun probeLanFromHello(head: JSONObject) {
+        keepFreshTicket(head)
         val lan = head.optJSONObject("lan") ?: run {
             activeLanBase = null
             activeLanToken = null
@@ -594,7 +615,17 @@ class LinkPlugin : Plugin() {
     }
 
     /** Pings the PC via 'hello' to pre-warm direct UDP/LAN paths, records latencyMs, and refreshes the library. */
+    @Volatile private var pingJob: Deferred<JSObject>? = null
+
+    /** §84 A: resume, the watchdog and the page all ask at once; they share one ping instead of dialling three times. */
     private suspend fun pingAndSync(): JSObject {
+        pingJob?.takeIf { it.isActive }?.let { return it.await() }
+        val job = scope.async { pingNow() }
+        pingJob = job
+        return job.await()
+    }
+
+    private suspend fun pingNow(): JSObject {
         if (!paired()) return buildStatusJson()
         runCatching {
             val t0 = SystemClock.elapsedRealtime()
@@ -741,11 +772,13 @@ class LinkPlugin : Plugin() {
             }.getOrNull()
         }
         openLanSongStream(id, lowData, rangeHeader, cacheKey)?.let { return it }
+        // §84 A: a seek asks for "bytes=N-"; the PC resumes the file there (low data is transcoded live, so it restarts)
+        val from = if (lowData) 0L else Regex("^bytes=(\\d+)-").find(rangeHeader ?: "")?.groupValues?.get(1)?.toLongOrNull() ?: 0L
         return runBlocking(Dispatchers.IO) {
             runCatching {
                 withConnection { c ->
                     val bi = c.openBi()
-                    bi.send().writeAll((JSONObject().put("op", "song").put("id", id).put("from", 0).put("lowData", lowData).toString() + "\n").toByteArray())
+                    bi.send().writeAll((JSONObject().put("op", "song").put("id", id).put("from", from).put("lowData", lowData).toString() + "\n").toByteArray())
                     bi.send().finish()
                     val headerBuf = ByteArrayOutputStream(512)
                     var nl = -1
@@ -810,6 +843,7 @@ class LinkPlugin : Plugin() {
                         private var eof: Boolean = false
                         private var closed: Boolean = false
                         private var accumulator: ByteArrayOutputStream? = when {
+                            from > 0L -> null // part of a song is never kept as the whole song
                             expectedSize > MAX_RAM_TRACK_BYTES.toLong() -> null
                             expectedSize > 0L -> ByteArrayOutputStream(expectedSize.toInt())
                             else -> ByteArrayOutputStream(65536)
@@ -897,7 +931,8 @@ class LinkPlugin : Plugin() {
                             super.close()
                         }
                     }
-                    SongStreamResult(mime, 200, expectedSize, null, null, stream)
+                    if (from > 0L && expectedSize > from) SongStreamResult(mime, 206, expectedSize - from, "bytes $from-${expectedSize - 1}/$expectedSize", "bytes", stream)
+                    else SongStreamResult(mime, 200, expectedSize, null, if (lowData) null else "bytes", stream)
                 }
             }.onFailure { Log.w(TAG, "songStream $id: ${it.message}") }.getOrNull()
         }

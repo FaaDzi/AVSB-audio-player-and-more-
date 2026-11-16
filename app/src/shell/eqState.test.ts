@@ -92,6 +92,18 @@ describe('saved presets', () => {
     expect(() => readPreset(JSON.stringify({ ...presetFrom(eq, 'Mine'), gains: [1] }))).toThrow()
     expect(() => readPreset(' '.repeat(70000))).toThrow()
   })
+  it('read Equalizer APO text: our own export with its title line, and an AutoEq GraphicEQ line (§84 A)', () => {
+    const apo = '# Equalizer APO configuration - My HD600\r\nPreamp: -3.5 dB\r\nDevice: all\r\nFilter 1: ON PK Fc 105 Hz Gain +4.0 dB Q 0.70\r\nFilter 2: OFF PK Fc 500 Hz Gain 2 dB Q 1\r\nFilter 3: ON HSC Fc 8000 Hz Gain -2.5 dB Q 0.71\r\nFilter 4: ON LP Fc 18000 Hz'
+    expect(readPreset(apo, 'x_APO.txt')).toMatchObject({
+      name: 'My HD600', mode: 'advanced+', preamp: -3.5,
+      filters: [{ kind: 'peak', fc: 105, gain: 4, q: 0.7 }, { kind: 'highshelf', fc: 8000, gain: -2.5, q: 0.71 }],
+    })
+    expect(readPreset('Preamp: -6 dB\nFilter: ON PK Fc 3000 Hz Gain -3 dB Q 2', 'Sony XM4.txt').name).toBe('Sony XM4')
+    const graphic = readPreset('GraphicEQ: 20 0; 100 6; 1000 0; 20000 0', 'g.txt')
+    expect(chainDb(graphic.filters, [100])[0]).toBeGreaterThan(4)
+    expect(Math.abs(chainDb(graphic.filters, [3000])[0])).toBeLessThan(1)
+    expect(() => readPreset('# just a note\nPreamp: -3 dB')).toThrow()
+  })
   it('replace one with the same name', () => {
     const one = presetFrom(eq, 'Mine')
     const two = { ...one, preamp: 1 }

@@ -170,6 +170,9 @@ port.on('message', async (event) => {
           return reply(true, link.remove(String(msg.arg ?? '')))
         case 'rename':
           return reply(true, link.rename(String(msg.arg?.id ?? ''), String(msg.arg?.name ?? '')))
+        case 'restart':
+          await link.restart()
+          return reply(true, link.status())
         case 'stop':
           await link.stop()
           return reply(true, true)

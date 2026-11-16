@@ -29,7 +29,7 @@ Also in there: crossfeed and virtual speakers, head tracking with the camera, bi
 
 Get the latest build from the [Releases page](../../releases).
 
-- **Windows (64-bit):** unzip and run `AVSB.exe`. It isn't code-signed, so Windows SmartScreen will warn you the first time: "More info", then "Run anyway". Settings are kept in a `user-data` folder next to the exe, so the whole thing is portable.
+- **Windows (64-bit):** unzip and run `AVSB.exe`. It isn't code-signed, so Windows SmartScreen will warn you the first time: "More info", then "Run anyway". Your settings, stats and phone pairing are kept in `%APPDATA%\AVSB`, so to update you just replace the folder with the new one. (1.0 kept them in a `user-data` folder next to the exe; 1.1 moves that across the first time it starts, so unzip 1.1 over your 1.0 folder or copy `user-data` into the new one.)
 - **Android (arm64, Android 7+):** install the APK. You'll have to allow installs from your browser or file manager.
 
 There's no Mac, Linux or iOS build.

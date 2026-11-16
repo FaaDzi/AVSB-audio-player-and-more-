@@ -5166,6 +5166,8 @@ function createLink(opts) {
   }
   let ep = null;
   let online = false;
+  let watches = [];
+  let restarting = null;
   let lanServer = null;
   let lanPort = 0;
   let lanToken = randomBytes2(32).toString("hex");
@@ -5651,7 +5653,10 @@ function createLink(opts) {
         // the PC's clock, for the time in the phone's signed LAN requests
         now: Date.now(),
         protocol: 2,
-        ...lan ? { lan } : {}
+        ...lan ? { lan } : {},
+        // §84 A: where the PC is right now (its relay moves, its port changes with every start). The phone keeps
+        // this in place of the address from the day it paired.
+        ...req.op === "hello" && ep ? { ticket: iroh.EndpointTicket.fromAddr(ep.addr()).toString() } : {}
       }));
     }
     if (req.op === "bench") {
@@ -5855,20 +5860,52 @@ function createLink(opts) {
       b.alpns([alpnBytes]);
       for (const a of opts.bind ?? []) b.bindAddr(a);
       ep = await b.bind();
+      const mine = ep;
       log(`link up as ${ep.id().fmtShort()}`);
       void ep.online().then(() => {
-        online = true;
-        onChange();
+        if (ep === mine) {
+          online = true;
+          onChange();
+        }
       }, () => {
       });
+      try {
+        watches = [
+          ep.watchHomeRelay((a, b2) => {
+            const urls = Array.isArray(a) ? a : Array.isArray(b2) ? b2 : [];
+            if (ep !== mine || opts.relay === false) return;
+            log(urls.length ? `relay: ${urls.join(", ")}` : "relay: none (phones away from this network cannot reach the PC)");
+            online = urls.length > 0;
+            onChange();
+          })
+        ];
+      } catch (e) {
+        log(`relay watch unavailable: ${e?.message ?? e}`);
+      }
       void (async () => {
         for (; ; ) {
-          const incoming = await ep.acceptNext().catch(() => null);
-          if (!incoming) break;
-          handle(incoming).catch((e) => log(`connection error: ${e?.message ?? e}`));
+          const incoming = await mine.acceptNext().catch(() => null);
+          if (incoming) {
+            handle(incoming).catch((e) => log(`connection error: ${e?.message ?? e}`));
+            continue;
+          }
+          if (ep !== mine) return;
+          log("link stopped accepting, restarting");
+          await new Promise((r) => setTimeout(r, 1e3));
+          if (ep === mine) await this.restart().catch((e) => log(`couldn't restart: ${e?.message ?? e}`));
+          return;
         }
       })();
       onChange();
+    },
+    /** §84 A: a fresh endpoint with the same key (after sleep the old one's sockets and relay link can be dead). */
+    restart() {
+      restarting = (restarting ?? Promise.resolve()).then(async () => {
+        if (!ep) return;
+        await this.stop();
+        await this.start();
+      });
+      return restarting;
     },
     async stop() {
       for (const p of activeProcs) {
@@ -5883,6 +5920,9 @@ function createLink(opts) {
       const e = ep;
       ep = null;
       online = false;
+      for (const w of watches) void w.stop().catch(() => {
+      });
+      watches = [];
       downscaledRamCache.clear();
       lowDataRamCache.clear();
       await e.close().catch(() => {
@@ -5913,6 +5953,8 @@ function createLink(opts) {
     /** Opens the 5-minute pairing window. The link the phone scans: the PC's address (ticket), its name and the secret. */
     async pair() {
       await this.start();
+      if (opts.relay !== false) await Promise.race([ep.online(), new Promise((r) => setTimeout(r, 5e3))]).catch(() => {
+      });
       const { secret, expires } = pairing.open();
       const ticket = iroh.EndpointTicket.fromAddr(ep.addr()).toString();
       const link = `iemdream://pair?t=${encodeURIComponent(ticket)}&s=${secret}&n=${encodeURIComponent(pcName())}`;

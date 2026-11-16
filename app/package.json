@@ -1,7 +1,7 @@
 {
   "name": "iem-tournament",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
     "sync-data": "node -e \"require('fs').copyFileSync('../songs/manifest.json','public/data/songs.json')\"",
@@ -58,25 +58,5 @@
     "vite": "^6.3.5",
     "vitest": "^3.2.4"
   },
-  "main": "electron/shell-main.cjs",
-  "build": {
-    "appId": "local.iem-tournament",
-    "productName": "IEM Tournament",
-    "directories": {
-      "output": "release"
-    },
-    "asarUnpack": [
-      "dist/songs/**"
-    ],
-    "files": [
-      "dist/**",
-      "electron/**",
-      "package.json"
-    ],
-    "win": {
-      "target": "dir",
-      "icon": "public/icon.ico",
-      "signAndEditExecutable": true
-    }
-  }
+  "main": "electron/shell-main.cjs"
 }

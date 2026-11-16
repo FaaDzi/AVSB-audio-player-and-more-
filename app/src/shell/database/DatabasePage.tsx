@@ -1,10 +1,12 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import type { CatalogKind } from '../../data/catalog'
 import { imgUrl } from '../../reviews/reviews'
 import { useShell } from '../context'
 import { Chip, Icon, IconButton, Menu } from '../ui'
 import { TipListRow, tipMatches, useTips } from './EarTips'
-import { listModels, loadDatabase, SORTS, type Database, type Model, type SortMode } from './catalog'
+import { listModels, loadDatabase, SORTS, withCustomEqs, type Database, type Model, type SortMode } from './catalog'
+import { getPresets } from '../eqState'
+import { getSetting, subscribeSettings } from '../settings/store'
 
 const KINDS: [CatalogKind, string][] = [['iems', 'IEMs'], ['tws', 'TWS'], ['headphones', 'Headphones'], ['speakers', 'Speakers'], ['soundbar', 'Soundbars']]
 const ROW_HEIGHT = 80
@@ -21,7 +23,10 @@ export function useDatabase(): { db: Database | null; failed: string | null } {
     loadDatabase().then((d) => { if (live) setDb(d) }, (e: unknown) => { if (live) setFailed(String(e)) })
     return () => { live = false }
   }, [])
-  return { db, failed }
+  // your saved EQs join as entries of their own (§85), and follow the presets as they're saved, renamed or deleted
+  const presets = useSyncExternalStore(subscribeSettings, () => getSetting('eqpresets'))
+  const withMine = useMemo(() => (db ? withCustomEqs(db, getPresets()) : null), [db, presets]) // eslint-disable-line react-hooks/exhaustive-deps
+  return { db: withMine, failed }
 }
 
 export function DatabaseStatus({ failed }: { failed: string | null }) {
@@ -42,7 +47,7 @@ function ModelRow({ model, db, onOpen }: { model: Model; db: Database; onOpen: (
       <span className="ms-db-photo">{photo ? <img src={imgUrl(photo.src)} alt="" loading="lazy" decoding="async" /> : <Icon name="headphones" />}</span>
       <span className="ms-db-text">
         <b className="ms-ellipsis">{model.name}</b>
-        <small className="ms-ellipsis">{[kindLabel, options > 1 ? `${options} options` : null, model.reviewCount ? `${model.reviewCount} ${model.reviewCount === 1 ? 'review' : 'reviews'}` : null].filter(Boolean).join(' · ')}</small>
+        <small className="ms-ellipsis">{model.custom ? `Custom EQ · ${model.custom.baseName}` : [kindLabel, options > 1 ? `${options} options` : null, model.reviewCount ? `${model.reviewCount} ${model.reviewCount === 1 ? 'review' : 'reviews'}` : null].filter(Boolean).join(' · ')}</small>
       </span>
       {model.usd !== null && <span className="ms-db-price">{usd(model.usd)}</span>}
       <span className="ms-db-score">{model.score !== null ? model.score.toFixed(1) : ''}</span>
@@ -66,11 +71,13 @@ export function DatabasePage({ initialKind }: { initialKind?: 'tips' } = {}) {
   const list = useRef<HTMLDivElement>(null)
   const [view, setView] = useState({ top: 0, height: 900 })
 
-  const shown = useMemo(() => (db && !tipsMode ? listModels(db.models, { query, kinds, reviewedOnly, sort }) : []), [db, query, kinds, reviewedOnly, sort, tipsMode])
+  const [customOnly, setCustomOnly] = useState(false)
+  const shown = useMemo(() => (db && !tipsMode ? listModels(db.models, { query, kinds, reviewedOnly, sort, customOnly }) : []), [db, query, kinds, reviewedOnly, sort, tipsMode, customOnly])
+  const customCount = useMemo(() => (db?.models ?? []).filter((m) => m.custom).length, [db])
   const shownTips = useMemo(() => (tipsMode ? (tips?.rows ?? []).filter((r) => tipMatches(r, query)) : []), [tips, query, tipsMode])
   const counts = useMemo(() => {
     const c = new Map<CatalogKind, number>()
-    for (const m of db?.models ?? []) c.set(m.kind, (c.get(m.kind) ?? 0) + 1)
+    for (const m of db?.models ?? []) if (!m.custom) c.set(m.kind, (c.get(m.kind) ?? 0) + 1)
     return c
   }, [db])
 
@@ -88,12 +95,13 @@ export function DatabasePage({ initialKind }: { initialKind?: 'tips' } = {}) {
   useEffect(() => {
     if (scroller.current) scroller.current.scrollTop = 0
     setView((v) => ({ ...v, top: 0 }))
-  }, [query, kinds, reviewedOnly, sort, tipsMode])
+  }, [query, kinds, reviewedOnly, sort, tipsMode, customOnly])
 
   if (!db) return <DatabaseStatus failed={failed} />
 
   const toggleKind = (kind: CatalogKind) => {
-    if (tipsMode) {
+    if (tipsMode || customOnly) {
+      setCustomOnly(false)
       setTipsMode(false)
       setKinds(new Set([kind]))
       return
@@ -119,9 +127,10 @@ export function DatabasePage({ initialKind }: { initialKind?: 'tips' } = {}) {
         </label>
         <div className="ms-db-tools">
           <div className="ms-chips">
-            {KINDS.map(([kind, label]) => <Chip key={kind} label={`${label} ${(counts.get(kind) ?? 0).toLocaleString('en-US')}`} selected={!tipsMode && kinds.has(kind)} onClick={() => toggleKind(kind)} />)}
+            {KINDS.map(([kind, label]) => <Chip key={kind} label={`${label} ${(counts.get(kind) ?? 0).toLocaleString('en-US')}`} selected={!tipsMode && !customOnly && kinds.has(kind)} onClick={() => toggleKind(kind)} />)}
+            <Chip label={`Custom ${customCount}`} selected={customOnly && !tipsMode} onClick={() => { setTipsMode(false); setCustomOnly(!customOnly || tipsMode) }} />
             <Chip label={`Ear tips ${tips?.rows.length ?? ''}`.trim()} selected={tipsMode} onClick={() => setTipsMode(!tipsMode)} />
-            {!tipsMode && <Chip label="Reviewed" selected={reviewedOnly} onClick={() => setReviewedOnly(!reviewedOnly)} />}
+            {!tipsMode && !customOnly && <Chip label="Reviewed" selected={reviewedOnly} onClick={() => setReviewedOnly(!reviewedOnly)} />}
           </div>
           {!tipsMode && <button type="button" className="ms-tool ms-db-sort" onClick={(e) => setSortMenu({ x: e.clientX, y: e.clientY })}>
             <Icon name="sort" size={20} /> {SORTS.find(([s]) => s === sort)?.[1]}
@@ -135,7 +144,7 @@ export function DatabasePage({ initialKind }: { initialKind?: 'tips' } = {}) {
           </>
         ) : <>
         <p className="ms-count ms-db-count">{shown.length.toLocaleString('en-US')} {shown.length === 1 ? 'model' : 'models'}</p>
-        {!shown.length && <div className="ms-empty small"><Icon name="search_off" /><p>Nothing matches.</p></div>}
+        {!shown.length && <div className="ms-empty small"><Icon name={customOnly && !query ? 'tune' : 'search_off'} /><p>{customOnly && !query ? 'Save an EQ in the Equalizer and it shows up here.' : 'Nothing matches.'}</p></div>}
         <div ref={list} className="ms-db-list" style={{ height: shown.length * ROW_HEIGHT }}>
           <div style={{ transform: `translateY(${from * ROW_HEIGHT}px)` }}>
             {shown.slice(from, to).map((m) => <ModelRow key={m.id} model={m} db={db} onOpen={() => push({ page: 'device', id: m.id })} />)}

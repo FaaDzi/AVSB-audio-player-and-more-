@@ -680,3 +680,10 @@ button.ms-tourney-row:hover { background: var(--control-hover); }
 :root[data-style='gameshow'] .ms-tz-qvs { color: #fff; text-shadow: 4px 4px 0 var(--gs-ink); font-family: 'Fredoka', var(--font-ui); font-weight: 700; }
 :root[data-style='gameshow'] .ms-layer:has(.ms-tz-quick) { background: var(--gs-sunset); }
 @media (max-width: 760px) { .ms-tz-qslots { grid-template-columns: 1fr; } }
+/* the reveal keeps the VS screen's corners: A on the left, B on the right, in their colours (§84 G) */
+.ms-tz-reveal-card { position: relative; }
+.ms-tz-reveal-card.a { --corner: var(--vs-corner-a); }
+.ms-tz-reveal-card.b { --corner: var(--vs-corner-b); }
+.ms-tz-reveal-corner { position: absolute; top: 12px; left: 12px; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; background: var(--corner); color: #fff; font-style: normal; font-weight: 800; font-size: 20px; }
+.ms-tz-reveal-card.b .ms-tz-reveal-corner { left: auto; right: 12px; }
+.ms-tz-reveal-card { border-bottom: 5px solid var(--corner); }

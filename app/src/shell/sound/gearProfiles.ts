@@ -384,7 +384,7 @@ export function onGearChanged(newDeviceId: string | null, prevDeviceId?: string 
   // the EQ playing now belongs to the device being left; a device with none saved yet keeps it as its start
   if (prevDeviceId !== undefined) {
     const eq = getEq()
-    setSessionAutosave(prevDeviceId, presetFrom(eq, eq.preset))
+    setSessionAutosave(prevDeviceId, presetFrom(eq, eq.preset, prevDeviceId))
   }
   const profile = getGearProfile(newDeviceId)
   applyProfileItem(profile.activeItemId, newDeviceId)

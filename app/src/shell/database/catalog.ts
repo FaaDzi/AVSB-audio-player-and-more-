@@ -3,6 +3,8 @@ import { searchScore, searchWords } from '../../components/iemSearch'
 import { groupVariants, kindOfIem, loadCatalog, mergeCatalogs, priceOf, reviewsOf, splitName, type Catalog, type CatalogKind } from '../../data/catalog'
 import { logLine } from '../logs'
 import { addListeningDevices } from '../../data/listeningDevices'
+import { chainDb } from '../../eq/biquad'
+import { presetFilters, type SavedPreset } from '../eqState'
 
 export interface Model {
   id: string
@@ -16,6 +18,8 @@ export interface Model {
   score: number | null
   reviewCount: number
   photoId: string | null
+  /** One of your saved EQs on a device (§85): the preset's name and the device it sits on. */
+  custom?: { preset: string; baseId: string; baseName: string }
 }
 
 export interface Database {
@@ -64,15 +68,58 @@ export function buildModels(catalog: Catalog): Model[] {
 export type SortMode = 'name' | 'score' | 'price-asc' | 'price-desc'
 export const SORTS: [SortMode, string][] = [['name', 'Name'], ['score', 'Highest score'], ['price-asc', 'Price, low to high'], ['price-desc', 'Price, high to low']]
 
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+
+/**
+ * The Database with your saved EQs in it (plan §85): each saved EQ that knows its device becomes an entry whose
+ * curve is that device with the EQ on top. Made fresh from the presets every time, nothing is stored: a preset
+ * that's renamed or deleted changes or leaves the Database with it. The shared database isn't touched, so
+ * brackets and the sound engine never see these.
+ */
+export function withCustomEqs(db: Database, presets: readonly SavedPreset[]): Database {
+  const { catalog } = db
+  const rows: Iem[] = []
+  const models: Model[] = []
+  for (const preset of presets) {
+    const base = preset.device ? catalog.byId.get(preset.device) : undefined
+    if (!base) continue
+    const baseModel = db.models.find((m) => m.members.includes(base))
+    const eq = chainDb(presetFilters(preset), catalog.data.grid)
+    // the base id stays in front: 'hp-' and 'spk-' ids keep their kind and their graph rules
+    const iem: Iem = { ...base, id: `${base.id}~eq~${slug(preset.name)}`, name: `${base.name} ${preset.name}`, source: 'Your EQ', sources: ['Your EQ'], fr: Int16Array.from(base.fr, (v, i) => v + Math.round(eq[i] / catalog.data.frScale)) }
+    if (catalog.byId.has(iem.id) || rows.some((r) => r.id === iem.id)) continue
+    rows.push(iem)
+    models.push({
+      id: iem.id,
+      name: preset.name,
+      kind: kindOfIem(base),
+      members: [iem],
+      sortName: preset.name.normalize('NFKD').toLowerCase().replace(/^[^a-z0-9]+/, ''),
+      usd: null,
+      score: null,
+      reviewCount: 0,
+      photoId: baseModel?.photoId ?? null,
+      custom: { preset: preset.name, baseId: base.id, baseName: baseModel?.name ?? base.name },
+    })
+  }
+  if (!rows.length) return db
+  return {
+    catalog: { ...catalog, data: { ...catalog.data, iems: [...catalog.data.iems, ...rows] }, byId: new Map([...catalog.byId, ...rows.map((r) => [r.id, r] as const)]) },
+    models: [...db.models, ...models],
+  }
+}
+
 export interface ListFilters {
   query: string
   kinds: Set<CatalogKind>
   reviewedOnly: boolean
   sort: SortMode
+  /** Only your own EQs (the "Custom" chip), whatever kind of device they're on. */
+  customOnly?: boolean
 }
 
 /** The list for these filters. While searching, the closest match comes first. */
-export function listModels(models: Model[], { query, kinds, reviewedOnly, sort }: ListFilters): Model[] {
+export function listModels(models: Model[], { query, kinds, reviewedOnly, sort, customOnly }: ListFilters): Model[] {
   const words = searchWords(query)
   const match = new Map<string, number>()
   if (words.length) {
@@ -81,7 +128,7 @@ export function listModels(models: Model[], { query, kinds, reviewedOnly, sort }
       if (best < Infinity) match.set(m.id, best)
     }
   }
-  const list = models.filter((m) => kinds.has(m.kind) && (!reviewedOnly || m.reviewCount > 0) && (!words.length || match.has(m.id)))
+  const list = models.filter((m) => (customOnly ? Boolean(m.custom) : kinds.has(m.kind) && (!reviewedOnly || m.reviewCount > 0)) && (!words.length || match.has(m.id)))
   const byName = (a: Model, b: Model) => (a.sortName < b.sortName ? -1 : a.sortName > b.sortName ? 1 : 0)
   if (words.length) return list.sort((a, b) => (match.get(a.id) as number) - (match.get(b.id) as number) || byName(a, b))
   return list.sort((a, b) => {

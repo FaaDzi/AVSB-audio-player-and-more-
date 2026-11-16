@@ -9,10 +9,28 @@ const { pathToFileURL } = require('node:url')
 const { fetchMeta } = require('./meta-proxy.cjs')
 const { resolveFfmpegBin } = require('./ffmpeg.cjs')
 
-// Keep all app data beside the app instead of %APPDATA% on C:.
+// The app's data (settings, stats, the pairing key, paired phones) lives in the user's own Windows folder, not in
+// the program folder (plan §84 H): an update is "delete the old folder, unzip the new one", and that used to take
+// everything with it. A `user-data` folder still beside the exe (1.0, or carried over by hand) is moved across once.
+const besideExe = path.join(path.dirname(process.execPath), 'user-data')
 const dataDir = app.isPackaged
-  ? path.join(path.dirname(process.execPath), 'user-data')
+  ? path.join(app.getPath('appData'), 'AVSB')
   : path.join(__dirname, '..', '..', '.cache', 'electron-shell-data')
+let movedData = null
+if (app.isPackaged && fs.existsSync(besideExe) && !fs.existsSync(dataDir)) {
+  const half = `${dataDir}.moving`
+  try {
+    fs.rmSync(half, { recursive: true, force: true })
+    // caches rebuild themselves, and the lock belongs to whichever copy is running
+    fs.cpSync(besideExe, half, { recursive: true, filter: (src) => !/(Cache|lockfile|DevToolsActivePort)$/i.test(path.basename(src)) })
+    fs.renameSync(half, dataDir)
+    // the old folder goes only after the whole copy is in place; if that fails it is simply left behind
+    try { fs.rmSync(besideExe, { recursive: true, force: true }) } catch { /* in use: harmless, the new folder wins from now on */ }
+    movedData = `Moved saved data from ${besideExe} to ${dataDir}`
+  } catch (e) {
+    movedData = `Could not move saved data (${e?.message ?? e}); a fresh folder is used at ${dataDir}`
+  }
+}
 app.setPath('userData', dataDir)
 app.setPath('crashDumps', path.join(dataDir, 'crashes'))
 // crash reports stay in that folder and are never sent anywhere
@@ -31,6 +49,7 @@ function logToFile(message) {
     // a log that can't be written must never take the app down
   }
 }
+if (movedData) logToFile(movedData)
 
 try {
   if (fs.statSync(logFile).size > LOG_LIMIT_BYTES) fs.renameSync(logFile, `${logFile}.old`)
@@ -396,6 +415,24 @@ app.whenReady().then(async () => {
   const linkRpcPending = new Map()
   let linkWorkerRestarts = []
   let awake = null
+  // §84 F: the PC has to be awake to serve a phone (a sleeping PC freezes this app; nothing can wake it from mobile
+  // data). So with a phone paired the PC is kept from idle sleep (the screen still turns off): always on mains
+  // power, on battery only while a phone is actually connected. Both switches are in the tray menu.
+  const powerFile = path.join(dataDir, 'power.json')
+  const power = { keepAwake: true, startWithWindows: false }
+  try { Object.assign(power, JSON.parse(fs.readFileSync(powerFile, 'utf8'))) } catch { /* first run */ }
+  const savePower = () => { try { fs.writeFileSync(powerFile, JSON.stringify(power)) } catch { /* read-only folder */ } }
+  const applyAwake = () => {
+    const phones = lastLinkStatus?.phones ?? []
+    const want = power.keepAwake && (phones.some((p) => p.connected) || (phones.length > 0 && !powerMonitor.isOnBatteryPower()))
+    if (want && awake === null) { awake = powerSaveBlocker.start('prevent-app-suspension'); logToFile('Keeping the PC awake for paired phones') }
+    if (!want && awake !== null) { powerSaveBlocker.stop(awake); awake = null; logToFile('PC may sleep again') }
+  }
+  powerMonitor.on('on-ac', applyAwake)
+  powerMonitor.on('on-battery', applyAwake)
+  const applyStartup = () => {
+    if (app.isPackaged) app.setLoginItemSettings({ openAtLogin: power.startWithWindows, args: ['--hidden'] })
+  }
   let winRef = null
   let isQuitting = false
   let tray = null
@@ -447,9 +484,7 @@ app.whenReady().then(async () => {
 
   const linkChanged = (nextStatus) => {
     if (nextStatus) lastLinkStatus = nextStatus
-    const connected = lastLinkStatus.phones?.some((p) => p.connected)
-    if (connected && awake === null) awake = powerSaveBlocker.start('prevent-app-suspension')
-    if (!connected && awake !== null) { powerSaveBlocker.stop(awake); awake = null }
+    applyAwake()
     winRef?.webContents.send('link-changed')
     updateTrayMenu()
   }
@@ -637,6 +672,7 @@ app.whenReady().then(async () => {
     autoHideMenuBar: true,
     icon: path.join(__dirname, '..', 'public', 'icon.ico'),
     backgroundColor: '#121212',
+    show: !process.argv.includes('--hidden'), // started with Windows: tray only
     // backgroundThrottling off: songs keep playing smoothly while the window is minimised
     webPreferences: { contextIsolation: true, sandbox: true, backgroundThrottling: false, preload: path.join(__dirname, 'shell-preload.cjs') },
   })
@@ -676,11 +712,15 @@ app.whenReady().then(async () => {
       { type: 'separator' },
       { label: statusLabel, enabled: false },
       { type: 'separator' },
+      { label: 'Keep this PC awake for my phones', type: 'checkbox', checked: power.keepAwake, click: (item) => { power.keepAwake = item.checked; savePower(); applyAwake() } },
+      { label: 'Start with Windows (in the tray)', type: 'checkbox', checked: power.startWithWindows, click: (item) => { power.startWithWindows = item.checked; savePower(); applyStartup() } },
+      { type: 'separator' },
       { label: 'Quit AVSB', click: () => { isQuitting = true; app.quit() } },
     ])
     tray.setContextMenu(contextMenu)
   }
   updateTrayMenu = refreshTray
+  if (process.argv.includes('--hidden')) refreshTray()
 
   ipcMain.handle('set-mini-mode', (_event, mini) => {
     try {
@@ -742,6 +782,8 @@ app.whenReady().then(async () => {
   })
   powerMonitor.on('resume', () => {
     logToFile('System resumed from sleep')
+    // §84 A: the link's sockets and relay connection don't survive sleep; phones couldn't reach the PC until a restart
+    Promise.resolve(callLinkWorker('restart')).catch((e) => logToFile(`Link: restart after sleep failed: ${e?.message ?? e}`))
     if (win && !win.isDestroyed()) {
       win.webContents.send('system-resume')
     }

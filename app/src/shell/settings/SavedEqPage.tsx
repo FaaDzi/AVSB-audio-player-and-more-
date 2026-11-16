@@ -1,13 +1,17 @@
 // Dedicated Saved EQ Management Page (§73):
 // View, apply, manage, rename, and export user-made and autosaved equalizers.
 // Supports direct export to Equalizer APO (config.txt) and JSON / PEQ format for hardware DACs and DSP players.
-import { useState, useRef, useMemo } from 'react'
+import { useState, useRef, useMemo, useEffect } from 'react'
+import { loadDatabase, type Database } from '../database/catalog'
+import { ImportDeviceDialog } from './EqStudio'
 import { Icon, Dialog } from '../ui'
 import { useShell } from '../context'
 import {
   BANDS,
   eqFilters,
   getPresets,
+  presetFields,
+  presetFilters,
   readPreset,
   setEq,
   setPresets,
@@ -29,8 +33,10 @@ export function generateEqualizerApoConfig(preset: SavedPreset): string {
     `# Equalizer APO configuration - ${preset.name}`,
     `Preamp: ${preset.preamp > 0 ? '+' : ''}${preset.preamp.toFixed(1)} dB`,
   ]
-  if (preset.mode === 'advanced+' && preset.filters && preset.filters.length > 0) {
-    preset.filters.forEach((f, i) => {
+  // Basic mode has no bands of its own: what its pads or radar play goes out as filters (§85 A; it used to export nothing)
+  const filters = preset.mode === 'basic' ? presetFilters(preset).filter((f) => f.gain !== 0) : preset.mode === 'advanced+' ? preset.filters ?? [] : []
+  if (filters.length > 0) {
+    filters.forEach((f, i) => {
       let typeStr = 'PK'
       if (f.kind === 'lowshelf') typeStr = 'LSC'
       else if (f.kind === 'highshelf') typeStr = 'HSC'
@@ -107,19 +113,16 @@ export function SavedEqPage() {
   const [newName, setNewName] = useState('')
   const [deletingName, setDeletingName] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [importing, setImporting] = useState<SavedPreset | null>(null)
+  const [db, setDb] = useState<Database | null>(null)
+  useEffect(() => {
+    let live = true
+    void loadDatabase().then((d) => live && setDb(d), () => {})
+    return () => { live = false }
+  }, [])
 
   const applyPreset = (p: SavedPreset) => {
-    setEq({
-      preset: p.name,
-      mode: p.mode,
-      count: p.count,
-      gains: p.gains,
-      filters: p.filters,
-      preamp: p.preamp,
-      bass: p.bass,
-      treble: p.treble,
-      on: true,
-    })
+    setEq({ ...presetFields(p), on: true })
     showToast(`Loaded ${p.name}`)
   }
 
@@ -149,14 +152,20 @@ export function SavedEqPage() {
   const handleImport = (file: File) => {
     file.text().then((text) => {
       try {
-        const p = readPreset(text)
-        setPresets(withPreset(presets, p))
-        applyPreset(p)
-        showToast(`Imported ${p.name}`)
+        const p = readPreset(text, file.name)
+        // a file from squig.link or Hangout doesn't say what it's for: ask, so the EQ stays tied to its device (§85 B)
+        if (p.device || !db) finishImport(p)
+        else setImporting(p)
       } catch (err: unknown) {
         showToast((err as Error).message || 'Invalid preset file')
       }
     })
+  }
+
+  const finishImport = (p: SavedPreset) => {
+    setPresets(withPreset(getPresets(), p))
+    applyPreset(p)
+    showToast(`Imported ${p.name}`)
   }
 
   const savePermanent = () => {
@@ -327,6 +336,14 @@ export function SavedEqPage() {
       </div>
 
       {/* Rename / Save Dialog */}
+      {importing && db && (
+        <ImportDeviceDialog
+          db={db}
+          presetName={importing.name}
+          activeId={activeGear}
+          onDone={(device) => { finishImport(device ? { ...importing, device } : importing); setImporting(null) }}
+        />
+      )}
       {namingTarget && (
         <Dialog title={namingTarget === autosave ? 'Save Autosaved EQ to App' : 'Rename Preset'} onClose={() => setNamingTarget(null)}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14, padding: '4px 0' }}>

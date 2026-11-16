@@ -1,14 +1,15 @@
 import { SpatialCrossfeedSection } from '../sound/SoundSection'
 import { version } from '../../../package.json'
-import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { Chip, Dialog, Icon, IconButton, Menu } from '../ui'
 import { useShell } from '../context'
 import { Slider } from '../PlayerBar'
-import { BANDS, carryOver, DEFAULT_PEQ_FILTERS, DEFAULT_POLAR, DEFAULT_SHAPER, EQ_DEFAULT, eqFilters, getPresets, presetFrom, readPreset, setEq, setPresets, useEq, withPreset, type EqState, type PolarParams, type ShaperParams } from '../eqState'
+import { BANDS, carryOver, DEFAULT_POLAR, DEFAULT_SHAPER, EQ_DEFAULT, eqFilters, getPresets, presetFields, presetFrom, readPreset, setEq, setPresets, useEq, withPreset, type EqState, type SavedPreset, type PolarParams, type ShaperParams } from '../eqState'
 import { getGear } from '../sound/gear'
 import {
   addProfileItem,
+  applyProfileItem,
   clearSessionAutosave,
   getSessionAutosave,
   isHeadphoneDevice,
@@ -23,14 +24,23 @@ import { loadDatabase, type Database } from '../database/catalog'
 import { kindOfIem } from '../../data/catalog'
 import { DevicePickerModal } from '../sound/AudioProfileSheet'
 import { getSetting, setSetting, useSettings } from './store'
-import { chainDb } from '../../eq/biquad'
+import { chainDb, type Biquad } from '../../eq/biquad'
 import { PeqEditor } from '../../gallery/PeqEditor'
 import { clearCrash, clearLogs, lastCrash, useLogs } from '../logs'
 import { host, type AppProcessMetric } from '../host'
 import { PROVIDERS } from '../metadata'
 import { hearingNote, loadHearing, saveHearing, summarise } from '../../hearing/hearing'
 import { AudioToolsPage, playDiagnosticTone } from '../sound/AudioTools'
-import { BALANCE_BANDS, bandCurves, useChannels } from '../sound/channels'
+import { BALANCE_BANDS, bandCurves, setChannels, useChannels } from '../sound/channels'
+import { AutoEqCard, EqGraph, filterColor, FineTuneCard, ImportDeviceDialog, getLab, setLab, useHrtfTilt } from './EqStudio'
+import { curveAt, eqScene, TUNE_STEP_DB, tuneAt, type AutoEqResult } from '../eqStudio'
+import { setTone as playToneAt, stopTone } from '../eqTone'
+import { PEQ_MAX_FILTERS, tidyFilter } from '../../eq/peq'
+import { useRefs } from '../tournament/engine'
+import { currentSound, setPaused } from '../engine'
+import { setSound, useSound } from '../sound/soundState'
+import { loadFit } from '../../fit/fit'
+import { airMode } from '../../audio/filter'
 import { resolveStyleScope, type ThemeStyleScope } from '../theme'
 
 /** The top-right corner of the Settings title bar. A page puts its own icons there. */
@@ -56,11 +66,11 @@ export const PRESETS: Record<string, number[]> = {
   Electronic: [5, 4, 1, 0, -2, 1, 0, 1, 4, 5],
   Acoustic: [4, 3, 2, 1, 1, 1, 2, 3, 3, 2],
 }
+/** The graph's frequencies when there's no device data to bring its own grid. */
+const PLAIN_GRID = Array.from({ length: 200 }, (_, i) => 20 * 1000 ** (i / 199))
 const freq = (hz: number) => (hz >= 1000 ? (hz % 1000 === 0 && hz >= 10000 ? `${hz / 1000}k` : `${(hz / 1000).toFixed(1)}k`) : String(hz))
 
 // the chart's frequency axis runs from 20 Hz to 20 kHz on a log scale
-const hzToX = (hz: number) => (Math.log10(hz / 20) / 3) * 1000
-const dbToY = (db: number) => 60 - db * 4
 
 function EqShaperPads({
   params,
@@ -342,6 +352,7 @@ export function Equalizer() {
   const [resetting, setResetting] = useState(false)
   const [presetMenu, setPresetMenu] = useState<{ x: number; y: number } | null>(null)
   const importer = useRef<HTMLInputElement>(null)
+  const [importing, setImporting] = useState<SavedPreset | null>(null)
   const mine = saved.find((p) => p.name === eq.preset)
   const { on, mode, preset, count, gains, filters: peq } = eq
   const tone = { preamp: eq.preamp, bass: eq.bass, treble: eq.treble, balance: eq.balance }
@@ -350,7 +361,7 @@ export function Equalizer() {
   const onEqTweaked = (patch: Partial<EqState>) => {
     const next = { ...eq, ...patch, preset: 'Custom EQ 1 (Autosaved)' }
     setEq({ ...patch, preset: 'Custom EQ 1 (Autosaved)' })
-    setSessionAutosave(activeGear, presetFrom(next, 'Custom EQ 1 (Autosaved)'))
+    setSessionAutosave(activeGear, presetFrom(next, 'Custom EQ 1 (Autosaved)', activeGear))
   }
 
   const finishNaming = () => {
@@ -358,14 +369,14 @@ export function Equalizer() {
     if (!naming || !name) return
     if (PRESETS[name]) { showToast('A built-in preset already has that name'); return }
     const others = naming.was ? saved.filter((p) => p.name !== naming.was) : saved
-    setPresets(withPreset(others, presetFrom(eq, name)))
+    setPresets(withPreset(others, presetFrom(eq, name, activeGear)))
     setEq({ preset: name })
     clearSessionAutosave(activeGear)
     showToast('Preset saved to App')
     setNaming(null)
   }
   const exportPreset = () => {
-    const url = URL.createObjectURL(new Blob([JSON.stringify(presetFrom(eq, eq.preset), null, 2)], { type: 'application/json' }))
+    const url = URL.createObjectURL(new Blob([JSON.stringify(presetFrom(eq, eq.preset, activeGear), null, 2)], { type: 'application/json' }))
     const link = document.createElement('a')
     link.href = url
     link.download = `${eq.preset}.eq.json`
@@ -374,14 +385,19 @@ export function Equalizer() {
   }
   const importPreset = (file: File) => {
     file.text().then((text) => {
-      const preset = readPreset(text)
+      const preset = readPreset(text, file.name)
       if (PRESETS[preset.name]) throw new Error('A built-in preset already has that name')
-      setPresets(withPreset(saved, preset))
-      applySaved(preset)
-      showToast(`Added ${preset.name}`)
+      // a file from squig.link or Hangout doesn't say what it's for: ask, so the EQ stays tied to its device (§85 B)
+      if (preset.device || !db) finishImport(preset)
+      else setImporting(preset)
     }).catch((e: Error) => showToast(e.message))
   }
-  const applySaved = (p: (typeof saved)[number]) => setEq({ preset: p.name, mode: p.mode, count: p.count, gains: p.gains, filters: p.filters, preamp: p.preamp, bass: p.bass, treble: p.treble })
+  const finishImport = (preset: SavedPreset) => {
+    setPresets(withPreset(getPresets(), preset))
+    applySaved(preset)
+    showToast(`Added ${preset.name}`)
+  }
+  const applySaved = (p: (typeof saved)[number]) => setEq(presetFields(p))
   const setTone = (t: typeof tone) => setEq(t)
   const setDyn = (d: typeof dyn) => setEq(d)
   const bands = BANDS[count]
@@ -399,29 +415,112 @@ export function Equalizer() {
     setEq({ mode: next, ...carried })
     if (carried) showToast(`Your sound carried over to ${next === 'basic' ? 'Basic (simplified)' : next === 'advanced' ? 'Advanced' : 'Advanced +'}`)
   }
-  const points = useMemo(() => {
-    if (mode === 'advanced') return bands.map((hz, i) => ({ x: hzToX(hz), y: dbToY(gains[i] ?? 0) }))
-    if (mode === 'advanced+') return peq.map((f) => ({ x: hzToX(f.fc), y: dbToY(f.gain) }))
-    return []
-  }, [mode, bands, gains, peq])
-  const { line, peak } = useMemo(() => {
-    const hz = Array.from({ length: 200 }, (_, i) => 20 * 1000 ** (i / 199))
-    const db = chainDb(eqFilters(eq), hz, 48000)
-    return { line: hz.map((f, i) => `${hzToX(f)},${dbToY(db[i])}`).join(' '), peak: Math.max(0, ...db) }
-  }, [eq])
+  // ---- the graph and its two steps (plan §84 B, C, E)
+  const refs = useRefs()
+  const labRaw = getSetting('eqlab')
+  const lab = useMemo(() => getLab(activeGear), [activeGear, labRaw]) // eslint-disable-line react-hooks/exhaustive-deps
+  const hrtf = useHrtfTilt(db?.catalog.data.grid ?? null, isSpeakerDevice(activeGear) ? 0 : isHeadphone ? 0.5 : 1)
+  const scene = useMemo(
+    () => (db && refs ? eqScene({ catalog: db.catalog, refs, fit: loadFit(), airMode: airMode() }, activeGear, { ...lab, hrtf: lab.hrtf ? hrtf?.curve ?? null : null }) : null),
+    [db, refs, activeGear, lab, hrtf],
+  )
+  const grid = scene?.grid ?? PLAIN_GRID
+  const eqDb = useMemo(() => chainDb(eqFilters(eq), grid, 48000), [eq, grid])
+  const peak = Math.max(0, ...eqDb)
+  // the Sound aim, while it's on, is part of what you hear
+  const sound = useSound()
+  const extraDb = useMemo(() => {
+    const curve = sound.aim.kind !== 'off' && !sound.bypass ? currentSound()?.curve : null
+    return curve && curve.length === grid.length ? curve : null
+  }, [sound, grid, db, refs]) // eslint-disable-line react-hooks/exhaustive-deps
   // L/R view (§78 E5): with per-band balance on, each ear's curve is the EQ plus that ear's band corrections
   const channels = useChannels()
-  const earLines = useMemo(() => {
+  const ears = useMemo(() => {
     const curves = bandCurves(channels)
     if (!curves) return null
-    const hz = Array.from({ length: 200 }, (_, i) => 20 * 1000 ** (i / 199))
-    const base = chainDb(on ? eqFilters(eq) : [], hz, 48000)
-    const ear = (gains: number[]) => {
-      const db = chainDb(BALANCE_BANDS.map((fc, i) => ({ kind: 'peak' as const, fc, gain: gains[i], q: 1 })), hz, 48000)
-      return hz.map((f, i) => `${hzToX(f)},${dbToY(base[i] + db[i])}`).join(' ')
-    }
+    const ear = (g: number[]) => chainDb(BALANCE_BANDS.map((fc, i) => ({ kind: 'peak' as const, fc, gain: g[i], q: 1 })), grid, 48000)
     return { left: ear(curves.left), right: ear(curves.right) }
-  }, [channels, eq, on])
+  }, [channels, grid])
+  const handles = useMemo(
+    () => (mode === 'advanced' ? bands.map((hz, i) => ({ hz, db: gains[i] ?? 0 })) : mode === 'advanced+' ? peq.map((f) => ({ hz: f.fc, db: f.gain })) : []),
+    [mode, bands, gains, peq],
+  )
+  const moveHandle = (i: number, to: { hz?: number; db?: number }) => {
+    if (mode === 'advanced') onEqTweaked({ gains: bands.map((_, k) => (k === i ? Math.max(-12, Math.min(12, to.db ?? gains[k] ?? 0)) : gains[k] ?? 0)) })
+    else onEqTweaked({ filters: peq.map((f, k) => (k === i ? tidyFilter({ ...f, fc: to.hz ?? f.fc, gain: to.db ?? f.gain }) : f)) })
+  }
+
+  // the graph stays in view: once the page scrolls past it, it shrinks and pins to the top
+  const [compact, setCompact] = useState(false)
+  const [gap, setGap] = useState(0)
+  const sentinel = useRef<HTMLDivElement>(null)
+  const hero = useRef<HTMLDivElement>(null)
+  const fullHeight = useRef(0)
+  useEffect(() => {
+    const check = () => {
+      const [mark, pinned] = [sentinel.current, hero.current]
+      if (!mark || !pinned) return
+      // the mark scrolls away, the pinned graph doesn't: the distance between them is how far the page has moved
+      const past = pinned.getBoundingClientRect().top - mark.getBoundingClientRect().top
+      // shrink as soon as the page moves (the full-size graph would cover the cards), grow back at the top
+      setCompact((was) => {
+        if (!was) fullHeight.current = pinned.offsetHeight
+        return was ? past > 8 : past > 24
+      })
+    }
+    // whichever box scrolls (the settings pane on PC, the page on the phone): scroll events don't bubble, capture does
+    document.addEventListener('scroll', check, { capture: true, passive: true })
+    return () => document.removeEventListener('scroll', check, { capture: true })
+  }, [subView])
+  // the room the full-size graph took stays in the page, so shrinking it doesn't move what's under your finger
+  useLayoutEffect(() => {
+    setGap(compact && hero.current ? Math.max(0, fullHeight.current - hero.current.offsetHeight) : 0)
+  }, [compact])
+
+  // the test tone, heard through the EQ: a sine only meets the EQ at its own frequency
+  const [toneUi, setToneUi] = useState({ hz: 3000, playing: false, sweeping: false })
+  const [held, setHeld] = useState(false)
+  const [undo, setUndo] = useState<Biquad[][]>([])
+  useEffect(() => {
+    if (!toneUi.playing) { stopTone(); return }
+    const base = (on ? chainDb(eqFilters(eq), [toneUi.hz], 48000)[0] : 0) + (extraDb ? curveAt(grid, extraDb, toneUi.hz) : 0)
+    playToneAt(toneUi.hz, base + (ears ? curveAt(grid, ears.left, toneUi.hz) : 0), base + (ears ? curveAt(grid, ears.right, toneUi.hz) : 0))
+  }, [toneUi, eq, on, ears, extraDb, grid])
+  useEffect(() => stopTone, [])
+  useEffect(() => {
+    if (!toneUi.playing || !toneUi.sweeping) return
+    // 1 → 14 kHz in about 18 s, round and round: slow enough to hear a peak go by
+    const t = window.setInterval(() => setToneUi((s) => ({ ...s, hz: s.hz >= 14000 ? 1000 : s.hz * 2 ** (1 / 48) })), 100)
+    return () => window.clearInterval(t)
+  }, [toneUi.playing, toneUi.sweeping])
+  const playTone = (playing: boolean) => {
+    if (playing) setPaused(true) // a sweep over music tells you nothing
+    setToneUi((s) => ({ ...s, playing, sweeping: playing && s.sweeping }))
+  }
+  const nudge = (dir: 1 | -1) => {
+    // the by-ear filters live in Advanced+; another mode's sound comes along first
+    const carried = mode === 'advanced+' ? null : carryOver(eq, 'advanced+')
+    const from = mode === 'advanced+' ? peq : carried?.filters ?? []
+    const next = tuneAt(from, toneUi.hz, dir * TUNE_STEP_DB)
+    if (!next) { showToast('All 20 filters are in use'); return }
+    setUndo([...undo, from])
+    onEqTweaked({ ...carried, mode: 'advanced+', filters: next, on: true })
+  }
+  const lean = (side: 'left' | 'right') => {
+    const i = BALANCE_BANDS.reduce((best, hz, k) => (Math.abs(Math.log(hz / toneUi.hz)) < Math.abs(Math.log(BALANCE_BANDS[best] / toneUi.hz)) ? k : best), 0)
+    const next = BALANCE_BANDS.map((_, k) => channels.bands[k] ?? 0)
+    next[i] = Math.max(-6, Math.min(6, next[i] + (side === 'left' ? 0.5 : -0.5))) // + is right louder
+    setChannels({ bands: next, perBand: true })
+  }
+  const applyAuto = (r: AutoEqResult, targetName: string) => {
+    // the correction now lives in the EQ: the Sound aim goes off so it isn't applied twice
+    applyProfileItem(null, activeGear)
+    setSound({ aim: { kind: 'off' }, bypass: false })
+    setUndo([])
+    // automatic headroom already makes room for the boosts
+    onEqTweaked({ mode: 'advanced+', filters: r.filters, preamp: eq.headroom ? 0 : r.preamp, on: true })
+    showToast(`${activeGearName} → ${targetName}: ${r.beforeDb.toFixed(1)} → ${r.afterDb.toFixed(1)} dB off target`)
+  }
 
   const pick = (view: typeof subView) => (swapPage ? swapPage(VIEW_PAGE[view]) : setSubView(view))
   const navBar = (
@@ -472,7 +571,8 @@ export function Equalizer() {
   return (
     <div className="ms-eq">
       {navBar}
-      <div className={`ms-eq-hero${on ? ' on' : ''}`}>
+      <div ref={sentinel} className="ms-eq-sentinel" />
+      <div ref={hero} className={`ms-eq-hero${on ? ' on' : ''}${compact ? ' compact' : ''}`}>
         <div className="ms-eq-head">
           <div className="grow">
             <h3>{preset}</h3>
@@ -481,52 +581,67 @@ export function Equalizer() {
               {' '}· Preamp {tone.preamp.toFixed(1)} dB
             </p>
           </div>
+          {(on || held) && (
+            <button
+              type="button"
+              className={`ms-eq-ab${held ? ' held' : ''}`}
+              aria-label="Hold to hear it without the EQ"
+              title="Hold to hear it without the EQ"
+              onPointerDown={(e) => { e.currentTarget.setPointerCapture(e.pointerId); setHeld(true); setEq({ on: false }) }}
+              onPointerUp={() => { if (held) { setHeld(false); setEq({ on: true }) } }}
+              onPointerCancel={() => { if (held) { setHeld(false); setEq({ on: true }) } }}
+            >
+              <Icon name="compare" size={22} />
+            </button>
+          )}
           <input type="checkbox" role="switch" aria-label="Equalizer" className="ms-switch" checked={on} onChange={(e) => setEq({ on: e.target.checked })} />
         </div>
-        <div className="ms-eq-curve" aria-hidden="true">
-          <span className="db" style={{ top: '10%' }}>+12</span>
-          <span className="db" style={{ top: '50%' }}>0</span>
-          <span className="db" style={{ top: '90%' }}>-12</span>
-          <div className="plot">
-            <svg viewBox="0 0 1000 120" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="eq-spec-grad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="rgba(255, 255, 255, 0.45)" />
-                  <stop offset="100%" stopColor="rgba(255, 255, 255, 0.04)" />
-                </linearGradient>
-              </defs>
-              {/* Vertical spectrum analyzer bars matching Image 1 */}
-              {Array.from({ length: 48 }, (_, i) => {
-                const bx = (i / 48) * 1000
-                const bw = 12
-                const factor = Math.sin((i / 48) * Math.PI) * 0.4 + 0.35 + Math.cos((i / 16) * Math.PI) * 0.15
-                const bh = Math.max(12, Math.min(108, factor * 110))
-                const by = 120 - bh
-                return (
-                  <rect
-                    key={i}
-                    x={bx + 2}
-                    y={by}
-                    width={bw}
-                    height={bh}
-                    rx={2}
-                    fill="url(#eq-spec-grad)"
-                    opacity={on ? 0.75 : 0.25}
-                  />
-                )
-              })}
-              {[12, -12].map((db) => <line key={db} x1="0" x2="1000" y1={dbToY(db)} y2={dbToY(db)} stroke="rgba(255, 255, 255, 0.1)" />)}
-              {[100, 1000, 10000].map((hz) => <line key={hz} x1={hzToX(hz)} x2={hzToX(hz)} y1="0" y2="120" stroke="rgba(255, 255, 255, 0.1)" />)}
-              <polyline points={line} />
-              {earLines && <polyline className="ear-l" points={earLines.left} />}
-              {earLines && <polyline className="ear-r" points={earLines.right} />}
-            </svg>
-            {points.map((p, i) => <i key={i} style={{ left: `${p.x / 10}%`, top: `${(p.y / 120) * 100}%` }} />)}
-            {[100, 1000, 10000].map((hz) => <span key={hz} className="hz" style={{ left: `${hzToX(hz) / 10}%` }}>{freq(hz)}</span>)}
-          </div>
-        </div>
-        <small>EQ curve{earLines && <span className="ms-eq-ears"><b className="l">L</b><b className="r">R</b></span>}</small>
+        <EqGraph
+          on={on}
+          compact={compact}
+          grid={grid}
+          eqDb={eqDb}
+          extraDb={extraDb}
+          device={scene?.device ?? null}
+          target={scene?.target ?? null}
+          ears={ears}
+          handles={handles}
+          freeHz={mode === 'advanced+'}
+          onHandle={moveHandle}
+          onHandleQ={mode === 'advanced+' ? (i, k) => onEqTweaked({ filters: peq.map((f, n) => (n === i ? tidyFilter({ ...f, q: f.q * k }) : f)) }) : undefined}
+          onAdd={mode === 'advanced+' && peq.length < PEQ_MAX_FILTERS ? (at) => onEqTweaked({ filters: [...peq, tidyFilter({ kind: 'peak', fc: at.hz, gain: at.db, q: 1.4 })] }) : undefined}
+          onRemove={mode === 'advanced+' ? (i) => onEqTweaked({ filters: peq.filter((_, n) => n !== i) }) : undefined}
+          toneHz={toneUi.playing ? toneUi.hz : null}
+          onTone={(hz) => setToneUi((s) => ({ ...s, hz: Math.round(hz), sweeping: false }))}
+        />
       </div>
+      <div style={{ height: gap }} />
+
+      {db && (
+        <AutoEqCard
+          db={db}
+          deviceId={activeGear}
+          deviceName={activeGearName}
+          lab={lab}
+          scene={scene}
+          hrtfName={hrtf?.name ?? null}
+          onLab={(patch) => setLab(activeGear, patch)}
+          onApply={applyAuto}
+          onPickGear={() => go({ page: 'settings', section: 'gear' })}
+        />
+      )}
+      <FineTuneCard
+        hz={toneUi.hz}
+        playing={toneUi.playing}
+        sweeping={toneUi.sweeping}
+        canUndo={undo.length > 0}
+        onHz={(hz) => setToneUi((s) => ({ ...s, hz }))}
+        onPlay={playTone}
+        onSweep={(sweeping) => { if (sweeping && !toneUi.playing) setPaused(true); setToneUi((s) => ({ ...s, sweeping, playing: s.playing || sweeping })) }}
+        onNudge={nudge}
+        onLean={lean}
+        onUndo={() => { onEqTweaked({ mode: 'advanced+', filters: undo[undo.length - 1] }); setUndo(undo.slice(0, -1)) }}
+      />
 
       <div className="ms-segment-small big ms-eq-mode" role="radiogroup" aria-label="Equalizer mode">
         {(['basic', 'advanced', 'advanced+'] as const).map((m) => (
@@ -640,7 +755,8 @@ export function Equalizer() {
         <section className="ms-set-section ms-eq-advanced">
           <h3>Parametric Filters</h3>
           <PeqEditor
-            filters={peq.length ? peq : DEFAULT_PEQ_FILTERS}
+            tableOnly={filterColor}
+            filters={peq}
             sampleRate={48000}
             onChange={(filters) => onEqTweaked({ filters })}
           />
@@ -782,7 +898,7 @@ export function Equalizer() {
         ref={importer}
         type="file"
         hidden
-        accept=".json"
+        accept=".json,.txt"
         aria-label="Import preset"
         onChange={(e) => {
           const file = e.target.files?.[0]
@@ -798,6 +914,14 @@ export function Equalizer() {
           { label: 'Delete preset', icon: 'delete', onSelect: () => { setPresets(saved.filter((p) => p !== mine)); setEq({ preset: 'Custom' }) } },
         ] : []),
       ]} />}
+      {importing && db && (
+        <ImportDeviceDialog
+          db={db}
+          presetName={importing.name}
+          activeId={activeGear}
+          onDone={(device) => { finishImport(device ? { ...importing, device } : importing); setImporting(null) }}
+        />
+      )}
       {naming && (
         <Dialog
           title={naming.was ? 'Rename preset' : 'Save preset'}

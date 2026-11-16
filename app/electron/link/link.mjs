@@ -445,6 +445,8 @@ export function createLink(opts) {
 
   let ep = null
   let online = false
+  let watches = []
+  let restarting = null
   let lanServer = null
   let lanPort = 0
   let lanToken = randomBytes(32).toString('hex')
@@ -929,6 +931,9 @@ export function createLink(opts) {
         now: Date.now(),
         protocol: 2,
         ...(lan ? { lan } : {}),
+        // §84 A: where the PC is right now (its relay moves, its port changes with every start). The phone keeps
+        // this in place of the address from the day it paired.
+        ...(req.op === 'hello' && ep ? { ticket: iroh.EndpointTicket.fromAddr(ep.addr()).toString() } : {}),
       }))
     }
     if (req.op === 'bench') {
@@ -1126,16 +1131,50 @@ export function createLink(opts) {
       b.alpns([alpnBytes])
       for (const a of opts.bind ?? []) b.bindAddr(a)
       ep = await b.bind()
+      const mine = ep
       log(`link up as ${ep.id().fmtShort()}`)
-      void ep.online().then(() => { online = true; onChange() }, () => {})
+      void ep.online().then(() => { if (ep === mine) { online = true; onChange() } }, () => {})
+      // §84 A: "online" follows the relay for as long as the endpoint lives, and the log says which relay it is
+      // (off the home network the relay is the only way in, and nothing used to say whether it was up)
+      try {
+        watches = [
+          ep.watchHomeRelay((a, b) => {
+            // the native callback comes as (error, value)
+            const urls = Array.isArray(a) ? a : Array.isArray(b) ? b : []
+            if (ep !== mine || opts.relay === false) return
+            log(urls.length ? `relay: ${urls.join(', ')}` : 'relay: none (phones away from this network cannot reach the PC)')
+            online = urls.length > 0
+            onChange()
+          }),
+        ]
+      } catch (e) {
+        log(`relay watch unavailable: ${e?.message ?? e}`)
+      }
       void (async () => {
         for (;;) {
-          const incoming = await ep.acceptNext().catch(() => null)
-          if (!incoming) break
-          handle(incoming).catch((e) => log(`connection error: ${e?.message ?? e}`))
+          const incoming = await mine.acceptNext().catch(() => null)
+          if (incoming) { handle(incoming).catch((e) => log(`connection error: ${e?.message ?? e}`)); continue }
+          // the endpoint stopped accepting. If nobody stopped it on purpose, bring it back: it used to stay dead
+          // (and count as running) until the app was restarted.
+          if (ep !== mine) return
+          log('link stopped accepting, restarting')
+          await new Promise((r) => setTimeout(r, 1000))
+          if (ep === mine) await this.restart().catch((e) => log(`couldn't restart: ${e?.message ?? e}`))
+          return
         }
       })()
       onChange()
+    },
+
+    /** §84 A: a fresh endpoint with the same key (after sleep the old one's sockets and relay link can be dead). */
+    restart() {
+      // one at a time (Windows reports a resume twice), and only when it was running
+      restarting = (restarting ?? Promise.resolve()).then(async () => {
+        if (!ep) return
+        await this.stop()
+        await this.start()
+      })
+      return restarting
     },
 
     async stop() {
@@ -1148,6 +1187,8 @@ export function createLink(opts) {
       const e = ep
       ep = null
       online = false
+      for (const w of watches) void w.stop().catch(() => {})
+      watches = []
       downscaledRamCache.clear()
       lowDataRamCache.clear()
       await e.close().catch(() => {})
@@ -1180,6 +1221,9 @@ export function createLink(opts) {
     /** Opens the 5-minute pairing window. The link the phone scans: the PC's address (ticket), its name and the secret. */
     async pair() {
       await this.start()
+      // the ticket carries the relay: wait for it (a few seconds at most), or a phone paired right after start
+      // only gets this network's addresses
+      if (opts.relay !== false) await Promise.race([ep.online(), new Promise((r) => setTimeout(r, 5000))]).catch(() => {})
       const { secret, expires } = pairing.open()
       const ticket = iroh.EndpointTicket.fromAddr(ep.addr()).toString()
       const link = `iemdream://pair?t=${encodeURIComponent(ticket)}&s=${secret}&n=${encodeURIComponent(pcName())}`

@@ -1,5 +1,7 @@
 import { useSyncExternalStore } from 'react'
 import { chainDb, type Biquad } from '../eq/biquad'
+import { fitParametric, PARAMETRIC_20 } from '../eq/parametric'
+import { PEQ_MAX_FILTERS, tidyFilter } from '../eq/peq'
 import { getSetting, setSetting, subscribeSettings } from './settings/store'
 
 export const BANDS: Record<number, number[]> = {
@@ -190,27 +192,84 @@ export interface SavedPreset {
   preamp: number
   bass: number
   treble: number
+  /** Basic mode's sound (§85 A): without these a Basic preset saved nothing of what it played. */
+  subMode?: EqState['subMode']
+  shaper?: ShaperParams
+  polar?: PolarParams
+  /** What it was made for (a catalog id), so the Database can show the device with this EQ on it (§85). */
+  device?: string
 }
 
-export const presetFrom = (eq: EqState, name: string): SavedPreset =>
-  ({ name, mode: eq.mode, count: eq.count, gains: eq.gains, filters: eq.filters, preamp: eq.preamp, bass: eq.bass, treble: eq.treble })
+export const presetFrom = (eq: EqState, name: string, device?: string | null): SavedPreset =>
+  ({ name, mode: eq.mode, count: eq.count, gains: eq.gains, filters: eq.filters, preamp: eq.preamp, bass: eq.bass, treble: eq.treble, subMode: eq.subMode, shaper: eq.shaper, polar: eq.polar, ...(device ? { device } : {}) })
+
+/** A preset as the EQ fields it sets (everything it saved; the rest of the EQ stays as it is). */
+export const presetFields = (p: SavedPreset): Partial<EqState> =>
+  ({ preset: p.name, mode: p.mode, count: p.count, gains: p.gains, filters: p.filters, preamp: p.preamp, bass: p.bass, treble: p.treble, ...(p.mode === 'basic' && p.shaper ? { subMode: p.subMode ?? 'shaper', shaper: p.shaper, polar: p.polar ?? DEFAULT_POLAR } : {}) })
+
+/** The filters a preset plays, whatever mode it was made in. */
+export const presetFilters = (p: SavedPreset): Biquad[] => eqFilters({ ...EQ_DEFAULT, ...presetFields(p), on: true })
 
 const MAX_PRESET_BYTES = 64 * 1024
 const isNumber = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v)
 
 /** Reads a preset file. Throws with a message fit to show if it isn't a usable one. */
-export function readPreset(text: string): SavedPreset {
+const APO_KIND: Record<string, Biquad['kind']> = { PK: 'peak', PEQ: 'peak', LS: 'lowshelf', LSC: 'lowshelf', LSQ: 'lowshelf', HS: 'highshelf', HSC: 'highshelf', HSQ: 'highshelf' }
+
+/**
+ * An Equalizer APO / AutoEq / squig.link text file as an Advanced+ preset (plan §84 A); null when it has no filters.
+ * Comments and lines we don't use (Device:, Channel:, Include:, …) are skipped; filters that are OFF or of a kind
+ * we don't play (LP, HP, notch, …) are left out; a GraphicEQ line is fitted with parametric filters.
+ */
+function readApoText(text: string, fileName: string): SavedPreset | null {
+  let preamp = 0
+  let name = fileName.replace(/\.[^.]+$/, '').replace(/_APO$/, '').trim()
+  let filters: Biquad[] = []
+  for (const raw of text.split(/\r?\n/)) {
+    const line = raw.trim()
+    const title = /^#.*Equalizer APO configuration\s*-\s*(.+)$/i.exec(line)
+    if (title) name = title[1].trim()
+    const pre = /^Preamp:\s*([+-]?[\d.]+)\s*dB/i.exec(line)
+    if (pre) preamp = Number(pre[1])
+    const f = /^Filter\s*\d*:\s*ON\s+([A-Z]+)\s+Fc\s+([\d.]+)\s*Hz(?:\s+Gain\s+([+-]?[\d.]+)\s*dB)?(?:\s+Q\s+([\d.]+))?/i.exec(line)
+    const kind = f && APO_KIND[f[1].toUpperCase()]
+    if (f && kind && f[3] !== undefined) filters.push({ kind, fc: Number(f[2]), gain: Number(f[3]), q: f[4] ? Number(f[4]) : 0.71 })
+    const graphic = /^GraphicEQ:\s*(.+)$/i.exec(line)
+    if (graphic) {
+      const pts = graphic[1].split(';').map((p) => p.trim().split(/\s+/).map(Number)).filter((p) => p.length === 2 && p.every(Number.isFinite) && p[0] > 0)
+      if (pts.length > 1) {
+        const grid = Array.from({ length: 121 }, (_, i) => 20 * 1000 ** (i / 120))
+        // straight lines between the points on a log-frequency axis, flat past the ends
+        const curve = grid.map((hz) => {
+          const j = pts.findIndex((p) => p[0] >= hz)
+          if (j <= 0) return (j === 0 ? pts[0] : pts[pts.length - 1])[1]
+          const [a, b] = [pts[j - 1], pts[j]]
+          return a[1] + ((b[1] - a[1]) * Math.log(hz / a[0])) / Math.log(b[0] / a[0])
+        })
+        filters = fitParametric(grid, curve, PARAMETRIC_20).filters
+      }
+    }
+  }
+  filters = filters.filter((f) => [f.fc, f.gain, f.q].every(isNumber) && f.fc > 0 && f.q > 0).slice(0, PEQ_MAX_FILTERS).map(tidyFilter)
+  if (!filters.length || !isNumber(preamp)) return null
+  return { name: name || 'Imported EQ', mode: 'advanced+', count: 10, gains: BANDS[10].map(() => 0), filters, preamp: Math.max(-24, Math.min(12, preamp)), bass: 0, treble: 0 }
+}
+
+/** A preset from a file: our own JSON, or Equalizer APO text (`fileName` names it when the text doesn't). */
+export function readPreset(text: string, fileName = ''): SavedPreset {
   const bad = new Error('That file is not an equalizer preset')
   if (text.length > MAX_PRESET_BYTES) throw bad
   let p: Partial<SavedPreset>
   try {
     p = JSON.parse(text) as Partial<SavedPreset>
   } catch {
+    const apo = readApoText(text, fileName)
+    if (apo) return apo
     throw bad
   }
   const filtersOk = Array.isArray(p.filters) && p.filters.every((f) => f && typeof f.kind === 'string' && isNumber(f.fc) && isNumber(f.gain) && isNumber(f.q))
   const gainsOk = Array.isArray(p.gains) && p.gains.every(isNumber) && p.gains.length === BANDS[p.count ?? 0]?.length
-  if (typeof p.name !== 'string' || !p.name.trim() || (p.mode !== 'basic' && p.mode !== 'advanced' && p.mode !== 'advanced+') || !filtersOk || !gainsOk || ![p.preamp, p.bass, p.treble].every(isNumber)) throw bad
+  if (typeof p.name !== 'string' || !p.name.trim() || (p.mode !== 'basic' && p.mode !== 'advanced' && p.mode !== 'advanced+') || !filtersOk || !gainsOk || ![p.preamp, p.bass, p.treble].every(isNumber) || (p.device !== undefined && typeof p.device !== 'string')) throw bad
   return p as SavedPreset
 }
 

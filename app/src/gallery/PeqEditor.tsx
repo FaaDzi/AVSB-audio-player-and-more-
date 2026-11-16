@@ -19,11 +19,11 @@ const PLOT_HZ = Array.from({ length: 200 }, (_, i) => 20 * 1000 ** (i / 199))
 const KIND_LABEL: Record<Biquad['kind'], string> = { peak: 'Peak', lowshelf: 'Low shelf', highshelf: 'High shelf' }
 const fmtHz = (f: number) => (f >= 1000 ? `${+(f / 1000).toFixed(f >= 10000 ? 1 : 2)}k` : `${f}`)
 
-export function PeqEditor(props: { filters: Biquad[]; onChange: (f: Biquad[]) => void; sampleRate: number; maxFilters?: number }) {
+export function PeqEditor(props: { filters: Biquad[]; onChange: (f: Biquad[]) => void; sampleRate: number; maxFilters?: number; /** The page has its own graph with the handles (the shell's EQ tab): only the table shows, each row in its handle's colour. */ tableOnly?: (i: number) => string }) {
   const { filters, onChange, sampleRate } = props
   const max = Math.min(PEQ_MAX_FILTERS, props.maxFilters ?? PEQ_MAX_FILTERS)
   // the filter table folds away on phones (the graph stays); open on wider screens
-  const [tableOpen] = useState(() => typeof window === 'undefined' || window.innerWidth > 640)
+  const [tableOpen] = useState(() => Boolean(props.tableOnly) || typeof window === 'undefined' || window.innerWidth > 640)
   const [sel, setSel] = useState<number | null>(filters.length ? 0 : null)
   const svgRef = useRef<SVGSVGElement>(null)
   const dragging = useRef<number | null>(null)
@@ -49,7 +49,7 @@ export function PeqEditor(props: { filters: Biquad[]; onChange: (f: Biquad[]) =>
 
   return (
     <div className="peq">
-      <svg
+      {!props.tableOnly && <svg
         ref={svgRef}
         className="peq-graph"
         viewBox={`0 0 ${W} ${H}`}
@@ -103,7 +103,7 @@ export function PeqEditor(props: { filters: Biquad[]; onChange: (f: Biquad[]) =>
             {i + 1}
           </text>
         ))}
-      </svg>
+      </svg>}
 
       <div className="peq-head">
         <span className="peq-preamp">Preamp {preamp.toFixed(1)} dB</span>
@@ -131,7 +131,7 @@ export function PeqEditor(props: { filters: Biquad[]; onChange: (f: Biquad[]) =>
         <div className="peq-table" role="table" aria-label="Filters">
           {filters.map((f, i) => (
             <div key={i} role="row" className={`peq-row ${sel === i ? 'on' : ''}`} onFocus={() => setSel(i)} onClick={() => setSel(i)}>
-              <span className="peq-num">{i + 1}</span>
+              <span className="peq-num" style={props.tableOnly ? { background: props.tableOnly(i), color: '#111' } : undefined}>{i + 1}</span>
               <select value={f.kind} onChange={(e) => set(i, { kind: e.target.value as Biquad['kind'] })} aria-label={`Filter ${i + 1} type`}>
                 {(Object.keys(KIND_LABEL) as Biquad['kind'][]).map((k) => (
                   <option key={k} value={k}>{KIND_LABEL[k]}</option>
