@@ -1,5 +1,6 @@
 // Settings → My gear (§69): what you're listening on now, the devices you own, the ones you've starred to hear,
 // and your source (DAC / dongle, DSP cable). Sound and the tournament both use the active device.
+import { gearName } from './phoneSpeaker'
 import { useMemo, useState } from 'react'
 import { Icon } from '../ui'
 import { useShell } from '../context'
@@ -53,7 +54,7 @@ export function MyGear() {
   const { showToast, go } = useShell()
   const [adding, setAdding] = useState<'owned' | 'starred' | null>(null)
   if (!db) return null
-  const name = (id: string) => db.catalog.byId.get(id)?.name ?? id
+  const name = (id: string) => gearName(id, db.catalog.byId.get(id)?.name)
   const detail = (id: string) => {
     const d = db.catalog.byId.get(id)
     return d ? kindDetail(kindOfIem(d), d.back) : ''

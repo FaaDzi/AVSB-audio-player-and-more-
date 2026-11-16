@@ -19,6 +19,7 @@ import {
 } from './gearProfiles'
 import { useGear } from './gear'
 import { copyCurrentAimToEq } from './copyEq'
+import { gearName } from './phoneSpeaker'
 import { loadDatabase, listModels, type Database } from '../database/catalog'
 import { soundCurve, type SoundEnv } from './soundCurve'
 import { kindOfIem } from '../../data/catalog'
@@ -54,7 +55,7 @@ export function AudioProfileSheet({ onClose }: { onClose: () => void }) {
 
   const activeDeviceName = useMemo(() => {
     if (!gear.active) return 'Default Device'
-    return db?.catalog.byId.get(gear.active)?.name ?? gear.active
+    return gearName(gear.active, db?.catalog.byId.get(gear.active)?.name)
   }, [gear.active, db])
 
   const isHeadphone = useMemo(() => {

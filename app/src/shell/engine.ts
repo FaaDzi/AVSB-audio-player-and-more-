@@ -516,6 +516,9 @@ export async function playTrack(t: Track, autostart = true, startAt = 0) {
     p.switching = false
     events.onLoading?.(false)
   }
+  // §86 H: how long a song takes from the tap to sound goes in the log, so slow starts can be measured, not guessed
+  const askedAt = performance.now()
+  const took = () => `${Math.round(performance.now() - askedAt)} ms`
 
   try {
     const { quick, full } = load(t, true)
@@ -540,9 +543,10 @@ export async function playTrack(t: Track, autostart = true, startAt = 0) {
         pendingSeek = null
         if (wantPlaying) p.play()
         finishSwitch()
-        logLine('INFO', 'Player', `Playing ${t.path}`)
+        logLine('INFO', 'Player', `Playing ${t.path} (first part after ${took()})`)
         const buffer = await full
         if (mine !== token) return
+        logLine('INFO', 'Player', `Whole song ready after ${took()}`)
         const level = await levelOf(t, buffer)
         if (mine !== token) return
         p.swapBuffer(buffer, level)
@@ -563,7 +567,7 @@ export async function playTrack(t: Track, autostart = true, startAt = 0) {
     pendingSeek = null
     if (wantPlaying) p.play()
     finishSwitch()
-    logLine('INFO', 'Player', `Playing ${t.path}`)
+    logLine('INFO', 'Player', `Playing ${t.path} (after ${took()})`)
   } catch (e) {
     if (mine === token) {
       logLine('ERROR', 'Player', `Couldn't play ${t.path}: ${String(e)}`)

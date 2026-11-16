@@ -22,3 +22,12 @@ describe('parseBackup', () => {
     expect(() => parseBackup('null')).toThrow('not a backup')
   })
 })
+
+describe('the rest of what the app keeps (favourites, stats, tournaments)', () => {
+  it('travels with the collections, and not without them', () => {
+    const storage = { 'shell.favorites.v1': '["a"]', 'shell.stats.v1': '{}' }
+    expect(buildBackup({ playlists: '[]' }, true, true, 'now', storage).storage).toEqual(storage)
+    expect(buildBackup({ playlists: '[]' }, true, false, 'now', storage).storage).toBeUndefined()
+    expect(buildBackup({}, true, true, 'now').storage).toBeUndefined()
+  })
+})

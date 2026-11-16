@@ -1,3 +1,4 @@
+import { checkDaily, openUpdate } from './updates'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Icon, IconButton } from './ui'
 import { MiniPlayer } from './MiniPlayer'
@@ -128,6 +129,11 @@ export function Shell() {
   const metaBanner = useMetaBanner()
 
   // Local Library: songs come from the chosen folders, and arrive part-way through a scan too
+  // §83: a newer release on GitHub gets one toast a day, with the download for this platform
+  useEffect(() => {
+    void checkDaily().then((u) => { if (u) setToast({ message: `AVSB ${u.version} is out`, action: { label: 'Download', onClick: () => openUpdate(u) } }) })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   useEffect(() => {
     let analysing = false
     const take = (tracks: Track[]) => {

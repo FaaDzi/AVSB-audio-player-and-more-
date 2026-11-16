@@ -218,14 +218,19 @@ export const PAGE_GROUPS: Page[][] = [
     },
     {
       id: 'playback', title: 'Playback', icon: 'play_circle', sections: [
-        { title: 'Player', rows: [pick('player', 'External player', 'Open songs in your default Windows music app. Only in the installed app.', 'open_in_new'), pick('player', 'Built-in player', 'Play your music right inside this app', 'play_circle', true)] },
-        { title: 'Volume and transitions', rows: [
-          nav('Equalizer', '5–31 bands, tone controls, preamp and dynamics', 'equalizer', 'equalizer', { badge: 'Beta' }),
-          nav('Saved Equalizers', 'View, export for Equalizer APO/DACs, and manage custom EQ presets', 'tune', 'saved-eq'),
+        ...(ONPHONE ? [] : [{ title: 'Player', rows: [pick('player', 'External player', 'Open songs in your default Windows music app. Only in the installed app.', 'open_in_new'), pick('player', 'Built-in player', 'Play your music right inside this app', 'play_circle', true)] }]),
+        // §86 D: what shapes the sound, then the tools and tests (pages of their own), then levels and transitions
+        { title: 'Sound', rows: [
+          nav('Equalizer', 'AutoEQ to a target, fine-tune by ear, bands and filters', 'equalizer', 'equalizer'),
+          nav('Saved Equalizers', 'Save, import, export and manage your EQs', 'tune', 'saved-eq'),
           nav('Spatial & Crossfeed', 'CanOpener crossfeed, virtual speaker room stage, SOFA HRTF profiles and head tracking', 'surround_sound', 'spatial'),
+        ] },
+        { title: 'Tools and tests', rows: [
           nav('Audio Tools & Diagnostics', 'Fit & seal, left/right & phase, and channel balance', 'biotech', 'audio-tools'),
           nav('Hearing Check', 'Multi-frequency threshold check (125 Hz – 16 kHz) with personal audiogram curve', 'hearing', 'hearing-test'),
           nav('Ear-Training & Blind ABX', 'Name the boosted band, and blind ABX', 'quiz', 'blind-abx'),
+        ] },
+        { title: 'Volume and transitions', rows: [
           toggle('normalize', 'Volume normalization', 'Measures each song and plays them at a similar loudness, so a quiet song isn\'t followed by a sudden loud one. Only the level changes, the sound itself doesn\'t.', 'graphic_eq', true),
           { kind: 'chips', id: 'gainmode', label: 'Gain mode', options: ['Track', 'Album'], value: 'Track', when: { id: 'normalize', is: true } },
           { kind: 'slider', id: 'normpreamp', label: 'Pre-amp', min: -14, max: 4, step: 1, value: 0, ticks: 19, format: (v) => `${v > 0 ? '+' : ''}${v} dB (target ${v - 14} LUFS)`, note: 'Higher is louder but evens out less, as more songs reach their peak. A song is never raised past its own peak, so it never clips.', when: { id: 'normalize', is: true } },
@@ -235,7 +240,7 @@ export const PAGE_GROUPS: Page[][] = [
         ] },
         { title: 'Mix transitions', when: { id: 'automix', is: true }, rows: [
           choice('transition', 'Transition effect', ['Auto', 'Crossfade', 'Muffled', 'Echo', 'Pitch', 'Custom'], 'Auto', 'tune'),
-          { kind: 'slider', id: 'mixsecs', label: 'Transition length', min: 0, max: 30, step: 1, value: 0, format: (v) => (v ? `${v} s` : 'Auto: 6 s, less for short songs'), resettable: true },
+          { kind: 'slider', id: 'mixsecs', label: 'Transition length', min: 0, max: 30, step: 1, value: 0, format: (v) => (v ? `${v} s` : 'Auto'), resettable: true },
           { kind: 'slider', id: 'mixpitch', label: 'Pitch', min: -6, max: 6, step: 0.5, value: 2, format: (v) => `${v > 0 ? '+' : ''}${v} semitones`, note: 'Speed moves with the pitch, like a record.', when: { id: 'transition', is: ['Pitch', 'Custom'] } },
           { kind: 'slider', id: 'mixspeed', label: 'Speed', min: 0.8, max: 1.2, step: 0.01, value: 1, format: (v) => `${v.toFixed(2)}×`, when: { id: 'transition', is: 'Custom' } },
           toggle('mixecho', 'Echo', undefined, 'surround_sound', false, undefined, { when: { id: 'transition', is: 'Custom' } }),

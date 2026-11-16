@@ -1,4 +1,5 @@
 // The new shell (implementation_plan.md section 57). Its own page, so the current app is untouched.
+import { followPhoneSpeaker } from './sound/phoneSpeaker'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import 'material-symbols/rounded.css'
@@ -28,6 +29,7 @@ startLogs()
 startTheme()
 startRainbowPulse()
 startEngineSettings()
+followPhoneSpeaker()
 if (import.meta.env.DEV) (window as unknown as { shellEngine: unknown }).shellEngine = engineForTests
 
 createRoot(document.getElementById('root')!).render(

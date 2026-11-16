@@ -1,6 +1,8 @@
 /* ---- EQ tab: graph, AutoEQ and fine-tune by ear (plan §84 B, C, E) ---- */
 .ms-eq-sentinel { height: 1px; margin-bottom: -1px; }
-.ms-eq-hero { position: sticky; top: 0; z-index: 6; }
+.ms-eq-hero { position: sticky; top: 0; z-index: 6; overflow-anchor: none; }
+.ms-eq-spacer { overflow-anchor: none; }
+.ms-eq-hero .ms-eq-head p, .ms-eqg-legend { opacity: var(--eqg-fade, 1); }
 .ms-eq-hero.compact { padding: 8px 12px; border-radius: 0 0 var(--radius-card) var(--radius-card); box-shadow: 0 10px 28px rgb(0 0 0 / 0.45); }
 .ms-eq-hero.compact .ms-eq-head { align-items: center; }
 .ms-eq-hero.compact .ms-eq-head h3 { font-size: 16px; line-height: 20px; }
@@ -9,10 +11,10 @@
 .ms-eq-ab.held { background: var(--accent); color: var(--on-accent); }
 
 .ms-eqg { --eqg-h: clamp(200px, 34vh, 320px); position: relative; margin: 12px 0 26px; padding-left: 28px; user-select: none; }
-.ms-eqg.compact { --eqg-h: clamp(96px, 16vh, 132px); margin: 6px 0 20px; }
-.ms-eqg-db { position: absolute; left: 0; top: 0; width: 24px; height: var(--eqg-h); }
+.ms-eqg.compact { margin: 6px 0 20px; }
+.ms-eqg-db { position: absolute; left: 0; top: 0; width: 24px; height: calc(var(--eqg-h) - var(--eqg-shrink, 0px)); }
 .ms-eqg-db span { position: absolute; left: 0; transform: translateY(-50%); font-size: 11px; color: var(--text-dim); }
-.ms-eqg-plot { position: relative; height: var(--eqg-h); border-radius: 12px; background: rgb(var(--ink) / 0.04); touch-action: pan-y; }
+.ms-eqg-plot { position: relative; height: calc(var(--eqg-h) - var(--eqg-shrink, 0px)); border-radius: 12px; background: rgb(var(--ink) / 0.04); touch-action: pan-y; }
 .ms-eqg.tone .ms-eqg-plot { touch-action: none; cursor: ew-resize; }
 .ms-eqg-plot svg { display: block; width: 100%; height: 100%; overflow: visible; }
 .ms-eqg-plot svg * { vector-effect: non-scaling-stroke; fill: none; }
@@ -96,7 +98,6 @@
 .ms-eq-advanced .peq-row select { min-width: 68px; }
 @media (max-width: 640px) {
   .ms-eqg { --eqg-h: clamp(170px, 26vh, 240px); }
-  .ms-eqg.compact { --eqg-h: clamp(88px, 13vh, 120px); }
   .ms-eq-hero.compact .ms-eq-head h3 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 }
 
@@ -114,3 +115,10 @@
 .ms-db-filters small { color: var(--text-dim); }
 .ms-eqlab-import > p { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; color: var(--text); }
 .ms-eqlab-import .ms-eqlab-empty { margin-bottom: 12px; padding: 14px 16px; }
+
+/* ---- Manage Saved EQs (plan §86 C) ---- */
+.ms-saved-eq-top { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 16px; }
+.ms-saved-eq-top .ms-btn { height: 48px; padding: 0 20px; border-radius: 24px; display: inline-flex; align-items: center; gap: 8px; }
+.ms-saved-eq-actions { display: flex; align-items: center; gap: 4px; flex-wrap: nowrap; }
+.ms-saved-eq-card.autosave { margin-bottom: 12px; border: 1px dashed var(--outline); }
+.ms-tool.on { background: var(--nav-selected); color: var(--text-strong); }

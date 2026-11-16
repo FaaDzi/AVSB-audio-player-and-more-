@@ -32,9 +32,11 @@ import { PROVIDERS } from '../metadata'
 import { hearingNote, loadHearing, saveHearing, summarise } from '../../hearing/hearing'
 import { AudioToolsPage, playDiagnosticTone } from '../sound/AudioTools'
 import { BALANCE_BANDS, bandCurves, setChannels, useChannels } from '../sound/channels'
-import { AutoEqCard, EqGraph, filterColor, FineTuneCard, ImportDeviceDialog, getLab, setLab, useHrtfTilt } from './EqStudio'
+import { AutoEqCard, EqGraph, filterColor, FineTuneCard, ImportDeviceDialog, SWEEP_FULL, SWEEP_TREBLE, getLab, setLab, useHrtfTilt } from './EqStudio'
 import { curveAt, eqScene, TUNE_STEP_DB, tuneAt, type AutoEqResult } from '../eqStudio'
 import { setTone as playToneAt, stopTone } from '../eqTone'
+import { gearName } from '../sound/phoneSpeaker'
+import { checkNow, openUpdate, type Update } from '../updates'
 import { PEQ_MAX_FILTERS, tidyFilter } from '../../eq/peq'
 import { useRefs } from '../tournament/engine'
 import { currentSound, setPaused } from '../engine'
@@ -343,7 +345,7 @@ export function Equalizer() {
   const availableTargets = targetListFor(activeGear, isHeadphone)
   const activeGearName = useMemo(() => {
     if (!activeGear) return 'Default Device'
-    return db?.catalog.byId.get(activeGear)?.name ?? activeGear
+    return gearName(activeGear, db?.catalog.byId.get(activeGear)?.name)
   }, [activeGear, db])
 
   const autosave = getSessionAutosave(activeGear)
@@ -450,35 +452,46 @@ export function Equalizer() {
     else onEqTweaked({ filters: peq.map((f, k) => (k === i ? tidyFilter({ ...f, fc: to.hz ?? f.fc, gain: to.db ?? f.gain }) : f)) })
   }
 
-  // the graph stays in view: once the page scrolls past it, it shrinks and pins to the top
+  // The graph stays in view (plan §86 A). It keeps its full size until half of it has scrolled under the top, then
+  // gives up height pixel for pixel with the scroll until it reaches its small size. Nothing flips between two
+  // states, so there is nothing to bounce; the room it gives up is handed to a spacer under it, so the page below
+  // never moves because of it.
   const [compact, setCompact] = useState(false)
-  const [gap, setGap] = useState(0)
   const sentinel = useRef<HTMLDivElement>(null)
   const hero = useRef<HTMLDivElement>(null)
-  const fullHeight = useRef(0)
+  const spacer = useRef<HTMLDivElement>(null)
+  const rest = useRef({ hero: 0, graph: 0 })
+  const fit = useRef(() => {})
   useEffect(() => {
+    let frame = 0
     const check = () => {
-      const [mark, pinned] = [sentinel.current, hero.current]
-      if (!mark || !pinned) return
+      frame = 0
+      const [mark, pinned, pad] = [sentinel.current, hero.current, spacer.current]
+      const plot = pinned?.querySelector<HTMLElement>('.ms-eqg-plot')
+      if (!mark || !pinned || !pad || !plot) return
       // the mark scrolls away, the pinned graph doesn't: the distance between them is how far the page has moved
       const past = pinned.getBoundingClientRect().top - mark.getBoundingClientRect().top
-      // shrink as soon as the page moves (the full-size graph would cover the cards), grow back at the top
-      setCompact((was) => {
-        if (!was) fullHeight.current = pinned.offsetHeight
-        return was ? past > 8 : past > 24
-      })
+      if (past <= 0 && !pinned.classList.contains('compact')) rest.current = { hero: pinned.offsetHeight, graph: plot.offsetHeight }
+      const { graph } = rest.current
+      const most = Math.max(0, graph - Math.max(88, graph * 0.42))
+      const shrink = Math.max(0, Math.min(most, past - graph / 2))
+      pinned.style.setProperty('--eqg-shrink', `${shrink}px`)
+      // the title and legend fade as it shrinks, and step down to the small layout once it is as small as it gets
+      pinned.style.setProperty('--eqg-fade', String(most ? 1 - shrink / most : 1))
+      setCompact(most > 0 && shrink >= most - 0.5)
+      pad.style.height = `${Math.max(0, rest.current.hero - pinned.offsetHeight)}px`
     }
+    fit.current = check
+    const onScroll = () => { frame ||= requestAnimationFrame(check) }
     // whichever box scrolls (the settings pane on PC, the page on the phone): scroll events don't bubble, capture does
-    document.addEventListener('scroll', check, { capture: true, passive: true })
-    return () => document.removeEventListener('scroll', check, { capture: true })
+    document.addEventListener('scroll', onScroll, { capture: true, passive: true })
+    return () => { document.removeEventListener('scroll', onScroll, { capture: true }); cancelAnimationFrame(frame) }
   }, [subView])
-  // the room the full-size graph took stays in the page, so shrinking it doesn't move what's under your finger
-  useLayoutEffect(() => {
-    setGap(compact && hero.current ? Math.max(0, fullHeight.current - hero.current.offsetHeight) : 0)
-  }, [compact])
+  // the small layout changes the height once more: the spacer is set again before anything is painted
+  useLayoutEffect(() => fit.current(), [compact])
 
   // the test tone, heard through the EQ: a sine only meets the EQ at its own frequency
-  const [toneUi, setToneUi] = useState({ hz: 3000, playing: false, sweeping: false })
+  const [toneUi, setToneUi] = useState({ hz: 3000, playing: false, sweeping: false, full: false })
   const [held, setHeld] = useState(false)
   const [undo, setUndo] = useState<Biquad[][]>([])
   useEffect(() => {
@@ -489,10 +502,11 @@ export function Equalizer() {
   useEffect(() => stopTone, [])
   useEffect(() => {
     if (!toneUi.playing || !toneUi.sweeping) return
-    // 1 → 14 kHz in about 18 s, round and round: slow enough to hear a peak go by
-    const t = window.setInterval(() => setToneUi((s) => ({ ...s, hz: s.hz >= 14000 ? 1000 : s.hz * 2 ** (1 / 48) })), 100)
+    // the treble in about 18 s (the whole range in about 48 s), round and round: slow enough to hear a peak go by
+    const [lo, hi] = toneUi.full ? SWEEP_FULL : SWEEP_TREBLE
+    const t = window.setInterval(() => setToneUi((s) => ({ ...s, hz: s.hz >= hi || s.hz < lo ? lo : s.hz * 2 ** (1 / 48) })), 100)
     return () => window.clearInterval(t)
-  }, [toneUi.playing, toneUi.sweeping])
+  }, [toneUi.playing, toneUi.sweeping, toneUi.full])
   const playTone = (playing: boolean) => {
     if (playing) setPaused(true) // a sweep over music tells you nothing
     setToneUi((s) => ({ ...s, playing, sweeping: playing && s.sweeping }))
@@ -523,13 +537,11 @@ export function Equalizer() {
   }
 
   const pick = (view: typeof subView) => (swapPage ? swapPage(VIEW_PAGE[view]) : setSubView(view))
+  // §86 D: the chips only switch the two pages that shape the sound; tools and tests are pages of their own
   const navBar = (
     <div className="ms-chips" style={{ marginBottom: 14 }} role="tablist" aria-label="Audio & Diagnostics views">
-      <Chip label="Equalizer & Sound" selected={subView === 'eq'} onClick={() => pick('eq')} />
+      <Chip label="Equalizer" selected={subView === 'eq'} onClick={() => pick('eq')} />
       <Chip label="Spatial & Crossfeed" selected={subView === 'spatial'} onClick={() => pick('spatial')} />
-      <Chip label="Audio Tools & Guides" selected={subView === 'tools'} onClick={() => pick('tools')} />
-      <Chip label="Hearing Check" selected={subView === 'hearing'} onClick={() => pick('hearing')} />
-      <Chip label="Ear-Training & ABX" selected={subView === 'abx'} onClick={() => pick('abx')} />
     </div>
   )
 
@@ -544,7 +556,6 @@ export function Equalizer() {
   if (subView === 'tools') {
     return (
       <div className="ms-eq">
-        {navBar}
         <AudioToolsPage />
       </div>
     )
@@ -552,7 +563,6 @@ export function Equalizer() {
   if (subView === 'hearing') {
     return (
       <div className="ms-eq">
-        {navBar}
         <HearingTestPage />
       </div>
     )
@@ -560,7 +570,6 @@ export function Equalizer() {
   if (subView === 'abx') {
     return (
       <div className="ms-eq">
-        {navBar}
         <BlindAbxPage />
       </div>
     )
@@ -615,7 +624,7 @@ export function Equalizer() {
           onTone={(hz) => setToneUi((s) => ({ ...s, hz: Math.round(hz), sweeping: false }))}
         />
       </div>
-      <div style={{ height: gap }} />
+      <div ref={spacer} className="ms-eq-spacer" />
 
       {db && (
         <AutoEqCard
@@ -634,6 +643,8 @@ export function Equalizer() {
         hz={toneUi.hz}
         playing={toneUi.playing}
         sweeping={toneUi.sweeping}
+        fullRange={toneUi.full}
+        onFullRange={(full) => setToneUi((s) => ({ ...s, full }))}
         canUndo={undo.length > 0}
         onHz={(hz) => setToneUi((s) => ({ ...s, hz }))}
         onPlay={playTone}
@@ -1244,10 +1255,26 @@ const CREDITS: [icon: string, what: string, who: string][] = [
 ]
 
 export function About() {
+  const { showToast } = useShell()
+  const [found, setFound] = useState<Update | null>(null)
+  const [checking, setChecking] = useState(false)
+  const check = () => {
+    setChecking(true)
+    void checkNow().then((u) => {
+      setChecking(false)
+      setFound(u)
+      if (!u) showToast(`AVSB ${version} is the newest`)
+    })
+  }
   return (
     <>
       <section className="ms-set-section">
         <div className="ms-set-group">
+          <button type="button" className="ms-set-row clickable" disabled={checking} onClick={() => (found ? openUpdate(found) : check())}>
+            <Icon name={found ? 'download' : 'system_update'} />
+            <span className="grow ms-set-text">{found ? `Download AVSB ${found.version}` : checking ? 'Checking…' : 'Check for updates'}</span>
+            <Icon name="chevron_right" />
+          </button>
           <div className="ms-set-row"><Icon name="info" /><span className="grow ms-set-text">AVSB {version}<small>Free software under the GNU GPL 3.0</small></span></div>
         </div>
       </section>

@@ -4,7 +4,7 @@ import { useSyncExternalStore } from 'react'
 import { getSetting, setSetting, subscribeSettings } from '../settings/store'
 import { getGear } from './gear'
 import { setSound } from './soundState'
-import { getEq, presetFrom, setEq, type SavedPreset } from '../eqState'
+import { EQ_DEFAULT, getEq, presetFields, presetFrom, setEq, type SavedPreset } from '../eqState'
 import { ROOM_SLOPES, roomTargetName } from './soundCurve'
 
 export interface GearProfileItem {
@@ -392,16 +392,10 @@ export function onGearChanged(newDeviceId: string | null, prevDeviceId?: string 
   // Switch to device's active EQ preset or session autosave
   const autosave = getSessionAutosave(newDeviceId)
   if (autosave) {
-    setEq({
-      preset: autosave.name,
-      mode: autosave.mode,
-      count: autosave.count,
-      gains: autosave.gains,
-      filters: autosave.filters,
-      preamp: autosave.preamp,
-      bass: autosave.bass,
-      treble: autosave.treble,
-    })
+    setEq(presetFields(autosave))
+  } else if (newDeviceId?.startsWith('phone-speaker-')) {
+    // the phone's own speaker (§86 G) never inherits an earphone's EQ: it starts flat and keeps what you then make
+    setEq(presetFields(presetFrom(EQ_DEFAULT, EQ_DEFAULT.preset)))
   } else if (profile.activeEqPreset) {
     setEq({ preset: profile.activeEqPreset })
   }

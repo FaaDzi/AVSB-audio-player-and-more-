@@ -50,7 +50,7 @@ const CSP = [
   "img-src 'self' data: blob: https:",
   "media-src 'self' blob: data:",
   "font-src 'self' data:",
-  "connect-src 'self' https://lrclib.net",
+  "connect-src 'self' https://lrclib.net https://api.github.com",
   "worker-src 'self' blob:",
   "object-src 'none'",
   "base-uri 'self'",

@@ -70,6 +70,8 @@ public class AudioRoutePlugin extends Plugin {
     public void status(PluginCall call) {
         JSObject ret = new JSObject();
         ret.put("speaker", onSpeaker());
+        Boolean stereo = speakerIsStereo();
+        if (stereo != null) ret.put("stereo", stereo.booleanValue());
         call.resolve(ret);
     }
 
@@ -87,6 +89,26 @@ public class AudioRoutePlugin extends Plugin {
         JSObject data = new JSObject();
         data.put("speaker", now);
         notifyListeners("change", data);
+    }
+
+    /**
+     * Does the phone's own speaker take two channels? null when the phone doesn't say (an empty list means "any").
+     * Only a hint for the app's first guess at "two speakers or one": Android has no call for the number of speakers.
+     */
+    private Boolean speakerIsStereo() {
+        if (am == null) return null;
+        try {
+            for (AudioDeviceInfo d : am.getDevices(AudioManager.GET_DEVICES_OUTPUTS)) {
+                if (d.getType() != AudioDeviceInfo.TYPE_BUILTIN_SPEAKER) continue;
+                int[] counts = d.getChannelCounts();
+                if (counts == null || counts.length == 0) return null;
+                for (int c : counts) if (c >= 2) return true;
+                return false;
+            }
+        } catch (RuntimeException e) {
+            // some vendor builds throw from the audio service
+        }
+        return null;
     }
 
     private boolean onSpeaker() {

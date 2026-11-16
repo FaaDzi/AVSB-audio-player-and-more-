@@ -9,6 +9,7 @@ import { DevicePickerModal } from '../sound/AudioProfileSheet'
 import { familyOf, targetsFor, type Aim } from '../sound/soundCurve'
 import { autoEq, CANAL_PEAK_HZ, curveAt, midLevel, NO_PREFS, type AutoEqResult, type EqPrefs, type EqScene, type FitDepth } from '../eqStudio'
 import { getSetting, setSetting } from './store'
+import { getSpeakerKind, isPhoneSpeaker, setSpeakerKind, SPEAKER_KINDS } from '../sound/phoneSpeaker'
 
 // ---- what the AutoEQ card remembers, per device
 
@@ -233,6 +234,19 @@ export function AutoEqCard(props: {
   const result = useMemo(() => (scene ? autoEq(scene, lab.filters) : null), [scene, lab.filters])
   const touched = PREFS.some((p) => lab.prefs[p.key] !== 0)
 
+  // the phone's own speaker (§86 G): no measurement to aim from, but which speakers play is yours to say
+  if (isPhoneSpeaker(deviceId)) {
+    return (
+      <section className="ms-eqlab">
+        <header><em>1</em><h3>{props.deviceName}</h3><Icon name="smartphone" /></header>
+        <div className="ms-segment-small big" role="radiogroup" aria-label="Which speakers play">
+          {SPEAKER_KINDS.map(([kind, label]) => (
+            <button type="button" key={kind} role="radio" aria-checked={getSpeakerKind() === kind} className={getSpeakerKind() === kind ? 'on' : ''} onClick={() => setSpeakerKind(kind)}>{label}</button>
+          ))}
+        </div>
+      </section>
+    )
+  }
   if (!scene?.device) {
     return (
       <section className="ms-eqlab">
@@ -322,9 +336,12 @@ export function AutoEqCard(props: {
 
 // ---- step 2: fine-tune by ear
 
-/** The tone slider runs over the range where ears and units differ; the graph can take it anywhere. */
-const TONE_LO = 200
-const TONE_HI = 16000
+/** The tone slider covers everything you can hear (§86 B). */
+const TONE_LO = 20
+const TONE_HI = 20000
+/** The automatic sweep: the treble, where ears and units differ (the Headphone Show's method), or everything. */
+export const SWEEP_TREBLE: [number, number] = [1000, 14000]
+export const SWEEP_FULL: [number, number] = [TONE_LO, TONE_HI]
 const toneFrac = (hz: number) => Math.log(hz / TONE_LO) / Math.log(TONE_HI / TONE_LO)
 const toneHzOf = (f: number) => TONE_LO * (TONE_HI / TONE_LO) ** f
 
@@ -332,6 +349,9 @@ export function FineTuneCard(props: {
   hz: number
   playing: boolean
   sweeping: boolean
+  /** The sweep covers 20 Hz–20 kHz instead of the treble only. */
+  fullRange: boolean
+  onFullRange: (on: boolean) => void
   canUndo: boolean
   onHz: (hz: number) => void
   onPlay: (on: boolean) => void
@@ -360,6 +380,9 @@ export function FineTuneCard(props: {
         </div>
         <button type="button" className={`ms-chip${props.sweeping ? ' on' : ''}`} onClick={() => props.onSweep(!props.sweeping)}>
           <Icon name="waves" size={18} />Sweep
+        </button>
+        <button type="button" className={`ms-chip${props.fullRange ? ' on' : ''}`} aria-pressed={props.fullRange} onClick={() => props.onFullRange(!props.fullRange)}>
+          <Icon name="unfold_more" size={18} />Full range
         </button>
       </div>
 

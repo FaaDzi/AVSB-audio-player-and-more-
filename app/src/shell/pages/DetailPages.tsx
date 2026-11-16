@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Chip, Cover, Dialog, Icon, IconButton, Menu, TopBar } from '../ui'
+import { Cover, Dialog, Icon, IconButton, Menu, TopBar } from '../ui'
 import { useShell } from '../context'
 import {
   NO_FILTERS, activeFilterCount, filterTracks, folderPath, groupAlbums, groupArtists, isPcTrack, moveItem, shuffled, sortByFileName, sortTracks, trackCount, useLibrary,
@@ -10,7 +10,7 @@ import { TrackTable } from './TrackTable'
 import { DeletePlaylistDialog } from './TrackMenu'
 import { FilterDialog, FolderActions, Tile, below, sortMenuItems } from './LibraryPage'
 import { useCoverStyle } from '../cover'
-import { useArtistSeparators } from '../settings/store'
+import { getSetting, setSetting, useArtistSeparators } from '../settings/store'
 
 export type PlaylistSortMode =
   | 'custom'
@@ -43,6 +43,15 @@ export const PLAYLIST_SOURCE_CHIPS: readonly [PlaylistSourceFilter, string][] = 
   ['pc', 'PC Stream'],
   ['lossless', 'Lossless Only'],
 ]
+
+/** The sort chosen per playlist (setting `plsort`); a playlist not in it shows in its own order. */
+function savedSorts(): Record<string, PlaylistSortMode> {
+  try {
+    return JSON.parse(String(getSetting('plsort') ?? '{}')) as Record<string, PlaylistSortMode>
+  } catch {
+    return {}
+  }
+}
 
 function qualityTier(t: Track): number {
   if (!t.lossy && (t.bits > 16 || t.rate > 48000)) return 0 // Hi-Res FLAC/Lossless
@@ -106,8 +115,16 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
   const [deleting, setDeleting] = useState(false)
   const [query, setQuery] = useState('')
   const [sourceFilter, setSourceFilter] = useState<PlaylistSourceFilter>('all')
-  const [sortMode, setSortMode] = useState<PlaylistSortMode>('custom')
+  // the view you chose for this playlist is remembered (§86 F). Sorting is only a view: the playlist's own order,
+  // the one you made with "Edit order", is never changed by it and is what "Custom" always comes back to.
+  const [sortMode, setSortState] = useState<PlaylistSortMode>(() => savedSorts()[id] ?? 'custom')
+  const setSortMode = (mode: PlaylistSortMode) => {
+    setSortState(mode)
+    const { [id]: _was, ...rest } = savedSorts()
+    setSetting('plsort', JSON.stringify(mode === 'custom' ? rest : { ...rest, [id]: mode }))
+  }
   const [sortMenu, setSortMenu] = useState<{ x: number; y: number } | null>(null)
+  const [filterMenu, setFilterMenu] = useState<{ x: number; y: number } | null>(null)
 
   const byId = useMemo(() => new Map(libraryTracks.map((t) => [t.id, t])), [libraryTracks])
   const tracks = useMemo(
@@ -124,6 +141,7 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
   const update = (patch: Partial<typeof playlist>) => replaceData({ ...data, playlists: data.playlists.map((p) => (p.id === id ? { ...p, ...patch } : p)) })
   const cover = tracks.find((t) => t.cover)?.cover ?? ''
   const currentSortLabel = PLAYLIST_SORTS.find(([k]) => k === sortMode)?.[1] ?? 'Custom / Playlist Order'
+  const currentFilterLabel = PLAYLIST_SOURCE_CHIPS.find(([k]) => k === sourceFilter)?.[1] ?? 'All'
 
   if (editingOrder) {
     return (
@@ -203,33 +221,45 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
             />
             {query && <IconButton icon="close" label="Clear search" small onClick={() => setQuery('')} />}
           </label>
-          <div className="ms-row" style={{ flexWrap: 'wrap', gap: 8 }}>
-            <div className="ms-chips" role="group" aria-label="Source filter">
-              {PLAYLIST_SOURCE_CHIPS.map(([id, label]) => (
-                <Chip
-                  key={id}
-                  label={label}
-                  selected={sourceFilter === id}
-                  onClick={() => setSourceFilter(id)}
-                />
-              ))}
-            </div>
-            <div className="ms-tools">
-              <button
-                type="button"
-                className="ms-tool"
-                aria-label={`Sort playlist: ${currentSortLabel}`}
-                onClick={(e) => setSortMenu(below(e))}
-              >
-                <Icon name="sort" size={20} /> {currentSortLabel}
+          {/* §86 F: one row. Sort on the left, the filter as one button beside it, and "Edit order" while the
+              playlist shows in its own order */}
+          <div className="ms-tools" style={{ flexWrap: 'wrap', gap: 8 }}>
+            <button
+              type="button"
+              className="ms-tool"
+              aria-label={`Sort playlist: ${currentSortLabel}`}
+              onClick={(e) => setSortMenu(below(e))}
+            >
+              <Icon name="sort" size={20} /> {currentSortLabel}
+            </button>
+            <button
+              type="button"
+              className={`ms-tool${sourceFilter !== 'all' ? ' on' : ''}`}
+              aria-label={`Filter: ${currentFilterLabel}`}
+              onClick={(e) => setFilterMenu(below(e))}
+            >
+              <Icon name="filter_list" size={20} /> {sourceFilter === 'all' ? 'Filter' : currentFilterLabel}
+            </button>
+            {sortMode === 'custom' && sourceFilter === 'all' && !query && tracks.length > 1 && (
+              <button type="button" className="ms-tool" onClick={() => setEditingOrder(true)}>
+                <Icon name="drag_handle" size={20} /> Edit order
               </button>
-            </div>
+            )}
           </div>
         </div>
 
         <TrackTable tracks={visibleTracks} playlistId={playlist.id} />
       </div>
 
+      {filterMenu && (
+        <Menu
+          compact
+          x={filterMenu.x}
+          y={filterMenu.y}
+          onClose={() => setFilterMenu(null)}
+          items={PLAYLIST_SOURCE_CHIPS.map(([f, label]) => ({ label, checked: sourceFilter === f, onSelect: () => setSourceFilter(f) }))}
+        />
+      )}
       {sortMenu && (
         <Menu
           compact
