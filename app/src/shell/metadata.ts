@@ -57,6 +57,8 @@ export interface Found {
   confirmedMatch?: boolean
   /** True when the background namer checked online and found nothing or the user rejected the suggestion (§72.A5). */
   notFoundOnline?: boolean
+  /** The found cover shows instead of the file's own, which is under 300 px (§87 Import song art). */
+  replaceCover?: boolean
 }
 
 export type SavedDetails = Found
@@ -144,7 +146,7 @@ const via = (url: string) => `/shell-host/meta?url=${encodeURIComponent(url)}`
 
 // MusicBrainz allows one request a second from each caller
 let mbQueue: Promise<unknown> = Promise.resolve()
-const MB_GAP_MS = 1100
+export const MB_GAP_MS = 1100
 
 async function getJson<T>(url: string): Promise<T | null> {
   const response = await fetch(via(url))
@@ -516,6 +518,41 @@ export async function savedCover(id: string): Promise<string | undefined> {
   }
 }
 
+/** Every saved cover, for the backup file. */
+export async function exportSavedCovers(): Promise<Record<string, string>> {
+  const db = await coversDb()
+  try {
+    return await new Promise((done, fail) => {
+      const out: Record<string, string> = {}
+      const req = db.transaction('covers').objectStore('covers').openCursor()
+      req.onsuccess = () => {
+        const c = req.result
+        if (!c) return done(out)
+        if (typeof c.value === 'string') out[String(c.key)] = c.value
+        c.continue()
+      }
+      req.onerror = () => fail(req.error)
+    })
+  } finally {
+    db.close()
+  }
+}
+
+/** Puts a backup's covers back (only images: a non-image value from a hand-edited file is skipped). */
+export async function importSavedCovers(covers: Record<string, string>) {
+  const db = await coversDb()
+  try {
+    await new Promise<void>((done, fail) => {
+      const tx = db.transaction('covers', 'readwrite')
+      for (const [id, data] of Object.entries(covers)) if (typeof data === 'string' && data.startsWith('data:image/')) tx.objectStore('covers').put(data, id)
+      tx.oncomplete = () => done()
+      tx.onerror = () => fail(tx.error)
+    })
+  } finally {
+    db.close()
+  }
+}
+
 /** Adds to what was saved before; a field already saved is kept, while newly confirmed title/artist update the song. */
 export async function saveDetails(id: string, found: Found) {
   const before = savedDetails(id)
@@ -530,8 +567,10 @@ export async function saveDetails(id: string, found: Found) {
     originalArtist: before?.originalArtist ?? rest.originalArtist,
     confirmedMatch: rest.confirmedMatch ?? before?.confirmedMatch,
     notFoundOnline: rest.notFoundOnline ?? before?.notFoundOnline,
+    replaceCover: rest.replaceCover ?? before?.replaceCover,
   }
-  if (cover && !before?.from.cover) {
+  // a cover counts as found only once its image is stored: the mark alone (a restored backup) used to block every new one
+  if (cover) {
     setMemoryCover(id, cover)
     try {
       const db = await coversDb()
@@ -686,6 +725,8 @@ export interface NamingStatus {
 
 let namingTracks: Track[] = []
 let namingLoopActive = false
+/** The background namer is asking MusicBrainz right now: the bulk art job waits its turn (one request a second). */
+export const isNamingRunning = () => namingLoopActive
 let namingDoneCount = 0
 let namingTotalCount = 0
 let namingCurrentTitle = ''
@@ -719,6 +760,56 @@ export function feedNamingTracks(tracks: Track[]) {
 
 registerNamingSink(feedNamingTracks)
 
+/** One song through the online lookup: named, offered as a possible match, or marked as not found. */
+export async function nameOne(track: Track) {
+  try {
+    const res = await lookUp(track)
+    if (res.found) {
+      await saveDetails(track.id, {
+        ...res.found,
+        title: res.identity?.title ?? res.found.title,
+        artist: res.identity?.artist ?? res.found.artist,
+        originalTitle: track.originalTitle ?? track.title,
+        originalArtist: track.originalArtist ?? track.artist,
+        confirmedMatch: true,
+      })
+    } else if (res.possible) {
+      upsertPossibleMatch({
+        id: track.id,
+        originalTitle: track.originalTitle ?? track.title,
+        originalArtist: track.originalArtist ?? track.artist,
+        suggestedTitle: res.possible.title || cleanRipTitle(track.originalTitle ?? track.title),
+        suggestedArtist: res.possible.artist || (res.possible.values.albumArtist as string | undefined) || track.artist || 'Unknown artist',
+        suggestedAlbum: (res.possible.values.album as string | undefined) || track.album || undefined,
+        possible: res.possible,
+      })
+    } else {
+      const before = savedDetails(track.id)
+      const mark: Found = {
+        values: before?.values ?? {},
+        from: before?.from ?? {},
+        at: Date.now(),
+        originalTitle: track.originalTitle ?? track.title,
+        originalArtist: track.originalArtist ?? track.artist,
+        notFoundOnline: true,
+      }
+      localStorage.setItem(KEY + track.id, JSON.stringify(mark))
+    }
+  } catch (e) {
+    logLine('WARN', 'Details', `Auto-name failed for "${track.title}": ${e}`)
+    const before = savedDetails(track.id)
+    const mark: Found = {
+      values: before?.values ?? {},
+      from: before?.from ?? {},
+      at: Date.now(),
+      originalTitle: track.originalTitle ?? track.title,
+      originalArtist: track.originalArtist ?? track.artist,
+      notFoundOnline: true,
+    }
+    try { localStorage.setItem(KEY + track.id, JSON.stringify(mark)) } catch { /* ignore */ }
+  }
+}
+
 async function startNamingRunner() {
   if (namingLoopActive) return
   namingLoopActive = true
@@ -749,52 +840,7 @@ async function startNamingRunner() {
       cachedNamingSnapshot = null
       notifyNamingChanged()
 
-      try {
-        const res = await lookUp(track)
-        if (res.found) {
-          await saveDetails(track.id, {
-            ...res.found,
-            title: res.identity?.title ?? res.found.title,
-            artist: res.identity?.artist ?? res.found.artist,
-            originalTitle: track.originalTitle ?? track.title,
-            originalArtist: track.originalArtist ?? track.artist,
-            confirmedMatch: true,
-          })
-        } else if (res.possible) {
-          upsertPossibleMatch({
-            id: track.id,
-            originalTitle: track.originalTitle ?? track.title,
-            originalArtist: track.originalArtist ?? track.artist,
-            suggestedTitle: res.possible.title || cleanRipTitle(track.originalTitle ?? track.title),
-            suggestedArtist: res.possible.artist || (res.possible.values.albumArtist as string | undefined) || track.artist || 'Unknown artist',
-            suggestedAlbum: (res.possible.values.album as string | undefined) || track.album || undefined,
-            possible: res.possible,
-          })
-        } else {
-          const before = savedDetails(track.id)
-          const mark: Found = {
-            values: before?.values ?? {},
-            from: before?.from ?? {},
-            at: Date.now(),
-            originalTitle: track.originalTitle ?? track.title,
-            originalArtist: track.originalArtist ?? track.artist,
-            notFoundOnline: true,
-          }
-          localStorage.setItem(KEY + track.id, JSON.stringify(mark))
-        }
-      } catch (e) {
-        logLine('WARN', 'Details', `Auto-name failed for "${track.title}": ${e}`)
-        const before = savedDetails(track.id)
-        const mark: Found = {
-          values: before?.values ?? {},
-          from: before?.from ?? {},
-          at: Date.now(),
-          originalTitle: track.originalTitle ?? track.title,
-          originalArtist: track.originalArtist ?? track.artist,
-          notFoundOnline: true,
-        }
-        try { localStorage.setItem(KEY + track.id, JSON.stringify(mark)) } catch { /* ignore */ }
-      }
+      await nameOne(track)
       namingDoneCount++
       cachedNamingSnapshot = null
       notifyNamingChanged()

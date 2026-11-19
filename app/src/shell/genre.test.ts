@@ -51,4 +51,14 @@ describe('genre covers (plan §76 G)', () => {
     const out = withArtistGenres([t('1', 'Nas', 'hip-hop'), t('2', 'Nas', 'hip-hop'), t('3', 'Nas, AZ'), t('4', 'Unknown')])
     expect(out.map((x) => x.genre)).toEqual(['hip-hop', 'hip-hop', 'hip-hop', ''])
   })
+  it('gives a rip with no artist the genre of an artist named in its title, and Unknown Artist songs nothing', () => {
+    const t = (id: string, artist: string, title: string, genre = '') => ({ id, artist, title, genre }) as Track
+    const out = withArtistGenres([
+      t('1', 'Nas', 'Halftime', 'hip-hop'),
+      t('2', 'Unknown Artist', 'NAS - The World Is Yours (Official Audio)'),
+      t('3', 'Unknown Artist', 'Some Song', 'rock'),
+      t('4', 'Unknown Artist', 'Another Song'),
+    ])
+    expect(out.map((x) => x.genre)).toEqual(['hip-hop', 'hip-hop', 'rock', ''])
+  })
 })

@@ -10,7 +10,7 @@ export interface SyncState { lists: Playlist[]; deleted: Record<string, number> 
 export const PHONE_PREFIX = 'phone:'
 const PC_PREFIX = 'pc_'
 
-const sameContent = (a: Playlist, b: Playlist) => a.name === b.name && a.tracks.join('\n') === b.tracks.join('\n')
+const sameContent = (a: Playlist, b: Playlist) => a.name === b.name && a.tracks.join('\n') === b.tracks.join('\n') && a.cover === b.cover
 
 /** Stamps new or edited playlists with `now` and remembers the deleted ones, so the other side can tell which is newer. */
 export function stamp(prev: Playlist[], next: Playlist[], deleted: Record<string, number>, now = Date.now()): SyncState {
@@ -42,12 +42,15 @@ export function merge(mine: SyncState, theirs: SyncState): SyncState {
 
 const canon = (s: SyncState) =>
   JSON.stringify({
-    lists: s.lists.map((p) => [p.id, p.name, p.tracks, p.updated ?? 0, Object.keys(p.missing ?? {}).sort()]),
+    lists: s.lists.map((p) => [p.id, p.name, p.tracks, p.updated ?? 0, Object.keys(p.missing ?? {}).sort(), p.cover ?? '']),
     deleted: Object.entries(s.deleted).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)),
   })
 
 /** True when merging changed nothing a person would see or the other side would need. */
 export const sameState = (a: SyncState, b: SyncState) => canon(a) === canon(b)
+
+/** A playlist's own cover is a small JPEG; anything bigger from the other side is dropped. */
+const MAX_COVER = 200_000
 
 /** The other side's copy, checked: only well-formed playlists, sizes capped. Null when it isn't a playlist copy at all. */
 export function asState(v: unknown): SyncState | null {
@@ -64,6 +67,7 @@ export function asState(v: unknown): SyncState | null {
       tracks: p.tracks.slice(0, 20000),
       updated: Number(p.updated) || 0,
       ...(p.missing && typeof p.missing === 'object' ? { missing: p.missing } : {}),
+      ...(typeof p.cover === 'string' && p.cover.startsWith('data:image/') && p.cover.length <= MAX_COVER ? { cover: p.cover } : {}),
     })),
     deleted: Object.fromEntries(Object.entries(deleted).filter(([, at]) => typeof at === 'number')),
   }

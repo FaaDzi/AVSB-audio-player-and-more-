@@ -36,7 +36,7 @@ export function StatsPage() {
         <div className="ms-set-group">
           {songs.map(({ track, plays: count }) => (
             <button type="button" className="ms-set-row clickable" key={track.id} onClick={() => play(track)}>
-              <Cover id={track.cover} className="ms-stats-cover" />
+              <Cover id={track.cover} className="ms-stats-cover" genre={track.genre} speciality={track.category} title={track.title} />
               <span className="grow ms-set-text ms-ellipsis">{track.title}<small>{track.artist || 'Unknown Artist'}</small></span>
               <span className="ms-value">{count}</span>
             </button>

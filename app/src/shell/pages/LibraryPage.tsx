@@ -3,9 +3,10 @@ import { Chip, Cover, Dialog, Icon, IconButton, Menu, PlayCircle, useLongPress }
 import { useShell } from '../context'
 import {
   FORMATS, METADATA_FILTERS, NO_FILTERS, SORTS, activeFilterCount, filterTracks, folderName, folderPath, groupAlbums, groupArtists, groupFolders, hideFolder, initial,
-  onLibrarySearch, playlistCount, qualityLabel, shuffled, sortByFileName, sortIcon, sortTracks, takePendingLibrarySearch, trackCount, useLibrary, visiblePlaylists, type Album, type Filters, type SortMode, type Track,
+  isPremiumQuality, onLibrarySearch, playlistCount, qualityLabel, shuffled, sortByFileName, sortIcon, sortTracks, takePendingLibrarySearch, trackCount, useLibrary, visiblePlaylists, type Album, type Filters, type SortMode, type Track,
 } from '../library'
 import { TrackTable } from './TrackTable'
+import { sharePlaylist } from './playlistCover'
 import { DeletePlaylistDialog, useTrackMenu } from './TrackMenu'
 import { SearchResults } from './SearchResults'
 import { useLeaving } from '../motion'
@@ -198,7 +199,7 @@ function SongCard({ track, list }: { track: Track; list: Track[] }) {
     <article className={`ms-card${active ? ' on' : ''}`} onClick={() => push({ page: 'song', id: track.id })} onContextMenu={(e) => menu.open(e, track)}>
       <div className="ms-card-art">
         <Cover id={track.cover} alt="" genre={track.genre} speciality={track.category} title={track.title} />
-        <span className="ms-badge">{qualityLabel(track)}</span>
+        <span className={`ms-badge${isPremiumQuality(track) ? ' hi' : ''}`}>{qualityLabel(track)}</span>
         {!track.downloaded && <span className="ms-card-local" title="On this computer"><Icon name="folder" fill size={14} /></span>}
         <PlayCircle title={track.title} active={active} playing={playing} loading={loading} onStart={() => play(track, list)} onToggle={() => setPlaying(!playing)} />
       </div>
@@ -398,7 +399,7 @@ function Playlists() {
       </div>
       <div className="ms-grid square">
         {shownPlaylists.map((p) => {
-          const cover = p.tracks.map((id) => byId.get(id)?.cover).find(Boolean) ?? ''
+          const cover = p.cover || (p.tracks.map((id) => byId.get(id)?.cover).find(Boolean) ?? '')
           const activeTrackCount = p.tracks.filter((id) => byId.has(id)).length
           return (
             <article className="ms-card" key={p.id} onClick={() => openPlaylist(p.id)} {...press((x, y) => setMenu({ x, y, id: p.id }))}>
@@ -417,6 +418,7 @@ function Playlists() {
           items={[
             { label: 'Open playlist', icon: 'queue_music', onSelect: () => openPlaylist(menu.id) },
             { label: 'Rename', icon: 'edit', divider: true, onSelect: () => setRenaming({ id: menu.id, name: data.playlists.find((p) => p.id === menu.id)?.name ?? '' }) },
+            { label: 'Share', icon: 'ios_share', onSelect: () => { const p = data.playlists.find((x) => x.id === menu.id); if (p) void sharePlaylist(p.name, p.tracks.map((id) => byId.get(id)).filter((t): t is Track => !!t)) } },
             { label: 'Delete playlist', icon: 'delete', danger: true, onSelect: () => setDeleting(menu.id) },
           ]}
         />

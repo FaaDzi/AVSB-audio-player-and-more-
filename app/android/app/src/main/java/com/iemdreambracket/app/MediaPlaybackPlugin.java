@@ -58,6 +58,11 @@ public class MediaPlaybackPlugin extends Plugin {
 
     private AudioFocusRequest focusRequest;
     private boolean holding;
+    /**
+     * §88 B: a PC song plays from the page's audio element, which takes audio focus itself. Taking it back here made
+     * Chrome pause the element a moment after it started, so while one plays this plugin leaves focus alone.
+     */
+    private boolean pageHasFocus;
     private boolean noisyRegistered;
     private MediaSession session;
     /** What the gallery is playing; null title = nothing set (a match, or the gallery is closed). */
@@ -235,7 +240,7 @@ public class MediaPlaybackPlugin extends Plugin {
         cancelResume();
         main.removeCallbacks(endWindow);
         main.removeCallbacks(pausedTimeout);
-        if (!holding) {
+        if (!holding && !pageHasFocus) {
             int result;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
@@ -436,6 +441,21 @@ public class MediaPlaybackPlugin extends Plugin {
         b.addAction(new Notification.Action.Builder(android.R.drawable.ic_media_next, "Next", action(ctx, ACTION_NEXT, 3)).build());
         b.setStyle(new Notification.MediaStyle().setMediaSession(session.getSessionToken()).setShowActionsInCompactView(0, 1, 2));
         return b.build();
+    }
+
+    /** The page says whether its audio element (a streamed song) holds audio focus now. */
+    @PluginMethod
+    public void pageFocus(PluginCall call) {
+        pageHasFocus = Boolean.TRUE.equals(call.getBoolean("on", false));
+        if (pageHasFocus && holding) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && focusRequest != null) {
+                audio().abandonAudioFocusRequest(focusRequest);
+            } else {
+                audio().abandonAudioFocus(onFocus);
+            }
+            holding = false;
+        }
+        call.resolve();
     }
 
     private void release() {

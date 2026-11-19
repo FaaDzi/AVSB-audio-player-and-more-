@@ -1,10 +1,10 @@
 import { useSyncExternalStore } from 'react'
-import { GalleryPlayer } from '../audio/galleryPlayer'
+import { GalleryPlayer, type StreamSong } from '../audio/galleryPlayer'
 import { designFir } from '../audio/filter'
 import { knownLevel, songLevel, type SongLevel } from '../audio/songLevel'
 import { measureLoudness, setSmartVolumeOn, SMART_TARGET_LUFS, songGainDb } from '../audio/smartVolume'
 import { DirectDac, directBlocker, setDirectView, type DirectBlocker } from '../audio/directDac'
-import { isAndroid } from '../platform'
+import { isAndroid, setStreamFocus, STREAM_INTERRUPTED } from '../platform'
 import { loadSpatial, onSpatialChange } from '../spatial/settings'
 import { onDeviceChange } from '../fit/system'
 import { chainDb } from '../eq/biquad'
@@ -252,6 +252,59 @@ export function resolveBestTrack(t: Track): Track | null {
 
 const measuredFile = (t: Track) => ({ file: { name: t.path, size: t.size } })
 
+/**
+ * §88 B: a PC song plays from an audio element as it arrives. Seeking asks the phone for that byte range, which comes
+ * from the song cache (§88 C) or from the PC.
+ */
+function streamSong(t: Track): StreamSong {
+  const el = new Audio()
+  el.preload = 'auto'
+  // the phone's server is another origin: without CORS the EQ chain would only get silence from it
+  el.crossOrigin = 'anonymous'
+  el.src = pcAudioBase ? `${pcAudioBase}/${lowDataFor(t) ? 'low' : 'raw'}/${t.path.slice(3)}` : audioUrl(t)
+  return { el, sec: t.sec }
+}
+/** The phone's own HTTP server for PC songs; the WebView's request hook couldn't serve an audio element's ranges. */
+let pcAudioBase = ''
+void phoneLink?.audioBase?.().then((r) => { pcAudioBase = r.base }).catch(() => {})
+
+/** A typical modern master, for a streamed song whose level was never measured (its samples never reach the page). */
+// shortcut: unmeasured PC songs play as if at -9 LUFS; measure them on the PC and send the level with the library if levels jump
+const ASSUMED_LEVEL: SongLevel = { lufs: -9, peak: 1 }
+const streamLevel = (t: Track) =>
+  levelForTarget(albumOrOwn(t, knownLevel(measuredFile(t)) ?? ASSUMED_LEVEL), Number(getSetting('normpreamp') ?? 0))
+
+/** Throughput of a stream, from how fast its element buffers, for the automatic Low Data switch. */
+function watchThroughput(t: Track, el: HTMLAudioElement, low: boolean) {
+  const from = performance.now()
+  const onProgress = () => {
+    const end = el.buffered.length ? el.buffered.end(el.buffered.length - 1) : 0
+    if (!t.sec || end < t.sec - 1) return
+    el.removeEventListener('progress', onProgress)
+    const bytes = low ? (128_000 / 8) * t.sec : t.size
+    recordPcStreamThroughput(bytes, performance.now() - from, low)
+  }
+  el.addEventListener('progress', onProgress)
+}
+
+/** On Android: true on mobile data (the page can't tell on the PC, where it never matters). */
+const onMobileData = () => (navigator as Navigator & { connection?: { type?: string } }).connection?.type === 'cellular'
+
+/**
+ * §88 D: 30 s into a song, the next one (picked once, Shell's whatsNext) goes into the phone's song cache: on Wi-Fi
+ * always, on mobile data only with Low Data.
+ */
+function fetchAheadLater(mine: number) {
+  window.setTimeout(() => {
+    if (mine !== token) return
+    const next = events.nextForGapless?.()
+    const r = next ? resolveBestTrack(next) : null
+    if (!r || !isPcTrack(r) || (onMobileData() && !wantsLowData())) return
+    logLine('INFO', 'Player', `Fetching the next song ahead: ${r.title}`)
+    void phoneLink?.prebuffer?.({ id: r.id, lowData: wantsLowData() })
+  }, 30_000)
+}
+
 /** Album gain: every song in the album moves together, from those measured so far. Falls back to the song itself. */
 function albumOrOwn(t: Track, own: SongLevel): SongLevel {
   if (getSetting('gainmode') !== 'Album' || !t.album) return own
@@ -285,6 +338,7 @@ function getPlayer(): GalleryPlayer {
     lastEq = ''
   })
   p.onStalled = (stalled) => setEngineBuffering(stalled)
+  p.onInterrupted = () => window.dispatchEvent(new Event(STREAM_INTERRUPTED))
   p.onEnded = () => {
     setEngineBuffering(false)
     events.onEnded?.()
@@ -293,19 +347,24 @@ function getPlayer(): GalleryPlayer {
     const t = queued
     queued = null
     loaded = t
+    if (t) void setStreamFocus(isPcTrack(t))
     if (t) events.onAdvance?.(t)
   }
   p.onNearEnd = () => {
     const mixing = Boolean(getSetting('automix'))
     if (!mixing && !getSetting('gapless')) return
-    const next = events.nextForGapless?.()
+    const found = events.nextForGapless?.()
+    const next = found ? resolveBestTrack(found) : null
     if (!next) return
-    // the phone keeps up to 32 MB of a PC song in RAM; prebuffering a bigger one downloaded it only to drop it (item 7)
-    if (next.path.startsWith('pc:') && (wantsLowData() || next.size <= 32 * 1024 * 1024)) {
-      void phoneLink?.prebuffer?.({ id: next.id, lowData: wantsLowData() })
-    }
     const mine = token
     const epoch = gaplessEpoch
+    if (isPcTrack(next)) {
+      if (!player?.playing) return
+      const song = streamSong(next)
+      queued = next
+      player.queueNext(song, streamLevel(next), mixing ? mixSeconds(player.duration, next.sec, chosenMix()) : 0, mixEffectFrom(getSetting))
+      return
+    }
     void load(next).full
       .then(async (buffer) => {
         const level = await levelOf(next, buffer)
@@ -520,6 +579,45 @@ export async function playTrack(t: Track, autostart = true, startAt = 0) {
   const askedAt = performance.now()
   const took = () => `${Math.round(performance.now() - askedAt)} ms`
 
+  // a streamed song's element holds audio focus itself; a decoded one needs the playback service to hold it
+  await setStreamFocus(isPcTrack(t))
+  if (mine !== token) return
+  if (isPcTrack(t)) {
+    const song = streamSong(t)
+    watchThroughput(t, song.el, lowDataFor(t))
+    p.setBuffer(song, streamLevel(t))
+    loaded = t
+    partialPlaying = false
+    if (pendingSeek !== null) p.seek(pendingSeek)
+    pendingSeek = null
+    if (wantPlaying) p.play()
+    const local = findMatchingLocalTrack(t)
+    const ready = await new Promise<boolean>((resolve) => {
+      song.el.addEventListener('canplay', () => resolve(true), { once: true })
+      song.el.addEventListener('error', () => resolve(false), { once: true })
+      // a copy on this phone takes over when the PC is slow to answer; without one, only an error ends the wait
+      if (local) window.setTimeout(() => resolve(song.el.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA), 4500)
+    })
+    if (mine !== token) return
+    if (ready) {
+      finishSwitch()
+      logLine('INFO', 'Player', `Streaming ${t.path} (sound after ${took()})`)
+      fetchAheadLater(mine)
+      return
+    }
+    logLine('WARN', 'Player', `Couldn't stream ${t.path} (${song.el.error?.message || `code ${song.el.error?.code ?? '?'}`})${local ? '; playing the copy on this phone' : ''}`)
+    if (local) {
+      switching = false
+      p.switching = false
+      void playTrack(local, wantPlaying, livePosition())
+      return
+    }
+    p.fadeStop()
+    finishSwitch()
+    events.onError?.(t, song.el.error ?? new Error('stream failed'))
+    return
+  }
+
   try {
     const { quick, full } = load(t, true)
     if (quick) {
@@ -544,6 +642,7 @@ export async function playTrack(t: Track, autostart = true, startAt = 0) {
         if (wantPlaying) p.play()
         finishSwitch()
         logLine('INFO', 'Player', `Playing ${t.path} (first part after ${took()})`)
+        fetchAheadLater(mine)
         const buffer = await full
         if (mine !== token) return
         logLine('INFO', 'Player', `Whole song ready after ${took()}`)
@@ -568,6 +667,7 @@ export async function playTrack(t: Track, autostart = true, startAt = 0) {
     if (wantPlaying) p.play()
     finishSwitch()
     logLine('INFO', 'Player', `Playing ${t.path} (after ${took()})`)
+    fetchAheadLater(mine)
   } catch (e) {
     if (mine === token) {
       logLine('ERROR', 'Player', `Couldn't play ${t.path}: ${String(e)}`)
@@ -718,6 +818,8 @@ const directPosition = () => {
 
 export function setPaused(paused: boolean) {
   wantPlaying = !paused
+  // back from a pause (maybe from the notification, with the app away): wake the PC link before the stream needs it
+  if (!paused && loaded && isPcTrack(loaded)) void phoneLink?.ping?.().catch(() => {})
   if (direct) {
     directState = { ...directState, position: directPosition(), playing: !paused, at: performance.now() }
     void (paused ? DirectDac.pause() : DirectDac.resume()).catch(() => {})

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Cover, Icon } from '../ui'
 import { useShell } from '../context'
 import { groupArtists, openLibrarySearch, trackCount, useLibrary, type Track } from '../library'
@@ -7,6 +7,7 @@ import { topArtists, topSongs, useListening, type Listening } from '../stats'
 import { getSetting, useArtistSeparators, useSettings } from '../settings/store'
 import { getCachedArtistPhoto, lookupArtistPhoto, subscribeArtistPhotos } from '../metadata'
 import { isRewindDue, markRewindViewed, RewindModal } from './RewindModal'
+import { SHELF_PREFIX } from './playlistCover'
 
 const DEFAULT_REFRESH_MS = 3 * 86_400_000
 const MIN_SHELF_SONGS = 5
@@ -416,7 +417,7 @@ export function HomePage() {
         {artists.length > 0 && (
           <section>
             <h2 className="ms-h2">Your Artists</h2>
-            <div className="ms-shelf">
+            <Shelf>
               {artists.map((a) => (
                 <article
                   className="ms-shelf-item round"
@@ -428,12 +429,12 @@ export function HomePage() {
                   <div className="ms-card-sub">{a.sub}</div>
                 </article>
               ))}
-            </div>
+            </Shelf>
           </section>
         )}
 
         {shelves.map((shelf) => (
-          <ShelfRow key={shelf.id} title={shelf.title} tracks={shelf.tracks} onPlay={(t) => play(t, shelf.tracks)} />
+          <ShelfRow key={shelf.id} title={shelf.title} tracks={shelf.tracks} onPlay={(t) => play(t, shelf.tracks)} onOpen={() => push({ page: 'playlist', id: SHELF_PREFIX + shelf.id })} />
         ))}
 
         {phone && (
@@ -448,11 +449,11 @@ export function HomePage() {
   )
 }
 
-function ShelfRow({ title, tracks, onPlay }: { title: string; tracks: Track[]; onPlay: (t: Track) => void }) {
+function ShelfRow({ title, tracks, onPlay, onOpen }: { title: string; tracks: Track[]; onPlay: (t: Track) => void; onOpen: () => void }) {
   return (
     <section>
-      <h2 className="ms-h2">{title}</h2>
-      <div className="ms-shelf">
+      <h2 className="ms-h2"><button type="button" className="ms-h2-link" onClick={onOpen}>{title}<Icon name="chevron_right" size={22} /></button></h2>
+      <Shelf>
         {tracks.map((t) => (
           <article className="ms-shelf-item" key={t.id} onClick={() => onPlay(t)}>
             <Cover id={t.cover} alt="" genre={t.genre} speciality={t.category} title={t.title} />
@@ -460,7 +461,68 @@ function ShelfRow({ title, tracks, onPlay }: { title: string; tracks: Track[]; o
             <div className="ms-card-sub">{t.artist || 'Unknown Artist'}</div>
           </article>
         ))}
-      </div>
+      </Shelf>
     </section>
+  )
+}
+
+/** A sideways row. On PC a mouse can drag it (a drag isn't a click) and ‹ › buttons page it when it runs past the edge. */
+function Shelf({ children }: { children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const drag = useRef<{ x: number; left: number; moved: boolean } | null>(null)
+  const [ends, setEnds] = useState({ left: false, right: false })
+  const update = () => {
+    const el = ref.current
+    if (!el) return
+    const left = el.scrollLeft > 4
+    const right = el.scrollLeft + el.clientWidth < el.scrollWidth - 4
+    setEnds((e) => (e.left === left && e.right === right ? e : { left, right }))
+  }
+  useEffect(() => {
+    update()
+    const el = ref.current
+    if (!el) return
+    const ro = new ResizeObserver(update)
+    ro.observe(el)
+    return () => ro.disconnect()
+  })
+  const page = (dir: number) => {
+    const el = ref.current
+    if (el) el.scrollBy({ left: dir * el.clientWidth * 0.8, behavior: 'smooth' })
+  }
+  return (
+    <div className="ms-shelf-wrap">
+      <div
+        ref={ref}
+        className="ms-shelf"
+        onScroll={update}
+        onDragStart={(e) => e.preventDefault()}
+        onPointerDown={(e) => {
+          drag.current = e.pointerType === 'mouse' && e.button === 0 ? { x: e.clientX, left: e.currentTarget.scrollLeft, moved: false } : null
+        }}
+        onPointerMove={(e) => {
+          const d = drag.current
+          if (!d || !(e.buttons & 1)) return
+          const dx = e.clientX - d.x
+          if (!d.moved && Math.abs(dx) < 6) return
+          if (!d.moved) {
+            d.moved = true
+            e.currentTarget.setPointerCapture(e.pointerId)
+          }
+          e.currentTarget.scrollLeft = d.left - dx
+        }}
+        onClickCapture={(e) => {
+          if (drag.current?.moved) {
+            e.stopPropagation()
+            e.preventDefault()
+          }
+          drag.current = null
+        }}
+      >
+        {children}
+      </div>
+      {ends.left && <button type="button" className="ms-shelf-arrow left" aria-label="Scroll left" onClick={() => page(-1)}><Icon name="chevron_left" /></button>}
+      {ends.right && <button type="button" className="ms-shelf-arrow right" aria-label="Scroll right" onClick={() => page(1)}><Icon name="chevron_right" /></button>}
+    </div>
   )
 }

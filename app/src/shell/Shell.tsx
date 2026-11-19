@@ -254,10 +254,13 @@ export function Shell() {
     }
     const ahead = direction === 1 ? history.current.goForward(now) : null
     if (ahead) { startSong(ahead); return }
+    // shuffle's next is the one already picked (and maybe fetched ahead)
+    const picked = direction === 1 && shuffle && repeat !== 'one' ? whatsNext.current() : null
+    if (picked) { history.current.visit(now); startSong(picked); return }
     const next = nextByButton(shuffle ? freshPicks(list, now, history.current) : list, now, direction, shuffle)
     history.current.visit(now)
     startSong(next)
-  }, [queue, data, shuffle, setPosition, startSong])
+  }, [queue, data, shuffle, repeat, setPosition, startSong])
 
   // Android (plan §70 C3): the notification, lock screen and headset buttons follow the player
   const controls = useRef({ setPlaying, step, setPosition })
@@ -277,19 +280,26 @@ export function Shell() {
   }, [current, playing, loading])
 
   const whatsNext = useRef<() => Track | null>(() => null)
+  // §88 D: "next" is picked once per song and order, so the song fetched ahead is the one that plays (shuffle used to
+  // re-roll on every ask)
+  const nextPick = useRef<{ key: string; pick: Track | null } | null>(null)
   whatsNext.current = () => {
     const now = currentRef.current
     if (!now) return null
     const ahead = repeat === 'one' ? null : history.current.peekForward()
     if (ahead) return ahead
+    const key = [now.id, shuffle, repeat, autoplay, queue.length, queue[0]?.id, queue[queue.length - 1]?.id, data?.tracks.length].join('|')
+    if (nextPick.current?.key === key) return nextPick.current.pick
     const library = (data?.tracks ?? []).filter(canPlay)
     const list = (queue.length ? queue : library).filter(canPlay)
-    return nextAfterEnd(shuffle ? freshPicks(list, now, history.current) : list, now, { repeat, shuffle, autoplay }, library, Math.random, (others) => {
+    const pick = nextAfterEnd(shuffle ? freshPicks(list, now, history.current) : list, now, { repeat, shuffle, autoplay }, library, Math.random, (others) => {
       const heard = getListening()
       const pick = pickAutoplay(others, now, { features: featuresOf, learned: heard.learned, personal: Boolean(getSetting('personal')) && heard.autoplayed >= LEARN_AFTER })
       autoPicked.current = pick.id
       return pick
     })
+    nextPick.current = { key, pick }
+    return pick
   }
   /** A song took over by itself: the history records it like any other move. */
   const arrived = useRef((next: Track) => {

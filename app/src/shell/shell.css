@@ -226,6 +226,9 @@ small, .ms-card-sub, .ms-player-artist, .ms-queue-sub, .ms-sr-text small, .ms-se
   position: absolute; left: 8px; top: 8px; padding: 2px 6px; border-radius: var(--radius-badge);
   background: rgba(0, 0, 0, 0.7); color: #fff; font-size: 11px; font-weight: 500;
 }
+/* 24-bit / hi-res / Dolby: light blue, so the better files stand out at a glance; Game show's warm backdrop gets cyan */
+.ms-badge.hi, .ms-np-quality.hi { background: #b8dcff; color: #0b2a4a; }
+:root[data-style='gameshow'] .ms-badge.hi, :root[data-style='gameshow'] .ms-np-quality.hi { background: #3ee6d8; color: #102028; }
 .ms-badge.count {
   left: auto; top: auto; right: 10px; bottom: 10px; height: 28px; padding: 0 10px; border-radius: 14px;
   background: var(--chip); display: inline-flex; align-items: center; gap: 4px; font-size: 13px;
@@ -250,6 +253,8 @@ small, .ms-card-sub, .ms-player-artist, .ms-queue-sub, .ms-sr-text small, .ms-se
 .ms-grid.songs .ms-card-sub { font-size: 12px; line-height: 16px; }
 /* the quality badge (now with its format) stops short of the folder icon at the right corner */
 .ms-grid.songs .ms-badge { left: 4px; top: 4px; max-width: calc(100% - 34px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 1px 6px; background: rgba(30, 30, 30, 0.8); color: #e3e2e6; font-size: 11px; }
+.ms-grid.songs .ms-badge.hi { background: #b8dcff; color: #0b2a4a; }
+:root[data-style='gameshow'] .ms-grid.songs .ms-badge.hi { background: #3ee6d8; color: #102028; }
 .ms-card-local { position: absolute; right: 4px; top: 4px; width: 22px; height: 18px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-badge); background: rgba(30, 30, 30, 0.8); color: var(--text); }
 
 /* cover tiles on artist pages and in Folders */

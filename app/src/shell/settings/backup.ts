@@ -13,6 +13,8 @@ export interface Backup {
    * details and lyrics), as it sits in storage. Without it a restore brought back settings and playlists only.
    */
   storage?: Record<string, string>
+  /** Song covers found online, by song id (data URLs). They sit in IndexedDB, not with the rest. */
+  covers?: Record<string, string>
 }
 
 /** Not worth carrying: rebuilt on demand (spectrum analyses are megabytes each), or the settings themselves. */
@@ -55,8 +57,13 @@ export function parseBackup(text: string): Backup {
   return b as Backup
 }
 
-export function downloadBackup() {
-  const backup = buildBackup(getSettings(), Boolean(getSetting('bksettings')), Boolean(getSetting('bkcollections')), undefined, otherStorage())
+export async function downloadBackup() {
+  const collections = Boolean(getSetting('bkcollections'))
+  const backup = buildBackup(getSettings(), Boolean(getSetting('bksettings')), collections, undefined, otherStorage())
+  if (collections) {
+    const covers = await (await import('../metadata')).exportSavedCovers().catch(() => ({}))
+    if (Object.keys(covers).length) backup.covers = covers
+  }
   const url = URL.createObjectURL(new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' }))
   const link = document.createElement('a')
   link.href = url
@@ -66,10 +73,11 @@ export function downloadBackup() {
 }
 
 /** Replaces the saved settings and playlists with the backup's. The page reloads afterwards to use them. */
-export function restoreBackup(backup: Backup) {
+export async function restoreBackup(backup: Backup) {
   for (const [id, value] of Object.entries(backup.settings ?? {})) setSetting(id, value)
   if (backup.playlists) setSetting('playlists', backup.playlists)
   for (const [key, value] of Object.entries(backup.storage ?? {})) {
     if (typeof value === 'string' && !NOT_STORED.test(key)) try { localStorage.setItem(key, value) } catch { /* full: the rest still goes in */ }
   }
+  if (backup.covers) await (await import('../metadata')).importSavedCovers(backup.covers).catch(() => {})
 }

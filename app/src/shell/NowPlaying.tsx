@@ -6,7 +6,7 @@ import { Slider, VolumeControl } from './PlayerBar'
 import { PanelSwap } from './SidePanels'
 import { useHeld } from './motion'
 import { useCoverStyle } from './cover'
-import { coverUrl, duration, type Track } from './library'
+import { coverUrl, duration, isPremiumQuality, type Track } from './library'
 import { host } from './host'
 import { getSetting, useSettings } from './settings/store'
 import { applyTheme, resolveStyleScope } from './theme'
@@ -197,7 +197,7 @@ export function NowPlaying() {
         <div className="ms-np-seek"><Slider wavy={playing && !(phonePortrait && panel)} value={current.sec ? position / current.sec : 0} label="Seek" onChange={(v) => setPosition(v * current.sec)} /></div>
         <div className="ms-np-times">
           <span>{duration(position)}</span>
-          <span className="ms-np-quality"><Icon name={directInfo ? 'usb' : 'graphic_eq'} size={16} />{quality.join(' · ')}</span>
+          <span className={`ms-np-quality${!isLowData && isPremiumQuality(current) ? ' hi' : ''}`}><Icon name={directInfo ? 'usb' : 'graphic_eq'} size={16} />{quality.join(' · ')}</span>
           <span>{duration(current.sec)}</span>
         </div>
         {phonePortrait && <div className="ms-np-actions">{saveButtons}</div>}

@@ -48,7 +48,7 @@ const CSP = [
   "script-src 'self' 'wasm-unsafe-eval'",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
-  "media-src 'self' blob: data:",
+  "media-src 'self' blob: data: http://127.0.0.1:*",
   "font-src 'self' data:",
   "connect-src 'self' https://lrclib.net https://api.github.com",
   "worker-src 'self' blob:",

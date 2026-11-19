@@ -33,6 +33,11 @@ interface LinkPlugin {
   /** §81 F: this phone's own name for the PC; '' goes back to Android's device name. */
   setName?: (o: { name: string }) => Promise<void>
   prebuffer?: (o: { id: string; lowData?: boolean }) => Promise<void>
+  /** §88 C: the songs kept from the PC on this phone's storage. */
+  songCache?: () => Promise<{ bytes: number; songs: number }>
+  clearSongCache?: () => Promise<void>
+  /** §88 B: the phone's own little HTTP server for PC songs (127.0.0.1, secret path). */
+  audioBase?: () => Promise<{ base: string }>
   ping?: () => Promise<PhoneLinkStatus>
   testSpeed?: () => Promise<PhoneLinkStatus>
   isAirplaneMode?: () => Promise<{ airplaneMode: boolean }>

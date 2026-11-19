@@ -3,9 +3,10 @@
 import { useMemo, useState } from 'react'
 import { Cover, Icon, IconButton } from '../ui'
 import { useShell } from '../context'
+import { importSongArt, stopBulk, syncLyrics, useBulkStatus, type BulkKind } from '../bulkMeta'
 import { host } from '../host'
 import {
-  clearHiddenFolders, duration, folderPath, qualityLabel, unhideFolder, useHiddenFolders, useLibrary,
+  clearHiddenFolders, duration, folderPath, qualityLabel, unhideFolder, useHiddenFolders, useLibrary, type Track,
 } from '../library'
 import {
   acceptPossibleMatch, getMatchedTracks, isNamingEnabled, rejectPossibleMatch,
@@ -200,6 +201,54 @@ function SubfolderList({ folder }: { folder: LibraryFolder }) {
  * §72.A5 & A6 — Background Library Naming Runner & "Check these" review queue.
  * Off by default until switched on; looks up only tracks with missing artist or YouTube-style filenames at 1 req / 1.1s.
  */
+const BULK: Record<BulkKind, { label: string; icon: string; idle: string; start: (t: Track[]) => Promise<void> }> = {
+  art: { label: 'Import song art', icon: 'imagesmode', idle: 'Adds covers to songs without one and replaces covers under 300 px', start: importSongArt },
+  lyrics: { label: 'Sync lyrics', icon: 'lyrics', idle: 'Fetches lyrics for songs without any, timed ones first', start: syncLyrics },
+}
+
+/** §87: the two library-wide jobs, each a row with its own progress and Stop. */
+export function BulkMetaRows() {
+  return (
+    <div className="ms-set-group">
+      <BulkRow kind="art" />
+      <BulkRow kind="lyrics" />
+    </div>
+  )
+}
+
+function BulkRow({ kind }: { kind: BulkKind }) {
+  const tracks = useLibrary()
+  const st = useBulkStatus(kind)
+  const job = BULK[kind]
+  const percent = st.total ? Math.round((st.done / st.total) * 100) : 0
+  const sub = st.running
+    ? st.waiting || `${st.done} of ${st.total} · ${st.found} found${st.current ? ` · ${st.current}` : ''}`
+    : st.total
+      ? `${st.found} found in ${st.done} songs`
+      : job.idle
+  return (
+    <>
+      <div className="ms-set-row">
+        <Icon name={job.icon} />
+        <span className="grow ms-set-text">
+          <span className="ms-set-label">{job.label}</span>
+          <small>{sub}</small>
+        </span>
+        {st.running
+          ? <button type="button" className="ms-btn tonal small" onClick={() => stopBulk(kind)}><Icon name="stop" size={18} /> Stop</button>
+          : <button type="button" className="ms-btn tonal small" onClick={() => void job.start(tracks)}><Icon name="play_arrow" size={18} /> Start</button>}
+      </div>
+      {st.running && (
+        <div className="ms-scan-line" role="status" style={{ margin: '0 16px 12px' }}>
+          <Icon name="sync" size={18} />
+          <span>{st.done} of {st.total} ({percent}%)</span>
+          <i style={{ width: `${percent}%` }} />
+        </div>
+      )}
+    </>
+  )
+}
+
 export function MetadataNamingSection() {
   const { showToast } = useShell()
   const status = useNamingStatus()
@@ -721,7 +770,7 @@ export function DuplicatesPage() {
           <div className="ms-set-group">
             {g.map((t) => (
               <div key={t.id} className="ms-set-row">
-                <Cover id={t.cover} alt="" className="ms-dupe-cover" />
+                <Cover id={t.cover} alt="" className="ms-dupe-cover" genre={t.genre} speciality={t.category} title={t.title} />
                 <span className="grow ms-set-text">
                   <span className="ms-set-label">{folderPath(t.path)}</span>
                   <small>{qualityLabel(t)} · {duration(t.sec)} · {(t.size / 1048576).toFixed(1)} MB</small>

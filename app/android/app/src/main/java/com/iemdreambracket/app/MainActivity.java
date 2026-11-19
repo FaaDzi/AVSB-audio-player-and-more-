@@ -85,6 +85,10 @@ public class MainActivity extends BridgeActivity {
         WindowInsetsControllerCompat bars = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
         bars.setAppearanceLightStatusBars(false); // light icons on the dark launch frame; the page sets its own (ShellHost.setSystemAppearance)
         bars.setAppearanceLightNavigationBars(false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            getWindow().setStatusBarContrastEnforced(false); // the page fades its own band under the clock (§89 E)
+            getWindow().setNavigationBarContrastEnforced(false);
+        }
         // No padding of our own: with viewport-fit=cover Capacitor's SystemBars passes the bar and cut-out insets to the
         // page as env(safe-area-inset-*), so the theme shows behind the status bar. (On a WebView older than 140 it pads
         // the window itself, and setSystemAppearance colours that strip to match.)

@@ -2,14 +2,16 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Cover, Dialog, Icon, IconButton, Menu, TopBar } from '../ui'
 import { useShell } from '../context'
 import {
-  NO_FILTERS, activeFilterCount, filterTracks, folderPath, groupAlbums, groupArtists, isPcTrack, moveItem, shuffled, sortByFileName, sortTracks, trackCount, useLibrary,
+  NO_FILTERS, activeFilterCount, filterTracks, folderPath, groupAlbums, groupArtists, isPcTrack, isPremiumQuality, moveItem, shuffled, sortByFileName, sortTracks, trackCount, useLibrary,
   type Filters, type SortMode, type Track,
 } from '../library'
 import { missingTrack } from '../playlistSync'
 import { TrackTable } from './TrackTable'
-import { DeletePlaylistDialog } from './TrackMenu'
 import { FilterDialog, FolderActions, Tile, below, sortMenuItems } from './LibraryPage'
 import { useCoverStyle } from '../cover'
+import { useListening } from '../stats'
+import { buildHomeShelves } from './HomePage'
+import { pickSquareImage, SHELF_PREFIX } from './playlistCover'
 import { getSetting, setSetting, useArtistSeparators } from '../settings/store'
 
 export type PlaylistSortMode =
@@ -54,7 +56,7 @@ function savedSorts(): Record<string, PlaylistSortMode> {
 }
 
 function qualityTier(t: Track): number {
-  if (!t.lossy && (t.bits > 16 || t.rate > 48000)) return 0 // Hi-Res FLAC/Lossless
+  if (isPremiumQuality(t)) return 0 // Hi-Res FLAC/Lossless, Dolby
   if (!t.lossy) return 1 // CD FLAC/Lossless
   return 2 // Lossy
 }
@@ -107,12 +109,18 @@ export function sortAndFilterPlaylistTracks(
 }
 
 export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
-  const { data, play, replaceData, showToast } = useShell()
+  const { data, play, push, replaceData, showToast } = useShell()
   const libraryTracks = useLibrary()
-  const playlist = data.playlists.find((p) => p.id === id)
+  const listening = useListening()
+  // a Home shelf opens here too (§89 C): shown like a playlist, kept only if saved, replaced at the next shelf refresh
+  const shelfId = id.startsWith(SHELF_PREFIX) ? id.slice(SHELF_PREFIX.length) : null
+  const shelf = useMemo(
+    () => (shelfId ? buildHomeShelves(libraryTracks, listening).find((x) => x.id === shelfId) : undefined),
+    [shelfId, libraryTracks, listening],
+  )
+  const playlist = data.playlists.find((p) => p.id === id) ?? (shelf ? { id, name: shelf.title, tracks: shelf.tracks.map((t) => t.id) } : undefined)
   const [editingOrder, setEditingOrder] = useState(false)
-  const [renaming, setRenaming] = useState<string | null>(null)
-  const [deleting, setDeleting] = useState(false)
+  const [coverMenu, setCoverMenu] = useState<{ x: number; y: number } | null>(null)
   const [query, setQuery] = useState('')
   const [sourceFilter, setSourceFilter] = useState<PlaylistSourceFilter>('all')
   // the view you chose for this playlist is remembered (§86 F). Sorting is only a view: the playlist's own order,
@@ -137,9 +145,18 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
     [tracks, query, sourceFilter, sortMode],
   )
 
-  if (!playlist) return <div className="ms-empty"><p>This playlist no longer exists.</p></div>
+  if (!playlist) return <div className="ms-empty"><p>{shelfId ? 'This mix has been refreshed. Home has new ones.' : 'This playlist no longer exists.'}</p></div>
   const update = (patch: Partial<typeof playlist>) => replaceData({ ...data, playlists: data.playlists.map((p) => (p.id === id ? { ...p, ...patch } : p)) })
-  const cover = tracks.find((t) => t.cover)?.cover ?? ''
+  const cover = playlist.cover || (tracks.find((t) => t.cover)?.cover ?? '')
+  const save = () => {
+    const copy = { id: `p-${Date.now()}`, name: playlist.name, tracks: [...playlist.tracks] }
+    replaceData({ ...data, playlists: [...data.playlists, copy] })
+    showToast(`Saved "${copy.name}" to your playlists`)
+    push({ page: 'playlist', id: copy.id })
+  }
+  const chooseCover = () => {
+    void pickSquareImage().then((image) => { if (image) update({ cover: image }) }).catch((e: unknown) => showToast(`Couldn't use that image: ${String(e)}`))
+  }
   const currentSortLabel = PLAYLIST_SORTS.find(([k]) => k === sortMode)?.[1] ?? 'Custom / Playlist Order'
   const currentFilterLabel = PLAYLIST_SOURCE_CHIPS.find(([k]) => k === sourceFilter)?.[1] ?? 'All'
 
@@ -162,23 +179,13 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
 
   return (
     <div className="ms-scroll">
-      <TopBar
-        title={playlist.name}
-        back={back}
-        actions={
-          <>
-            <IconButton icon="ios_share" label="Export" filled onClick={() => showToast(`Exported ${tracks.length} of ${playlist.tracks.length} tracks`)} />
-            <IconButton icon="swap_vert" label="Edit order" filled onClick={() => setEditingOrder(true)} />
-            <IconButton icon="edit" label="Rename" filled onClick={() => setRenaming(playlist.name)} />
-            <IconButton icon="delete" label="Delete playlist" filled onClick={() => setDeleting(true)} />
-            <IconButton icon="photo_camera" label="Change cover" filled onClick={() => showToast('Changing the cover comes with the real library')} />
-          </>
-        }
-      />
+      {/* §89 D: rename, share and delete live in the playlist's long-press menu in Library; the cover changes on a tap */}
+      <TopBar title={playlist.name} back={back} />
       <div className="ms-detail">
         <DetailHeader
           cover={cover}
           title={playlist.name}
+          onCover={shelf ? undefined : (e) => (playlist.cover ? setCoverMenu(below(e)) : chooseCover())}
           sub={
             <>
               <Icon name="queue_music" size={18} />{' '}
@@ -189,7 +196,9 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
           }
           actions={
             <>
-              <IconButton icon="download" label="Download" filled onClick={() => showToast('Download is here for layout only')} />
+              {shelf
+                ? <IconButton icon="playlist_add" label="Save playlist" filled onClick={save} />
+                : <IconButton icon="download" label="Download" filled onClick={() => showToast('Download is here for layout only')} />}
               <button
                 type="button"
                 className="ms-btn play"
@@ -240,7 +249,7 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
             >
               <Icon name="filter_list" size={20} /> {sourceFilter === 'all' ? 'Filter' : currentFilterLabel}
             </button>
-            {sortMode === 'custom' && sourceFilter === 'all' && !query && tracks.length > 1 && (
+            {!shelf && sortMode === 'custom' && sourceFilter === 'all' && !query && tracks.length > 1 && (
               <button type="button" className="ms-tool" onClick={() => setEditingOrder(true)}>
                 <Icon name="drag_handle" size={20} /> Edit order
               </button>
@@ -248,7 +257,7 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
           </div>
         </div>
 
-        <TrackTable tracks={visibleTracks} playlistId={playlist.id} />
+        <TrackTable tracks={visibleTracks} playlistId={shelf ? undefined : playlist.id} />
       </div>
 
       {filterMenu && (
@@ -275,21 +284,18 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
         />
       )}
 
-      {renaming !== null && (
-        <Dialog
-          title="Rename playlist"
-          onClose={() => setRenaming(null)}
-          footer={
-            <>
-              <button type="button" className="ms-btn text" onClick={() => setRenaming(null)}>Cancel</button>
-              <button type="button" className="ms-btn primary" disabled={!renaming.trim()} onClick={() => { update({ name: renaming.trim() }); setRenaming(null) }}>Save</button>
-            </>
-          }
-        >
-          <input className="ms-input filled" aria-label="Playlist name" autoFocus value={renaming} onChange={(e) => setRenaming(e.target.value)} />
-        </Dialog>
+      {coverMenu && (
+        <Menu
+          compact
+          x={coverMenu.x}
+          y={coverMenu.y}
+          onClose={() => setCoverMenu(null)}
+          items={[
+            { label: 'Choose an image', icon: 'image', onSelect: chooseCover },
+            { label: 'Use song covers', icon: 'library_music', onSelect: () => update({ cover: undefined }) },
+          ]}
+        />
       )}
-      {deleting && <DeletePlaylistDialog playlist={playlist} onClose={() => setDeleting(false)} onDeleted={back} />}
     </div>
   )
 }
@@ -410,7 +416,7 @@ function OrderEditor({ name, cover, tracks, onClose, onSave }: {
             const moving = drag?.id === id
             return (
               <div className={`ms-order-row${moving ? ' moving' : ''}`} key={id} style={moving ? { transform: `translateY(${drag.offset}px)` } : undefined}>
-                <Cover id={t.cover} className="ms-order-cover" />
+                <Cover id={t.cover} className="ms-order-cover" genre={t.genre} speciality={t.category} title={t.title} />
                 <div className="grow ms-order-text"><div className="ms-ellipsis">{t.title}</div><small className="ms-ellipsis">{t.artist || 'Unknown Artist'}</small></div>
                 <button
                   type="button"
@@ -524,10 +530,11 @@ export function FolderPage({ folder, back }: { folder: string; back: () => void 
   )
 }
 
-function DetailHeader({ cover, title, sub, actions, genre, speciality }: { cover: string; title: string; sub: React.ReactNode; actions?: React.ReactNode; genre?: string; speciality?: string }) {
+function DetailHeader({ cover, title, sub, actions, genre, speciality, onCover }: { cover: string; title: string; sub: React.ReactNode; actions?: React.ReactNode; genre?: string; speciality?: string; onCover?: (e: React.MouseEvent<HTMLElement>) => void }) {
+  const art = <Cover id={cover} alt={title} className="ms-detail-cover" genre={genre} speciality={speciality} title={title} />
   return (
     <header className="ms-detail-head">
-      <Cover id={cover} alt={title} className="ms-detail-cover" genre={genre} speciality={speciality} title={title} />
+      {onCover ? <button type="button" className="ms-detail-cover-btn" aria-label="Change cover" onClick={onCover}>{art}<span className="ms-detail-cover-edit"><Icon name="photo_camera" size={20} /></span></button> : art}
       <div className="ms-detail-info">
         <div>
           <h1>{title}</h1>

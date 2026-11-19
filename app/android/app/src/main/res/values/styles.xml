@@ -20,6 +20,8 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
+        <!-- no grey system scrim under the clock: the page draws its own band that fades into it (§89 E) -->
+        <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
     </style>
 
 

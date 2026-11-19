@@ -22,7 +22,7 @@ export function MiniPlayer() {
   return (
     <div className="ms-mini-page">
       <div className="ms-mini" style={coverStyle}>
-        <Cover id={current?.cover ?? ''} className="ms-mini-art" />
+        <Cover id={current?.cover ?? ''} className="ms-mini-art" genre={current?.genre} speciality={current?.category} title={current?.title} />
         <div className="ms-mini-text">
           <div className="ms-player-title">{current?.title}</div>
           <div className="ms-player-artist">{current?.artist}</div>

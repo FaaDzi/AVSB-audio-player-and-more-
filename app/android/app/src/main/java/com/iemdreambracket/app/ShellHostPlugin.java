@@ -659,7 +659,9 @@ public class ShellHostPlugin extends Plugin {
             LinkPlugin.SongStreamResult result = link == null ? null : link.openSongStream(wanted.substring(3), lowData, rangeHeader);
             if (result == null) return text(404, "text/plain", "not found");
             Map<String, String> headers = new HashMap<>();
-            headers.put("Cache-Control", "no-store");
+            // §88 B: the WebView's audio element reads a song in ranges and joins them; a "no-store" answer can't be joined,
+            // so it re-asked for the end of the file forever. The song's bytes never change under the same id.
+            headers.put("Cache-Control", "private, max-age=86400");
             if (result.getAcceptRanges() != null) headers.put("Accept-Ranges", result.getAcceptRanges());
             if (result.getContentRange() != null) headers.put("Content-Range", result.getContentRange());
             if (result.getContentLength() > 0L) headers.put("Content-Length", String.valueOf(result.getContentLength()));

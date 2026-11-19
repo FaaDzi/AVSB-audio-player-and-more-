@@ -102,8 +102,60 @@ export interface Dynamics {
 const DEFAULT_DYNAMICS: Dynamics = { headroom: true, limiter: true, limitAlways: false, compressor: null }
 
 /** A loaded song with its own gain stage. */
+/**
+ * A song played by an audio element instead of a decoded buffer (§88 B: a PC song on the phone). It plays as the bytes
+ * arrive and seeks by asking for that byte range, so the page never holds the whole decoded song. `sec` is its length
+ * from the library (a live Low Data stream doesn't know its own).
+ */
+export interface StreamSong {
+  el: HTMLAudioElement
+  sec: number
+}
+const isStream = (x: AudioBuffer | StreamSong): x is StreamSong => 'el' in x
+
+/** An audio element standing in for an AudioBufferSourceNode: started (at a context time) and stopped the same way. */
+class MediaVoice {
+  onended: (() => void) | null = null
+  /** Android paused the element (another app took audio focus), not this player. */
+  onInterrupted: (() => void) | null = null
+  private timer: ReturnType<typeof setTimeout> | undefined
+  private el: HTMLAudioElement
+  private ctx: BaseAudioContext
+  constructor(el: HTMLAudioElement, ctx: BaseAudioContext, when: number, offset: number) {
+    this.el = el
+    this.ctx = ctx
+    if (Math.abs(el.currentTime - offset) > 0.05) el.currentTime = offset
+    el.onended = () => this.onended?.()
+    // events arrive late: the pause from a seek's own stop lands after the play that followed it, so only a pause the
+    // element is still in counts
+    el.onpause = () => { if (el.paused && !el.ended) this.onInterrupted?.() }
+    const go = () => void el.play().catch((e: unknown) => console.warn(`Stream wouldn't start: ${String(e)}`))
+    const wait = (when - ctx.currentTime) * 1000
+    if (wait > 20) this.timer = setTimeout(go, wait)
+    else go()
+  }
+  stop(when = 0) {
+    clearTimeout(this.timer)
+    const halt = () => {
+      this.el.onended = null
+      this.el.onpause = null
+      this.el.pause()
+    }
+    const wait = (when - this.ctx.currentTime) * 1000
+    if (wait > 20) this.timer = setTimeout(halt, wait)
+    else halt()
+  }
+  disconnect() { /* the element's node stays wired to its song gain until the song is dropped */ }
+}
+
+type Voice = AudioBufferSourceNode | MediaVoice
+
+const lengthOf = (t: Track) => t.buffer?.duration ?? t.media?.sec ?? 0
+
 interface Track {
-  buffer: AudioBuffer
+  /** null for a streamed song (`media`). */
+  buffer: AudioBuffer | null
+  media?: StreamSong
   /** null until measured (a song started cold is measured just after it starts; till then a pink spectrum stands in). */
   spectrum: Spectrum | null
   /** The song's loudest stretches (empty until measured), and the levelled stage's peak on them (linear; null = not measured yet). */
@@ -112,7 +164,7 @@ interface Track {
   /** Off's level for this song (dB): Smart volume, or just the song's own overs taken off. */
   offDb: number
   gain: GainNode
-  source: AudioBufferSourceNode | null
+  source: Voice | null
   /** When `source` starts on the context clock (for the queued next song: when this one ends). */
   startAt: number
   /** In a crossfade: its gain is on a scheduled curve, which other gain changes must leave alone. */
@@ -213,6 +265,8 @@ export class GalleryPlayer {
   onAdvance: (() => void) | null = null
   /** Called about NEAR_END_S before the end of the playing song while nothing is queued after it. */
   onNearEnd: (() => void) | null = null
+  /** A streamed song was paused by Android (another app took the sound): the page pauses like a press. */
+  onInterrupted: (() => void) | null = null
   /** Called when playback stalls waiting for the remainder of a partial buffer. */
   onStalled: ((stalled: boolean) => void) | null = null
   /** The page is loading the song it's switching to (a skip): set while it reads and decodes, then cleared. */
@@ -297,7 +351,7 @@ export class GalleryPlayer {
   }
 
   get duration() {
-    return this.cur?.buffer.duration ?? 0
+    return this.cur ? lengthOf(this.cur) : 0
   }
 
   /** The loaded song. */
@@ -307,16 +361,18 @@ export class GalleryPlayer {
 
   get position() {
     if (!this.cur?.source) return this.offset
+    // a stream can stall while it waits for bytes: the element's own clock is the truth, not the context's
+    if (this.cur.media) return Math.min(this.duration, this.cur.media.el.currentTime)
     return Math.min(this.duration, this.offset + this.ctx.currentTime - this.startedAt)
   }
 
   /** `level`: the song's Smart volume measurement when it's known (audio/songLevel.ts); else measured here. */
-  setBuffer(buffer: AudioBuffer | null, level?: { lufs: number; peak: number }, partial = false) {
+  setBuffer(buffer: AudioBuffer | StreamSong | null, level?: { lufs: number; peak: number }, partial = false) {
     this.stop()
     this.dropNext()
     // after a fadeStop the old song may still be fading out: let it finish
     const old = this.cur
-    if (old) setTimeout(() => old.gain.disconnect(), (SKIP_FADE_S + 0.05) * 1000)
+    if (old) setTimeout(() => this.release(old), (SKIP_FADE_S + 0.05) * 1000)
     // measured after it starts, not before: the scan is a few hundred ms on a phone, and it was
     // silence between a tap on ⏭ and the next song
     this.cur = buffer ? this.makeTrack(buffer, level, true) : null
@@ -346,7 +402,7 @@ export class GalleryPlayer {
   }
 
   /** Queue the song that plays when this one ends, gaplessly (replaces any queued one). */
-  queueNext(buffer: AudioBuffer, level?: { lufs: number; peak: number }, overlapS = 0, effect: MixEffect = PLAIN_MIX) {
+  queueNext(buffer: AudioBuffer | StreamSong, level?: { lufs: number; peak: number }, overlapS = 0, effect: MixEffect = PLAIN_MIX) {
     this.dropNext()
     this.overlapS = overlapS
     this.mixEffect = effect
@@ -388,9 +444,9 @@ export class GalleryPlayer {
       this.offset = from
       this.startedAt = when
       t.source = this.startSource(t, when, from)
-      setTimeout(() => old.gain.disconnect(), 300)
+      setTimeout(() => this.release(old), 300)
       this.armNearEnd()
-    } else old.gain.disconnect()
+    } else this.release(old)
     this.applyGain(t, 0.5)
   }
 
@@ -534,7 +590,7 @@ export class GalleryPlayer {
     this.sleep.gain.cancelScheduledValues(now)
     this.sleep.gain.setValueAtTime(fadeInS > 0 ? 0 : 1, now)
     if (fadeInS > 0) this.sleep.gain.linearRampToValueAtTime(1, now + fadeInS)
-    if (this.offset >= t.buffer.duration - 0.05 && !t.partial) this.offset = 0
+    if (this.offset >= lengthOf(t) - 0.05 && !t.partial) this.offset = 0
     // back from a fadeStop: its fade is cancelled and the level put back
     t.gain.gain.cancelScheduledValues(this.ctx.currentTime)
     this.applyGain(t, 0)
@@ -598,9 +654,23 @@ export class GalleryPlayer {
   }
 
   /** `later`: with a known level, measure the spectrum and loud windows just after the song starts, not before. */
-  private makeTrack(buffer: AudioBuffer, level?: { lufs: number; peak: number }, later = false): Track {
+  private makeTrack(song: AudioBuffer | StreamSong, level?: { lufs: number; peak: number }, later = false): Track {
     const gain = this.ctx.createGain()
     gain.connect(this.input)
+    if (isStream(song)) {
+      // no samples to measure: its stored level sets Off's gain, and the pink spectrum stands in for the EQ match
+      this.ctx.createMediaElementSource(song.el).connect(gain)
+      const t: Track = { buffer: null, media: song, spectrum: null, windows: [], stagePeak: null, offDb: level ? songGainDb(level) : 0, gain, source: null, startAt: 0 }
+      // only a stream that ran dry mid-song is a stall: the wait before its first sound, or after a seek, is loading
+      let began = false
+      song.el.addEventListener('waiting', () => { if (began && !song.el.seeking && t === this.cur && t.source) this.onStalled?.(true) })
+      song.el.addEventListener('playing', () => {
+        began = true
+        if (t === this.cur) this.onStalled?.(false)
+      })
+      return t
+    }
+    const buffer = song
     const a = analysed.get(buffer)
     if (a) return { buffer, spectrum: a.spectrum, windows: a.windows, stagePeak: null, offDb: songGainDb(a.loudness), gain, source: null, startAt: 0 }
     const analyse = () => {
@@ -630,7 +700,13 @@ export class GalleryPlayer {
     return t
   }
 
-  private startSource(t: Track, when: number, offset: number) {
+  private startSource(t: Track, when: number, offset: number): Voice {
+    if (t.media) {
+      const voice = new MediaVoice(t.media.el, this.ctx, when, offset)
+      voice.onended = () => this.ended(t, voice)
+      voice.onInterrupted = () => { if (t === this.cur && t.source === voice) this.onInterrupted?.() }
+      return voice
+    }
     const src = this.ctx.createBufferSource()
     src.buffer = t.buffer
     src.connect(t.gain)
@@ -641,6 +717,7 @@ export class GalleryPlayer {
 
   /** When the playing song ends, on the context clock. */
   private get endAt() {
+    if (this.cur?.media) return this.ctx.currentTime + this.duration - this.position
     return this.startedAt + (this.duration - this.offset)
   }
 
@@ -649,6 +726,11 @@ export class GalleryPlayer {
     if (!n || !this.cur?.source) return
     this.unschedule(n)
     const overlap = Math.min(this.overlapS, Math.max(0, this.endAt - this.ctx.currentTime))
+    // a stream's end can't be put on the audio clock (it may stall): gapless next to one starts on its 'ended'
+    if ((this.cur.media || n.media) && overlap <= 0.05) {
+      n.startAt = Infinity
+      return
+    }
     n.startAt = Math.max(this.ctx.currentTime, this.endAt - overlap)
     n.source = this.startSource(n, n.startAt, 0)
     if (overlap > 0.05) this.crossfade(this.cur, n, overlap)
@@ -719,7 +801,7 @@ export class GalleryPlayer {
       })
     }
     const source = from.source
-    if (rate !== 1 && source) {
+    if (rate !== 1 && source && 'playbackRate' in source) {
       source.playbackRate.setValueAtTime(1, at)
       source.playbackRate.linearRampToValueAtTime(rate, at + glide)
       // running slower it wouldn't reach its end in time, and the next song takes over on that end
@@ -749,15 +831,21 @@ export class GalleryPlayer {
     this.nearTimer = setTimeout(() => this.onNearEnd?.(), ms)
   }
 
-  private ended(t: Track, src: AudioBufferSourceNode) {
+  private ended(t: Track, src: Voice) {
     if (t.source !== src) return
     t.source = null
     if (t !== this.cur) return
     if (t.partial) {
-      this.offset = t.buffer.duration
+      this.offset = lengthOf(t)
       this.stalled = true
       this.onStalled?.(true)
       return
+    }
+    const n = this.next
+    if (n && !n.source && n.startAt === Infinity) {
+      // gapless after (or into) a stream: the next song starts now, on this one's end
+      n.startAt = this.ctx.currentTime
+      n.source = this.startSource(n, 0, 0)
     }
     if (this.next?.source) this.promote()
     else {
@@ -777,7 +865,7 @@ export class GalleryPlayer {
       old.source.onended = null
       old.source.disconnect()
     }
-    old.gain.disconnect()
+    this.release(old)
     this.next = null
     this.endMix(n)
     this.cur = n
@@ -812,8 +900,19 @@ export class GalleryPlayer {
   private dropNext() {
     if (!this.next) return
     this.unschedule(this.next)
-    this.next.gain.disconnect()
+    this.release(this.next)
     this.next = null
+  }
+
+  /** A song that's gone: off the graph, and a stream's element stops loading and lets go of its bytes. */
+  private release(t: Track) {
+    t.gain.disconnect()
+    if (!t.media) return
+    t.media.el.onended = null
+    t.media.el.onpause = null
+    t.media.el.pause()
+    t.media.el.removeAttribute('src')
+    t.media.el.load()
   }
 
   private rebuild(links: StageLink[], curve: { grid: ArrayLike<number>; db: ArrayLike<number> } | null, measure: (w: Float32Array[][]) => number) {

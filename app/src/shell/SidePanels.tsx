@@ -71,7 +71,7 @@ export function QueueList() {
             onDrop={() => { if (dragFrom.current !== null) move(dragFrom.current, i) }}
           >
             <button type="button" className="ms-queue-play" onClick={() => play(t, list)}>
-              <Cover id={t.cover} className={current?.id === t.id ? 'round' : ''} />
+              <Cover id={t.cover} className={current?.id === t.id ? 'round' : ''} genre={t.genre} speciality={t.category} title={t.title} />
               <span className="grow">
                 <span className="ms-queue-title">{t.title}</span>
                 <span className="ms-queue-sub">{t.artist || 'Unknown Artist'}</span>

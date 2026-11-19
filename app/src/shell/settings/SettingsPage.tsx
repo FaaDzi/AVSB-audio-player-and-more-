@@ -12,7 +12,7 @@ import { analysedCount, clearAnalysis, libraryCount, useAnalysisProgress } from 
 import { LEARN_AFTER } from '../autoplay'
 import { getListening, resetLearning, useListening } from '../stats'
 import { StatsPage } from './StatsPage'
-import { DuplicatesPage, LibraryCount, LibraryFolders, MetadataNamingSection } from './LibraryPages'
+import { BulkMetaRows, DuplicatesPage, LibraryCount, LibraryFolders, MetadataNamingSection } from './LibraryPages'
 import { scan, triggerMetadataRefresh } from '../localLibrary'
 import { About, DataNetworkSection, Equalizer, HeaderSlot, SwapPage, Logs, NetworkEmpty, Phone, PriorityPage, Shortcuts, Storage } from './CustomPages'
 import { ProfileCard } from './LinkPage'
@@ -181,6 +181,7 @@ function Sections({ page, ctx }: { page: Page; ctx: Ctx }) {
             {section.block === 'library-folders' && <LibraryFolders />}
             {section.block === 'separator-preview' && <SeparatorPreview />}
             {section.block === 'metadata-naming' && <MetadataNamingSection />}
+            {section.block === 'metadata-bulk' && <BulkMetaRows />}
             {rows.length > 0 && (
               <div className="ms-set-group">
                 {rows.map((row) => <SettingRow key={row.label} row={row} ctx={ctx} />)}
@@ -334,7 +335,7 @@ function SettingRow({ row, ctx }: { row: Row; ctx: Ctx }) {
       return (
         <>
         <button type="button" className={`ms-set-row clickable${row.danger ? ' danger' : ''}`} onClick={() => {
-          if (row.label === 'Create backup file') { downloadBackup(); showToast('Backup saved to your downloads') }
+          if (row.label === 'Create backup file') { void downloadBackup().then(() => showToast('Backup saved to your downloads')) }
           else if (row.label === 'Choose backup file') restorePicker.current?.click()
           else if (row.label === 'Scan Library' || row.label === 'Force Full Scan') void scan(row.label === 'Force Full Scan').then(() => showToast('Scanning your folders'), () => showToast("The scan couldn't start"))
           else if (row.label === 'Refresh metadata') void triggerMetadataRefresh().catch(() => showToast("Metadata refresh couldn't start"))
@@ -356,8 +357,8 @@ function SettingRow({ row, ctx }: { row: Row; ctx: Ctx }) {
                 const file = e.target.files?.[0]
                 e.target.value = ''
                 if (!file) return
-                file.text().then((text) => {
-                  restoreBackup(parseBackup(text))
+                file.text().then(async (text) => {
+                  await restoreBackup(parseBackup(text))
                   window.location.reload()
                 }).catch((err: Error) => showToast(err.message))
               }}

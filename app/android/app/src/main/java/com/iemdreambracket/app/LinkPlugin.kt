@@ -45,7 +45,6 @@ import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withTimeout
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
@@ -67,8 +66,8 @@ import javax.crypto.spec.SecretKeySpec
  * - Durable state (`node-key.bin`, `paired-pcs.json`, `library-tracks.json`, `offline/`, `covers/`) lives in
  *   `context.noBackupFilesDir` (NOT `context.cacheDir`) so MIUI Cleaner / Xiaomi Security / Samsung Device Care never
  *   wipe pairing or metadata when clearing cache.
- * - Zero-storage in-memory streaming (§73.C1): streamed PC songs are held only in a 2-track RAM LRU buffer
- *   (`MAX_RAM_TRACKS = 2`), consuming 0 MB of phone flash storage unless explicitly saved offline.
+ * - Streamed PC songs are kept in a song cache in `context.cacheDir` (§88 C, 1 GB, oldest out first), so replays,
+ *   Previous, a page restart and seeks don't download them again. Android may clear it; it refills as songs play.
  */
 @CapacitorPlugin(name = "Link")
 class LinkPlugin : Plugin() {
@@ -78,10 +77,10 @@ class LinkPlugin : Plugin() {
         private const val PREFS = "link"
         private const val KEY_ALIAS = "iemdream-link"
         private val ALPN = "iemdream/1".toByteArray()
-        /** Maximum number of streamed PC songs kept in RAM LRU at once (0 MB phone flash storage used). */
-        private const val MAX_RAM_TRACKS = 1
-        /** Max single track size cached in RAM (32 MB; keeps Java heap lean to prevent Android WebView/LMK kills). */
-        private const val MAX_RAM_TRACK_BYTES = 32 * 1024 * 1024
+        /** §88 C: songs streamed from the PC stay in the app's cache, oldest out first. Android may clear it; nothing breaks. */
+        private const val SONG_CACHE_BYTES = 1024L * 1024 * 1024
+        /** At most this many left-behind songs (a skip, a seek) finish downloading into the cache at once. */
+        private const val MAX_DETACHED = 2
         private const val CHUNK = 256 * 1024
         /** The owner has this long to click Allow on the PC. */
         private const val PAIR_TIMEOUT_MS = 3 * 60_000L
@@ -138,11 +137,158 @@ class LinkPlugin : Plugin() {
         val stream: InputStream,
     )
 
-    /** 2-track in-memory LRU buffer for zero-storage streaming: trackId -> (mimeType, bytes). */
-    private val ramLock = Any()
-    private val ramSongs = object : LinkedHashMap<String, Pair<String, ByteArray>>(4, 0.75f, true) {
-        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, Pair<String, ByteArray>>?): Boolean {
-            return size > MAX_RAM_TRACKS
+    // ---- §88 C: the song cache. A song is written there while it streams (a whole-file request only) and counts once
+    // it arrived complete; replays, Previous, a page restart and seeks into it then read the file, not the network.
+    private fun songCacheDir() = File(context.cacheDir, "link/songs").apply { mkdirs() }
+    private val writing = java.util.Collections.synchronizedSet(HashSet<String>())
+    private val detached = java.util.concurrent.atomic.AtomicInteger(0)
+
+    private fun cachedSongFile(key: String): File? =
+        File(songCacheDir(), key).takeIf { it.isFile && it.length() > 0 }?.also { it.setLastModified(System.currentTimeMillis()) }
+
+    private fun cachedMime(key: String): String =
+        runCatching { File(songCacheDir(), "$key.type").readText() }.getOrDefault("application/octet-stream")
+
+    private fun rangeStart(rangeHeader: String?): Long? =
+        rangeHeader?.let { Regex("^bytes=(\\d+)-").find(it)?.groupValues?.get(1)?.toLongOrNull() }
+
+    private fun onMobileData(): Boolean = runCatching {
+        val cm = context.getSystemService(ConnectivityManager::class.java)
+        cm.getNetworkCapabilities(cm.activeNetwork)?.hasTransport(android.net.NetworkCapabilities.TRANSPORT_CELLULAR) == true
+    }.getOrDefault(false)
+
+    inner class CacheWriter(private val key: String, private val mime: String, private val expected: Long) {
+        private val part = File(songCacheDir(), "$key.part")
+        private var out: java.io.OutputStream? = java.io.BufferedOutputStream(java.io.FileOutputStream(part), CHUNK)
+        private var size = 0L
+        val open: Boolean get() = out != null
+
+        fun write(b: ByteArray, off: Int, n: Int) {
+            val o = out ?: return
+            try {
+                o.write(b, off, n)
+                size += n
+            } catch (e: Exception) {
+                abort()
+            }
+        }
+
+        fun finish() {
+            val o = out ?: return
+            out = null
+            var ok = runCatching { o.close() }.isSuccess && size > 0 && (expected <= 0 || size == expected)
+            if (ok) ok = runCatching { File(songCacheDir(), "$key.type").writeText(mime) }.isSuccess && part.renameTo(File(songCacheDir(), key))
+            if (!ok) part.delete()
+            writing.remove(key)
+            if (ok) trimSongCache()
+        }
+
+        fun abort() {
+            val o = out ?: return
+            out = null
+            runCatching { o.close() }
+            part.delete()
+            writing.remove(key)
+        }
+    }
+
+    private fun startCacheWrite(key: String, mime: String, expected: Long): CacheWriter? {
+        if (cachedSongFile(key) != null || !writing.add(key)) return null
+        return runCatching { CacheWriter(key, mime, expected) }.getOrElse { writing.remove(key); null }
+    }
+
+    private fun trimSongCache() {
+        val all = songCacheDir().listFiles() ?: return
+        val stale = System.currentTimeMillis() - 3_600_000L
+        all.filter { it.name.endsWith(".part") && it.lastModified() < stale && it.name.removeSuffix(".part") !in writing }.forEach { it.delete() }
+        val songs = all.filter { it.isFile && !it.name.endsWith(".type") && !it.name.endsWith(".part") }
+        var total = songs.sumOf { it.length() }
+        for (f in songs.sortedBy { it.lastModified() }) {
+            if (total <= SONG_CACHE_BYTES) break
+            total -= f.length()
+            f.delete()
+            File(songCacheDir(), "${f.name}.type").delete()
+        }
+    }
+
+    /** A cached or offline file as a response; a range is answered from its start to the end of the file. */
+    private fun fileResult(f: File, mime: String, rangeHeader: String?): SongStreamResult? = runCatching {
+        val len = f.length()
+        val start = rangeStart(rangeHeader)
+        val input = FileInputStream(f)
+        if (start == null) return@runCatching SongStreamResult(mime, 200, len, null, "bytes", input)
+        if (start >= len) {
+            input.close()
+            return@runCatching null
+        }
+        // shortcut: "bytes=a-b" is answered to the end of the file; the WebView's player only asks open-ended ranges
+        var skipped = 0L
+        while (skipped < start) {
+            val k = input.skip(start - skipped)
+            if (k <= 0) break
+            skipped += k
+        }
+        SongStreamResult(mime, 206, len - start, "bytes $start-${len - 1}/$len", "bytes", input)
+    }.getOrNull()
+
+    /**
+     * The network stream as the player reads it, copied into the cache on the way. When the player lets go early (a
+     * skip, a seek), the rest still downloads into the cache in the background, except on mobile data without Low Data.
+     */
+    private fun cachingStream(src: InputStream, writer: CacheWriter?, lowData: Boolean, release: () -> Unit): InputStream = object : InputStream() {
+        private var done = false
+
+        override fun read(): Int {
+            val one = ByteArray(1)
+            return if (read(one, 0, 1) < 0) -1 else one[0].toInt() and 0xff
+        }
+
+        private var total = 0L
+        override fun read(b: ByteArray, off: Int, len: Int): Int {
+            val n = try {
+                src.read(b, off, len)
+            } catch (e: Exception) {
+                Log.w(TAG, "stream read failed after $total bytes: $e")
+                throw e
+            }
+            if (n < 0) {
+                writer?.finish()
+            } else if (n > 0) {
+                total += n
+                writer?.write(b, off, n)
+            }
+            return n
+        }
+
+        override fun close() {
+            if (done) return
+            done = true
+            if (writer != null && writer.open && detached.get() < MAX_DETACHED && (lowData || !onMobileData())) {
+                detached.incrementAndGet()
+                scope.launch(Dispatchers.IO) {
+                    try {
+                        val buf = ByteArray(CHUNK)
+                        while (true) {
+                            val n = src.read(buf, 0, buf.size)
+                            if (n < 0) {
+                                writer.finish()
+                                break
+                            }
+                            writer.write(buf, 0, n)
+                        }
+                    } catch (e: Exception) {
+                        writer.abort()
+                    } finally {
+                        detached.decrementAndGet()
+                        runCatching { src.close() }
+                        release()
+                    }
+                }
+                return
+            }
+            writer?.abort()
+            runCatching { src.close() }
+            release()
         }
     }
 
@@ -199,7 +345,7 @@ class LinkPlugin : Plugin() {
         activeLanBase = null
         activeLanToken = null
         clearPairedPc()
-        synchronized(ramLock) { ramSongs.clear() }
+        runCatching { songCacheDir().deleteRecursively() }
         tracks = JSONArray()
         libraryVersion = -1
         lastLatencyMs = -1L
@@ -685,57 +831,11 @@ class LinkPlugin : Plugin() {
             val contentRange = httpConn.getHeaderField("Content-Range")
             val acceptRanges = httpConn.getHeaderField("Accept-Ranges")
             val rawIn = httpConn.inputStream
-            val canCache = rangeHeader == null && (len in 1L..MAX_RAM_TRACK_BYTES.toLong() || (lowData && len < 0L))
-            val wrapped = object : InputStream() {
-                private var accumulator: ByteArrayOutputStream? = if (canCache) {
-                    ByteArrayOutputStream(if (len > 0L) len.toInt() else 65536)
-                } else null
-
-                private fun finishCache() {
-                    val acc = accumulator ?: return
-                    accumulator = null
-                    val full = acc.toByteArray()
-                    if (full.isNotEmpty() && full.size <= MAX_RAM_TRACK_BYTES && (len <= 0L || full.size.toLong() == len)) {
-                        synchronized(ramLock) {
-                            ramSongs[cacheKey] = mime to full
-                        }
-                    }
-                }
-
-                override fun read(): Int {
-                    val v = rawIn.read()
-                    if (v < 0) {
-                        finishCache()
-                        return -1
-                    }
-                    val acc = accumulator
-                    if (acc != null) {
-                        if (acc.size() < MAX_RAM_TRACK_BYTES) acc.write(v) else accumulator = null
-                    }
-                    return v
-                }
-
-                override fun read(b: ByteArray, off: Int, readLen: Int): Int {
-                    val n = rawIn.read(b, off, readLen)
-                    if (n < 0) {
-                        finishCache()
-                        return -1
-                    }
-                    val acc = accumulator
-                    if (acc != null && n > 0) {
-                        if (acc.size() + n <= MAX_RAM_TRACK_BYTES) acc.write(b, off, n) else accumulator = null
-                    }
-                    return n
-                }
-
-                override fun close() {
-                    accumulator = null
-                    runCatching { rawIn.close() }
-                    runCatching { httpConn.disconnect() }
-                    super.close()
-                }
-            }
-            SongStreamResult(mime, code, len, contentRange, acceptRanges, wrapped)
+            val whole = rangeStart(rangeHeader).let { it == null || it == 0L }
+            val total = contentRange?.substringAfterLast('/')?.toLongOrNull() ?: len
+            val writer = if (whole) startCacheWrite(cacheKey, mime, total) else null
+            val conn = httpConn
+            SongStreamResult(mime, code, len, contentRange, acceptRanges, cachingStream(rawIn, writer, lowData) { runCatching { conn.disconnect() } })
         } catch (e: Exception) {
             Log.w(TAG, "LAN stream fallback for $id: ${e.message}")
             runCatching { httpConn?.disconnect() }
@@ -758,19 +858,8 @@ class LinkPlugin : Plugin() {
     fun openSongStream(id: String, lowData: Boolean = false, rangeHeader: String? = null): SongStreamResult? {
         if (!Regex("^[A-Za-z0-9_-]{1,64}$").matches(id) || !paired()) return null
         val cacheKey = if (lowData) "$id-low" else id
-        if (rangeHeader == null) {
-            synchronized(ramLock) {
-                ramSongs[cacheKey]?.let { (mime, bytes) ->
-                    return SongStreamResult(mime, 200, bytes.size.toLong(), null, "bytes", ByteArrayInputStream(bytes))
-                }
-            }
-        }
-        val offlineFile = File(offlineDir(), id)
-        if (offlineFile.exists() && rangeHeader == null) {
-            return runCatching {
-                SongStreamResult("application/octet-stream", 200, offlineFile.length(), null, null, FileInputStream(offlineFile))
-            }.getOrNull()
-        }
+        File(offlineDir(), id).takeIf { it.exists() }?.let { f -> fileResult(f, "application/octet-stream", rangeHeader)?.let { return it } }
+        cachedSongFile(cacheKey)?.let { f -> fileResult(f, cachedMime(cacheKey), rangeHeader)?.let { return it } }
         openLanSongStream(id, lowData, rangeHeader, cacheKey)?.let { return it }
         // §84 A: a seek asks for "bytes=N-"; the PC resumes the file there (low data is transcoded live, so it restarts)
         val from = if (lowData) 0L else Regex("^bytes=(\\d+)-").find(rangeHeader ?: "")?.groupValues?.get(1)?.toLongOrNull() ?: 0L
@@ -842,22 +931,6 @@ class LinkPlugin : Plugin() {
                         private var pos: Int = 0
                         private var eof: Boolean = false
                         private var closed: Boolean = false
-                        private var accumulator: ByteArrayOutputStream? = when {
-                            from > 0L -> null // part of a song is never kept as the whole song
-                            expectedSize > MAX_RAM_TRACK_BYTES.toLong() -> null
-                            expectedSize > 0L -> ByteArrayOutputStream(expectedSize.toInt())
-                            else -> ByteArrayOutputStream(65536)
-                        }
-
-                        init {
-                            if (initialBytes.isNotEmpty()) {
-                                if (initialBytes.size <= MAX_RAM_TRACK_BYTES) {
-                                    accumulator?.write(initialBytes)
-                                } else {
-                                    accumulator = null
-                                }
-                            }
-                        }
 
                         private fun pullNextChunk(): Boolean {
                             if (eof || closed) return false
@@ -866,43 +939,20 @@ class LinkPlugin : Plugin() {
                             } catch (e: InterruptedException) {
                                 Thread.currentThread().interrupt()
                                 eof = true
-                                accumulator = null
                                 throw java.io.IOException("stream interrupted", e)
                             }
                             if (next == null) {
                                 eof = true
-                                accumulator = null
                                 throw java.io.IOException("PC stream stalled")
                             }
                             if (next.isEmpty()) {
                                 eof = true
                                 val err = producerError.get()
-                                if (err != null) {
-                                    accumulator = null
-                                    throw java.io.IOException("PC stream dropped: ${err.message}", err)
-                                }
-                                accumulator?.let { acc ->
-                                    val full = acc.toByteArray()
-                                    if (full.isNotEmpty() && (expectedSize <= 0L || full.size.toLong() == expectedSize) && full.size <= MAX_RAM_TRACK_BYTES) {
-                                        synchronized(ramLock) {
-                                            ramSongs[cacheKey] = mime to full
-                                        }
-                                    }
-                                }
-                                accumulator = null
+                                if (err != null) throw java.io.IOException("PC stream dropped: ${err.message}", err)
                                 return false
                             }
                             cur = next
                             pos = 0
-                            val acc = accumulator
-                            if (acc != null) {
-                                if (acc.size() + next.size <= MAX_RAM_TRACK_BYTES) {
-                                    acc.write(next)
-                                } else {
-                                    // Drop RAM cache accumulator immediately rather than retaining oversized arrays
-                                    accumulator = null
-                                }
-                            }
                             return true
                         }
 
@@ -926,13 +976,18 @@ class LinkPlugin : Plugin() {
 
                         override fun close() {
                             closed = true
-                            accumulator = null
                             producerJob.cancel()
                             super.close()
                         }
                     }
-                    if (from > 0L && expectedSize > from) SongStreamResult(mime, 206, expectedSize - from, "bytes $from-${expectedSize - 1}/$expectedSize", "bytes", stream)
-                    else SongStreamResult(mime, 200, expectedSize, null, if (lowData) null else "bytes", stream)
+                    val writer = if (from == 0L) startCacheWrite(cacheKey, mime, expectedSize) else null
+                    val body = cachingStream(stream, writer, lowData) {}
+                    when {
+                        from > 0L && expectedSize > from -> SongStreamResult(mime, 206, expectedSize - from, "bytes $from-${expectedSize - 1}/$expectedSize", "bytes", body)
+                        // the player asked "bytes=0-": answered as a range, or it takes the song for one it can't seek in
+                        rangeHeader != null && expectedSize > 0L && !lowData -> SongStreamResult(mime, 206, expectedSize, "bytes 0-${expectedSize - 1}/$expectedSize", "bytes", body)
+                        else -> SongStreamResult(mime, 200, expectedSize, null, if (lowData) null else "bytes", body)
+                    }
                 }
             }.onFailure { Log.w(TAG, "songStream $id: ${it.message}") }.getOrNull()
         }
@@ -951,8 +1006,9 @@ class LinkPlugin : Plugin() {
     fun removeCachedTrack(rawId: String): Boolean {
         val id = rawId.removePrefix("pc_").removePrefix("pc:")
         var removed = false
-        synchronized(ramLock) {
-            if (ramSongs.remove(id) != null) removed = true
+        for (key in listOf(id, "$id-low")) {
+            if (File(songCacheDir(), key).delete()) removed = true
+            File(songCacheDir(), "$key.type").delete()
         }
         val f = File(offlineDir(), id)
         if (f.exists() && f.delete()) {
@@ -1454,7 +1510,7 @@ class LinkPlugin : Plugin() {
         scope.launch { refreshLibrary(); call.resolve(buildStatusJson()) }
     }
 
-    /** Pre-buffers the next track into the RAM LRU slot without extra throwaway heap copies. */
+    /** §88 D: fetches the next song into the song cache ahead of time (drained through openSongStream's cache copy). */
     @PluginMethod
     fun prebuffer(call: PluginCall) {
         val rawId = call.getString("id", "") ?: ""
@@ -1465,23 +1521,127 @@ class LinkPlugin : Plugin() {
             return
         }
         val cacheKey = if (lowData) "$id-low" else id
-        synchronized(ramLock) {
-            if (ramSongs.containsKey(cacheKey)) {
-                call.resolve()
-                return
-            }
+        if (cachedSongFile(cacheKey) != null || cacheKey in writing) {
+            call.resolve()
+            return
         }
         scope.launch {
             runCatching {
                 songStream(id, lowData)?.second?.use { input ->
                     val b = ByteArray(64 * 1024)
                     while (input.read(b) >= 0) {
-                        // drained directly through songStream's bounded LRU accumulator
+                        // every byte read is copied into the song cache on the way
                     }
                 }
             }
             call.resolve()
         }
+    }
+
+    // ---- §88 B: the page's audio element streams PC songs over real HTTP from this phone itself. Through the WebView's
+    // request hook its range answers were never accepted (it re-asked for the end of the file until it gave up). Only
+    // 127.0.0.1, behind a random path made fresh each start, so other apps can't read through it.
+    private val audioSecret = java.util.UUID.randomUUID().toString().replace("-", "")
+    @Volatile private var audioServer: java.net.ServerSocket? = null
+
+    @Synchronized
+    private fun startAudioServer(): Int {
+        audioServer?.takeIf { !it.isClosed }?.let { return it.localPort }
+        val ss = java.net.ServerSocket(0, 16, java.net.InetAddress.getByName("127.0.0.1"))
+        audioServer = ss
+        Thread({
+            while (!ss.isClosed) {
+                val sock = try { ss.accept() } catch (e: Exception) { break }
+                Thread({ runCatching { serveAudio(sock) } }, "avsb-audio").apply { isDaemon = true }.start()
+            }
+        }, "avsb-audio-accept").apply { isDaemon = true }.start()
+        return ss.localPort
+    }
+
+    private fun serveAudio(sock: java.net.Socket) = sock.use { s ->
+        s.soTimeout = 30_000
+        val input = java.io.BufferedInputStream(s.getInputStream())
+        val lines = ArrayList<String>()
+        val line = StringBuilder()
+        while (true) {
+            val c = input.read()
+            if (c < 0) return
+            if (c == '\n'.code) {
+                val text = line.toString().trimEnd('\r')
+                line.setLength(0)
+                if (text.isEmpty()) break
+                lines.add(text)
+                if (lines.size > 64) return
+            } else {
+                line.append(c.toChar())
+                if (line.length > 8192) return
+            }
+        }
+        val request = lines.firstOrNull()?.split(" ") ?: return
+        val method = request[0]
+        val path = request.getOrNull(1)?.substringBefore('?') ?: return
+        val range = lines.drop(1).firstOrNull { it.startsWith("range:", ignoreCase = true) }?.substringAfter(':')?.trim()
+        val out = java.io.BufferedOutputStream(s.getOutputStream(), CHUNK)
+        fun head(status: String, headers: Map<String, String>) {
+            val text = StringBuilder("HTTP/1.1 $status\r\n")
+            for ((k, v) in headers) text.append(k).append(": ").append(v).append("\r\n")
+            text.append("Access-Control-Allow-Origin: *\r\nCache-Control: private, max-age=86400\r\nConnection: close\r\n\r\n")
+            out.write(text.toString().toByteArray())
+        }
+        val m = Regex("^/$audioSecret/(low|raw)/([A-Za-z0-9_-]{1,64})$").find(path)
+        val res = m?.let { openSongStream(it.groupValues[2], it.groupValues[1] == "low", range) }
+        if (res == null) {
+            head("404 Not Found", mapOf("Content-Length" to "0"))
+            out.flush()
+            return
+        }
+        res.stream.use { body ->
+            val headers = LinkedHashMap<String, String>()
+            headers["Content-Type"] = res.mime
+            if (res.contentLength > 0) headers["Content-Length"] = res.contentLength.toString()
+            res.acceptRanges?.let { headers["Accept-Ranges"] = it }
+            res.contentRange?.let { headers["Content-Range"] = it }
+            head(if (res.status == 206) "206 Partial Content" else "200 OK", headers)
+            if (method == "HEAD") {
+                out.flush()
+                return
+            }
+            val buf = ByteArray(CHUNK)
+            while (true) {
+                val n = body.read(buf)
+                if (n < 0) break
+                out.write(buf, 0, n)
+            }
+            out.flush()
+        }
+    }
+
+    /** Where the page's audio element finds PC songs: `<base>/raw/<id>` or `<base>/low/<id>`. */
+    @PluginMethod
+    fun audioBase(call: PluginCall) {
+        runCatching { startAudioServer() }.onSuccess { port ->
+            val out = JSObject()
+            out.put("base", "http://127.0.0.1:$port/$audioSecret")
+            call.resolve(out)
+        }.onFailure { call.reject(it.message ?: "no server") }
+    }
+
+    /** §88 C: how much the song cache holds, for Settings. */
+    @PluginMethod
+    fun songCache(call: PluginCall) {
+        val songs = songCacheDir().listFiles { f -> !f.name.endsWith(".type") && !f.name.endsWith(".part") } ?: emptyArray()
+        val out = JSObject()
+        out.put("bytes", songs.sumOf { it.length() })
+        out.put("songs", songs.size)
+        call.resolve(out)
+    }
+
+    /** Empties the song cache (songs still downloading are left to finish). */
+    @PluginMethod
+    fun clearSongCache(call: PluginCall) {
+        val busy = HashSet(writing)
+        songCacheDir().listFiles()?.forEach { f -> if (busy.none { f.name.startsWith(it) }) f.delete() }
+        call.resolve()
     }
 
     /** Forgets the PC on this phone and empties the cache. (The PC drops this phone itself after 7 days unused.) */
@@ -1495,7 +1655,7 @@ class LinkPlugin : Plugin() {
             activeLanBase = null
             activeLanToken = null
             clearPairedPc()
-            synchronized(ramLock) { ramSongs.clear() }
+            runCatching { songCacheDir().deleteRecursively() }
             tracks = JSONArray()
             libraryVersion = -1
             lastLatencyMs = -1L

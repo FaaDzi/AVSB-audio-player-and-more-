@@ -9,6 +9,8 @@ const config: CapacitorConfig = {
   android: {
     backgroundColor: '#0e071b',
   },
+  // §88 A: the page's log lines (player timings) reach adb logcat in the signed build too
+  loggingBehavior: 'production',
 }
 
 export default config

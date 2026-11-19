@@ -60,6 +60,7 @@ interface RawSavedOverlay {
   originalArtist?: string
   confirmedMatch?: boolean
   notFoundOnline?: boolean
+  replaceCover?: boolean
 }
 
 function readSavedOverlay(id: string): RawSavedOverlay | null {
@@ -148,6 +149,8 @@ export interface Playlist {
   updated?: number
   /** Songs only the phone has, by their "phone:<id>": title, artist and length to show until the file arrives. */
   missing?: Record<string, { title: string; artist: string; sec: number }>
+  /** A cover of your own (a small square JPEG data URL); without one the first song's cover shows. */
+  cover?: string
 }
 
 export interface LibraryData {
@@ -391,7 +394,8 @@ export function overlayTrack(t: Track): Track {
   // the track still carries its saved cover from the last overlay (Object.assign below): reloading it every time the
   // LRU evicts it reloaded the whole library in a loop once more than MEMORY_COVER_MAX songs had saved covers
   const foundCover = cachedSavedCover(t.id) ?? (saved?.from?.cover && t.cover?.startsWith('data:') ? t.cover : undefined)
-  if (!foundCover && !base.cover && saved?.from?.cover && lazyCoverLoader) {
+  const foundWins = Boolean(saved?.replaceCover)
+  if (!foundCover && (!base.cover || foundWins) && saved?.from?.cover && lazyCoverLoader) {
     lazyCoverLoader(t.id)
   }
   const extra = saved?.values ?? {}
@@ -417,7 +421,7 @@ export function overlayTrack(t: Track): Track {
     barcode: base.barcode || (extra.barcode ? String(extra.barcode) : undefined),
     releaseType: base.releaseType || (extra.releaseType ? String(extra.releaseType) : undefined),
     isrc: base.isrc || (extra.isrc ? String(extra.isrc) : ''),
-    cover: base.cover || foundCover || '',
+    cover: (foundWins && foundCover) || base.cover || foundCover || '',
     confirmedMatch: Boolean(saved?.confirmedMatch),
   }
   // Also mutate `t` in place so components reading `useShell().data.tracks` directly see the overlaid metadata
@@ -477,7 +481,11 @@ export function withCuratedInfo(tracks: Track[]): Track[] {
  */
 export function withArtistGenres(tracks: Track[]): Track[] {
   const votes = new Map<string, Map<string, number>>()
-  const artistOf = (t: Track) => splitArtists(t.artist)[0]?.toLowerCase() ?? ''
+  // "Unknown Artist" isn't an artist: its songs vote for nothing and take nothing from each other
+  const artistOf = (t: Track) => {
+    const a = splitArtists(t.artist)[0]?.toLowerCase() ?? ''
+    return /^unknown(\s+artist)?$/.test(a) ? '' : a
+  }
   for (const t of tracks) {
     const artist = artistOf(t)
     if (!t.genre || !artist) continue
@@ -489,7 +497,8 @@ export function withArtistGenres(tracks: Track[]): Track[] {
   const usual = new Map([...votes].map(([artist, tally]) => [artist, [...tally].sort((a, b) => b[1] - a[1])[0][0]]))
   return tracks.map((t) => {
     if (t.genre) return t
-    const genre = usual.get(artistOf(t))
+    // a rip with no artist ("NAS - The World Is Yours"): either side of the dash may be an artist the library knows
+    const genre = usual.get(artistOf(t)) ?? cleanRipTitle(t.title || '').split(/\s+-\s+/).map((part) => usual.get(splitArtists(part)[0]?.toLowerCase() ?? '')).find(Boolean)
     return genre ? { ...t, genre } : t
   })
 }
@@ -999,6 +1008,10 @@ export function qualityLabel(t: Track): string {
   const spec = [t.bits > 0 ? `${t.bits}-bit` : '', t.rate > 0 ? `${(t.rate / 1000).toFixed(1).replace(/\.0$/, '')}kHz` : '']
   return words(t.format, spec.filter(Boolean).join('/')) || 'Lossless'
 }
+
+/** 24-bit / hi-res lossless, or a Dolby format: these get the light-blue quality pill. */
+export const isPremiumQuality = (t: Pick<Track, 'lossy' | 'bits' | 'rate' | 'format'>) =>
+  (!t.lossy && (t.bits > 16 || t.rate > 48000)) || /^(E?AC-?[34]|TRUEHD|ATMOS)/i.test(t.format || '')
 
 export function duration(sec: number): string {
   const s = Math.round(sec)

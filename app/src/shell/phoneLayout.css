@@ -722,3 +722,12 @@
     height: 52px;
   }
 }
+
+/* §89 E: the band under the clock and icons is the page's own colour and fades out below the bar, so nothing scrolling
+   up (or a button's shadow) is cut by a hard edge. Android's grey scrim is off (MainActivity, styles.xml). */
+.ms-window.phone::before {
+  content: '';
+  position: fixed; top: 0; left: 0; right: 0; z-index: 4; pointer-events: none;
+  height: calc(var(--sat) + 18px);
+  background: linear-gradient(to bottom, var(--page) 0, var(--page) var(--sat), color-mix(in srgb, var(--page) 55%, transparent) calc(var(--sat) + 7px), transparent 100%);
+}

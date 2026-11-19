@@ -50,7 +50,7 @@ export interface Section {
   when?: Rule
   rows: Row[]
   /** A card drawn instead of, or after, the group of rows. */
-  block?: 'style-preview' | 'library-count' | 'network-empty' | 'separator-preview' | 'library-folders' | 'metadata-naming' | 'data-network'
+  block?: 'style-preview' | 'library-count' | 'network-empty' | 'separator-preview' | 'library-folders' | 'metadata-naming' | 'metadata-bulk' | 'data-network'
   /** A dim info card. */
   card?: { icon: string; title?: string; text: string }
 }
@@ -313,10 +313,9 @@ export const PAGE_GROUPS: Page[][] = [
     }] : []),
     {
       id: 'metadata', title: 'Metadata', icon: 'sell', sections: [
-        { title: 'Library', rows: [
-          action('Refresh metadata', 'Re-scan library tags, covers and metadata across all files', 'sync'),
-          nav('Metadata separators', 'How one artist tag splits into separate artists in Library', 'format_list_bulleted', 'metadata-separators'),
-        ] },
+        { title: 'Library', rows: [action('Refresh metadata', 'Re-read the tags in your song files', 'sync')] },
+        // §87: Import song art and Sync lyrics sit between Refresh metadata and the separators
+        { block: 'metadata-bulk', rows: [nav('Metadata separators', 'How one artist tag splits into separate artists in Library', 'format_list_bulleted', 'metadata-separators')] },
         { block: 'metadata-naming', rows: [] },
         { title: 'Providers', rows: [nav('Metadata Provider Priority', 'MusicBrainz, Cover Art Archive, Deezer. Tags in the file always come first', 'folder_open', 'metadata-priority')] },
         { rows: [], card: { icon: 'info', title: 'Look up details', text: 'On a song\'s page, Look up details fills only the fields its file leaves empty. It sends the title, artist, album, length and ISRC to the sources above. What\'s found is kept on this computer; audio files are never changed, and Library filters keep reading the file tags.' } },

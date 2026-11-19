@@ -12,6 +12,22 @@ interface SpeedResult {
   path: string
 }
 
+/** §88 C: the song cache on the phone, with Clear. */
+function SongCacheRow() {
+  const [info, setInfo] = useState<{ bytes: number; songs: number } | null>(null)
+  const refresh = () => { void phoneLink?.songCache?.().then(setInfo).catch(() => {}) }
+  useEffect(refresh, [])
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <Icon name="sd_storage" size={20} />
+      <span className="grow" style={{ fontSize: 13 }}>
+        Songs kept from the PC: {info ? `${info.songs} · ${Math.round(info.bytes / 1048576)} MB of 1 GB` : '…'}
+      </span>
+      <button type="button" className="ms-btn text small" disabled={!info?.songs} onClick={() => { void phoneLink?.clearSongCache?.().then(refresh) }}>Clear</button>
+    </div>
+  )
+}
+
 export function DataNetworkSection() {
   const { showToast } = useShell()
   useSettings()
@@ -236,6 +252,7 @@ export function DataNetworkSection() {
         </span>
         {testing ? 'Testing connection…' : 'Test Connection'}
       </button>
+      {phoneLink && <SongCacheRow />}
     </div>
   )
 }

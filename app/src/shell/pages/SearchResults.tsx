@@ -55,7 +55,7 @@ export function SearchResults({ query }: { query: string }) {
             {found.songs.slice(0, limit(5)).map((t) => (
               <article className="ms-sr-song" key={t.id} onClick={() => play(t, found.songs)} onContextMenu={(e) => menu.open(e, t)}>
                 <button type="button" className="ms-thumb-link" aria-label={`Details for ${t.title}`} onClick={(e) => { e.stopPropagation(); push({ page: 'song', id: t.id }) }}>
-                  <Cover id={t.cover} className="ms-sr-art" />
+                  <Cover id={t.cover} className="ms-sr-art" genre={t.genre} speciality={t.category} title={t.title} />
                 </button>
                 <span className="ms-sr-text">
                   <b>{t.title}</b>
@@ -73,7 +73,7 @@ export function SearchResults({ query }: { query: string }) {
           {heading('Albums')}
           {found.albums.slice(0, limit(5)).map((a) => (
             <button type="button" className="ms-sr-row" key={a.key} onClick={() => push({ page: 'album', key: a.key })}>
-              <Cover id={a.cover} className="ms-sr-art" />
+              <Cover id={a.cover} className="ms-sr-art" genre={a.tracks[0]?.genre} speciality={a.tracks[0]?.category} title={a.name} />
               <span className="ms-sr-text"><b>{a.name}</b><small>{a.artist} · {trackCount(a.tracks.length)}</small></span>
               <Icon name="chevron_right" />
             </button>
@@ -86,7 +86,7 @@ export function SearchResults({ query }: { query: string }) {
           {heading('Artists')}
           {found.artists.slice(0, limit(5)).map((a) => (
             <button type="button" className="ms-sr-row" key={a.name} onClick={() => push({ page: 'artist', name: a.name })}>
-              <Cover id={a.cover} className="ms-sr-art round" />
+              <Cover id={a.cover} className="ms-sr-art round" genre={a.tracks[0]?.genre} speciality={a.tracks[0]?.category} title={a.name} />
               <span className="ms-sr-text"><b>{a.name}</b><small>{trackCount(a.tracks.length)}</small></span>
               <Icon name="chevron_right" />
             </button>

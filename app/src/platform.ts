@@ -56,6 +56,8 @@ function handleAppVisibility(isActive: boolean) {
 const MediaPlayback = registerPlugin<{
   /** background: false when Android refused the foreground service (review item 10). */
   start(): Promise<{ background?: boolean } | undefined>
+  /** §88 B: true while the page's audio element (a streamed PC song) holds audio focus itself. */
+  pageFocus?(o: { on: boolean }): Promise<void>
   stop(): Promise<void>
   setNowPlaying(o: {
     title: string
@@ -442,6 +444,20 @@ function startMedia() {
     .catch(() => {})
 }
 
+let pageFocus = false
+/** Window event: a streamed song was paused by Android (another app took the sound); the app pauses like a press. */
+export const STREAM_INTERRUPTED = 'avsb-stream-interrupted'
+/**
+ * §88 B: a PC song plays from an audio element, which takes audio focus itself; the playback service must then leave
+ * focus alone (Chrome pauses the element when it loses it). Back on a decoded song, the service takes it again.
+ */
+export async function setStreamFocus(on: boolean) {
+  if (!isAndroid() || on === pageFocus) return
+  pageFocus = on
+  await MediaPlayback.pageFocus?.({ on }).catch(() => {})
+  if (!on && mediaOn) startMedia()
+}
+
 export function setMediaActive(on: boolean) {
   if (!isAndroid() || on === mediaOn) return
   mediaOn = on
@@ -455,5 +471,8 @@ export function onMediaControls(listener: (c: MediaControl) => void): () => void
     // another app took the sound, or the earphones came out: pause like a press would
     MediaPlayback.addListener('focusLost', () => listener({ action: 'pause' })),
   ]
+  const interrupted = () => listener({ action: 'pause' })
+  window.addEventListener(STREAM_INTERRUPTED, interrupted)
+  off.push(Promise.resolve({ remove: async () => window.removeEventListener(STREAM_INTERRUPTED, interrupted) }))
   return () => off.forEach((p) => void p.then((h) => h.remove()))
 }
