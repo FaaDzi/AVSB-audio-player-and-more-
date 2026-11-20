@@ -18,7 +18,7 @@ const ALLOWED = [
   'https://is4-ssl.mzstatic.com/',
   'https://is5-ssl.mzstatic.com/',
 ]
-const USER_AGENT = 'MusicPreferences/0.1.0 (desktop music player; song details looked up on request)'
+const USER_AGENT = 'AVSB/1.1.4 ( https://github.com/FaaDzi/AVSB-audio-player-and-more- )'
 const MAX_BYTES = 8e6
 
 function allowedMetaUrl(text) {

@@ -829,7 +829,7 @@ public class ShellHostPlugin extends Plugin {
                 c.setInstanceFollowRedirects(false);
                 c.setConnectTimeout(15000);
                 c.setReadTimeout(20000);
-                c.setRequestProperty("User-Agent", "MusicPreferences/0.1.0 (Android music player; song details looked up on request)");
+                c.setRequestProperty("User-Agent", "AVSB/1.1.4 ( https://github.com/FaaDzi/AVSB-audio-player-and-more- )");
                 c.setRequestProperty("Accept", "application/json, image/*");
                 int status = c.getResponseCode();
                 if (status >= 300 && status < 400 && c.getHeaderField("Location") != null) {

@@ -8,6 +8,7 @@ import {
   splitArtists, splitYoutubeTitle, useDetailsVersion, versionKey, type Track,
 } from './library'
 import { logLine } from './logs'
+import { waitMs } from '../platform'
 import { getSetting, setSetting } from './settings/store'
 import { android, setMetaBannerState } from './localLibrary'
 
@@ -149,6 +150,9 @@ const via = (url: string) => `/shell-host/meta?url=${encodeURIComponent(url)}`
 let mbQueue: Promise<unknown> = Promise.resolve()
 export const MB_GAP_MS = 1100
 
+/** "Slow down" from a site (429, or MusicBrainz's 503): try again later, never "nothing found" (§94 A). */
+export const isRateLimited = (e: unknown) => /HTTP (429|503)/.test(String(e))
+
 async function getJson<T>(url: string): Promise<T | null> {
   const response = await fetch(via(url))
   if (response.status === 404) return null
@@ -156,9 +160,29 @@ async function getJson<T>(url: string): Promise<T | null> {
   return response.json() as Promise<T>
 }
 
+// §94 A: after a second "slow down" in a row, MusicBrainz rests for 30 s; calls in that time fail at once
+let mbRestUntil = 0
+const MB_REST_MS = 30_000
+
 function mb<T>(path: string): Promise<T | null> {
-  const run = mbQueue.then(() => getJson<T>(`https://musicbrainz.org/ws/2/${path}${path.includes('?') ? '&' : '?'}fmt=json`))
-  mbQueue = run.catch(() => null).then(() => new Promise((done) => setTimeout(done, MB_GAP_MS)))
+  const url = `https://musicbrainz.org/ws/2/${path}${path.includes('?') ? '&' : '?'}fmt=json`
+  const run = mbQueue.then(async () => {
+    if (Date.now() < mbRestUntil) throw new Error('HTTP 503 (MusicBrainz resting)')
+    try {
+      return await getJson<T>(url)
+    } catch (e) {
+      if (!isRateLimited(e)) throw e
+      // one quick retry for a passing 503
+      await waitMs(3000)
+      try {
+        return await getJson<T>(url)
+      } catch (again) {
+        if (isRateLimited(again)) mbRestUntil = Date.now() + MB_REST_MS
+        throw again
+      }
+    }
+  })
+  mbQueue = run.catch(() => null).then(() => waitMs(MB_GAP_MS))
   return run
 }
 
@@ -373,44 +397,65 @@ export interface Lookup {
   possible: Found | null
   /** The song as the sources name it, when a strong match said who it is (a rip's file name rarely does). */
   identity?: { title: string; artist: string }
+  /** MusicBrainz was resting (it asked us to slow down) and nothing was found without it: ask again on a later run. */
+  later?: boolean
 }
 
 /**
  * Asks the enabled sources in order. Sends the title, artist, album, length and ISRC; nothing else.
  * MusicBrainz first even when Deezer ranks higher, since Cover Art Archive needs its release.
  */
-export async function lookUp(song: Track): Promise<Lookup> {
+/** `coversFirst` (Import song art, §94 A): Deezer and iTunes are asked first, and MusicBrainz (one request a second,
+ * 3-4 per song) only when neither has a strong match with a cover. */
+export async function lookUp(song: Track, coversFirst = false): Promise<Lookup> {
   const originalTitle = song.originalTitle ?? song.title
   const originalArtist = song.originalArtist ?? song.artist
   let fallback: Lookup = { found: null, possible: null }
   for (const reading of readingsOf({ ...song, title: originalTitle, artist: originalArtist })) {
-    const r = await lookUpAs({ ...song, ...reading, originalTitle, originalArtist })
+    const r = await lookUpAs({ ...song, ...reading, originalTitle, originalArtist }, coversFirst)
     if (r.found) return r
     if (!fallback.possible && r.possible) fallback = r
+    if (r.later) fallback = { ...fallback, later: true }
   }
   return fallback
 }
 
 export const lookupTrackDetails = lookUp
 
-async function lookUpAs(t: Track): Promise<Lookup> {
+async function lookUpAs(t: Track, coversFirst = false): Promise<Lookup> {
   const { order, off } = providerOrder()
   const missing = new Set(missingFields(t))
   const candidates: Candidate[] = []
   const coverArt = !off.has('coverart')
-  if (!off.has('musicbrainz')) {
-    const c = await fromMusicBrainz(t, coverArt, missing).catch((e) => { logLine('WARN', 'Details', `MusicBrainz: ${e}`); return null })
+  const quick = coversFirst
+    ? await Promise.all([
+      off.has('deezer') ? null : fromDeezer(t, true).catch(() => null),
+      off.has('itunes') ? null : fromItunes(t, coverArt).catch(() => null),
+    ])
+    : null
+  const coveredQuickly = quick?.some((c) => c?.cover && matchOf(t, c) === 'strong') ?? false
+  let mbResting = false
+  if (!off.has('musicbrainz') && !coveredQuickly) {
+    const c = await fromMusicBrainz(t, coverArt, missing).catch((e) => {
+      // song art carries on with Deezer and iTunes; everything else waits and asks again
+      if (isRateLimited(e) && coversFirst) { mbResting = true; return null }
+      if (isRateLimited(e)) throw e
+      logLine('WARN', 'Details', `MusicBrainz: ${e}`)
+      return null
+    })
     if (c) {
       // its cover counts as Cover Art Archive's, for the priority order
       if (c.cover) candidates.push({ ...c, provider: 'coverart', values: {} })
       candidates.push({ ...c, cover: undefined })
     }
   }
-  if (!off.has('deezer')) {
+  if (quick) {
+    for (const c of quick) if (c) candidates.push(c)
+  } else if (!off.has('deezer')) {
     const c = await fromDeezer(t, true).catch((e) => { logLine('WARN', 'Details', `Deezer: ${e}`); return null })
     if (c) candidates.push(c)
   }
-  if (!off.has('itunes')) {
+  if (!quick && !off.has('itunes')) {
     const c = await fromItunes(t, coverArt).catch((e) => { logLine('WARN', 'Details', `iTunes: ${e}`); return null })
     if (c) candidates.push(c)
   }
@@ -445,6 +490,7 @@ async function lookUpAs(t: Track): Promise<Lookup> {
     found: some(found),
     possible: some(possible),
     identity: named ? { title: named.title, artist: named.artists[0] ?? t.artist } : undefined,
+    later: mbResting && !some(found),
   }
 }
 
@@ -797,6 +843,7 @@ export async function nameOne(track: Track) {
       localStorage.setItem(KEY + track.id, JSON.stringify(mark))
     }
   } catch (e) {
+    if (isRateLimited(e)) throw e
     logLine('WARN', 'Details', `Auto-name failed for "${track.title}": ${e}`)
     const before = savedDetails(track.id)
     const mark: Found = {
@@ -841,11 +888,18 @@ async function startNamingRunner() {
       cachedNamingSnapshot = null
       notifyNamingChanged()
 
-      await nameOne(track)
+      try {
+        await nameOne(track)
+      } catch (e) {
+        // MusicBrainz asked to slow down: the same song is tried again in a minute
+        logLine('INFO', 'Details', `Song naming: ${String(e)}, waiting a minute`)
+        await waitMs(60_000)
+        continue
+      }
       namingDoneCount++
       cachedNamingSnapshot = null
       notifyNamingChanged()
-      await new Promise((r) => setTimeout(r, MB_GAP_MS))
+      await waitMs(MB_GAP_MS)
     }
   } finally {
     void android?.setWakeLock?.({ enabled: false }).catch(() => {})

@@ -12,8 +12,9 @@ const clock = () => new Date().toTimeString().slice(0, 8) + '.' + String(new Dat
 
 export function logLine(level: LogLevel, tag: string, message: string) {
   lines = [...lines.slice(-(LIMIT - 1)), [clock(), level, tag, message]]
-  // §88 A: player and network lines also reach the Android log (adb logcat), so timings survive a page restart
-  if (tag === 'Player' || tag === 'Network') console.info(`[AVSB ${tag}] ${message}`)
+  // §88 A: player and network lines also reach the Android log (adb logcat), so timings survive a page restart;
+  // §94 A: so do the background jobs' (Details) lines
+  if (tag === 'Player' || tag === 'Network' || tag === 'Details') console.info(`[AVSB ${tag}] ${message}`)
   listeners.forEach((l) => l())
 }
 

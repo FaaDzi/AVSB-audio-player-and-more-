@@ -32,6 +32,7 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(ShellHostPlugin.class); // the new UI's /shell-host/* routes: library, covers, audio (plan §70 A2)
         registerPlugin(LinkPlugin.class); // the phone ↔ PC link: pairing, the PC's songs (plan §70 D2)
         registerPlugin(DirectDacPlugin.class); // Direct to DAC: native playback at the song's own rate to a USB DAC (plan §77)
+        registerPlugin(BulkWorkPlugin.class); // Import song art / Sync lyrics in the background, like Mihon (plan §90 B)
         super.onCreate(savedInstanceState);
         getBridge().setWebViewClient(new BridgeWebViewClient(getBridge()) {
             @Override

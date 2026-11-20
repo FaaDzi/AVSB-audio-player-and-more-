@@ -78,6 +78,46 @@ const MediaPlayback = registerPlugin<{
   addListener(event: 'control', cb: (e: MediaControl) => void): Promise<{ remove: () => Promise<void> }>
 }>('MediaPlayback')
 
+/** §90 B: Import song art / Sync lyrics in the background with a progress notification (BulkWorkPlugin.java). */
+const BulkWork = registerPlugin<{
+  show(o: { title: string; text: string; done: number; total: number }): Promise<void>
+  finish(o: { text: string }): Promise<void>
+  sleep(o: { ms: number }): Promise<void>
+  checkPermissions(): Promise<{ notifications: string }>
+  requestPermissions(): Promise<{ notifications: string }>
+  addListener(event: 'stop', cb: () => void): Promise<{ remove: () => Promise<void> }>
+}>('BulkWork')
+
+/**
+ * Android 13+ shows an app's notifications only once allowed (the media one is exempt): asked when a background job
+ * starts, the way Mihon asks before its first library update. Without it the job still runs, just without the bar.
+ */
+export async function allowBulkNotifications() {
+  if (!isAndroid()) return
+  try {
+    const { notifications } = await BulkWork.checkPermissions()
+    if (notifications.startsWith('prompt')) await BulkWork.requestPermissions()
+  } catch { /* older Android: nothing to ask */ }
+}
+
+/** A wait that a hidden page's timer throttling can't stretch (Android: a native timer); setTimeout elsewhere. */
+export function waitMs(ms: number): Promise<void> {
+  const plain = () => new Promise<void>((r) => setTimeout(r, ms))
+  return isAndroid() ? BulkWork.sleep({ ms }).catch(plain) : plain()
+}
+
+/** The background job's notification (Android): started on the first call, updated after. */
+export function showBulkProgress(title: string, text: string, done: number, total: number) {
+  if (isAndroid()) void BulkWork.show({ title, text, done, total }).catch(() => {})
+}
+export function finishBulkProgress(summary: string) {
+  if (isAndroid()) void BulkWork.finish({ text: summary }).catch(() => {})
+}
+/** The notification's Stop button. */
+export function onBulkStop(cb: () => void) {
+  if (isAndroid()) void BulkWork.addListener('stop', cb)
+}
+
 /** Fired on window when another app takes the audio (or the earphones are unplugged): playing screens pause themselves. */
 export const AUDIO_INTERRUPTED = 'app-audio-interrupted'
 
