@@ -24,6 +24,26 @@ export interface PhoneLinkStatus {
   airplaneMode?: boolean
 }
 
+/**
+ * §93 Batch 6: on mobile data? Android's answer, refreshed every 10 s and when the page comes back; false on the PC.
+ * (navigator.connection.type, used before, isn't filled in by the WebView.)
+ */
+let mobileNow = false
+const mobileListeners = new Set<(mobile: boolean) => void>()
+export const onMobileData = () => mobileNow
+/** Called when the phone moves between Wi-Fi and mobile data. */
+export function onNetworkChange(cb: (mobile: boolean) => void) {
+  mobileListeners.add(cb)
+  return () => { mobileListeners.delete(cb) }
+}
+function pollNetwork() {
+  void phoneLink?.network?.().then(({ mobile }) => {
+    if (mobile === mobileNow) return
+    mobileNow = mobile
+    mobileListeners.forEach((l) => l(mobile))
+  }).catch(() => {})
+}
+
 interface LinkPlugin {
   status: () => Promise<PhoneLinkStatus>
   pair: (o: { link: string }) => Promise<{ ok: boolean; name?: string; error?: string }>
@@ -42,6 +62,8 @@ interface LinkPlugin {
   ping?: () => Promise<PhoneLinkStatus>
   testSpeed?: () => Promise<PhoneLinkStatus>
   isAirplaneMode?: () => Promise<{ airplaneMode: boolean }>
+  /** True on mobile data (Android's own answer). */
+  network?: () => Promise<{ mobile: boolean }>
   /** §80 A: the PC's playlists (JSON of SyncState in PC ids); no json when not connected. */
   playlists?: () => Promise<{ json?: string }>
   putPlaylists?: (o: { json: string }) => Promise<void>
@@ -51,6 +73,12 @@ interface LinkPlugin {
 }
 
 export const phoneLink = Capacitor.getPlatform() === 'android' ? registerPlugin<LinkPlugin>('Link') : null
+if (phoneLink && typeof window !== 'undefined') {
+  pollNetwork()
+  window.setInterval(pollNetwork, 10_000)
+  document.addEventListener('visibilitychange', pollNetwork)
+  window.addEventListener('online', pollNetwork)
+}
 
 /** What a failed pairing says, in words. */
 export function pairError(error = ''): string {

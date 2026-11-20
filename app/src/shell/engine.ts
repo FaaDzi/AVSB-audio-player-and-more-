@@ -21,37 +21,55 @@ import { loadFit } from '../fit/fit'
 import { loadDatabase, type Database } from './database/catalog'
 import { soundCurve, type SoundResult } from './sound/soundCurve'
 import { getSound } from './sound/soundState'
-import { phoneLink } from './linkClient'
+import { onMobileData, onNetworkChange, phoneLink } from './linkClient'
 
 let adaptiveLowData = false
 export const isAdaptiveLowDataActive = () => adaptiveLowData
 export const setAdaptiveLowData = (active: boolean) => { adaptiveLowData = active }
 
 function recordPcStreamThroughput(bytes: number, elapsedMs: number, isLowData: boolean) {
-  if (bytes < 512_000 || elapsedMs <= 0) return
+  // a song from the phone's cache fills in a moment and says nothing about the network
+  if (bytes < 512_000 || elapsedMs < 2000) return
   const mbps = (bytes * 8) / (elapsedMs / 1000) / 1_000_000
   if (!isLowData && mbps < 1.5 && getSetting('auto_lowdata_on_weak') !== false && !adaptiveLowData) {
     adaptiveLowData = true
     logLine('INFO', 'Network', `PC stream throughput low (${mbps.toFixed(1)} Mbps). Enabled Low Data mode for smoother playback.`)
+    lowDataListeners.forEach((l) => l())
   } else if (adaptiveLowData && mbps >= 8.0 && getSetting('stream_quality') !== 'Low Data (~128 kbps)') {
     adaptiveLowData = false
     logLine('INFO', 'Network', `PC stream throughput healthy (${mbps.toFixed(1)} Mbps). Resumed full quality streaming.`)
+    lowDataListeners.forEach((l) => l())
   }
 }
 
-if (typeof window !== 'undefined' && phoneLink) {
-  // On Android, check real PC link connection state cleanly without pinging local WebView assets.
-  window.setInterval(() => {
-    void phoneLink?.status().then((st) => {
-      if (st.connected && st.path === 'relayed' && getSetting('auto_lowdata_on_weak') !== false && !adaptiveLowData) {
-        adaptiveLowData = true
-        logLine('INFO', 'Network', 'PC Link is relayed. Enabled fast Low Data streaming.')
-      }
-      // switching back is the throughput check's call alone (recordPcStreamThroughput): a direct path can still be
-      // slow, and two owners flipped low data on and off every minute (review item 8)
-    }).catch(() => {})
-  }, 60000)
+// §93 Batch 6: the automatic Low Data switch. It used to turn on after any one stall (a FLAC start on 4G that caught its
+// breath once was enough) or a relayed link, and only a whole-file download could turn it off, which streamed songs
+// never are: it stayed on until the app restarted. Now: two stalls within 20 s, 5 s or more into a song; off again
+// on Wi-Fi, or when a song arrives fast enough.
+const stalls: number[] = []
+const STALL_WINDOW_MS = 20_000
+function noteStall() {
+  if (adaptiveLowData || !loaded || !isPcTrack(loaded) || getSetting('auto_lowdata_on_weak') === false) return
+  if (livePosition() < 5) return
+  const now = performance.now()
+  while (stalls.length && now - stalls[0] > STALL_WINDOW_MS) stalls.shift()
+  stalls.push(now)
+  if (stalls.length < 2) return
+  stalls.length = 0
+  adaptiveLowData = true
+  logLine('INFO', 'Network', 'The PC stream stalled twice in 20 s: Low Data (auto) is on until the connection is better')
+  lowDataListeners.forEach((l) => l())
 }
+const lowDataListeners = new Set<() => void>()
+/** The Now Playing pill follows the automatic switch. */
+export const useAdaptiveLowData = () =>
+  useSyncExternalStore((l) => { lowDataListeners.add(l); return () => { lowDataListeners.delete(l) } }, () => adaptiveLowData)
+onNetworkChange((mobile) => {
+  if (mobile || !adaptiveLowData) return
+  adaptiveLowData = false
+  logLine('INFO', 'Network', 'On Wi-Fi: Low Data (auto) is off from the next song')
+  lowDataListeners.forEach((l) => l())
+})
 
 /** The song's file on the dev server. Electron serves the same paths once the shell moves there. */
 const wantsLowData = () =>
@@ -124,10 +142,7 @@ export function setEngineBuffering(b: boolean) {
   events.onBuffering?.(b)
   events.onLoading?.(b)
   // only a stalled PC stream is a network problem: a local song stalls when its full decode is slower than its quick start
-  if (b && !adaptiveLowData && loaded && isPcTrack(loaded) && getSetting('auto_lowdata_on_weak') !== false) {
-    adaptiveLowData = true
-    logLine('INFO', 'Player', 'Playback stalled on network stream. Automatically enabled fast low-data mode.')
-  }
+  if (b) noteStall()
   bufferingListeners.forEach((l) => l())
 }
 export const useIsBuffering = () =>
@@ -295,8 +310,6 @@ function watchThroughput(t: Track, el: HTMLAudioElement, low: boolean) {
   el.addEventListener('progress', onProgress)
 }
 
-/** On Android: true on mobile data (the page can't tell on the PC, where it never matters). */
-const onMobileData = () => (navigator as Navigator & { connection?: { type?: string } }).connection?.type === 'cellular'
 
 /**
  * §88 D: 30 s into a song, the next one (picked once, Shell's whatsNext) goes into the phone's song cache: on Wi-Fi
@@ -836,7 +849,23 @@ export function setPaused(paused: boolean) {
   // while a song loads the player still holds the old one: playing now would bring it back
   if (!player || switching) return
   if (paused) player.pause()
-  else player.play()
+  else {
+    player.play()
+    logResume()
+  }
+}
+
+/** §93 Batch 6: "Resumed (sound after X ms)": the time until the position starts moving again. */
+function logResume() {
+  const t0 = performance.now()
+  const from = livePosition()
+  const song = loaded
+  const check = () => {
+    if (!wantPlaying || loaded !== song) return
+    if (livePosition() > from + 0.05) logLine('INFO', 'Player', `Resumed (sound after ${Math.round(performance.now() - t0)} ms)`)
+    else if (performance.now() - t0 < 20_000) window.setTimeout(check, 50)
+  }
+  window.setTimeout(check, 50)
 }
 
 export function seekTo(seconds: number) {

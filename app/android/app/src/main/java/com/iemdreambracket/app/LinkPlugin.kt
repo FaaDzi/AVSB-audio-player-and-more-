@@ -1299,6 +1299,12 @@ class LinkPlugin : Plugin() {
         }
     }
 
+    /** §93 Batch 6: the page's own guess (navigator.connection) isn't filled in by Android's WebView. */
+    @PluginMethod
+    fun network(call: PluginCall) {
+        call.resolve(JSObject().put("mobile", onMobileData()))
+    }
+
     @PluginMethod
     fun isAirplaneMode(call: PluginCall) {
         val airplaneMode = Settings.Global.getInt(context.contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) != 0

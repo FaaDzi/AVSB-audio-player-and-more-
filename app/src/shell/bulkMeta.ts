@@ -7,6 +7,8 @@ import { albumOwner, cleanRipTitle, coverUrl, isPcTrack, type Track } from './li
 import { isNamingRunning, isRateLimited, lookUp, nameOne, needsNaming, savedDetails, saveDetails, type Lookup } from './metadata'
 import { savedOnlineLyrics, searchOnline } from './onlineLyrics'
 import { logLine } from './logs'
+// on mobile data both jobs wait (the PC never does)
+import { onMobileData } from './linkClient'
 import { allowBulkNotifications, finishBulkProgress, onBulkStop, showBulkProgress, waitMs } from '../platform'
 
 export type BulkKind = 'art' | 'lyrics'
@@ -40,8 +42,7 @@ const markChecked = (k: BulkKind, id: string) => { try { localStorage.setItem(ch
 
 // §90 B: a native timer on the phone, so a hidden page's throttling doesn't slow the job
 const sleep = waitMs
-/** Android reports the connection type; on mobile data both jobs wait (the PC has no such type and never waits). */
-const onMobileData = () => (navigator as Navigator & { connection?: { type?: string } }).connection?.type === 'cellular'
+
 
 /** A rip the namer hasn't looked at yet: its title isn't trustworthy enough to search with. */
 export function waitsForName(t: Track): boolean {

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { Cover, Icon, IconButton } from './ui'
 import { SleepButton } from './sleepTimer'
 import { useShell } from './context'
-import { useLivePosition } from './engine'
+import { useAdaptiveLowData, useLivePosition } from './engine'
 import { Slider, VolumeControl } from './PlayerBar'
 import { PanelSwap } from './SidePanels'
 import { useHeld } from './motion'
@@ -115,6 +115,7 @@ export function NowPlaying() {
       applyTheme()
     }
   }, [])
+  const autoLowData = useAdaptiveLowData()
   const [landscapeTab, setLandscapeTab] = useState<'lyrics' | 'queue'>(() => (panel === 'queue' ? 'queue' : 'lyrics'))
   useEffect(() => {
     if (panel === 'lyrics' || panel === 'queue') setLandscapeTab(panel)
@@ -144,14 +145,16 @@ export function NowPlaying() {
   // beside lyrics, the art can take the place of the song's details
   const artOnly = panel === 'lyrics' && Boolean(getSetting('artlyrics')) && !landscape
   const nextRepeat = { off: 'all', all: 'one', one: 'off' } as const
-  const isLowData = getSetting('stream_quality') === 'Low Data (~128 kbps)' || Boolean(getSetting('lowdata'))
+  const chosenLowData = getSetting('stream_quality') === 'Low Data (~128 kbps)' || Boolean(getSetting('lowdata'))
+  // §93 Batch 6: the automatic switch shows too, so the pill names what is really playing
   const isPc = current.source === 'pc' || current.path.startsWith('pc:')
+  const isLowData = chosenLowData || (autoLowData && isPc)
   // the engine clears this whenever a song leaves Direct to DAC; its path can be the PC's copy, not current.path
   const directInfo = directView.info
   const quality = directInfo
     ? directQuality(directInfo)
     : isLowData
-      ? (isPc ? ['Low Data', '128 kbps'] : [current.format || 'Local', '0 MB Data'])
+      ? (isPc ? [chosenLowData ? 'Low Data' : 'Low Data (auto)', '128 kbps'] : [current.format || 'Local', '0 MB Data'])
       : current.lossy
         ? [current.format, `${current.kbps} kbps`]
         : [current.format, `${current.bits}-bit`, `${(current.rate / 1000).toFixed(1).replace(/\.0$/, '')} kHz`]
