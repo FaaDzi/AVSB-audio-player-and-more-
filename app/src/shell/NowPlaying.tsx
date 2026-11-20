@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { Cover, Icon, IconButton } from './ui'
+import { SleepButton } from './sleepTimer'
 import { useShell } from './context'
 import { useLivePosition } from './engine'
 import { Slider, VolumeControl } from './PlayerBar'
@@ -261,6 +262,7 @@ export function NowPlaying() {
             <GearSwitch />
           </>
         )}
+        <SleepButton current={current} />
         <IconButton icon="queue_music" label="Up next" filled={(landscape ? activeSidePanel : panel) === 'queue'} onClick={() => chooseTab('queue')} />
       </div>
     </div>

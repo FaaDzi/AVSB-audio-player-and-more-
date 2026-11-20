@@ -1095,7 +1095,6 @@ export function Logs() {
   const { showToast } = useShell()
   const [level, setLevel] = useState('ALL')
   const [query, setQuery] = useState('')
-  const [auto, setAuto] = useState(true)
   const logs = useLogs()
   const [crash, setCrash] = useState(lastCrash)
   const [levelMenu, setLevelMenu] = useState<{ x: number; y: number } | null>(null)
@@ -1130,7 +1129,6 @@ export function Logs() {
   return (
     <>
       <HeaderActions>
-        <IconButton icon="vertical_align_bottom" label={auto ? 'Auto-scroll ON' : 'Auto-scroll OFF'} active={!auto} onClick={() => setAuto(!auto)} />
         <IconButton icon="content_copy" label="Copy logs" onClick={copy} />
         <IconButton icon="more_vert" label="More" onClick={(e) => setMoreMenu(below(e))} />
       </HeaderActions>
@@ -1200,7 +1198,8 @@ export function Logs() {
           </div>
         )}
         <div className="ms-log">
-          {rows.map((l, i) => (
+          {/* newest first; Copy keeps time order */}
+          {[...rows].reverse().map((l, i) => (
             <div key={i} className={`ms-log-row ${l[1].toLowerCase()}`}>
               <div><span>{l[0]}</span><b>{l[1]}</b><i>{l[2]}</i></div>
               <p>{l[3]}</p>

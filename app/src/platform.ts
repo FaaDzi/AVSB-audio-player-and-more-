@@ -94,6 +94,8 @@ export const MEDIA_CONTROL = 'app-media-control'
 const sendControl = (c: MediaControl) => window.dispatchEvent(new CustomEvent<MediaControl>(MEDIA_CONTROL, { detail: c }))
 
 export interface NowPlaying {
+  /** The song's id: what tells a new song from a new lyric line in the artist slot. */
+  id?: string
   title: string
   artist: string
   album?: string
@@ -104,6 +106,8 @@ export interface NowPlaying {
   loading?: boolean
   /** Cover art (object/data URL or /shell-host/cover), if the song has one. */
   coverUrl: string | null
+  /** Shown when the cover can't be loaded (Android): the song's genre cover. */
+  fallbackCover?: string | null
 }
 
 let lastTrackKey = ''
@@ -239,7 +243,7 @@ export function setNowPlaying(np: NowPlaying) {
     setMediaActive(true)
   }
 
-  const trackKey = `${np.title}\0${np.artist}\0${np.coverUrl ?? ''}`
+  const trackKey = `${np.id ?? `${np.title}\0${np.artist}`}\0${np.coverUrl ?? ''}`
   const trackChanged = trackKey !== lastTrackKey
   lastTrackKey = trackKey
 
@@ -276,7 +280,11 @@ export function setNowPlaying(np: NowPlaying) {
     lastCoverUrl = wantedUrl
     lastCoverData = undefined
     const myToken = ++coverToken
+    // a cover that won't load (its file gone) falls back to the genre cover instead of the app icon
+    const fallback = np.fallbackCover
     void coverBase64(wantedUrl)
+      .catch(() => '')
+      .then((b64) => b64 || (fallback && fallback !== wantedUrl ? coverBase64(fallback).catch(() => '') : ''))
       .then((b64) => {
         if (!b64 || myToken !== coverToken || !latestNp || latestNp.coverUrl !== wantedUrl) return
         lastCoverData = b64

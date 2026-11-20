@@ -10,7 +10,7 @@ import { sharePlaylist } from './playlistCover'
 import { DeletePlaylistDialog, useTrackMenu } from './TrackMenu'
 import { SearchResults } from './SearchResults'
 import { useLeaving } from '../motion'
-import { useArtistSeparators } from '../settings/store'
+import { useArtistSeparators, useArtistsByAlbumArtist } from '../settings/store'
 import { useLibraryStatus } from '../localLibrary'
 
 const TABS = ['songs', 'albums', 'artists', 'playlists', 'folders'] as const
@@ -63,7 +63,8 @@ export function LibraryPage({ initialTab = 'songs' }: { initialTab?: Tab }) {
   const groups = useMemo(() => groupAlbums(visible), [visible])
   const { scanning } = useLibraryStatus()
   const separators = useArtistSeparators()
-  const artists = useMemo(() => groupArtists(visible, separators), [visible, separators])
+  const byAlbumArtist = useArtistsByAlbumArtist()
+  const artists = useMemo(() => groupArtists(visible, separators, byAlbumArtist), [visible, separators, byAlbumArtist])
   // the Folders tab has no filter button, so a filter set on another tab must not hide tracks here
   const folders = useMemo(() => groupFolders(filterTracks(libraryTracks, NO_FILTERS, query)), [libraryTracks, query])
 

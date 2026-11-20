@@ -1,6 +1,8 @@
 import { checkDaily, openUpdate } from './updates'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Icon, IconButton } from './ui'
+import { Icon, IconButton, placeholderCoverImage } from './ui'
+import { sleepStopsAfterThisSong, useSleepTimerRunner } from './sleepTimer'
+import { useLockScreenLyric } from './lockLyrics'
 import { MiniPlayer } from './MiniPlayer'
 import { NowPlaying } from './NowPlaying'
 import { PlayerBar } from './PlayerBar'
@@ -263,6 +265,8 @@ export function Shell() {
   }, [queue, data, shuffle, repeat, setPosition, startSong])
 
   // Android (plan §70 C3): the notification, lock screen and headset buttons follow the player
+  const pauseForSleep = useCallback(() => setPlaying(false), [setPlaying])
+  useSleepTimerRunner(current, playing, pauseForSleep)
   const controls = useRef({ setPlaying, step, setPosition })
   controls.current = { setPlaying, step, setPosition }
   useEffect(() => onMediaControls((c) => {
@@ -273,11 +277,14 @@ export function Shell() {
     else if (c.action === 'prev') k.step(-1)
     else if (c.action === 'seek' && c.position != null) k.setPosition(c.position)
   }), [])
+  // §90 C: a song without art shows its genre cover in the notification and on the lock screen, not the app icon
+  const lockLyric = useLockScreenLyric(current, playing)
+  const lockScreenArt = useMemo(() => (current ? placeholderCoverImage(current.genre, current.category, current.title) : null), [current])
   useEffect(() => {
     if (!current) return
     setMediaActive(playing)
-    showOnLockScreen({ title: current.title, artist: current.artist || 'Unknown Artist', duration: current.sec, position: loading ? 0 : livePosition(), playing, loading, coverUrl: current.cover ? coverUrl(current.cover) : null })
-  }, [current, playing, loading])
+    showOnLockScreen({ id: current.id, title: current.title, artist: lockLyric || current.artist || 'Unknown Artist', duration: current.sec, position: loading ? 0 : livePosition(), playing, loading, coverUrl: current.cover ? coverUrl(current.cover) : lockScreenArt, fallbackCover: lockScreenArt })
+  }, [current, playing, loading, lockScreenArt, lockLyric])
 
   const whatsNext = useRef<() => Track | null>(() => null)
   // §88 D: "next" is picked once per song and order, so the song fetched ahead is the one that plays (shuffle used to
@@ -319,7 +326,7 @@ export function Shell() {
   useEffect(() => {
     setEngineEvents({
       onLoading: setLoading,
-      nextForGapless: () => whatsNext.current(),
+      nextForGapless: () => (sleepStopsAfterThisSong() ? null : whatsNext.current()),
       onAdvance: (t) => arrived.current(t),
       onEnded: () => {
         const next = whatsNext.current()

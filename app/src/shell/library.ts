@@ -597,9 +597,12 @@ export const activeFilterCount = (f: Filters) => [f.source, f.quality, f.format,
 const missingAny = (t: Track) =>
   !t.year || !t.genre || !t.albumArtist || !t.track || !t.disc || !t.artist || !t.label || (!!t.isrc && !t.isrcOk)
 
+/** Whose album a song is on: its album artist, else the first artist named (so "Kanye West, Dwele" stays on Kanye's Graduation). */
+export const albumOwner = (t: Track) => t.albumArtist || splitArtists(t.artist)[0] || t.artist
+
 export function albumKey(t: Track): string {
   if (!t.album) return ''
-  return `${(t.albumArtist || t.artist).toLowerCase()}\u0000${t.album.toLowerCase()}`
+  return `${albumOwner(t).toLowerCase()}\u0000${t.album.toLowerCase()}`
 }
 
 function albumCounts(tracks: Track[]): Map<string, number> {
@@ -708,7 +711,7 @@ export function groupAlbums(tracks: Track[]): { albums: Album[]; singles: Album[
     if (!key) continue
     let a = groups.get(key)
     if (!a) {
-      a = { key, name: t.album, artist: t.albumArtist || t.artist, tracks: [], cover: t.cover, added: t.added }
+      a = { key, name: t.album, artist: albumOwner(t), tracks: [], cover: t.cover, added: t.added }
       groups.set(key, a)
     }
     a.tracks.push(t)
@@ -722,6 +725,8 @@ export function groupAlbums(tracks: Track[]): { albums: Album[]; singles: Album[
 
 // Names that contain a comma but are one artist. Mornye keeps "A, B" as a single artist; we don't copy that bug.
 const COMMA_NAMES = ['Tyler, The Creator', 'Earth, Wind & Fire', 'Grover Washington, Jr.', 'Crosby, Stills & Nash', 'Emerson, Lake & Palmer', 'Blood, Sweat & Tears']
+/** Duos and bands named with "&" or "and": one artist whatever the separators (§92 A). */
+const WHOLE_NAMES = ['Simon & Garfunkel', 'Simon and Garfunkel', 'Hall & Oates', 'Daryl Hall & John Oates', 'Earth, Wind & Fire', 'Mumford & Sons', 'Florence + the Machine', 'Marina and the Diamonds', 'Echo & the Bunnymen', 'Sly and the Family Stone']
 
 /**
  * Metadata separators: the marks that split one artist tag into separate artists. Comma, semicolon, and ampersand are on by
@@ -743,19 +748,18 @@ export function splitArtists(text: string, separators: readonly string[] = DEFAU
   if (!text) return []
   let rest = text
   const found: string[] = []
-  if (separators.includes(',')) {
-    for (const name of COMMA_NAMES) {
-      if (rest.includes(name)) {
-        found.push(name)
-        rest = rest.split(name).join('\u0000')
-      }
-    }
+  for (const name of [...WHOLE_NAMES, ...(separators.includes(',') ? COMMA_NAMES : [])]) {
+    const at = rest.toLowerCase().indexOf(name.toLowerCase())
+    if (at < 0) continue
+    const real = rest.slice(at, at + name.length)
+    if (!found.includes(real)) found.push(real)
+    rest = rest.split(real).join('\u0000')
   }
   // & only splits with spaces round it, so R&B and names like "AT&T" stay whole.
-  // Also split on common collaboration markers: 'and', 'feat.', 'ft.', 'vs.'
+  // Also split on collaboration markers: 'feat.', 'ft.', 'vs.' ("and" no longer: it sits inside band names)
   const marks = [
     '\u0000',
-    '\\s+(?:and|feat\\.?|ft\\.?|featuring|vs\\.?)\\s+',
+    '\\s+(?:feat\\.?|ft\\.?|featuring|vs\\.?)\\s+',
     ...separators.map((m) => (m === '&' ? '\\s+&\\s+' : `\\s*${escaped(m)}\\s*`)),
   ]
   for (const part of rest.split(new RegExp(marks.join('|'), 'i'))) {
@@ -926,20 +930,37 @@ export interface Artist {
   name: string
   tracks: Track[]
   cover: string
+  /** By album artist: songs where this artist is only a guest (in the song's Artist tag). */
+  appearsOn: Track[]
 }
 
-export function groupArtists(tracks: Track[], separators: readonly string[] = DEFAULT_SEPARATORS): Artist[] {
+/** Whose album it is: the album artist, or the song's artist when there's none (or it's a compilation's "Various Artists"). */
+const mainArtist = (t: Track) => (t.albumArtist && !/^various( artists)?$/i.test(t.albumArtist.trim()) ? t.albumArtist : t.artist)
+
+/**
+ * The Artists list. By album artist (§92 A, the default), every main artist once and guests under their "Appears on";
+ * otherwise everyone named on a song is an artist of their own.
+ */
+export function groupArtists(tracks: Track[], separators: readonly string[] = DEFAULT_SEPARATORS, byAlbumArtist = false): Artist[] {
   const groups = new Map<string, Artist>()
   for (const t of tracks) {
-    for (const name of splitArtists(t.artist, separators)) {
+    for (const name of splitArtists(byAlbumArtist ? mainArtist(t) : t.artist, separators)) {
       const key = name.toLowerCase()
       let a = groups.get(key)
       if (!a) {
-        a = { name, tracks: [], cover: t.cover }
+        a = { name, tracks: [], cover: t.cover, appearsOn: [] }
         groups.set(key, a)
       }
       a.tracks.push(t)
       a.cover ||= t.cover
+    }
+  }
+  if (byAlbumArtist) {
+    for (const t of tracks) {
+      const main = new Set(splitArtists(mainArtist(t), separators).map((n) => n.toLowerCase()))
+      for (const name of splitArtists(t.artist, separators)) {
+        if (!main.has(name.toLowerCase())) groups.get(name.toLowerCase())?.appearsOn.push(t)
+      }
     }
   }
   return [...groups.values()].sort((a, b) => collator.compare(a.name, b.name))

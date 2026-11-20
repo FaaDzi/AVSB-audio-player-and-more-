@@ -843,6 +843,8 @@ export function seekTo(seconds: number) {
   }
 }
 
+/** Sleep timer: fades the music out over `seconds` and pauses; true once quiet. Direct to DAC can't fade: it just stops. */
+export const fadeOutForSleep = (seconds: number): Promise<boolean> => (direct || !player ? Promise.resolve(true) : player.fadeOutAndPause(seconds))
 export const livePosition = () => (switching ? pendingSeek ?? 0 : direct ? directPosition() : seekAfterSwap ?? player?.position ?? 0)
 
 // The position the screen shows. It used to live in the Shell context and re-render the whole app every 500 ms while

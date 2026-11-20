@@ -3,7 +3,7 @@
 // phone. YouTube rips wait until the background namer has looked them up; one it couldn't name is tried once with
 // its cleaned-up title.
 import { useSyncExternalStore } from 'react'
-import { cleanRipTitle, coverUrl, isPcTrack, type Track } from './library'
+import { albumOwner, cleanRipTitle, coverUrl, isPcTrack, type Track } from './library'
 import { isNamingRunning, lookUp, MB_GAP_MS, nameOne, needsNaming, savedDetails, saveDetails, type Found } from './metadata'
 import { savedOnlineLyrics, searchOnline } from './onlineLyrics'
 import { logLine } from './logs'
@@ -92,7 +92,7 @@ async function run(k: BulkKind, tracks: Track[], step: (t: Track) => Promise<boo
 }
 
 /** Albums asked once per run: the songs of one album share the answer. */
-const albumKey = (t: Track) => (t.album ? `${(t.albumArtist || t.artist).toLowerCase()}|${t.album.toLowerCase()}` : '')
+const albumKey = (t: Track) => (t.album ? `${albumOwner(t).toLowerCase()}|${t.album.toLowerCase()}` : '')
 
 export async function importSongArt(library: Track[]) {
   const albums = new Map<string, Found | null>()

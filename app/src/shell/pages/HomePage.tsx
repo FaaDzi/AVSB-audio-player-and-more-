@@ -64,7 +64,7 @@ function seededShuffle<T>(items: readonly T[], seed: number, salt: string): T[] 
  * Picks the listener's most-played artists from stats.ts, falling back to artists with the most songs in the collection.
  */
 export function pickYourArtists(tracks: Track[], listening: Listening, separators: string[], limit = 14): HomeArtistCard[] {
-  const grouped = groupArtists(tracks, separators)
+  const grouped = groupArtists(tracks, separators, true)
   if (!grouped.length) return []
   const byKey = new Map(grouped.map((g) => [g.name.toLowerCase(), g]))
   const out: HomeArtistCard[] = []

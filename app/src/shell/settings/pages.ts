@@ -264,6 +264,7 @@ export const PAGE_GROUPS: Page[][] = [
         { title: 'Lyrics', rows: [
           { kind: 'slider', id: 'lyricsize', label: 'Lyrics text size', preview: 'Follow every line of your favorite song', resettable: true, ticks: 13, min: 0.7, max: 1.9, step: 0.1, value: 1, format: (v) => `${Math.round(v * 100)}%` },
           { kind: 'slider', id: 'lyricoffset', label: 'Lyrics timing', sub: 'Show synced lyrics later or earlier, for example when Bluetooth audio arrives late', resettable: true, ticks: 41, min: -2, max: 2, step: 0.1, value: 0, format: (v) => (Math.abs(v) < 0.05 ? 'In sync' : `${v > 0 ? '+' : ''}${v.toFixed(1)} s`) },
+          ...(ONPHONE ? [toggle('locklyrics', 'Lyrics on lock screen', 'While a song with timed lyrics plays, the notification and lock screen show the line being sung in place of the artist.', 'screen_lock_portrait', true)] : []),
           toggle('keepscreen', 'Keep screen on while viewing lyrics', 'Prevent screen timeout while lyrics are open, including when playback is paused.', 'light_mode', true),
           toggle('savelrc', 'Save found lyrics as .lrc files', 'When lyrics are found online, write them to a .lrc file next to the song. An existing .lrc is never replaced, and audio files are never changed. Only in the installed app.', 'save'),
           toggle('autolyrics', 'Find lyrics automatically', 'When a song has no lyrics, look it up online while the lyrics view is open. Sends its title, artist, album and length to the lyrics service.', 'cloud_download', true),
@@ -387,6 +388,7 @@ const SUB_PAGES: Page[] = [
   { id: 'metadata-priority', title: 'Metadata Provider Priority', icon: 'folder_open', parent: 'metadata', custom: 'metadata-priority' },
   {
     id: 'metadata-separators', title: 'Metadata separators', icon: 'format_list_bulleted', parent: 'metadata', sections: [
+      { title: 'Artists tab', rows: [toggle('artistsall', 'Every artist on the song', 'Off: the Artists tab lists album artists, and featured guests show on an artist’s page under Appears on. On: everyone named on a song is an artist of their own.', 'groups')] },
       { title: 'Split artists at', rows: SEPARATORS.map((m) => toggle(m.id, m.label, undefined, undefined, m.on)) },
       { rows: [], block: 'separator-preview' },
       { rows: [], card: { icon: 'info', text: 'Names with a comma in them, like Tyler, The Creator, stay whole. & only splits with a space on each side. Your files keep their tags as they are.' } },

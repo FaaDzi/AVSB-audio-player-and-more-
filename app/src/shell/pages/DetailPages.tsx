@@ -12,7 +12,7 @@ import { useCoverStyle } from '../cover'
 import { useListening } from '../stats'
 import { buildHomeShelves } from './HomePage'
 import { pickSquareImage, SHELF_PREFIX } from './playlistCover'
-import { getSetting, setSetting, useArtistSeparators } from '../settings/store'
+import { getSetting, setSetting, useArtistSeparators, useArtistsByAlbumArtist } from '../settings/store'
 
 export type PlaylistSortMode =
   | 'custom'
@@ -466,7 +466,12 @@ export function ArtistPage({ name, back }: { name: string; back: () => void }) {
   const { play, push } = useShell()
   const libraryTracks = useLibrary()
   const separators = useArtistSeparators()
-  const artist = useMemo(() => groupArtists(libraryTracks, separators).find((a) => a.name === name), [libraryTracks, name, separators])
+  const byAlbumArtist = useArtistsByAlbumArtist()
+  // a guest-only artist (opened from search) still has a page: their songs from the full list
+  const artist = useMemo(
+    () => groupArtists(libraryTracks, separators, byAlbumArtist).find((a) => a.name === name) ?? groupArtists(libraryTracks, separators).find((a) => a.name === name),
+    [libraryTracks, name, separators, byAlbumArtist],
+  )
   const [query, setQuery] = useState<string | null>(null)
   const [sort, setSort] = useState<SortMode>('latest')
   const [filters, setFilters] = useState<Filters>(NO_FILTERS)
@@ -500,6 +505,12 @@ export function ArtistPage({ name, back }: { name: string; back: () => void }) {
             <Tile key={a.key} tracks={a.tracks} cover={a.cover} title={a.name} sub={a.artist} onOpen={() => push({ page: 'album', key: a.key })} onPlay={() => play(a.tracks[0], a.tracks)} />
           ))}
         </div>
+        {artist.appearsOn.length > 0 && query === null && (
+          <>
+            <h2 className="ms-h2">Appears on</h2>
+            <TrackTable tracks={artist.appearsOn} />
+          </>
+        )}
       </div>
       {menu && <Menu compact x={menu.x} y={menu.y} onClose={() => setMenu(null)} items={sortMenuItems(sort, setSort)} />}
       {filtering && <FilterDialog value={filters} sort={sort} tracks={artist.tracks} onApply={(f, s) => { setFilters(f); setSort(s) }} onClose={() => setFiltering(false)} />}
@@ -534,7 +545,8 @@ function DetailHeader({ cover, title, sub, actions, genre, speciality, onCover }
   const art = <Cover id={cover} alt={title} className="ms-detail-cover" genre={genre} speciality={speciality} title={title} />
   return (
     <header className="ms-detail-head">
-      {onCover ? <button type="button" className="ms-detail-cover-btn" aria-label="Change cover" onClick={onCover}>{art}<span className="ms-detail-cover-edit"><Icon name="photo_camera" size={20} /></span></button> : art}
+      {/* §91 B: only the photo button changes the cover; a tap on the cover itself does nothing */}
+      {onCover ? <div className="ms-detail-cover-btn">{art}<button type="button" className="ms-detail-cover-edit" aria-label="Change cover" title="Change cover" onClick={onCover}><Icon name="photo_camera" size={20} /></button></div> : art}
       <div className="ms-detail-info">
         <div>
           <h1>{title}</h1>

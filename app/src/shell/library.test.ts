@@ -70,7 +70,9 @@ describe('grouping', () => {
     expect(splitArtists('K/DA, Madison Beer')).toEqual(['K/DA', 'Madison Beer'])
     expect(splitArtists('K/DA, Madison Beer', [',', '/'])).toEqual(['K', 'DA', 'Madison Beer'])
     expect(splitArtists('Mitchie M×OSTER project, Hatsune Miku', [',', '×'])).toEqual(['Mitchie M', 'OSTER project', 'Hatsune Miku'])
-    expect(splitArtists('Simon & Garfunkel, R&B Guy', [',', '&'])).toEqual(['Simon', 'Garfunkel', 'R&B Guy'])
+    expect(splitArtists('Simon & Garfunkel, R&B Guy', [',', '&'])).toEqual(['Simon & Garfunkel', 'R&B Guy'])
+    expect(splitArtists('Jay & Bob, Simon and Garfunkel', [',', '&'])).toEqual(['Simon and Garfunkel', 'Jay', 'Bob'])
+    expect(splitArtists('Kanye West feat. Rihanna')).toEqual(['Kanye West', 'Rihanna'])
     expect(splitArtists('Tyler, The Creator, Daniel Caesar', [])).toEqual(['Tyler, The Creator, Daniel Caesar'])
     expect(splitArtists('Tyler, The Creator; Kali Uchis', [';']).sort()).toEqual(['Kali Uchis', 'Tyler, The Creator'])
   })
@@ -232,5 +234,36 @@ describe.runIf(existsSync(fixture))('on the real library tags', () => {
   it('no artist name is left with a comma', () => {
     const odd = groupArtists(data.tracks).filter((a) => a.name.includes(',') && !/Tyler|Earth|Grover|Crosby|Emerson|Blood/.test(a.name))
     expect(odd.map((a) => a.name)).toEqual([])
+  })
+})
+
+describe('Artists by album artist (§92 A)', () => {
+  const songs = [
+    t({ id: 'a', artist: 'Kanye West feat. Rihanna', albumArtist: 'Kanye West', album: 'X' }),
+    t({ id: 'b', artist: 'Kanye West', albumArtist: '', album: 'Y' }),
+    t({ id: 'c', artist: 'Rihanna', albumArtist: 'Various Artists', album: 'Hits' }),
+    t({ id: 'd', artist: 'Kendrick Lamar', albumArtist: 'Kanye West', album: 'X' }),
+  ]
+  it('lists main artists once, with guests under Appears on', () => {
+    const list = groupArtists(songs, undefined, true)
+    expect(list.map((a) => a.name)).toEqual(['Kanye West', 'Rihanna'])
+    const kanye = list.find((a) => a.name === 'Kanye West')!
+    expect(kanye.tracks.map((x) => x.id)).toEqual(['a', 'b', 'd'])
+    const rihanna = list.find((a) => a.name === 'Rihanna')!
+    expect(rihanna.tracks.map((x) => x.id)).toEqual(['c'])
+    expect(rihanna.appearsOn.map((x) => x.id)).toEqual(['a'])
+  })
+  it('lists everyone on the song when asked', () => {
+    expect(groupArtists(songs).map((a) => a.name)).toEqual(['Kanye West', 'Kendrick Lamar', 'Rihanna'])
+  })
+})
+
+describe('albums of songs without an album artist', () => {
+  it('stay together under the first artist named', () => {
+    const { albums } = groupAlbums([
+      t({ id: '1', artist: 'Kanye West, Dwele', albumArtist: '', album: 'Graduation', track: 1 }),
+      t({ id: '2', artist: 'Kanye West', albumArtist: '', album: 'Graduation', track: 2 }),
+    ])
+    expect(albums.map((a) => [a.artist, a.tracks.length])).toEqual([['Kanye West', 2]])
   })
 })

@@ -439,3 +439,7 @@ small, .ms-card-sub, .ms-player-artist, .ms-queue-sub, .ms-sr-text small, .ms-se
 /* TrackTable's title stack: plain on PC, two lines on the phone (phoneLayout.css) */
 .ms-title-stack { display: contents; }
 .ms-phone-sub { display: none; }
+
+/* §92 sleep timer: the moon button, with the time left beside it while it runs */
+.ms-sleep { display: inline-flex; align-items: center; gap: 2px; }
+.ms-sleep-left { font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--accent); white-space: nowrap; }

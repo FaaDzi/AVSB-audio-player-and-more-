@@ -223,6 +223,30 @@ export function getSpecialtyColor(speciality?: string, resolvedGenre?: string): 
   return item ? { bg: item.bg, text: item.text, item } : UNKNOWN_COVER
 }
 
+/** The genre cover as a 512 px image, for the media notification and lock screen when a song has no art. */
+export function placeholderCoverImage(genre?: string, speciality?: string, title?: string): string {
+  const genreLabel = resolveGenre(genre, speciality, title).toLowerCase()
+  const { bg, text, item } = getSpecialtyColor(speciality, genreLabel)
+  const label = genreLabel || item?.id || 'music'
+  const canvas = document.createElement('canvas')
+  canvas.width = canvas.height = 512
+  const g = canvas.getContext('2d')
+  if (!g) return ''
+  g.fillStyle = bg
+  g.fillRect(0, 0, 512, 512)
+  g.fillStyle = text
+  g.textAlign = 'center'
+  g.textBaseline = 'middle'
+  const family = getComputedStyle(document.body).fontFamily || 'sans-serif'
+  let size = label.length <= 4 ? 150 : label.length <= 7 ? 116 : 88
+  do {
+    g.font = `800 ${size}px ${family}`
+    size -= 6
+  } while (g.measureText(label).width > 440 && size > 30)
+  g.fillText(label, 256, 262)
+  return canvas.toDataURL('image/jpeg', 0.9)
+}
+
 export function PlaceholderCover({ alt = '', className = '', genre, speciality, title: _title }: PlaceholderProps) {
   const isParty = typeof document !== 'undefined' && document.documentElement.getAttribute('data-style') === 'gameshow'
   const genreLabel = resolveGenre(genre, speciality, _title, alt).toLowerCase()

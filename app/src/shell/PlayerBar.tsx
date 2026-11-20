@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Cover, Icon, IconButton } from './ui'
+import { SleepButton } from './sleepTimer'
 import { useShell } from './context'
 import { duration } from './library'
 import { WaveTrack } from './WaveTrack'
@@ -72,6 +73,7 @@ export function PlayerBar() {
       <div className="ms-player-right">
         <IconButton icon="lyrics" label="Lyrics" active={panel === 'lyrics'} onClick={() => setPanel(panel === 'lyrics' ? null : 'lyrics')} />
         <IconButton icon="queue_music" label="Up next" active={panel === 'queue'} onClick={() => setPanel(panel === 'queue' ? null : 'queue')} />
+        <SleepButton current={current} />
         <IconButton icon="picture_in_picture_alt" label="Mini player" onClick={() => (current ? setMini(true) : showToast('Play a song first'))} />
         <VolumeControl value={volume} onChange={setVolume} />
       </div>

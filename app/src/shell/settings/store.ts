@@ -46,6 +46,12 @@ export function useSettings() {
 /** The marks that split an artist tag into separate artists, from Metadata separators. */
 export const artistSeparators = (): string[] => SEPARATORS.filter((s) => Boolean(getSetting(s.id) ?? s.on)).map((s) => s.mark)
 
+/** §92 A: the Artists tab lists album artists (guests under "Appears on") unless "Every artist on the song" is on. */
+export function useArtistsByAlbumArtist(): boolean {
+  useSettings()
+  return getSetting('artistsall') !== true
+}
+
 /** The same, re-rendering the caller when they change. The list keeps its identity while they don't. */
 export function useArtistSeparators(): string[] {
   useSettings()
