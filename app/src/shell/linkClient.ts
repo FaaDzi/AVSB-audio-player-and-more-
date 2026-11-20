@@ -36,6 +36,7 @@ interface LinkPlugin {
   /** §88 C: the songs kept from the PC on this phone's storage. */
   songCache?: () => Promise<{ bytes: number; songs: number }>
   clearSongCache?: () => Promise<void>
+  dropCachedSong?: (o: { id: string; lowData: boolean }) => Promise<void>
   /** §88 B: the phone's own little HTTP server for PC songs (127.0.0.1, secret path). */
   audioBase?: () => Promise<{ base: string }>
   ping?: () => Promise<PhoneLinkStatus>

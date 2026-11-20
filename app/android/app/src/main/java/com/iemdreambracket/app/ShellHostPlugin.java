@@ -501,7 +501,7 @@ public class ShellHostPlugin extends Plugin {
                     t.put("sec", sec);
                     t.put("size", size);
                     t.put("kbps", kbps);
-                    t.put("added", num(c, MediaStore.Audio.Media.DATE_ADDED) * 1000);
+                    t.put("added", num(c, MediaStore.Audio.Media.DATE_ADDED)); // seconds, like the PC's (plan §91 A)
                     t.put("cover", q ? cover : "");
                     out.put(t);
                 } catch (org.json.JSONException ignored) {

@@ -163,20 +163,50 @@ class LinkPlugin : Plugin() {
         private var size = 0L
         val open: Boolean get() = out != null
 
+        /** A Low Data song has no length to check against; it's only whole if its last Ogg page carries the end mark. */
+        private val tail = if (expected <= 0 && mime.contains("ogg")) ByteArray(70_000) else null
+        private var tailLen = 0
+
         fun write(b: ByteArray, off: Int, n: Int) {
             val o = out ?: return
             try {
                 o.write(b, off, n)
                 size += n
+                if (tail != null) keepTail(tail, b, off, n)
             } catch (e: Exception) {
                 abort()
             }
         }
 
+        private fun keepTail(t: ByteArray, b: ByteArray, off: Int, n: Int) {
+            if (n >= t.size) {
+                System.arraycopy(b, off + n - t.size, t, 0, t.size)
+                tailLen = t.size
+                return
+            }
+            val keep = minOf(tailLen, t.size - n)
+            System.arraycopy(t, tailLen - keep, t, 0, keep)
+            System.arraycopy(b, off, t, keep, n)
+            tailLen = keep + n
+        }
+
+        /** The last "OggS" page header in the tail has the end-of-stream flag (ffmpeg writes it only when it finishes). */
+        private fun oggEnded(t: ByteArray): Boolean {
+            var i = tailLen - 27
+            while (i >= 0) {
+                if (t[i] == 'O'.code.toByte() && t[i + 1] == 'g'.code.toByte() && t[i + 2] == 'g'.code.toByte() && t[i + 3] == 'S'.code.toByte()) {
+                    return (t[i + 5].toInt() and 0x04) != 0
+                }
+                i--
+            }
+            return false
+        }
+
         fun finish() {
             val o = out ?: return
             out = null
-            var ok = runCatching { o.close() }.isSuccess && size > 0 && (expected <= 0 || size == expected)
+            var ok = runCatching { o.close() }.isSuccess && size > 0 && (expected <= 0 || size == expected) && (tail == null || oggEnded(tail))
+            if (!ok && tail != null) Log.w(TAG, "Low Data copy of $key ended without its end mark: not kept")
             if (ok) ok = runCatching { File(songCacheDir(), "$key.type").writeText(mime) }.isSuccess && part.renameTo(File(songCacheDir(), key))
             if (!ok) part.delete()
             writing.remove(key)
@@ -1637,6 +1667,16 @@ class LinkPlugin : Plugin() {
     }
 
     /** Empties the song cache (songs still downloading are left to finish). */
+    @PluginMethod
+    fun dropCachedSong(call: PluginCall) {
+        val key = (call.getString("id") ?: "").removePrefix("pc_").removePrefix("pc:") + if (call.getBoolean("lowData") == true) "-low" else ""
+        if (key.isNotEmpty() && key !in writing) {
+            File(songCacheDir(), key).delete()
+            File(songCacheDir(), "$key.type").delete()
+        }
+        call.resolve()
+    }
+
     @PluginMethod
     fun clearSongCache(call: PluginCall) {
         val busy = HashSet(writing)

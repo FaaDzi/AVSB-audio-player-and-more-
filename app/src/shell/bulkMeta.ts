@@ -25,7 +25,7 @@ export const stopBulk = (k: BulkKind) => { stopAsked[k] = true }
 
 /** Covers smaller than this (shortest side, px) are replaced when a bigger one is found. */
 export const SMALL_COVER = 300
-const RECHECK_MS = 30 * 86_400_000
+const RECHECK_MS = 14 * 86_400_000
 const checkedKey = (k: BulkKind, id: string) => `shell.bulk.${k}.${id}`
 const checkedRecently = (k: BulkKind, id: string) => {
   try { return Date.now() - Number(localStorage.getItem(checkedKey(k, id)) ?? 0) < RECHECK_MS } catch { return false }

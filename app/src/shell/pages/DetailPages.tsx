@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Cover, Dialog, Icon, IconButton, Menu, TopBar } from '../ui'
 import { useShell } from '../context'
 import {
-  NO_FILTERS, activeFilterCount, filterTracks, folderPath, groupAlbums, groupArtists, isPcTrack, isPremiumQuality, moveItem, shuffled, sortByFileName, sortTracks, trackCount, useLibrary,
+  NO_FILTERS, activeFilterCount, filterTracks, folderPath, groupAlbums, groupArtists, isPcTrack, mergeTwins, isPremiumQuality, moveItem, shuffled, sortByFileName, sortTracks, trackCount, useLibrary,
   type Filters, type SortMode, type Track,
 } from '../library'
 import { missingTrack } from '../playlistSync'
@@ -304,7 +304,7 @@ export function AlbumPage({ albumKey, back }: { albumKey: string; back: () => vo
   const { play, push, showToast } = useShell()
   const libraryTracks = useLibrary()
   const album = useMemo(() => {
-    const { albums, singles } = groupAlbums(libraryTracks)
+    const { albums, singles } = groupAlbums(mergeTwins(libraryTracks))
     return [...albums, ...singles].find((a) => a.key === albumKey)
   }, [libraryTracks, albumKey])
   const coverStyle = useCoverStyle(album?.cover)
@@ -469,7 +469,7 @@ export function ArtistPage({ name, back }: { name: string; back: () => void }) {
   const byAlbumArtist = useArtistsByAlbumArtist()
   // a guest-only artist (opened from search) still has a page: their songs from the full list
   const artist = useMemo(
-    () => groupArtists(libraryTracks, separators, byAlbumArtist).find((a) => a.name === name) ?? groupArtists(libraryTracks, separators).find((a) => a.name === name),
+    () => groupArtists(mergeTwins(libraryTracks), separators, byAlbumArtist).find((a) => a.name === name) ?? groupArtists(mergeTwins(libraryTracks), separators).find((a) => a.name === name),
     [libraryTracks, name, separators, byAlbumArtist],
   )
   const [query, setQuery] = useState<string | null>(null)

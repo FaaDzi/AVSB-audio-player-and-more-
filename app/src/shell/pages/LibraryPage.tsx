@@ -3,7 +3,7 @@ import { Chip, Cover, Dialog, Icon, IconButton, Menu, PlayCircle, useLongPress }
 import { useShell } from '../context'
 import {
   FORMATS, METADATA_FILTERS, NO_FILTERS, SORTS, activeFilterCount, filterTracks, folderName, folderPath, groupAlbums, groupArtists, groupFolders, hideFolder, initial,
-  isPremiumQuality, onLibrarySearch, playlistCount, qualityLabel, shuffled, sortByFileName, sortIcon, sortTracks, takePendingLibrarySearch, trackCount, useLibrary, visiblePlaylists, type Album, type Filters, type SortMode, type Track,
+  isPcTrack, isPremiumQuality, mergeTwins, onLibrarySearch, playlistCount, qualityLabel, shuffled, sortByFileName, sortIcon, sortTracks, takePendingLibrarySearch, trackCount, useLibrary, visiblePlaylists, type Album, type Filters, type SortMode, type Track,
 } from '../library'
 import { TrackTable } from './TrackTable'
 import { sharePlaylist } from './playlistCover'
@@ -59,8 +59,9 @@ export function LibraryPage({ initialTab = 'songs' }: { initialTab?: Tab }) {
     })
   }, [])
 
-  const visible = useMemo(() => sortTracks(filterTracks(libraryTracks, filters, query), sort), [libraryTracks, filters, query, sort])
-  const groups = useMemo(() => groupAlbums(visible), [visible])
+  // a song on both the phone and the PC is listed once (council 2026-11-19); folders keep every file
+  const visible = useMemo(() => sortTracks(filterTracks(mergeTwins(libraryTracks), filters, query), sort), [libraryTracks, filters, query, sort])
+  const groups = useMemo(() => groupAlbums(visible, sort), [visible, sort])
   const { scanning } = useLibraryStatus()
   const separators = useArtistSeparators()
   const byAlbumArtist = useArtistsByAlbumArtist()
@@ -201,7 +202,11 @@ function SongCard({ track, list }: { track: Track; list: Track[] }) {
       <div className="ms-card-art">
         <Cover id={track.cover} alt="" genre={track.genre} speciality={track.category} title={track.title} />
         <span className={`ms-badge${isPremiumQuality(track) ? ' hi' : ''}`}>{qualityLabel(track)}</span>
-        {!track.downloaded && <span className="ms-card-local" title="On this computer"><Icon name="folder" fill size={14} /></span>}
+        {!track.downloaded && (
+          <span className="ms-card-local" title={track.pcTwin ? 'On this phone and your PC' : isPcTrack(track) ? 'On your PC' : 'On this device'}>
+            <Icon name={track.pcTwin ? 'devices' : isPcTrack(track) ? 'computer' : 'folder'} fill size={14} />
+          </span>
+        )}
         <PlayCircle title={track.title} active={active} playing={playing} loading={loading} onStart={() => play(track, list)} onToggle={() => setPlaying(!playing)} />
       </div>
       <button type="button" className="ms-card-title as-button">{track.title}</button>

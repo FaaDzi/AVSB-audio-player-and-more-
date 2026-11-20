@@ -1,4 +1,4 @@
-import { cleanRipTitle, withArtistFromTitle, type Track } from './library'
+import { cleanRipTitle, versionKey, withArtistFromTitle, type Track } from './library'
 import { host } from './host'
 import { logLine } from './logs'
 import { savedDetails } from './metadata'
@@ -78,7 +78,9 @@ const firstStamp = (lrc: string) => {
  * then an uncensored copy over one with words blanked out; then the timing most uploads of that length agree on;
  * then the closest length exactly.
  */
-export function rankLyrics(records: LrcLibRecord[], seconds: number, tolerance = MAX_LENGTH_DIFFERENCE_S): LrcLibRecord[] {
+export const rankLyrics = (records: LrcLibRecord[], seconds: number, tolerance = MAX_LENGTH_DIFFERENCE_S) => rankAll(records, seconds, tolerance)
+
+function rankAll(records: LrcLibRecord[], seconds: number, tolerance = MAX_LENGTH_DIFFERENCE_S): LrcLibRecord[] {
   const eligible = records.filter((r) => {
     if (r.instrumental) return false
     if (seconds > 0 && r.duration && Math.abs(r.duration - seconds) > tolerance) return false
@@ -190,6 +192,9 @@ export async function searchVersions(song: Track): Promise<string[]> {
   const t = withArtistFromTitle(overlaid)
   const seconds = Math.round(t.sec)
   let ranked: LrcLibRecord[] = []
+  // another recording's lyrics (the album cut for a "Secret Track" version) are wrong lyrics: the version must agree
+  const version = versionKey(song.originalTitle ?? song.title)
+  const rankLyrics = (records: LrcLibRecord[], sec: number, tol: number) => rankAll(records.filter((r) => versionKey(r.trackName ?? '') === version), sec, tol)
   const exact = new URLSearchParams({ track_name: t.title, artist_name: t.artist, album_name: t.album, duration: String(seconds) })
   const loose = new URLSearchParams({ track_name: t.title, artist_name: t.artist })
   const [one, many] = await Promise.all([getJson<LrcLibRecord>(`${API}/get?${exact}`), getJson<LrcLibRecord[]>(`${API}/search?${loose}`)])

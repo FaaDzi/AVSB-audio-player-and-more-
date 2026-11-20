@@ -5,7 +5,7 @@ import { useSyncExternalStore } from 'react'
 import {
   cachedSavedCover as getLibraryCachedCover, cleanRipTitle, cleanTitle, DEFAULT_SEPARATORS,
   deleteMemoryCover, notifyDetailsChanged, readingsOf, registerCoverLoader, registerNamingSink, setMemoryCover,
-  splitArtists, splitYoutubeTitle, useDetailsVersion, type Track,
+  splitArtists, splitYoutubeTitle, useDetailsVersion, versionKey, type Track,
 } from './library'
 import { logLine } from './logs'
 import { getSetting, setSetting } from './settings/store'
@@ -84,7 +84,8 @@ export function matchOf(t: Track, c: Candidate): Match {
   // the same ISRC is the same recording, even when the source spells it in another script (エイリアンエイリアン)
   if (t.isrc && c.isrcs?.some((i) => i.toUpperCase() === t.isrc.toUpperCase())) return 'strong'
   const normT = normalize(t.title)
-  const title = normT !== '' && normT === normalize(c.title)
+  // a version named in the title ("(Beach Picnic Version) [Secret Track]") must be the found one's too
+  const title = normT !== '' && normT === normalize(c.title) && versionKey(t.title) === versionKey(c.title)
   const ours = new Set([t.artist, ...splitArtists(t.artist, DEFAULT_SEPARATORS)].map(normalize).filter(Boolean))
   const artist = c.artists.some((a) => ours.has(normalize(a)))
   if (title && artist) return 'strong'

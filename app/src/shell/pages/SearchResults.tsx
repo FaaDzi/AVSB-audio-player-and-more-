@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Cover, Icon, IconButton } from '../ui'
 import { useShell } from '../context'
-import { groupAlbums, groupArtists, trackCount } from '../library'
+import { groupAlbums, groupArtists, mergeTwins, trackCount } from '../library'
 import { useTrackMenu } from './TrackMenu'
 import { useArtistSeparators } from '../settings/store'
 
@@ -19,11 +19,12 @@ export function SearchResults({ query }: { query: string }) {
 
   const found = useMemo(() => {
     const has = (...parts: string[]) => parts.some((p) => p?.toLowerCase().includes(q))
-    const { albums, singles } = groupAlbums(data.tracks)
+    const tracks = mergeTwins(data.tracks)
+    const { albums, singles } = groupAlbums(tracks)
     return {
-      songs: data.tracks.filter((t) => has(t.title, t.artist, t.album)),
+      songs: tracks.filter((t) => has(t.title, t.artist, t.album)),
       albums: [...albums, ...singles].filter((a) => has(a.name, a.artist)),
-      artists: groupArtists(data.tracks, separators).filter((a) => has(a.name)),
+      artists: groupArtists(tracks, separators).filter((a) => has(a.name)),
       playlists: data.playlists.filter((p) => has(p.name)),
     }
   }, [data, q, separators])

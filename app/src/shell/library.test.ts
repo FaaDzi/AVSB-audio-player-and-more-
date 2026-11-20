@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { describe, expect, it, vi } from 'vitest'
-import { METADATA_FILTERS, NO_FILTERS, SORTS, cachedSavedCover, coverUrl, deleteMemoryCover, deletePlaylist, filterTracks, folderName, folderPath, genreBadge, groupAlbums, groupArtists, groupFolders, initial, isPlaylistSaved, moveItem, overlayTrack, playlistCount, playlistNamesForTrack, qualityLabel, recentTracks, registerCoverLoader, removeFromPlaylist, setMemoryCover, sortByFileName, sortIcon, sortTracks, splitArtists, withArtistFromTitle, type LibraryData, type Track } from './library'
+import { METADATA_FILTERS, NO_FILTERS, SORTS, cachedSavedCover, coverUrl, deleteMemoryCover, deletePlaylist, filterTracks, folderName, folderPath, genreBadge, groupAlbums, groupArtists, groupFolders, initial, isPlaylistSaved, moveItem, overlayTrack, playlistCount, playlistNamesForTrack, qualityLabel, recentTracks, registerCoverLoader, removeFromPlaylist, setMemoryCover, sortByFileName, sortIcon, sortTracks, splitArtists, versionKey, withArrivalOrder, mergeTwins, withArtistFromTitle, type LibraryData, type Track } from './library'
 
 const base: Track = {
   id: 'a', path: 'a.flac', folder: '.', title: 'A', artist: 'X', albumArtist: 'X', album: 'Alb', track: 1, trackTotal: 2, disc: 1,
@@ -265,5 +265,36 @@ describe('albums of songs without an album artist', () => {
       t({ id: '2', artist: 'Kanye West', albumArtist: '', album: 'Graduation', track: 2 }),
     ])
     expect(albums.map((a) => [a.artist, a.tracks.length])).toEqual([['Kanye West', 2]])
+  })
+})
+
+describe('versionKey', () => {
+  it('tells other recordings apart and leaves the usual one alone', () => {
+    expect(versionKey('3005')).toBe('')
+    expect(versionKey('3005 (Beach Picnic Version) [Secret Track]')).toBe('beach picnic version+secret track')
+    expect(versionKey('Pacific Paradise (Original Mix)')).toBe('')
+    expect(versionKey('Song (2011 Remaster) - Album Version')).toBe('')
+    expect(versionKey('Song (Live at Wembley)')).toBe('live')
+  })
+})
+
+describe('phone and PC together (§91 A, council 2026-11-19)', () => {
+  it('puts the PC library just after it first arrived, in its own order, and later songs after that', () => {
+    const songs = withArrivalOrder([
+      t({ id: 'p1', added: 1_000 }),
+      t({ id: 'pc_a', path: 'pc:a', added: 500 }),
+      t({ id: 'pc_b', path: 'pc:b', added: 900 }),
+      t({ id: 'p2', added: 3_000 }),
+      t({ id: 'pc_c', path: 'pc:c', added: 4_000 }),
+    ], 2_000)
+    expect(sortTracks(songs, 'oldest').map((x) => x.id)).toEqual(['p1', 'pc_a', 'pc_b', 'p2', 'pc_c'])
+  })
+  it('lists a song on both once, as the phone copy', () => {
+    const merged = mergeTwins([
+      t({ id: 'p', title: '3005', artist: 'Childish Gambino', sec: 234, cover: '' }),
+      t({ id: 'pc_x', path: 'pc:x', title: '3005', artist: 'Childish Gambino', sec: 235, cover: 'c1' }),
+      t({ id: 'pc_y', path: 'pc:y', title: '3005', artist: 'Childish Gambino', sec: 226 }),
+    ])
+    expect(merged.map((x) => [x.id, x.pcTwin, x.cover])).toEqual([['p', 'pc_x', 'c1'], ['pc_y', undefined, '']])
   })
 })

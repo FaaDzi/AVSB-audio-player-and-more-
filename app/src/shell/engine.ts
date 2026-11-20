@@ -261,7 +261,15 @@ function streamSong(t: Track): StreamSong {
   el.preload = 'auto'
   // the phone's server is another origin: without CORS the EQ chain would only get silence from it
   el.crossOrigin = 'anonymous'
-  el.src = pcAudioBase ? `${pcAudioBase}/${lowDataFor(t) ? 'low' : 'raw'}/${t.path.slice(3)}` : audioUrl(t)
+  const low = lowDataFor(t)
+  el.src = pcAudioBase ? `${pcAudioBase}/${low ? 'low' : 'raw'}/${t.path.slice(3)}` : audioUrl(t)
+  // §90 E: a stream that ends well before the song's length was cut short (the PC's encoder stopped): its cached copy
+  // goes, so the next play fetches it whole
+  el.addEventListener('ended', () => {
+    if (!(t.sec > 0) || !(el.duration > 0) || t.sec - el.duration <= 3) return
+    logLine('WARN', 'Player', `"${t.title}" ended at ${el.duration.toFixed(0)} s of ${t.sec.toFixed(0)} s: dropped its saved copy`)
+    void phoneLink?.dropCachedSong?.({ id: t.path.slice(3), lowData: low }).catch(() => {})
+  })
   return { el, sec: t.sec }
 }
 /** The phone's own HTTP server for PC songs; the WebView's request hook couldn't serve an audio element's ranges. */

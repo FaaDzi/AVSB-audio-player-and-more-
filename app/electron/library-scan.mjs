@@ -18,7 +18,7 @@ const AUDIO = new Set([...Object.keys(MIME), ...LISTED_ONLY])
 const LOSSLESS = new Set(['FLAC', 'ALAC', 'WAV', 'AIFF', 'APE', 'WV', 'DSF', 'DFF', 'TTA'])
 const SKIP_DIRS = new Set(['$recycle.bin', 'system volume information', 'node_modules', '.git'])
 const ISRC = /^[A-Z]{2}[A-Z0-9]{3}\d{7}$/
-const INDEX_VERSION = 1
+const INDEX_VERSION = 2
 const PARALLEL = 8
 
 const md5 = (text) => createHash('md5').update(text).digest('hex')
@@ -155,7 +155,8 @@ export async function readTrack(file, folder, { id, saveCover, saveLyrics }) {
     sec: Math.round(sec * 100) / 100,
     size: stat.size,
     kbps: sec > 0 ? Math.round(((stat.size - (pic?.data?.length ?? 0)) * 8) / sec / 1000) : Math.round((f.bitrate ?? 0) / 1000),
-    added: Math.floor(stat.mtimeMs / 1000),
+    // when the file arrived on this PC (its creation date), so retagging a song doesn't move it (plan §91 A)
+    added: Math.floor((stat.birthtimeMs || stat.mtimeMs) / 1000),
     cover,
   }
 }

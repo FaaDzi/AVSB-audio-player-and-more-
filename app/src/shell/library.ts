@@ -99,6 +99,8 @@ export interface Track {
   playable?: boolean
   /** Its library folder is missing, for example a drive that isn't plugged in. */
   offline?: boolean
+  /** The PC's copy of this phone song, listed once (council 2026-11-19, mergeTwins). */
+  pcTwin?: string
   /** A playlist song only the phone has (§80 A): shown greyed out until the phone sends it. */
   missing?: boolean
   title: string
@@ -430,7 +432,62 @@ export function overlayTrack(t: Track): Track {
 }
 
 export function overlayTracks(tracks: Track[], hidden: readonly string[] = getHiddenFolders()): Track[] {
-  return withArtistGenres(withCuratedInfo(tracks.filter((t) => !isTrackHidden(t, hidden) && !isTrackDeleted(t.id)).map(overlayTrack)))
+  const shown = tracks.filter((t) => !isTrackHidden(t, hidden) && !isTrackDeleted(t.id)).map(overlayTrack)
+  return withArtistGenres(withCuratedInfo(withArrivalOrder(shown)))
+}
+
+const PC_FIRST_SEEN = 'shell.pcFirstSeen'
+/** When this phone first listed the PC's songs (seconds); set the first time it does. 0 without PC songs. */
+function pcFirstSeen(tracks: Track[]): number {
+  if (!tracks.some(isPcTrack)) return 0
+  try {
+    let at = Number(localStorage.getItem(PC_FIRST_SEEN))
+    if (!at) {
+      at = Math.floor(Date.now() / 1000)
+      localStorage.setItem(PC_FIRST_SEEN, String(at))
+    }
+    return at
+  } catch {
+    return 0
+  }
+}
+
+/**
+ * §91 A: songs sort by when they arrived in this library. The phone's own songs came first; the PC's library arrived
+ * when the phone first listed it, in the PC's own order, so its songs sit just after that moment (keeping their order).
+ * Anything added later on either side, by its own date, is newest.
+ */
+export function withArrivalOrder(tracks: Track[], firstSeen = pcFirstSeen(tracks)): Track[] {
+  if (!firstSeen) return tracks
+  return tracks.map((t) => (isPcTrack(t) && t.added <= firstSeen ? { ...t, added: firstSeen - 1 + t.added / 1e10 } : t))
+}
+
+const twinKey = (t: Track) => `${t.title.toLowerCase().replace(/\s+/g, ' ').trim()}\u0000${t.artist.toLowerCase().trim()}`
+
+/**
+ * Council 2026-11-19: a song on both the phone and the PC is listed once, as the phone's copy, with `pcTwin` set
+ * (playing picks the better copy, engine.ts resolveBestTrack). Matched song by song: title, artist, length within 3 s.
+ * Only the browsing lists use it (Library, search, album and artist pages): playlists and playlist sync keep the ids they
+ * were saved with.
+ */
+export function mergeTwins(tracks: Track[]): Track[] {
+  const local = new Map<string, Track[]>()
+  for (const t of tracks) if (!isPcTrack(t) && t.title && t.artist) local.set(twinKey(t), [...(local.get(twinKey(t)) ?? []), t])
+  if (!local.size) return tracks
+  const twinOf = new Map<string, Track>()
+  const dropped = new Set<string>()
+  for (const t of tracks) {
+    if (!isPcTrack(t) || !t.title || !t.artist) continue
+    const mine = local.get(twinKey(t))?.find((l) => !twinOf.has(l.id) && Math.abs((l.sec || 0) - (t.sec || 0)) <= 3)
+    if (!mine) continue
+    twinOf.set(mine.id, t)
+    dropped.add(t.id)
+  }
+  if (!dropped.size) return tracks
+  return tracks.filter((t) => !dropped.has(t.id)).map((t) => {
+    const pc = twinOf.get(t.id)
+    return pc ? { ...t, pcTwin: pc.id, cover: t.cover || pc.cover, genre: t.genre || pc.genre } : t
+  })
 }
 
 /** A song of the curated list (data/songs.json): what it tests ("bass", "busy", "vocals", ...) and its genre. */
@@ -703,8 +760,12 @@ export interface Album {
   added: number
 }
 
-/** Everything sharing an album name and artist. A one-track album counts as a single, as in Mornye. */
-export function groupAlbums(tracks: Track[]): { albums: Album[]; singles: Album[] } {
+/**
+ * Everything sharing an album name and artist. A one-track album counts as a single, as in Mornye. With `order` (the
+ * Library's sort, §91 A) albums come in the order of the already sorted songs (by title becomes by album name);
+ * without it, newest first.
+ */
+export function groupAlbums(tracks: Track[], order?: SortMode): { albums: Album[]; singles: Album[] } {
   const groups = new Map<string, Album>()
   for (const t of tracks) {
     const key = albumKey(t)
@@ -718,7 +779,9 @@ export function groupAlbums(tracks: Track[]): { albums: Album[]; singles: Album[
     a.cover ||= t.cover
     a.added = Math.max(a.added, t.added)
   }
-  const all = [...groups.values()].sort((a, b) => b.added - a.added)
+  const all = [...groups.values()]
+  if (!order) all.sort((a, b) => b.added - a.added)
+  else if (order === 'a-z' || order === 'z-a') all.sort((a, b) => (order === 'a-z' ? 1 : -1) * collator.compare(a.name, b.name))
   for (const a of all) a.tracks.sort((x, y) => x.disc - y.disc || x.track - y.track)
   return { albums: all.filter((a) => a.tracks.length > 1), singles: all.filter((a) => a.tracks.length === 1) }
 }
@@ -781,6 +844,24 @@ const RIP_BRACKET_NOTE = /\s*[([【「][^)\]】」]*\b(official|video|audio|lyri
 const UNBRACKETED_RIP_SUFFIX = /(?:\s+-\s+|\s+|(?<=[a-z0-9\u3040-\u30ff\u4e00-\u9faf]))(?:official\s+music\s+video|official\s+lyric\s+video|official\s+video|official\s+audio|lyric\s+video|music\s+video|full\s+ver(?:sion)?\.?)(?=\s*$|\s+-\s+|\s*[([【「])/gi
 
 const UNBRACKETED_TOKENS = /(?:\s+-\s+|\s+)\b(?:m\/v|mv|hd|hq|4k)\b(?=\s*$)/gi
+
+/**
+ * §93 Batch 2: which recording a title names beyond the song itself: "Remix", "Live", "Acoustic", "Secret Track",
+ * "(Beach Picnic Version)"… Two titles with different keys are different recordings (other lyrics, other length), even
+ * when the bare titles agree. "Original Mix", "Album/Single/Radio Version" and remasters name the usual recording: no key.
+ */
+export function versionKey(title: string): string {
+  const words = new Set<string>()
+  const t = title.toLowerCase()
+  for (const w of ['remix', 'live', 'acoustic', 'instrumental', 'demo', 'extended', 'slowed', 'sped up', 'nightcore', 'unplugged', 'karaoke', 'secret track', 'hidden track', 'cover']) {
+    if (new RegExp(`\\b${w}\\b`).test(t)) words.add(w)
+  }
+  for (const m of t.matchAll(/([\p{L}\p{N} ]+?)\s+version\b/gu)) {
+    const what = m[1].trim().split(/\s+/).slice(-2).join(' ')
+    if (!/^(album|original|single|radio|explicit|clean|main|full|short|long|lp|ep|\d{4}|remastered?|stereo|mono)$/.test(what.split(' ').pop() ?? '')) words.add(`${what} version`)
+  }
+  return [...words].sort().join('+')
+}
 
 export function cleanRipTitle(title: string): string {
   const halfwidth = title.replace(/[\uFF01-\uFF5E]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0))
