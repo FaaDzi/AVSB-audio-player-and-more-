@@ -9,6 +9,7 @@ import { DevicePickerModal } from '../sound/AudioProfileSheet'
 import { familyOf, targetsFor, type Aim } from '../sound/soundCurve'
 import { autoEq, CANAL_PEAK_HZ, curveAt, midLevel, NO_PREFS, type AutoEqResult, type EqPrefs, type EqScene, type FitDepth } from '../eqStudio'
 import { getSetting, setSetting } from './store'
+import { smoothLog } from '../../audio/filter'
 import { getSpeakerKind, isPhoneSpeaker, setSpeakerKind, SPEAKER_KINDS } from '../sound/phoneSpeaker'
 
 // ---- what the AutoEQ card remembers, per device
@@ -16,13 +17,16 @@ import { getSpeakerKind, isPhoneSpeaker, setSpeakerKind, SPEAKER_KINDS } from '.
 export interface EqLab {
   aim: Aim
   prefs: EqPrefs
+  /** Standard (true) or Precise (§91 E2); it was Gentle/Full. Standard also aims inside what the measurements agree on. */
   gentle: boolean
   depth: FitDepth
   filters: number
   /** Let the HRTF picked in Spatial shape the target. */
   hrtf: boolean
 }
-export const LAB_DEFAULT: EqLab = { aim: { kind: 'off' }, prefs: NO_PREFS, gentle: true, depth: 'normal', filters: 8, hrtf: true }
+export const LAB_DEFAULT: EqLab = { aim: { kind: 'off' }, prefs: NO_PREFS, gentle: true, depth: 'normal', filters: 10, hrtf: true }
+/** §91 E3: 5 / 10 / 15 / 20 filters (8 was a choice before; it reads as 10). */
+export const FILTER_COUNTS = [5, 10, 15, 20]
 
 function labStore(): Record<string, Partial<EqLab>> {
   try {
@@ -31,7 +35,10 @@ function labStore(): Record<string, Partial<EqLab>> {
     return {}
   }
 }
-export const getLab = (deviceId: string | null): EqLab => ({ ...LAB_DEFAULT, ...labStore()[deviceId ?? ''] })
+export const getLab = (deviceId: string | null): EqLab => {
+  const lab = { ...LAB_DEFAULT, ...labStore()[deviceId ?? ''] }
+  return FILTER_COUNTS.includes(lab.filters) ? lab : { ...lab, filters: 10 }
+}
 export const setLab = (deviceId: string | null, patch: Partial<EqLab>) =>
   setSetting('eqlab', JSON.stringify({ ...labStore(), [deviceId ?? '']: { ...getLab(deviceId), ...patch } }))
 
@@ -54,6 +61,8 @@ export const filterColor = (i: number) => FILTER_COLORS[i % FILTER_COLORS.length
 export interface GraphHandle {
   hz: number
   db: number
+  /** A parametric filter's width, shown beside its dot while it's touched. */
+  q?: number
 }
 
 export function EqGraph(props: {
@@ -80,6 +89,10 @@ export function EqGraph(props: {
   const { grid, eqDb, device, target, handles } = props
   const plot = useRef<HTMLDivElement>(null)
   const drag = useRef<number | 'tone' | null>(null)
+  // §91 F: a tap on (or near) the EQ line adds a filter there; a second finger pinches the held dot's width
+  const tap = useRef<{ x: number; y: number } | null>(null)
+  const fingers = useRef(new Map<number, number>())
+  const pinch = useRef<number | null>(null)
   const [hover, setHover] = useState<number | null>(null)
   const [sel, setSel] = useState<number | null>(null)
 
@@ -106,14 +119,32 @@ export function EqGraph(props: {
     const r = plot.current!.getBoundingClientRect()
     return { hz: hzOf((e.clientX - r.left) / r.width), db: dbOf((e.clientY - r.top) / r.height) }
   }
+  const pinched = (e: React.PointerEvent) => {
+    if (!fingers.current.has(e.pointerId)) return false
+    fingers.current.set(e.pointerId, e.clientX)
+    const d = drag.current
+    if (typeof d !== 'number' || fingers.current.size < 2) return false
+    const [a, b] = [...fingers.current.values()]
+    const gap = Math.max(12, Math.abs(a - b))
+    // fingers apart: a wider filter (lower Q); together: narrower
+    if (pinch.current) props.onHandleQ?.(d, Math.min(1.25, Math.max(0.8, pinch.current / gap)))
+    pinch.current = gap
+    return true
+  }
   const move = (e: React.PointerEvent) => {
+    if (pinched(e) && fingers.current.size > 1 && e.pointerType === 'touch' && !e.currentTarget.classList.contains('ms-eqg-handle')) return
     const p = at(e)
     const d = drag.current
     if (d === 'tone') props.onTone?.(p.hz)
     else if (d !== null) props.onHandle?.(d, props.freeHz ? { hz: Math.round(p.hz), db: Math.round(p.db * 2) / 2 } : { db: Math.round(p.db * 2) / 2 })
     else setHover(p.hz)
   }
-  const end = () => { drag.current = null }
+  const end = (e?: React.PointerEvent) => {
+    if (e) fingers.current.delete(e.pointerId)
+    if (fingers.current.size < 2) pinch.current = null
+    if (!fingers.current.size) drag.current = null
+  }
+  const maxBoost = Math.max(0, ...Array.from(eqDb))
   const readHz = props.toneHz ?? hover
   const readDb = readHz === null ? null : lines.afterDb ? curveAt(grid, lines.afterDb, readHz) : curveAt(grid, eqDb, readHz)
 
@@ -127,10 +158,30 @@ export function EqGraph(props: {
         className="ms-eqg-plot"
         onPointerMove={move}
         onPointerLeave={() => setHover(null)}
-        onPointerUp={end}
-        onPointerCancel={end}
+        onPointerUp={(e) => {
+          const t = tap.current
+          tap.current = null
+          if (t && Math.hypot(e.clientX - t.x, e.clientY - t.y) < 8 && props.onAdd && props.freeHz) {
+            const p = at(e)
+            const r = plot.current!.getBoundingClientRect()
+            const lineY = r.top + (yOf(curveAt(grid, eqDb, p.hz)) / H) * r.height
+            if (Math.abs(e.clientY - lineY) < 24) props.onAdd({ hz: Math.round(p.hz), db: Math.round(p.db * 2) / 2 })
+          }
+          end(e)
+        }}
+        onPointerCancel={(e) => { tap.current = null; end(e) }}
         onPointerDown={(e) => {
-          if (props.toneHz === null || (e.target as Element).closest('button')) return
+          if ((e.target as Element).closest('button')) return
+          // a second finger while a dot is held: the pinch
+          if (typeof drag.current === 'number') {
+            e.currentTarget.setPointerCapture(e.pointerId)
+            fingers.current.set(e.pointerId, e.clientX)
+            return
+          }
+          if (props.toneHz === null) {
+            tap.current = { x: e.clientX, y: e.clientY }
+            return
+          }
           e.currentTarget.setPointerCapture(e.pointerId)
           drag.current = 'tone'
           props.onTone?.(at(e).hz)
@@ -162,11 +213,13 @@ export function EqGraph(props: {
             onPointerDown={(e) => {
               e.stopPropagation()
               e.currentTarget.setPointerCapture(e.pointerId)
+              fingers.current.set(e.pointerId, e.clientX)
               drag.current = i
               setSel(i)
             }}
             onPointerMove={(e) => { if (drag.current === i) { e.stopPropagation(); move(e) } }}
-            onPointerUp={end}
+            onPointerUp={(e) => { e.stopPropagation(); end(e) }}
+            onPointerCancel={(e) => end(e)}
             onWheel={(e) => props.onHandleQ?.(i, e.deltaY < 0 ? 1.12 : 1 / 1.12)}
             onDoubleClick={(e) => { e.stopPropagation(); props.onRemove?.(i) }}
             onKeyDown={(e) => {
@@ -183,6 +236,12 @@ export function EqGraph(props: {
             {props.freeHz ? i + 1 : ''}
           </button>
         ))}
+        {sel !== null && handles[sel] && props.freeHz && (
+          <span className="ms-eqg-dotread" style={{ left: `${xOf(handles[sel].hz) / 10}%`, top: `${(yOf(handles[sel].db) / H) * 100}%` }}>
+            <b>{hzLabel(handles[sel].hz)}</b> {signed(handles[sel].db)}{handles[sel].q !== undefined && ` · Q ${handles[sel].q!.toFixed(2)}`}
+          </span>
+        )}
+        {props.on && maxBoost > 0.05 && <span className="ms-eqg-headroom">Headroom −{maxBoost.toFixed(1)} dB</span>}
         {readHz !== null && readDb !== null && (
           <span className="ms-eqg-read" style={{ left: `${xOf(readHz) / 10}%` }}>
             <b>{hzLabel(readHz)}</b> {signed(readDb)}
@@ -224,14 +283,20 @@ export function AutoEqCard(props: {
   onLab: (patch: Partial<EqLab>) => void
   onApply: (r: AutoEqResult, targetName: string) => void
   onPickGear: () => void
+  /** Opens the HRTF test (Spatial). */
+  onPickHrtf: () => void
 }) {
   const { db, deviceId, lab, scene } = props
+  // §91 E5: the HRTF test first, for a closer match; asked once, Skip remembered
+  const [askHrtf, setAskHrtf] = useState(false)
   const [picking, setPicking] = useState(false)
+  // §91 E3: the target, the button and the score; everything else waits under Advanced
+  const [advanced, setAdvanced] = useState(false)
   const targets = useMemo(() => targetsFor(db.catalog, deviceId), [db, deviceId])
   const family = familyOf(db.catalog, deviceId)
   const aimDevice = lab.aim.kind === 'device' ? db.catalog.byId.get(lab.aim.id) : undefined
   const targetName = lab.aim.kind === 'target' ? lab.aim.name : aimDevice?.name ?? ''
-  const result = useMemo(() => (scene ? autoEq(scene, lab.filters) : null), [scene, lab.filters])
+  const result = useMemo(() => (scene ? autoEq(scene, lab.filters, lab.gentle ? 'standard' : 'precise', family === 'iem') : null), [scene, lab.filters, lab.gentle, family])
   const touched = PREFS.some((p) => lab.prefs[p.key] !== 0)
 
   // the phone's own speaker (§86 G): no measurement to aim from, but which speakers play is yours to say
@@ -281,47 +346,73 @@ export function AutoEqCard(props: {
 
       {lab.aim.kind !== 'off' && (
         <>
-          <div className="ms-eqlab-prefs">
-            {PREFS.map((p) => (
-              <label key={p.key} className="ms-eqlab-pref">
-                <span><Icon name={p.icon} size={18} />{p.label}<b>{lab.prefs[p.key] > 0 ? '+' : ''}{lab.prefs[p.key].toFixed(1)}{p.unit}</b></span>
-                <Slider thick label={p.label} min={p.min} max={p.max} step={p.step} value={lab.prefs[p.key]} onChange={(v) => props.onLab({ prefs: { ...lab.prefs, [p.key]: v } })} />
-              </label>
-            ))}
-          </div>
-
-          <div className="ms-eqlab-options">
-            <div className="ms-segment-small" role="radiogroup" aria-label="How far to correct">
-              <button type="button" className={lab.gentle ? 'on' : ''} onClick={() => props.onLab({ gentle: true })}>Gentle</button>
-              <button type="button" className={lab.gentle ? '' : 'on'} onClick={() => props.onLab({ gentle: false })}>Full</button>
-            </div>
-            <div className="ms-segment-small" role="radiogroup" aria-label="Number of filters">
-              {[5, 8, 10].map((n) => <button type="button" key={n} className={lab.filters === n ? 'on' : ''} onClick={() => props.onLab({ filters: n })}>{n} filters</button>)}
-            </div>
-            {family === 'iem' && (
-              <div className="ms-segment-small" role="radiogroup" aria-label="How deep the tips sit" title={`Moves the ear-canal peak: ${DEPTHS.map(([d, l]) => `${l} ${(CANAL_PEAK_HZ[d] / 1000).toFixed(1)} kHz`).join(', ')}`}>
-                {DEPTHS.map(([d, label]) => <button type="button" key={d} className={lab.depth === d ? 'on' : ''} onClick={() => props.onLab({ depth: d })}>{label} fit</button>)}
-              </div>
-            )}
-            {props.hrtfName && (
-              <label className="ms-eqlab-hrtf">
-                <input type="checkbox" role="switch" className="ms-switch" checked={lab.hrtf} onChange={(e) => props.onLab({ hrtf: e.target.checked })} />
-                <span>Shape for HRTF <b>{props.hrtfName}</b></span>
-              </label>
-            )}
-            {touched && <IconButton icon="restart_alt" label="Reset preferences" onClick={() => props.onLab({ prefs: NO_PREFS })} />}
-          </div>
-
           <div className="ms-eqlab-go">
             {result && (
               <div className="ms-eqlab-score" aria-label={`From ${result.beforeDb.toFixed(1)} dB off target to ${result.afterDb.toFixed(1)} dB`}>
                 <b>{result.beforeDb.toFixed(1)}</b><Icon name="arrow_forward" size={20} /><b className="good">{result.afterDb.toFixed(1)}</b><small>dB off target</small>
               </div>
             )}
-            <button type="button" className="ms-btn primary ms-eqlab-apply" disabled={!result} onClick={() => result && props.onApply(result, targetName)}>
+            <button
+              type="button"
+              className="ms-btn primary ms-eqlab-apply"
+              disabled={!result}
+              onClick={() => {
+                if (!result) return
+                if (!props.hrtfName && family !== 'room' && !getSetting('hrtfskip')) setAskHrtf(true)
+                else props.onApply(result, targetName)
+              }}
+            >
               <Icon name="auto_fix_high" size={22} /> AutoEQ
             </button>
           </div>
+          {askHrtf && result && (
+            <div className="ms-eqlab-ask" role="alert">
+              <Icon name="hearing" size={22} />
+              <span className="grow">Pick your HRTF first for a closer match</span>
+              <button type="button" className="ms-btn tonal" onClick={() => { setAskHrtf(false); props.onPickHrtf() }}>Pick HRTF</button>
+              <button type="button" className="ms-btn text" onClick={() => { setAskHrtf(false); setSetting('hrtfskip', true); props.onApply(result, targetName) }}>Skip</button>
+            </div>
+          )}
+
+          <button type="button" className={`ms-eqlab-more${advanced ? ' open' : ''}`} aria-expanded={advanced} onClick={() => setAdvanced(!advanced)}>
+            <Icon name="tune" size={18} />Advanced
+            <span className="ms-eqlab-more-sum">{lab.gentle ? 'Standard' : 'Precise'} · {lab.filters} filters{touched ? ' · your taste' : ''}</span>
+            <Icon name={advanced ? 'expand_less' : 'expand_more'} size={20} />
+          </button>
+
+          {advanced && (
+            <>
+              <div className="ms-eqlab-options">
+                <div className="ms-segment-small" role="radiogroup" aria-label="How closely to follow the target">
+                  <button type="button" className={lab.gentle ? 'on' : ''} title="Smooths the correction and handles the treble with one shelf" onClick={() => props.onLab({ gentle: true })}>Standard</button>
+                  <button type="button" className={lab.gentle ? '' : 'on'} title="Follows the curve, with peaks up to 16 kHz" onClick={() => props.onLab({ gentle: false })}>Precise</button>
+                </div>
+                <div className="ms-segment-small" role="radiogroup" aria-label="Number of filters">
+                  {FILTER_COUNTS.map((n) => <button type="button" key={n} className={lab.filters === n ? 'on' : ''} onClick={() => props.onLab({ filters: n })}>{n}</button>)}
+                </div>
+                {family === 'iem' && (
+                  <div className="ms-segment-small" role="radiogroup" aria-label="How deep the tips sit" title={`Moves the ear-canal peak: ${DEPTHS.map(([d, l]) => `${l} ${(CANAL_PEAK_HZ[d] / 1000).toFixed(1)} kHz`).join(', ')}`}>
+                    {DEPTHS.map(([d, label]) => <button type="button" key={d} className={lab.depth === d ? 'on' : ''} onClick={() => props.onLab({ depth: d })}>{label} fit</button>)}
+                  </div>
+                )}
+                {props.hrtfName && (
+                  <label className="ms-eqlab-hrtf">
+                    <input type="checkbox" role="switch" className="ms-switch" checked={lab.hrtf} onChange={(e) => props.onLab({ hrtf: e.target.checked })} />
+                    <span>Shape for HRTF <b>{props.hrtfName}</b></span>
+                  </label>
+                )}
+                {touched && <IconButton icon="restart_alt" label="Reset preferences" onClick={() => props.onLab({ prefs: NO_PREFS })} />}
+              </div>
+              <div className="ms-eqlab-prefs">
+                {PREFS.map((p) => (
+                  <label key={p.key} className="ms-eqlab-pref">
+                    <span><Icon name={p.icon} size={18} />{p.label}<b>{lab.prefs[p.key] > 0 ? '+' : ''}{lab.prefs[p.key].toFixed(1)}{p.unit}</b></span>
+                    <Slider thick label={p.label} min={p.min} max={p.max} step={p.step} value={lab.prefs[p.key]} onChange={(v) => props.onLab({ prefs: { ...lab.prefs, [p.key]: v } })} />
+                  </label>
+                ))}
+              </div>
+            </>
+          )}
         </>
       )}
 
@@ -361,7 +452,13 @@ export function FineTuneCard(props: {
   /** The tone sits off-centre towards this side. */
   onLean: (side: 'left' | 'right') => void
   onUndo: () => void
+  /** §91 F: the treble and bass shelves' gains (dB), for the first two steps. */
+  treble: number
+  bass: number
+  onShelf: (kind: 'lowshelf' | 'highshelf', gain: number) => void
 }) {
+  // PEQdB's order: the treble first (the part ears and measurements disagree on most), then bass and balance, then peaks
+  const [step, setStep] = useState<'treble' | 'bass' | 'peaks'>('treble')
   return (
     <section className={`ms-eqlab ms-eqtune${props.playing ? ' playing' : ''}`}>
       <header>
@@ -370,6 +467,33 @@ export function FineTuneCard(props: {
         {props.canUndo && <IconButton icon="undo" label="Undo the last change" onClick={props.onUndo} />}
       </header>
 
+      <div className="ms-segment-small big ms-eqtune-steps" role="tablist" aria-label="Fine-tune step">
+        {([['treble', '1 Treble'], ['bass', '2 Bass'], ['peaks', '3 Peaks']] as const).map(([k, label]) => (
+          <button type="button" role="tab" key={k} aria-selected={step === k} className={step === k ? 'on' : ''} onClick={() => setStep(k)}>{label}</button>
+        ))}
+      </div>
+
+      {step !== 'peaks' && (
+        <div className="ms-eqtune-shelf">
+          <span className="ms-eqtune-shelf-head">
+            <Icon name={step === 'treble' ? 'music_note' : 'speaker'} size={20} />
+            {step === 'treble' ? 'Treble shelf · 8 kHz' : 'Bass shelf · 105 Hz'}
+            <b>{signed(step === 'treble' ? props.treble : props.bass)}</b>
+          </span>
+          <Slider thick label={step === 'treble' ? 'Treble shelf' : 'Bass shelf'} min={-8} max={8} step={0.5} value={step === 'treble' ? props.treble : props.bass} onChange={(v) => props.onShelf(step === 'treble' ? 'highshelf' : 'lowshelf', v)} />
+          {step === 'bass' && (
+            <div className="ms-eqtune-acts two">
+              <button type="button" className="ms-eqtune-act lean" onClick={() => props.onLean('left')}><Icon name="west" size={24} /><span>Leans left</span></button>
+              <button type="button" className="ms-eqtune-act lean" onClick={() => props.onLean('right')}><span>Leans right</span><Icon name="east" size={24} /></button>
+            </div>
+          )}
+          <button type="button" className="ms-btn text ms-eqtune-next" onClick={() => setStep(step === 'treble' ? 'bass' : 'peaks')}>
+            Next<Icon name="arrow_forward" size={18} />
+          </button>
+        </div>
+      )}
+
+      {step === 'peaks' && (<>
       <div className="ms-eqtune-tone">
         <button type="button" className="ms-eqtune-play" aria-label={props.playing ? 'Stop the tone' : 'Play the tone'} onClick={() => props.onPlay(!props.playing)}>
           <Icon name={props.playing ? 'stop' : 'play_arrow'} size={36} />
@@ -400,6 +524,7 @@ export function FineTuneCard(props: {
           <span>Leans right</span><Icon name="east" size={24} />
         </button>
       </div>
+      </>)}
     </section>
   )
 }
@@ -413,11 +538,18 @@ const loadDf = () =>
   (dfLoading ??= fetch(`${import.meta.env.BASE_URL}data/hrir/df.json`).then((r) => (r.ok ? (r.json() as Promise<DfFile>) : null)).catch(() => null))
 
 /**
- * How the chosen HRTF's outer ear differs from the dummy head the targets were made on, on `grid` (1–10 kHz only).
+ * How the chosen HRTF's outer ear differs from the dummy head the targets were made on, on `grid` (1–8.5 kHz).
  * `strength` scales it: in full for in-ears (they bypass the outer ear), half for over-ears (which already play
  * through your own outer ear, so a full correction would count part of it twice). Null for the generic or an
  * imported set, and before the data has loaded.
  */
+/** §91 E5: the HRTF counts in full up to 7 kHz and fades out by 8.5 kHz, where heads and measurements stop agreeing. */
+export function hrtfReach(hz: number): number {
+  if (hz <= 7000) return 1
+  if (hz >= 8500) return 0
+  return 0.5 + 0.5 * Math.cos((Math.PI * Math.log2(hz / 7000)) / Math.log2(8500 / 7000))
+}
+
 export function useHrtfTilt(grid: ArrayLike<number> | null, strength: number): { name: string; curve: Float64Array } | null {
   const [df, setDf] = useState<DfFile | null>(null)
   const [hrirId, setHrirId] = useState(() => loadSpatial().hrirId)
@@ -427,7 +559,10 @@ export function useHrtfTilt(grid: ArrayLike<number> | null, strength: number): {
     const d = df?.sets[hrirId]
     if (!df || !d || !grid || !strength) return null
     const [lo, hi] = [df.freqs[0], df.freqs[df.freqs.length - 1]]
-    return { name: hrirId.replace('hutubs-', 'pp'), curve: Float64Array.from(grid, (hz) => (hz < lo || hz > hi ? 0 : curveAt(df.freqs, d, hz) * strength)) }
+    const raw = Float64Array.from(grid, (hz) => (hz < lo || hz > hi ? 0 : curveAt(df.freqs, d, hz) * strength * hrtfReach(hz)))
+    // §91 E5: a third of an octave smooth, like Standard's treble rule: a head's fine ripples don't belong in the EQ
+    const ppo = Math.round(1 / Math.log2(grid[1] / grid[0]))
+    return { name: hrirId.replace('hutubs-', 'pp'), curve: smoothLog(raw, ppo, 1 / 3) }
   }, [df, hrirId, grid, strength])
 }
 

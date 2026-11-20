@@ -314,7 +314,8 @@ export function HrtfPicker(props: HrtfPickerProps) {
         <div className="selftest-round">
           <RoundDots round={(round.n === 2 ? round.done : 0) + ko.picks + 1} of={picks} />
           <p className="selftest-step">
-            Tap a card to listen. Pick the one that sounds more <b>outside your head</b>, in front of you.
+            Tap a card to listen. Pick the one where the sound comes from <b>in front of you</b> and still sounds natural. If
+            one is wider but thinner, pick the clearer one.
           </p>
           <div className="selftest-controls">
             <button type="button" className="game-btn-sm primary" disabled={!clip || !ready} onClick={toggle}>
@@ -340,6 +341,10 @@ export function HrtfPicker(props: HrtfPickerProps) {
                 Another song
               </button>
             )}
+            {/* §91 E5: when the two can't be told apart; the one already ahead in the knockout goes on */}
+            <button type="button" className="game-btn-sm" disabled={!ready} onClick={() => answer(flip ? 1 : 0)}>
+              Same
+            </button>
             <button type="button" className="game-btn-sm" onClick={keepCurrent}>
               Keep current{current ? `: ${current.name}` : ''}
             </button>

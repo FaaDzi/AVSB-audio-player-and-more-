@@ -70,6 +70,11 @@
 .ms-eqlab-hrtf { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text); }
 .ms-eqlab-hrtf b { color: var(--text-strong); }
 .ms-eqlab-go { display: flex; align-items: center; justify-content: flex-end; gap: 18px; margin-top: 16px; }
+/* §91 E3: Advanced — the summary says what's chosen, so it can stay closed */
+.ms-eqlab-more { display: flex; align-items: center; gap: 8px; width: 100%; margin-top: 14px; padding: 10px 12px; border-radius: 12px; color: var(--text-strong); font-weight: 600; background: rgb(var(--ink) / 0.05); }
+.ms-eqlab-more:hover { background: rgb(var(--ink) / 0.09); }
+.ms-eqlab-ask { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 12px; padding: 12px 14px; border-radius: 14px; background: var(--accent-container); color: var(--on-accent-container); }
+.ms-eqlab-more-sum { flex: 1; text-align: right; font-weight: 400; font-size: 13px; color: var(--text-dim); }
 .ms-eqlab-score { display: flex; align-items: baseline; gap: 8px; color: var(--text-dim); }
 .ms-eqlab-score b { font-size: 26px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
 .ms-eqlab-score b.good { color: var(--accent); }
@@ -122,3 +127,21 @@
 .ms-saved-eq-actions { display: flex; align-items: center; gap: 4px; flex-wrap: nowrap; }
 .ms-saved-eq-card.autosave { margin-bottom: 12px; border: 1px dashed var(--outline); }
 .ms-tool.on { background: var(--nav-selected); color: var(--text-strong); }
+
+/* §91 F: Fine-tune's guided steps */
+.ms-eqtune-steps { margin: 10px 0 4px; }
+.ms-eqtune-shelf { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.ms-eqtune-shelf-head { display: flex; align-items: center; gap: 8px; color: var(--text-strong); font-weight: 600; }
+.ms-eqtune-shelf-head b { margin-left: auto; font-variant-numeric: tabular-nums; }
+.ms-eqtune-next { align-self: flex-end; display: inline-flex; align-items: center; gap: 6px; }
+.ms-eqtune-acts.two { grid-template-columns: 1fr 1fr; }
+
+/* §91 F: the touched dot's values beside it, and the headroom the EQ needs */
+.ms-eqg-dotread { position: absolute; transform: translate(-50%, calc(-100% - 18px)); padding: 4px 8px; border-radius: 8px; background: var(--chrome); color: var(--text); font-size: 12px; white-space: nowrap; pointer-events: none; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); z-index: 3; }
+.ms-eqg-dotread b { color: var(--text-strong); }
+.ms-eqg-headroom { position: absolute; top: 6px; right: 8px; padding: 2px 8px; border-radius: 8px; font-size: 12px; color: var(--text-dim); background: rgb(var(--ink) / 0.06); pointer-events: none; }
+
+/* §91 F: install steps after an export */
+.ms-eq-steps { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 10px; color: var(--text); line-height: 1.45; }
+.ms-eq-steps b { color: var(--text-strong); }
+.ms-eq-steps code { padding: 1px 5px; border-radius: 5px; background: rgb(var(--ink) / 0.08); font-size: 0.92em; overflow-wrap: anywhere; }

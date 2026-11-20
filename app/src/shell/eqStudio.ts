@@ -3,7 +3,8 @@
 import type { Biquad } from '../eq/biquad'
 import { chainDb } from '../eq/biquad'
 import { tasteCurve } from '../eq/curves'
-import { fitParametric, PARAMETRIC_DEFAULTS } from '../eq/parametric'
+import { fitParametric, PARAMETRIC_DEFAULTS, type ParametricOptions } from '../eq/parametric'
+import { smoothLog } from '../audio/filter'
 import { PEQ_LIMITS, PEQ_MAX_FILTERS, tidyFilter } from '../eq/peq'
 import { addBiquadDb } from '../eq/biquad'
 import { SOUND_DEFAULT, soundCurve, type Aim, type SoundEnv } from './sound/soundCurve'
@@ -102,10 +103,27 @@ export interface AutoEqResult {
   afterDb: number
 }
 
+/**
+ * §91 E2, after PEQdB: Standard smooths the wanted correction (more for in-ears, whose treble measures least
+ * alike from rig to rig) and leaves everything above 7.5 kHz to one high shelf; Precise follows the curve with peaks
+ * up to 16 kHz. Both let the shelves move anywhere and fine-tune all the filters together.
+ */
+export type AutoEqMode = 'standard' | 'precise'
+export function autoEqOptions(mode: AutoEqMode, maxFilters: number): ParametricOptions {
+  return mode === 'standard'
+    ? { ...PARAMETRIC_DEFAULTS, maxFilters, fMax: 7500, shelfFMax: 16000, weightTo: 12000, passes: 80 }
+    : { ...PARAMETRIC_DEFAULTS, maxFilters, fMax: 16000, shelfFMax: 16000, weightTo: 16000, passes: 80 }
+}
+export function autoEqWant(grid: ArrayLike<number>, want: ArrayLike<number>, mode: AutoEqMode, inEar: boolean): ArrayLike<number> {
+  if (mode !== 'standard') return want
+  const ppo = Math.round(1 / Math.log2(grid[1] / grid[0]))
+  return smoothLog(Float64Array.from(want), ppo, inEar ? 1 / 3 : 1 / 6)
+}
+
 /** AutoEQ: the wanted correction as a handful of filters (peaks plus shelves), ready for Advanced+. */
-export function autoEq(scene: EqScene, maxFilters = 10): AutoEqResult | null {
+export function autoEq(scene: EqScene, maxFilters = 10, mode: AutoEqMode = 'standard', inEar = true): AutoEqResult | null {
   if (!scene.device || !scene.target || !scene.want) return null
-  const fitted = fitParametric(scene.grid, scene.want, { ...PARAMETRIC_DEFAULTS, maxFilters })
+  const fitted = fitParametric(scene.grid, autoEqWant(scene.grid, scene.want, mode, inEar), autoEqOptions(mode, maxFilters))
   const filters = fitted.filters.map(tidyFilter)
   const after = add(scene.device, chainDb(filters, scene.grid))
   return {

@@ -29,6 +29,7 @@ import {
 } from '../sound/gearProfiles'
 import { chainDb } from '../../eq/biquad'
 import { useSyncExternalStore } from 'react'
+import { saveFile } from '../../platform'
 
 export function generateEqualizerApoConfig(preset: SavedPreset): string {
   const lines: string[] = [
@@ -131,27 +132,16 @@ export function SavedEqPage() {
     showToast(`Loaded ${p.name}`)
   }
 
+  // §91 F: each export is followed by how to install it (saveFile: a download on the PC, the share sheet on the phone)
+  const [steps, setSteps] = useState<{ kind: 'apo' | 'json'; file: string } | null>(null)
   const exportApo = (p: SavedPreset) => {
-    const content = generateEqualizerApoConfig(p)
-    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${p.name.replace(/[^\w.-]/g, '_')}_APO.txt`
-    a.click()
-    URL.revokeObjectURL(url)
-    showToast(`Exported ${p.name} for Equalizer APO`)
+    const file = `${p.name.replace(/[^\w.-]/g, '_')}_APO.txt`
+    void saveFile(file, new Blob([generateEqualizerApoConfig(p)], { type: 'text/plain;charset=utf-8' })).then(() => setSteps({ kind: 'apo', file }), (e: unknown) => showToast(`Couldn't export: ${String(e)}`))
   }
 
   const exportJson = (p: SavedPreset) => {
-    const blob = new Blob([JSON.stringify(p, null, 2)], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${p.name.replace(/[^\w.-]/g, '_')}.eq.json`
-    a.click()
-    URL.revokeObjectURL(url)
-    showToast(`Exported ${p.name} as JSON`)
+    const file = `${p.name.replace(/[^\w.-]/g, '_')}.eq.json`
+    void saveFile(file, new Blob([JSON.stringify(p, null, 2)], { type: 'application/json' })).then(() => setSteps({ kind: 'json', file }), (e: unknown) => showToast(`Couldn't export: ${String(e)}`))
   }
 
   const handleImport = (file: File) => {
@@ -270,6 +260,26 @@ export function SavedEqPage() {
         ]} />
       )}
 
+      {steps && (
+        <Dialog title={steps.kind === 'apo' ? 'Install in Equalizer APO' : 'Open in AVSB'} onClose={() => setSteps(null)} footer={<button type="button" className="ms-btn text" onClick={() => setSteps(null)}>Done</button>}>
+          <ol className="ms-eq-steps">
+            {(steps.kind === 'apo'
+              ? [
+                  <>Install Equalizer APO and tick your headphones' output in its Configurator.</>,
+                  <>Move <b>{steps.file}</b> into <code>C:\Program Files\EqualizerAPO\config</code>.</>,
+                  <>Open <code>config.txt</code> there and add the line <code>Include: {steps.file}</code>, then save.</>,
+                  <>It plays at once. Wavelet and Poweramp read the same file: Import in their parametric EQ.</>,
+                ]
+              : [
+                  <>Copy <b>{steps.file}</b> to the other device.</>,
+                  <>In AVSB there, open Settings → Playback → Saved Equalizers.</>,
+                  <>Tap Import and pick the file.</>,
+                  <>Choose the headphones it's for, so it shows on them.</>,
+                ]
+            ).map((step, i) => <li key={i}>{step}</li>)}
+          </ol>
+        </Dialog>
+      )}
       {/* Rename / Save Dialog */}
       {importing && db && (
         <ImportDeviceDialog

@@ -13,6 +13,10 @@ export interface ParametricOptions {
   weightTo?: number
   /** Start with a low shelf (105 Hz) and a high shelf (10 kHz) where the curve tilts at its ends, as AutoEq does. */
   shelves?: boolean
+  /** §91 E1: how high the shelves may move (default fMax). PEQdB lets them go anywhere from 20 Hz to 16 kHz. */
+  shelfFMax?: number
+  /** Fine-tuning rounds for all filters together at the end (default 30). */
+  passes?: number
 }
 
 /**
@@ -63,19 +67,20 @@ export function fitParametric(grid: ArrayLike<number>, curve: ArrayLike<number>,
     for (let k = 0; k < f.length; k++) e += w[k] * (t[k] - s[k] - o) ** 2
     return e
   }
+  const shelfTop = opts.shelfFMax ?? opts.fMax
   const clampF = (b: Biquad): Biquad => ({
     kind: b.kind,
-    fc: Math.min(opts.fMax, Math.max(opts.fMin, b.fc)),
+    fc: Math.min(b.kind === 'peak' ? opts.fMax : shelfTop, Math.max(opts.fMin, b.fc)),
     gain: Math.min(opts.maxGainDb, Math.max(-opts.maxGainDb, b.gain)),
-    // a shelf above Q ≈ 1 overshoots into a bump before it settles
-    q: Math.min(b.kind === 'peak' ? opts.qMax : 1, Math.max(opts.qMin, b.q)),
+    // a shelf above Q ≈ 1 overshoots into a bump before it settles; below 0.4 it barely turns
+    q: b.kind === 'peak' ? Math.min(opts.qMax, Math.max(opts.qMin, b.q)) : Math.min(1, Math.max(0.4, b.q)),
   })
 
   // shelves first: a broad tilt at either end costs one shelf instead of several wide peaks
   if (opts.shelves) {
     for (const [kind, fc, inRange] of [
       ['lowshelf', 105, (x: number) => x < 105],
-      ['highshelf', 10000, (x: number) => x > 10000],
+      ['highshelf', Math.min(10000, shelfTop), (x: number) => x > Math.min(10000, shelfTop)],
     ] as const) {
       if (filters.length >= opts.maxFilters) break
       const o = offsetOf(sum)
@@ -117,7 +122,7 @@ export function fitParametric(grid: ArrayLike<number>, curve: ArrayLike<number>,
     for (let k = 0; k < f.length; k++) sum[k] += resp[k]
     refine(f, filters, parts, sum, errOf, clampF, 4)
   }
-  refine(f, filters, parts, sum, errOf, clampF, 30)
+  refine(f, filters, parts, sum, errOf, clampF, opts.passes ?? 30)
 
   const round = (b: Biquad): Biquad => ({ kind: b.kind, fc: Math.round(b.fc), gain: Math.round(b.gain * 10) / 10, q: Math.round(b.q * 100) / 100 })
   const out = filters.map(round).sort((a, b) => a.fc - b.fc)
@@ -145,9 +150,13 @@ function refine(
 ) {
   let err = errOf(sum)
   const trial = new Float64Array(sum.length)
+  // big steps first, then small ones. (It used to stop as soon as the big steps stopped helping, so the small
+  // ones never ran.)
+  let fine = false
   for (let pass = 0; pass < passes; pass++) {
     let improved = false
-    const scale = pass < passes / 2 ? 1 : 0.4
+    if (pass >= passes / 2) fine = true
+    const scale = fine ? 0.4 : 1
     for (let j = 0; j < filters.length; j++) {
       const b = filters[j]
       const steps: Biquad[] = [
@@ -173,7 +182,10 @@ function refine(
         }
       }
     }
-    if (!improved) break
+    if (!improved) {
+      if (fine) break
+      fine = true
+    }
   }
 }
 

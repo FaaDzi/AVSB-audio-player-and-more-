@@ -444,7 +444,7 @@ export function Equalizer() {
     return { left: ear(curves.left), right: ear(curves.right) }
   }, [channels, grid])
   const handles = useMemo(
-    () => (mode === 'advanced' ? bands.map((hz, i) => ({ hz, db: gains[i] ?? 0 })) : mode === 'advanced+' ? peq.map((f) => ({ hz: f.fc, db: f.gain })) : []),
+    () => (mode === 'advanced' ? bands.map((hz, i) => ({ hz, db: gains[i] ?? 0 })) : mode === 'advanced+' ? peq.map((f) => ({ hz: f.fc, db: f.gain, q: f.q })) : []),
     [mode, bands, gains, peq],
   )
   const moveHandle = (i: number, to: { hz?: number; db?: number }) => {
@@ -461,10 +461,12 @@ export function Equalizer() {
   const hero = useRef<HTMLDivElement>(null)
   const spacer = useRef<HTMLDivElement>(null)
   const rest = useRef({ hero: 0, graph: 0 })
-  const fit = useRef(() => {})
+  const fit = useRef((_switch = true) => {})
   useEffect(() => {
     let frame = 0
-    const check = () => {
+    // `switchLayout` false: only the spacer is set (right after the layout changed). Letting that pass change the
+    // layout too made the two layouts flip back and forth inside one render on a short page (React error #185).
+    const check = (switchLayout = true) => {
       frame = 0
       const [mark, pinned, pad] = [sentinel.current, hero.current, spacer.current]
       const plot = pinned?.querySelector<HTMLElement>('.ms-eqg-plot')
@@ -478,17 +480,19 @@ export function Equalizer() {
       pinned.style.setProperty('--eqg-shrink', `${shrink}px`)
       // the title and legend fade as it shrinks, and step down to the small layout once it is as small as it gets
       pinned.style.setProperty('--eqg-fade', String(most ? 1 - shrink / most : 1))
-      setCompact(most > 0 && shrink >= most - 0.5)
+      // a margin before it grows again: on a page barely taller than the screen the small layout's own change in
+      // height moved the scroll back over the line, and the two layouts flipped until React gave up (error #185)
+      if (switchLayout) setCompact((was) => most > 0 && (was ? shrink >= most - 12 : shrink >= most - 0.5))
       pad.style.height = `${Math.max(0, rest.current.hero - pinned.offsetHeight)}px`
     }
     fit.current = check
-    const onScroll = () => { frame ||= requestAnimationFrame(check) }
+    const onScroll = () => { frame ||= requestAnimationFrame(() => check()) }
     // whichever box scrolls (the settings pane on PC, the page on the phone): scroll events don't bubble, capture does
     document.addEventListener('scroll', onScroll, { capture: true, passive: true })
     return () => { document.removeEventListener('scroll', onScroll, { capture: true }); cancelAnimationFrame(frame) }
   }, [subView])
   // the small layout changes the height once more: the spacer is set again before anything is painted
-  useLayoutEffect(() => fit.current(), [compact])
+  useLayoutEffect(() => fit.current(false), [compact])
 
   // the test tone, heard through the EQ: a sine only meets the EQ at its own frequency
   const [toneUi, setToneUi] = useState({ hz: 3000, playing: false, sweeping: false, full: false })
@@ -518,6 +522,18 @@ export function Equalizer() {
     const next = tuneAt(from, toneUi.hz, dir * TUNE_STEP_DB)
     if (!next) { showToast('All 20 filters are in use'); return }
     setUndo([...undo, from])
+    onEqTweaked({ ...carried, mode: 'advanced+', filters: next, on: true })
+  }
+  // §91 F: Fine-tune's treble and bass steps move one shelf each, in the same Advanced+ filters as the by-ear nudges
+  const shelfGain = (kind: 'lowshelf' | 'highshelf') => (mode === 'advanced+' ? peq : []).find((f) => f.kind === kind)?.gain ?? 0
+  const setShelf = (kind: 'lowshelf' | 'highshelf', gain: number) => {
+    const carried = mode === 'advanced+' ? null : carryOver(eq, 'advanced+')
+    const from = mode === 'advanced+' ? peq : carried?.filters ?? []
+    const at = from.findIndex((f) => f.kind === kind)
+    if (at < 0 && from.length >= PEQ_MAX_FILTERS) { showToast('All 20 filters are in use'); return }
+    const next = at >= 0
+      ? from.map((f, n) => (n === at ? tidyFilter({ ...f, gain }) : f))
+      : [...from, tidyFilter({ kind, fc: kind === 'highshelf' ? 8000 : 105, gain, q: 0.7 })]
     onEqTweaked({ ...carried, mode: 'advanced+', filters: next, on: true })
   }
   const lean = (side: 'left' | 'right') => {
@@ -637,6 +653,7 @@ export function Equalizer() {
           onLab={(patch) => setLab(activeGear, patch)}
           onApply={applyAuto}
           onPickGear={() => go({ page: 'settings', section: 'gear' })}
+          onPickHrtf={() => go({ page: 'settings', section: 'spatial' })}
         />
       )}
       <FineTuneCard
@@ -652,6 +669,9 @@ export function Equalizer() {
         onNudge={nudge}
         onLean={lean}
         onUndo={() => { onEqTweaked({ mode: 'advanced+', filters: undo[undo.length - 1] }); setUndo(undo.slice(0, -1)) }}
+        treble={shelfGain('highshelf')}
+        bass={shelfGain('lowshelf')}
+        onShelf={setShelf}
       />
 
       <div className="ms-segment-small big ms-eq-mode" role="radiogroup" aria-label="Equalizer mode">

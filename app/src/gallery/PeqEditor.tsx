@@ -129,7 +129,8 @@ export function PeqEditor(props: { filters: Biquad[]; onChange: (f: Biquad[]) =>
         <details className="peq-fold" open={tableOpen}>
         <summary>Filters ({filters.length})</summary>
         <div className="peq-table" role="table" aria-label="Filters">
-          {filters.map((f, i) => (
+          {/* §91 F: listed low to high; each keeps its number and colour, so it still matches its dot */}
+          {filters.map((f, i) => [f, i] as const).sort((a, b) => a[0].fc - b[0].fc).map(([f, i]) => (
             <div key={i} role="row" className={`peq-row ${sel === i ? 'on' : ''}`} onFocus={() => setSel(i)} onClick={() => setSel(i)}>
               <span className="peq-num" style={props.tableOnly ? { background: props.tableOnly(i), color: '#111' } : undefined}>{i + 1}</span>
               <select value={f.kind} onChange={(e) => set(i, { kind: e.target.value as Biquad['kind'] })} aria-label={`Filter ${i + 1} type`}>
