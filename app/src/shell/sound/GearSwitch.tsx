@@ -8,6 +8,7 @@ import { useShell } from '../context'
 import { loadDatabase, type Database } from '../database/catalog'
 import { hearDevice, setActive, useGear } from './gear'
 import { setSound, useSound } from './soundState'
+import { gearName, isPhoneSpeaker } from './phoneSpeaker'
 
 let cachedDb: Database | null = null
 
@@ -29,7 +30,8 @@ export function GearSwitch() {
   const { go, setNowPlaying } = useShell()
   const [menu, setMenu] = useState<{ x: number; y: number } | null>(null)
   const db = useCatalogDb(Boolean(menu) || gear.owned.length > 0 || gear.starred.length > 0)
-  const name = (id: string) => db?.catalog.byId.get(id)?.name ?? '…'
+  // the phone speaker isn't in the catalog: its own name, not "…" (§101)
+  const name = (id: string) => db?.catalog.byId.get(id)?.name ?? (isPhoneSpeaker(id) ? gearName(id) : '…')
   const hearing = sound.aim.kind === 'device' && !sound.bypass ? sound.aim.id : null
   const plain = sound.aim.kind === 'off' || sound.bypass
 

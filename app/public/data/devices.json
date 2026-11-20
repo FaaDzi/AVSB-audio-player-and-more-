@@ -484,7 +484,7 @@
     {
       "name": "Questyle M15 / M15C / M15i / M12 / M12i",
       "match": [
-        "questyle",
+        "questyle(?!.*m18)",
         "\\bm1[25][ci]?\\b"
       ],
       "usb": [],
@@ -653,7 +653,8 @@
     {
       "name": "NiceHCK Octave",
       "match": [
-        "\\(\\s*octave\\s*\\)"
+        "\\(\\s*octave\\s*\\)",
+        "^octave$"
       ],
       "usb": [],
       "outputOhm": null,
@@ -732,8 +733,8 @@
     {
       "name": "Shanling UA4",
       "match": [
-        "\bshanling\\s*ua\\s*4\b",
-        "\bua4\b"
+        "\\bshanling\\s*ua\\s*4\\b",
+        "\\bua4\\b"
       ],
       "usb": [],
       "outputOhm": 0.4,
@@ -744,7 +745,7 @@
     {
       "name": "E1DA 9038D / 9038D6K",
       "match": [
-        "\b9038\\s*d"
+        "\\b9038\\s*d"
       ],
       "usb": [],
       "outputOhm": 0.07,
@@ -755,7 +756,7 @@
     {
       "name": "Questyle M18i",
       "match": [
-        "\bm18\\s*i\b"
+        "\\bm18\\s*i\\b"
       ],
       "usb": [],
       "outputOhm": null,
@@ -766,8 +767,8 @@
     {
       "name": "Samsung USB-C to 3.5 mm adapter (EE-UC10)",
       "match": [
-        "\bsamsung\b.*(usb[- ]?c|type[- ]?c|headset jack)",
-        "\bee-?uc10"
+        "\\bsamsung\\b.*(usb[- ]?c|type[- ]?c|headset jack)",
+        "\\bee-?uc10"
       ],
       "usb": [],
       "outputOhm": null,
@@ -1067,7 +1068,9 @@
       "name": "Moondrop Chu II DSP cable",
       "match": [
         "\\(\\s*chu\\s*2\\s*dsp\\s*\\)",
-        "chu\\s*ii\\s*dsp"
+        "chu\\s*ii\\s*dsp",
+        "^chu\\s*2\\s*dsp$",
+        "chu\\s*2\\s*dsp"
       ],
       "usb": [
         "31b2:0113"
@@ -1084,7 +1087,8 @@
     {
       "name": "Moondrop CDSP",
       "match": [
-        "\\(\\s*cdsp\\s*\\)"
+        "\\(\\s*cdsp\\s*\\)",
+        "^cdsp$"
       ],
       "usb": [],
       "chip": "KT Micro",
@@ -1158,7 +1162,8 @@
     {
       "name": "Moondrop Rays",
       "match": [
-        "\\(\\s*(ag\\s+)?rays\\s*\\)"
+        "\\(\\s*(ag\\s+)?rays\\s*\\)",
+        "^(ag\\s+)?rays$"
       ],
       "usb": [],
       "chip": "DSP in the cable",
@@ -1298,6 +1303,53 @@
       ],
       "confirmed": false,
       "source": "https://linsoul.com/products/fiio-jadeaudio-jd1"
+    },
+    {
+      "name": "KT02H20 dongle (JCally JM12 and others)",
+      "match": [
+        "kt02h20"
+      ],
+      "usb": [
+        "31b2:0111"
+      ],
+      "chip": "KT Micro KT02H20",
+      "app": "My gear → DSP cable or plug",
+      "iems": [
+        "Sold as a plain USB-C dongle (JCally JM12 and other brands)"
+      ],
+      "confirmed": true,
+      "note": "USB product \"KT02H20 HIFI Audio\", vendor KTMicro 31b2:0111, seen on a JCally JM12 (2026-11-21). Its hardware EQ is readable and resettable in the app.",
+      "source": "Owner's JM12 on a Xiaomi 14 (adb dumpsys usb)"
+    },
+    {
+      "name": "Kiwi Ears Allegro Pro",
+      "match": [
+        "allegro[-\\s]*pro"
+      ],
+      "usb": [],
+      "chip": "KT Micro",
+      "app": "Kiwi Ears app",
+      "iems": [
+        "Sold as a USB-C dongle"
+      ],
+      "confirmed": true,
+      "note": "USB product \"Kiwi Ears-Allegro PRO\" (devicePEQ device list).",
+      "source": "devicePEQ"
+    },
+    {
+      "name": "Kiwi Ears Allegro Mini",
+      "match": [
+        "allegro[-\\s]*mini"
+      ],
+      "usb": [],
+      "chip": "KT Micro",
+      "app": "Kiwi Ears app",
+      "iems": [
+        "Sold as a USB-C dongle"
+      ],
+      "confirmed": true,
+      "note": "USB product \"Kiwi Ears-Allegro Mini\" (devicePEQ device list).",
+      "source": "devicePEQ"
     }
   ],
   "dspNote": "DSP cables and IEMs with a DSP: they hold their own EQ, applied after the app. Checked before the DAC list. confirmed = USB product name seen in devicePEQ's device list."

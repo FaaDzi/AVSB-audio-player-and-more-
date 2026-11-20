@@ -22,6 +22,7 @@ import {
   type SavedPreset,
 } from '../eqState'
 import { getGear } from '../sound/gear'
+import { gearName, isPhoneSpeaker } from '../sound/phoneSpeaker'
 import {
   clearSessionAutosave,
   getSessionAutosave,
@@ -189,7 +190,7 @@ export function SavedEqPage() {
   }
 
   const current = presetFrom(eq, eq.preset, activeGear)
-  const deviceName = (id?: string) => (id ? db?.catalog.byId.get(id)?.name ?? null : null)
+  const deviceName = (id?: string) => (id ? db?.catalog.byId.get(id)?.name ?? (isPhoneSpeaker(id) ? gearName(id) : null) : null)
   const exportMenu = (e: React.MouseEvent, p: SavedPreset) => setMenu({ x: e.clientX, y: e.clientY, preset: p })
 
   // §86 C: what you do with the EQ you're hearing sits in one row on top; each saved EQ has one icon per action

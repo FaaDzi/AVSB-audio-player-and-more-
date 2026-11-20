@@ -117,8 +117,8 @@ export function describe(d: Detected): { level: 'ok' | 'caution' | 'warn' | 'inf
       return {
         level: 'caution',
         text: d.entry.app
-          ? `${d.entry.name}: a DSP cable with its own EQ, which plays on top of this app. Reset it to flat in ${d.entry.app} before testing.`
-          : `${d.entry.name}: its tuning is built into the cable's DSP and can't be switched off, so tests include it.`,
+          ? `${d.entry.name}: a DSP with its own EQ, which plays on top of this app. Reset it to flat in ${d.entry.app} before testing.`
+          : `${d.entry.name}: its tuning is built into its DSP and can't be switched off, so tests include it.`,
       }
     case 'bt-adapter':
       return { level: 'ok', text: `${d.name} (Bluetooth IEM adapter) detected: your wired IEMs are the speakers, so IEM mode is right. The Bluetooth codec adds a little colour of its own.` }

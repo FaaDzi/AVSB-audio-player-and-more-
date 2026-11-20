@@ -10,6 +10,7 @@ import { checkSource, loadSource, saveSource, sourceFor, type SourceSettings } f
 import { canUseDsp, connectDsp, type DspTransport } from '../../dsp/transport'
 import { AudioRoute, type BluetoothCodec } from '../../audio/speakerGuard'
 import { isAndroid } from '../../platform'
+import { logLine } from '../logs'
 import { decodeBand, displayHz, KT_MICRO_MODELS, KtMicroDsp, type DspBackup, type RawBand } from '../../dsp/ktmicro'
 
 const BACKUP_KEY = 'dsp-backup-v1'
@@ -33,7 +34,11 @@ function useOutput(table: DeviceTable | null): { out: OutputDevice | null; found
   const [out, setOut] = useState<OutputDevice | null>(null)
   useEffect(() => {
     let live = true
-    const read = () => void defaultOutput().then((o) => live && setOut(o), () => {})
+    const read = () => void defaultOutput().then((o) => {
+      // §101: what the phone or Windows calls it, so a device that isn't found can be added from the log
+      if (o) logLine('INFO', 'Sound', `Output: "${o.label}"${o.usb ? ` (USB ${o.usb})` : ''}`)
+      if (live) setOut(o)
+    }, () => {})
     read()
     const off = onDeviceChange(read)
     return () => {
@@ -44,7 +49,7 @@ function useOutput(table: DeviceTable | null): { out: OutputDevice | null; found
   return { out, found: out && table ? classifyOutput(out, table) : null }
 }
 
-function DspNeutral() {
+function DspNeutral({ detected }: { detected: string | null }) {
   const [link, setLink] = useState<{ t: DspTransport; dsp: KtMicroDsp; bands: RawBand[] } | null>(null)
   const [backup, setBackup] = useState<DspBackup | null>(loadBackup)
   const [busy, setBusy] = useState(false)
@@ -78,7 +83,7 @@ function DspNeutral() {
           if (!t) return setMsg('No supported DSP cable or plug found. Plug it in and try again.')
           const dsp = new KtMicroDsp(t)
           setLink({ t, dsp, bands: await dsp.readBands() })
-        })}><Icon name="usb" size={20} /> {busy ? 'Looking…' : 'Connect DSP cable'}</button>
+        })}><Icon name="usb" size={20} /> {busy ? 'Looking…' : detected ? 'Read its EQ' : 'Connect DSP cable'}</button>
       ) : (
         <>
           <p><b>{link.dsp.name}</b>: {summary(link.t.productName, link.bands)}</p>
@@ -141,12 +146,12 @@ function BluetoothLine({ out }: { out: OutputDevice | null }) {
 
 const ohms = (d: DacEntry) => (d.outputOhm !== null ? `${d.outputOhm} Ω output` : 'Output not published')
 
-function DacRow({ d, chosen, sub, onClick, trail }: { d: DacEntry | null; chosen?: boolean; sub: string; onClick: () => void; trail: string }) {
+function DacRow({ d, name, chosen, sub, onClick, trail }: { d: DacEntry | null; name?: string; chosen?: boolean; sub: string; onClick: () => void; trail: string }) {
   return (
     <button type="button" className={`ms-db-row ms-dac-row${chosen ? ' on' : ''}`} onClick={onClick} aria-pressed={chosen}>
-      <span className="ms-db-photo">{d?.photo ? <img src={imgUrl(d.photo)} alt="" loading="lazy" decoding="async" /> : <Icon name={d ? 'usb' : 'block'} />}</span>
+      <span className="ms-db-photo">{d?.photo ? <img src={imgUrl(d.photo)} alt="" loading="lazy" decoding="async" /> : <Icon name={d || name ? 'usb' : 'block'} />}</span>
       <span className="ms-db-text">
-        <b className="ms-ellipsis">{d?.name ?? 'Not listed'}</b>
+        <b className="ms-ellipsis">{d?.name ?? name ?? 'Not listed'}</b>
         <small className="ms-ellipsis">{sub}</small>
       </span>
       <Icon name={trail} />
@@ -155,7 +160,7 @@ function DacRow({ d, chosen, sub, onClick, trail }: { d: DacEntry | null; chosen
 }
 
 /** "Pick it by hand" (§79 F): the chosen DAC as a Database row; tapping opens a searchable list in the same look. */
-function DacPicker({ dacs, value, onPick }: { dacs: DacEntry[]; value: string; onPick: (name: string) => void }) {
+function DacPicker({ dacs, value, onPick, found }: { dacs: DacEntry[]; value: string; onPick: (name: string) => void; found: string | null }) {
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const current = dacs.find((d) => d.name === value) ?? null
@@ -168,7 +173,7 @@ function DacPicker({ dacs, value, onPick }: { dacs: DacEntry[]; value: string; o
   }
   return (
     <>
-      <DacRow d={current} sub={current ? `Picked by hand · ${ohms(current)}` : `Pick it by hand · ${dacs.length} DACs and dongles`} onClick={() => setOpen(true)} trail="chevron_right" />
+      <DacRow d={current} name={current ? undefined : found ?? undefined} sub={current ? `${found === current.name ? 'Found on its own' : 'Picked by hand'} · ${ohms(current)}` : found ? 'Found on its own · tap to pick another' : `Pick it by hand · ${dacs.length} DACs and dongles`} onClick={() => setOpen(true)} trail="chevron_right" />
       {open && (
         <Dialog title="Your DAC or dongle" onClose={() => setOpen(false)}>
           <label className="ms-search">
@@ -231,10 +236,10 @@ export function SourceSection({ activeId }: { activeId: string | null }) {
           </p>
         </div>
       </div>
-      <DacPicker dacs={dacs} value={source.dacName ?? ''} onPick={pick} />
+      <DacPicker dacs={dacs} value={source.dacName ?? ''} onPick={pick} found={!found ? null : found.kind === 'dac' || found.kind === 'bt-adapter' ? found.name : found.kind === 'dsp' ? found.entry.name : found.kind === 'usb-unknown' ? found.label : null} />
       <h3>DSP cable or plug</h3>
       {found?.kind === 'dsp' && <p className="ms-tz-note">Detected: <b>{found.entry.name}</b>.</p>}
-      <DspNeutral />
+      <DspNeutral detected={found?.kind === 'dsp' && /KT Micro/i.test(found.entry.chip) ? found.entry.name : null} />
     </section>
   )
 }

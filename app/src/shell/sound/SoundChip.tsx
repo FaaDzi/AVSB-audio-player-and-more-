@@ -6,6 +6,7 @@ import { Icon } from '../ui'
 import { useShell } from '../context'
 import { loadDatabase, type Database } from '../database/catalog'
 import { setSound, useSound } from './soundState'
+import { gearName, isPhoneSpeaker } from './phoneSpeaker'
 
 export function SoundChip({ big }: { big?: boolean }) {
   const sound = useSound()
@@ -20,7 +21,7 @@ export function SoundChip({ big }: { big?: boolean }) {
     }
   }, [sound.aim.kind, db])
   if (sound.aim.kind === 'off') return null
-  const name = sound.aim.kind === 'target' ? sound.aim.name : db?.catalog.byId.get(sound.aim.id)?.name ?? '…'
+  const name = sound.aim.kind === 'target' ? sound.aim.name : db?.catalog.byId.get(sound.aim.id)?.name ?? (isPhoneSpeaker(sound.aim.id) ? gearName(sound.aim.id) : '…')
   if (sound.aim.kind === 'device' && !sound.aim.id) return null
   const label = `${name}${sound.strength < 100 ? ` · ${sound.strength} %` : ''}`
   return (

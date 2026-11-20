@@ -67,4 +67,25 @@ group('the real device list (public/data/devices.json)', async () => {
     expect(name('Headphones (MOONRIVER 3)')).toBe('dac:Moondrop Moonriver 3')
     expect(name('Headphones (Moonriver 2 Ti)')).toBe('dac:Moondrop Moonriver 2 / 2 Ti')
   })
+
+  // §101: Android gives the bare USB product name (androidOutputDevice), not "Headphones (…)"
+  it('finds devices by the bare name Android gives', () => {
+    const android = (label: string, usb: string | null = null) => {
+      const d = classifyOutput({ id: 'android', label, usb }, real)
+      return d.kind === 'dsp' ? `dsp:${d.entry.name}` : d.kind === 'dac' ? `dac:${d.name}` : d.kind
+    }
+    // the owner's JCally JM12 on a Xiaomi 14, as `dumpsys usb` shows it
+    expect(android('KT02H20 HIFI Audio', '31b2:0111')).toBe('dsp:KT02H20 dongle (JCally JM12 and others)')
+    expect(android('KT02H20 HIFI Audio')).toBe('dsp:KT02H20 dongle (JCally JM12 and others)')
+    expect(android('Chu2 DSP')).toBe('dsp:Moondrop Chu II DSP cable')
+    expect(android('CDSP')).toBe('dsp:Moondrop CDSP')
+    expect(android('Rays')).toBe('dsp:Moondrop Rays')
+    expect(android('Octave')).toBe('dac:NiceHCK Octave')
+    expect(android('Shanling UA4')).toBe('dac:Shanling UA4')
+    expect(android('Questyle M18i')).toBe('dac:Questyle M18i')
+  })
+
+  it('no pattern carries a control character (a heredoc once turned \\b into a backspace)', () => {
+    for (const d of [...real.dacs, ...real.btAdapters, ...(real.dsps ?? [])]) for (const m of d.match) expect(m).not.toMatch(/[\u0000-\u001f]/)
+  })
 })
