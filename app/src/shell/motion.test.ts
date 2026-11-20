@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { easeInOutCubic, easeOutCubic, lyricLag, lyricScrollAt, springAt } from './motion'
-import { SQUIGGLE, edgeFade, humpAt, levelStep, waveY } from './WaveTrack'
+import { SQUIGGLE, WAVE, calmAt, edgeFade, humpAt, levelStep, waveY } from './WaveTrack'
 
 describe('springAt', () => {
   it('starts at 0 and settles on 1', () => {
@@ -50,16 +50,24 @@ describe('seek wave (§95)', () => {
     expect(edgeFade(200, 0, 200)).toBe(0)
     expect(edgeFade(100, 0, 200)).toBe(1)
   })
-  it('follow the level against the song average, rising fast and falling slowly', () => {
-    const s = { mean: -18, amount: 1 }
-    levelStep(s, -9, 80)
+  it('follow the level against the song average, rising fast and falling slowly, never flat', () => {
+    const s = { mean: -18, amount: 0.5 }
+    levelStep(s, -12, 80)
     const risen = s.amount
-    expect(risen).toBeGreaterThan(1.3)
+    expect(risen).toBeGreaterThan(0.9)
     const fall = { mean: -18, amount: 1 }
-    levelStep(fall, -30, 80)
-    expect(1 - fall.amount).toBeLessThan(risen - 1)
-    for (let i = 0; i < 400; i++) levelStep(s, -9, 100)
-    expect(s.amount).toBeCloseTo(1, 1)
+    levelStep(fall, -40, 80)
+    expect(1 - fall.amount).toBeLessThan(risen - 0.5)
+    for (let i = 0; i < 100; i++) levelStep(fall, -60, 100)
+    expect(fall.amount).toBeCloseTo(WAVE.floor, 2)
+  })
+  it('ease down softly under the buttons, with no edge', () => {
+    expect(calmAt(500, 400, 600)).toBeCloseTo(WAVE.calm, 9)
+    expect(calmAt(100, 400, 600)).toBe(1)
+    const near = [calmAt(399, 400, 600), calmAt(380, 400, 600), calmAt(360, 400, 600)]
+    expect(near[0]).toBeLessThan(near[1])
+    expect(near[1]).toBeLessThan(near[2])
+    expect(calmAt(500, 0, 0)).toBe(1)
   })
 })
 

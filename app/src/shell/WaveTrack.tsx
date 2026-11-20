@@ -9,19 +9,27 @@ import { getSetting } from './settings/store'
  * (the default) makes the humps follow the music's level against the song's own recent average.
  */
 export const WAVE = {
-  /** Tallest hump at a song's usual level, px above the bar. */
-  height: 12,
+  /**
+   * §99: the tallest swell, px above the bar: Samsung's notification-panel wave, which never changes height, is the
+   * loud end of ours. Quieter music scales it down to `floor` of that, never flat while playing.
+   */
+  height: 14,
+  floor: 0.35,
   /**
    * §97: three layers, back to front, each moved by its own part of the music. Lengths are shares of the whole track
    * (not the played part, which grows and would stretch them every frame); drift in px/s; weight = height share.
-   * Back: faint cover colour, the rumble (20-250 Hz). Middle: grey at 70 %, the mids (250 Hz-2 kHz).
+   * Back: faint cover colour, the rumble (20-250 Hz). Middle: light grey, the mids (250 Hz-2 kHz).
    * Front: solid cover colour, the highs (2-16 kHz) together with the overall level.
+   * §99: like Samsung's, each is a continuous swell about a third of the track long, always rolling, the layers
+   * sliding over each other at different speeds (a dark grey read as a shadow on the dark player, so it's light now).
    */
   layers: [
-    { length: 0.31, drift: 38, weight: 1, alpha: 0.32, grey: false },
-    { length: 0.22, drift: 62, weight: 0.85, alpha: 0.7, grey: true },
-    { length: 0.16, drift: 90, weight: 0.8, alpha: 1, grey: false },
+    { length: 0.42, drift: 46, weight: 1, alpha: 0.35, grey: false },
+    { length: 0.33, drift: 70, weight: 0.8, alpha: 0.45, grey: true },
+    { length: 0.27, drift: 96, weight: 0.65, alpha: 1, grey: false },
   ],
+  /** §99: under the play / previous / next buttons (the PC bar) the swell eases down to this share, softly. */
+  calm: 0.35, calmEdge: 56,
   /** Humps fade in over this much at the start and before the handle. */
   fade: 28,
   rampMs: 400, tickMs: 16,
@@ -35,10 +43,17 @@ export function waveY(x: number, phase: number, amount: number): number {
   return SQUIGGLE.amplitude * amount * Math.sin(phase + (x * 2 * Math.PI) / SQUIGGLE.wavelength)
 }
 
-/** One layer's height at `x` (0 to 1): a rounded hump every `length` px, never below the bar. */
+/** One layer's height at `x` (0 to 1): a continuous rolling swell, one crest every `length` px, never below the bar. */
 export function humpAt(x: number, length: number, shift: number): number {
-  const s = Math.sin(((x - shift) / length) * 2 * Math.PI)
-  return s > 0 ? s ** 1.6 : 0
+  return (1 - Math.cos(((x - shift) / length) * 2 * Math.PI)) / 2
+}
+
+/** §99: 1 away from the buttons, easing smoothly to `WAVE.calm` under them (no edge, no cut-out). */
+export function calmAt(x: number, from: number, to: number): number {
+  if (to <= from) return 1
+  const d = x < from ? from - x : x > to ? x - to : 0
+  const t = Math.min(1, d / WAVE.calmEdge)
+  return WAVE.calm + (1 - WAVE.calm) * t * t * (3 - 2 * t)
 }
 
 /** Fades the humps to nothing over `WAVE.fade` px at both ends of the played part. */
@@ -48,13 +63,12 @@ export function edgeFade(x: number, start: number, end: number): number {
 }
 
 /**
- * The level's pull on the humps' height: 1 at the song's recent average, lower in quiet parts, taller in loud ones.
- * Rises in about 80 ms and falls in about 350 ms: it kicks with the beat and settles without flickering.
+ * The level's pull on the swell: 1 (Samsung's height) when the music is 3 dB over the song's recent average, down to
+ * `WAVE.floor` in quiet parts. Rises in about 80 ms and falls in about 350 ms: it kicks with the beat, never flickers.
  */
 export function levelStep(state: { mean: number; amount: number }, db: number, dtMs: number) {
   state.mean += (db - state.mean) * Math.min(1, dtMs / 6000)
-  // 4 dB over the song's average doubles the humps; quiet parts nearly flatten, so a beat reads clearly
-  const target = Math.min(2.2, Math.max(0.15, 1 + (db - state.mean) / 4))
+  const target = Math.min(1, Math.max(WAVE.floor, 0.75 + (db - state.mean) / 12))
   const tau = target > state.amount ? 80 : 350
   state.amount += (target - state.amount) * Math.min(1, dtMs / tau)
   return state.amount
@@ -131,6 +145,16 @@ export function WaveTrack({ share, moving, compact = false }: { share: number; m
     let lastColor = 0
     // each layer's drift, added up frame by frame (time × speed would jump whenever a length changed)
     const shifts = [0, 0, 0]
+    // §99: where the player's buttons sit over the track (the PC bar), in canvas px; none elsewhere
+    const calm = { from: 0, to: 0 }
+    const measureCalm = () => {
+      const buttons = el.closest('.ms-player-center')?.querySelector('.ms-player-buttons')
+      const box = el.getBoundingClientRect()
+      const b = buttons?.getBoundingClientRect()
+      calm.from = b ? b.left - box.left : 0
+      calm.to = b ? b.right - box.left : 0
+    }
+    measureCalm()
 
     s.draw = () => {
       // a soft wave needs no more than 2 pixels per point: a phone's 3x screen would triple the work for nothing
@@ -176,11 +200,11 @@ export function WaveTrack({ share, moving, compact = false }: { share: number; m
         const lift = Math.min(room, base * layer.weight * amounts[k])
         if (lift < 0.2) return
         const length = Math.max(48, w * layer.length)
-        ctx.fillStyle = layer.grey ? 'rgb(160 160 160)' : s.color
+        ctx.fillStyle = layer.grey ? 'rgb(214 214 218)' : s.color
         ctx.globalAlpha = layer.alpha
         ctx.beginPath()
         ctx.moveTo(start, top)
-        for (let x = start; x <= end; x += 3) ctx.lineTo(x, top - lift * humpAt(x, length, shifts[k]) * edgeFade(x, start, end))
+        for (let x = start; x <= end; x += 3) ctx.lineTo(x, top - lift * humpAt(x, length, shifts[k]) * edgeFade(x, start, end) * calmAt(x, calm.from, calm.to))
         ctx.lineTo(end, top)
         ctx.closePath()
         ctx.fill()
@@ -231,6 +255,7 @@ export function WaveTrack({ share, moving, compact = false }: { share: number; m
     const sizes = new ResizeObserver(() => {
       w = el.clientWidth
       h = el.clientHeight
+      measureCalm()
       s.draw()
     })
     sizes.observe(el)
