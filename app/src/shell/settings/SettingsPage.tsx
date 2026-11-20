@@ -96,7 +96,7 @@ export function SettingsPage({ initial }: { initial?: string }) {
   }
 
   return (
-    <div className={`ms-settings${phone ? ` phone ${phonePane ? 'pane' : 'list'}` : ''}`}>
+    <div className={`ms-settings${phone ? ` phone ${phonePane ? 'pane' : 'list'}` : history.length ? ' deep' : ''}`}>
       <div className="ms-settings-list">
         <h1>Settings</h1>
         <label className="ms-search small">

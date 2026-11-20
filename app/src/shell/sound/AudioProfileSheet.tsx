@@ -92,11 +92,10 @@ export function AudioProfileSheet({ onClose }: { onClose: () => void }) {
   }
 
   const handlePointerDown = (item: GearProfileItem, e: React.PointerEvent) => {
+    // holding a row opens the same options as a right-click (the % pill is the way to the strength slider)
     if (e.pointerType === 'touch') {
-      longPressTimer.current = window.setTimeout(() => {
-        setSliderItem(item)
-        setTempStrength(item.strength)
-      }, 500)
+      const { clientX: x, clientY: y } = e
+      longPressTimer.current = window.setTimeout(() => setContextItem({ item, x, y }), 500)
     }
   }
 
@@ -179,7 +178,7 @@ export function AudioProfileSheet({ onClose }: { onClose: () => void }) {
                     <button
                       type="button"
                       className="ms-profile-pct-pill"
-                      title="Click to adjust strength % (or right-click / hold)"
+                      title="Adjust the strength %"
                       onClick={(e) => {
                         e.stopPropagation()
                         setSliderItem(item)
@@ -228,7 +227,7 @@ export function AudioProfileSheet({ onClose }: { onClose: () => void }) {
                     <button
                       type="button"
                       className="ms-profile-pct-pill"
-                      title="Click to adjust strength % (or right-click / hold)"
+                      title="Adjust the strength %"
                       onClick={(e) => {
                         e.stopPropagation()
                         setSliderItem(item)

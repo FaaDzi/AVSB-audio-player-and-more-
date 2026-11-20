@@ -109,7 +109,6 @@
 .ms-np .ms-pl-add .ms-iconbtn { width: 44px; height: 44px; color: #fff; border-radius: 50%; }
 /* the + turns yellow while the song is in one of your playlists (the heart is pink) */
 .ms-pl-add.saved .ms-iconbtn, .ms-np .ms-pl-add.saved .ms-iconbtn { color: #facc15; }
-.ms-np-corner-mid { display: inline-flex; align-items: center; gap: 6px; }
 /* a liked heart, wherever it is: filled (ui.tsx), pink, with a short pop */
 .ms-iconbtn.liked, .ms-player .ms-iconbtn.liked, .ms-np-fav-btn.active { color: #ff4081; }
 .ms-iconbtn.liked .ms-icon { animation: ms-like-pop 250ms ease-out; }
@@ -365,6 +364,9 @@
 /* settings */
 .ms-settings { position: absolute; inset: 0; display: flex; }
 .ms-settings-list { width: 320px; flex: none; overflow-y: auto; padding: 12px 12px 16px; background: var(--chrome); scrollbar-width: none; }
+/* §97: a page opened from a page (Equalizer from Playback) on a narrow wide-layout window (a tablet in portrait)
+   gets the list's room too: beside it, it was 241 px, narrower than a phone. Back brings the list back */
+@media (max-width: 1000px) { .ms-settings.deep .ms-settings-list { display: none; } }
 .ms-settings-list h1 { font-size: 24px; font-weight: 500; padding: 8px 12px 12px; color: var(--text-strong); }
 .ms-search.small { margin-top: 0; }
 .ms-settings-profile { display: flex; align-items: center; gap: 12px; width: 100%; margin-top: 12px; padding: 8px 16px; min-height: 56px; border-radius: var(--radius-card); background: var(--player); text-align: left; color: var(--text-strong); }

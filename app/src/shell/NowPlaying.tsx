@@ -23,7 +23,7 @@ import { directQuality, useDirectView } from '../audio/directDac'
 /** How long lyrics are left alone before the player shrinks. */
 const COMPACT_AFTER_MS = 6000
 
-const LANDSCAPE_QUERY = '(orientation: landscape) and (max-height: 540px), (orientation: landscape) and (pointer: coarse)'
+const LANDSCAPE_QUERY = '(orientation: landscape) and (max-height: 540px), (orientation: landscape) and (pointer: coarse) and (max-height: 600px)'
 const landscapeMedia = typeof window !== 'undefined' && window.matchMedia ? window.matchMedia(LANDSCAPE_QUERY) : null
 function useLandscapeSplit() {
   return useSyncExternalStore(
@@ -255,10 +255,11 @@ export function NowPlaying() {
         </section>
       )}
 
-      <div className="ms-np-corner">
+      <div className={`ms-np-corner${phonePortrait ? ' five' : ''}`}>
         <IconButton icon="lyrics" label="Lyrics" filled={(landscape ? activeSidePanel : panel) === 'lyrics'} onClick={() => chooseTab('lyrics')} />
         {phonePortrait ? (
-          <span className="ms-np-corner-mid"><GearSwitch /><GearCircleIndicator size={22} /></span>
+          // five equal slots: the circle is the middle one
+          <><GearSwitch /><GearCircleIndicator size={22} /></>
         ) : (
           <>
             {!landscape && <GearCircleIndicator size={24} />}

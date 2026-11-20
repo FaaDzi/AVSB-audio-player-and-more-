@@ -4,6 +4,7 @@
 // switches back when the earphones do. Three kinds, because they sound different: both speakers, top only, bottom only.
 import { AudioRoute, onPhoneSpeaker } from '../../audio/speakerGuard'
 import { isAndroid } from '../../platform'
+import { interpLog, smoothLog } from '../../audio/filter'
 import { getSetting, setSetting } from '../settings/store'
 import { getGear, setActive } from './gear'
 
@@ -54,4 +55,19 @@ export function followPhoneSpeaker() {
   onPhoneSpeaker(follow)
   // the state at start too: the app may have been closed on the speaker and opened with earphones in
   void AudioRoute.status().then((r) => follow(!!r.speaker), () => {})
+}
+
+/**
+ * §97: a typical phone (or tablet) speaker's response, dB against 1 kHz, drawn as the device line instead of a flat
+ * one. 80 Hz-16 kHz: medians of Notebookcheck's pink-noise readings (8 phones incl. Xiaomi 14 and Galaxy S21 FE;
+ * 3 Galaxy tablets); below 80 Hz and at 20 kHz extended by slope. reports/research-2026-11-20/phone_speaker_response.md
+ */
+const SPEAKER_HZ = [20, 40, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1600, 2000, 2500, 3150, 4000, 5000, 8000, 10000, 12500, 16000, 20000]
+const PHONE_DB = [-60, -52, -42, -36, -32, -23, -22, -19, -17, -15, -9, -8, -4, 0, 0, 3, 4, 6, 6, 3.5, 0, 0, -9, -14, -20]
+const TABLET_DB = [-52, -46, -39, -33, -28, -14, -14, -11, -8, -8, -3, -3.5, -2, 0, 2, 1, -4, 1.5, 2, 0.5, -1.5, -4, -13, -20, -27]
+export function typicalSpeakerDb(grid: ArrayLike<number>, tablet = false): Float64Array {
+  const raw = interpLog(SPEAKER_HZ, tablet ? TABLET_DB : PHONE_DB, grid)
+  // single room readings jump ±2-4 dB band to band: a third-octave smooth shows the shape, not the noise
+  const ppo = Math.round(1 / Math.log2(grid[1] / grid[0]))
+  return smoothLog(raw, ppo, 1 / 3)
 }

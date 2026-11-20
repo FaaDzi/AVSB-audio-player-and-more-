@@ -122,7 +122,7 @@
 .ms-window.phone .ms-toast { transform: none; min-width: 0; }
 
 /* menus open as bottom sheets on the phone (Mornye's song menu), whatever opened them */
-@media (max-width: 640px), (max-height: 540px) and (pointer: coarse), (orientation: landscape) and (pointer: coarse) {
+@media (max-width: 640px), (max-height: 540px) and (pointer: coarse), (orientation: landscape) and (pointer: coarse) and (max-height: 600px) {
   .ms-menu-scrim { background: var(--scrim); }
   .ms-menu {
     left: 0 !important;
@@ -244,6 +244,8 @@
 .ms-window.phone .ms-np-step, .ms-window.phone .ms-np-play { height: 60px; }
 .ms-window.phone .ms-np-volume { top: auto; bottom: calc(76px + var(--sab)); left: 20px; right: 20px; width: auto; height: 46px; }
 .ms-window.phone .ms-np-corner { left: 20px; right: 20px; bottom: calc(16px + var(--sab)); justify-content: space-around; }
+/* portrait: Lyrics · headphones · circle · Sleep · Up next in five equal slots, so the circle sits in the middle */
+.ms-window.phone .ms-np-corner.five { display: grid; grid-template-columns: repeat(5, 1fr); justify-items: center; }
 /* lyrics and queue take the whole screen on portrait phone instead of a side column; the close button and bottom gear/corner stay reachable */
 .ms-window.phone .ms-np.split .ms-np-player { opacity: 0; pointer-events: none; }
 .ms-window.phone .ms-np-side {
@@ -351,7 +353,7 @@
 /* ==========================================================================
    §73.B — Phone & Tablet Landscape Layout Overhaul
    ========================================================================== */
-@media (orientation: landscape) and (max-height: 540px), (orientation: landscape) and (pointer: coarse) {
+@media (orientation: landscape) and (max-height: 540px), (orientation: landscape) and (pointer: coarse) and (max-height: 600px) {
   /* Safe-area horizontal padding so camera hole-punch cutouts never overlap text or controls */
   .ms-window.phone .ms-page,
   .ms-window.phone .ms-home,

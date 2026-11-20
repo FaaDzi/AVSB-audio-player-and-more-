@@ -2,7 +2,7 @@
 import '../eqStudio.css'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { loadSpatial, onSpatialChange } from '../../spatial/settings'
-import { Dialog, Icon, IconButton } from '../ui'
+import { Dialog, Icon, IconButton, Menu } from '../ui'
 import { Slider } from '../PlayerBar'
 import type { Database } from '../database/catalog'
 import { DevicePickerModal } from '../sound/AudioProfileSheet'
@@ -62,7 +62,8 @@ export const FILTER_COLORS = ['#7cc4ff', '#ffb86b', '#9be28a', '#ff8fa3', '#c9a5
 export const filterColor = (i: number) => FILTER_COLORS[i % FILTER_COLORS.length]
 /** §96: like PEQdB, a filter's colour says its type: the card, its dot and its label share it. */
 export const KIND_COLOR: Record<Biquad['kind'], string> = { peak: '#ffb86b', lowshelf: '#ff7ab6', highshelf: '#c9a5ff', lowpass: '#5ee0d0', highpass: '#9be28a' }
-export const KIND_SHORT: Record<Biquad['kind'], string> = { peak: 'PK', lowshelf: 'LSC', highshelf: 'HSC', lowpass: 'LPQ', highpass: 'HPQ' }
+/** Names in full on screen; the files keep Equalizer APO's PK / LSC / HSC / LPQ / HPQ. */
+export const KIND_NAME: Record<Biquad['kind'], string> = { peak: 'Peak', lowshelf: 'Low shelf', highshelf: 'High shelf', lowpass: 'Low-pass', highpass: 'High-pass' }
 
 export interface GraphHandle {
   hz: number
@@ -81,6 +82,8 @@ export function EqGraph(props: {
   eqDb: ArrayLike<number>
   extraDb: ArrayLike<number> | null
   device: ArrayLike<number> | null
+  /** The device line's name in the legend (the phone speaker's is a typical one, not yours measured). */
+  deviceLabel?: string
   target: ArrayLike<number> | null
   ears: { left: ArrayLike<number>; right: ArrayLike<number> } | null
   handles: GraphHandle[]
@@ -259,7 +262,7 @@ export function EqGraph(props: {
       </div>
       {!props.compact && (
         <div className="ms-eqg-legend">
-          {lines.device && <span className="device">Your device</span>}
+          {lines.device && <span className="device">{props.deviceLabel ?? 'Your device'}</span>}
           {lines.target && <span className="target">Target</span>}
           {lines.after && <span className="after">With EQ</span>}
           <span className="eq">EQ</span>
@@ -325,7 +328,7 @@ export function AutoEqCard(props: {
           <span><Icon name="local_fire_department" size={18} />Warmth<b>{props.warmth > 0 ? '+' : ''}{props.warmth.toFixed(1)} dB</b></span>
           <Slider thick label="Warmth" min={0} max={3} step={0.5} value={props.warmth} onChange={props.onWarmth} />
         </label>
-        <p className="ms-eqlab-note">Speaker correction (limited). No standard target exists for phone speakers, so it plays flat; the speaker guard keeps the small drivers safe.</p>
+        <p className="ms-eqlab-note">Speaker correction (limited). No standard target exists for phone speakers, so nothing is corrected unless you add Warmth or filters; the graph shows a typical phone speaker, and the speaker guard keeps the small drivers safe.</p>
       </section>
     )
   }
@@ -625,39 +628,36 @@ export function ImportDeviceDialog(props: { db: Database; presetName: string; ac
 export function FilterCards(props: {
   filters: Biquad[]
   onChange: (filters: Biquad[]) => void
-  /** The EQ is on (the bypass button shows its state). */
-  on: boolean
-  onBypass: () => void
 }) {
   const { filters, onChange } = props
+  const [typeMenu, setTypeMenu] = useState<{ i: number; x: number; y: number } | null>(null)
   const set = (i: number, patch: Partial<Biquad>) => onChange(filters.map((f, k) => (k === i ? tidyFilter({ ...f, ...patch }) : f)))
   const add = () => {
     if (filters.length >= PEQ_MAX_FILTERS) return
-    // a new peak goes into the widest gap between the filters already there
+    // a new peak goes into the widest gap between the filters already there, and into the list at its place
     const at = [20, ...filters.map((f) => f.fc).sort((a, b) => a - b), 20000]
     let best = 1000, gap = 0
     for (let k = 1; k < at.length; k++) {
       const g = Math.log2(at[k] / at[k - 1])
       if (g > gap) { gap = g; best = Math.round(Math.sqrt(at[k] * at[k - 1])) }
     }
-    onChange([...filters, tidyFilter({ kind: 'peak', fc: best, gain: 0, q: 1.41 })])
+    const next = filters.findIndex((f) => f.fc > best)
+    const fresh = tidyFilter({ kind: 'peak', fc: best, gain: 0, q: 1.41 })
+    onChange(next < 0 ? [...filters, fresh] : [...filters.slice(0, next), fresh, ...filters.slice(next)])
   }
   return (
     <section className="ms-eqcards">
       <div className="ms-eqcards-tools">
-        <IconButton icon="add" label="Add a filter" onClick={add} />
-        <IconButton icon="swap_vert" label="Sort low to high" onClick={() => onChange([...filters].sort((a, b) => a.fc - b.fc))} />
-        <IconButton icon={props.on ? 'power_settings_new' : 'power_off'} label={props.on ? 'Bypass the EQ' : 'Turn the EQ on'} onClick={props.onBypass} />
-        <IconButton icon="delete_sweep" label="Clear all filters" onClick={() => onChange([])} />
+        <button type="button" className="ms-btn text" disabled={filters.length >= PEQ_MAX_FILTERS} onClick={add}><Icon name="add" size={20} />Add filter</button>
         <span className="ms-eqcards-count">{filters.length} / {PEQ_MAX_FILTERS}</span>
       </div>
       {filters.map((f, i) => (
         <div key={i} className="ms-eqcard" style={{ '--c': KIND_COLOR[f.kind] } as React.CSSProperties}>
           <div className="ms-eqcard-head">
             <b>{i + 1}</b>
-            <select aria-label={`Filter ${i + 1} type`} value={f.kind} onChange={(e) => set(i, { kind: e.target.value as Biquad['kind'] })}>
-              {(Object.keys(KIND_SHORT) as Biquad['kind'][]).map((k) => <option key={k} value={k}>{KIND_SHORT[k]}</option>)}
-            </select>
+            <button type="button" className="ms-eqcard-kind" aria-haspopup="menu" aria-label={`Filter ${i + 1} type: ${KIND_NAME[f.kind]}`} onClick={(e) => { const r = e.currentTarget.getBoundingClientRect(); setTypeMenu({ i, x: r.left, y: r.bottom + 4 }) }}>
+              <span>{KIND_NAME[f.kind]}</span><Icon name="arrow_drop_down" size={18} />
+            </button>
             <IconButton icon="close" label={`Remove filter ${i + 1}`} small onClick={() => onChange(filters.filter((_, k) => k !== i))} />
           </div>
           <div className="ms-eqcard-fields">
@@ -670,6 +670,18 @@ export function FilterCards(props: {
         </div>
       ))}
       {!filters.length && <p className="ms-eqcards-empty">No filters yet. Press AutoEQ, tap the EQ line on the graph, or add one with +.</p>}
+      {typeMenu && filters[typeMenu.i] && (
+        <Menu
+          x={typeMenu.x}
+          y={typeMenu.y}
+          onClose={() => setTypeMenu(null)}
+          items={(Object.keys(KIND_NAME) as Biquad['kind'][]).map((k) => ({
+            label: KIND_NAME[k],
+            checked: filters[typeMenu.i].kind === k,
+            onSelect: () => set(typeMenu.i, { kind: k }),
+          }))}
+        />
+      )}
     </section>
   )
 }

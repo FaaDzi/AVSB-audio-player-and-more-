@@ -133,6 +133,8 @@
 .ms-eqtune-shelf { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
 .ms-eqtune-shelf-head { display: flex; align-items: center; gap: 8px; color: var(--text-strong); font-weight: 600; }
 .ms-eqtune-shelf-head b { margin-left: auto; font-variant-numeric: tabular-nums; }
+/* the thick slider keeps its 44 px: .ms-slider's flex: 1 collapsed it in this column, and Next sat on it */
+.ms-eqtune-shelf .ms-slider { flex: none; }
 .ms-eqtune-next { align-self: flex-end; display: inline-flex; align-items: center; gap: 6px; }
 .ms-eqtune-acts.two { grid-template-columns: 1fr 1fr; }
 
@@ -156,11 +158,19 @@
 .ms-window:not(.phone) .ms-eq-main .ms-eqg { --eqg-h: clamp(280px, 52vh, 520px); }
 .ms-window:not(.phone) .ms-eq-main .ms-eq-hero { position: static; }
 .ms-window:not(.phone) .ms-eq-rail .ms-eqlab { margin: 0; }
+/* §97: a narrow pane on a wide screen (Settings' third column on a tablet in portrait) has no room for two columns:
+   graph first, then the controls, unpinned */
+.ms-window:not(.phone) .ms-eq { container-type: inline-size; }
+@container (max-width: 700px) {
+  .ms-window:not(.phone) .ms-eq-studio { display: flex; flex-direction: column; }
+  .ms-window:not(.phone) .ms-eq-main { position: static; }
+  .ms-window:not(.phone) .ms-eq-main .ms-eqg { --eqg-h: clamp(240px, 34vh, 360px); }
+}
 
 /* preset menu */
 .ms-eq-presetbar { display: flex; align-items: center; gap: 4px; padding: 6px 6px 6px 12px; border-radius: var(--radius-card); background: var(--chrome); }
 .ms-eq-presetpick { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; color: var(--text-dim); }
-.ms-eq-presetpick select, .ms-eqlab-target select, .ms-eqcard select {
+.ms-eq-presetpick select, .ms-eqlab-target select {
   min-width: 0; flex: 1; height: 38px; padding: 0 10px; border-radius: 10px; border: 1px solid var(--hairline);
   background: rgb(var(--ink) / 0.05); color: var(--text-strong); font: inherit; font-size: 14px;
 }
@@ -177,7 +187,9 @@
 }
 .ms-eqcard-head { display: flex; align-items: center; gap: 8px; }
 .ms-eqcard-head b { width: 22px; color: var(--c); font-variant-numeric: tabular-nums; }
-.ms-eqcard select { flex: 0 1 84px; height: 30px; font-weight: 700; color: var(--c); text-align: center; }
+.ms-eqcard-kind { display: inline-flex; align-items: center; gap: 2px; min-width: 0; height: 30px; padding: 0 6px 0 12px; border-radius: 15px; background: color-mix(in srgb, var(--c) 20%, transparent); color: var(--c); font: inherit; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.ms-eqcard-kind span { overflow: hidden; text-overflow: ellipsis; }
+.ms-eqcard-kind:active { transform: scale(0.97); }
 .ms-eqcard-head .ms-iconbtn { margin-left: auto; }
 .ms-eqcard-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 6px; }
 .ms-eqcard-fields .peq-field { display: flex; flex-direction: column-reverse; gap: 2px; align-items: stretch; }
@@ -203,7 +215,7 @@
 .ms-window.phone .ms-eqcard { padding: 6px 7px 8px; }
 .ms-window.phone .ms-eqcard-fields { gap: 3px; }
 .ms-window.phone .ms-eqcard-fields input { padding: 0 1px; font-size: 12px; letter-spacing: -0.02em; }
-.ms-window.phone .ms-eqcard select { flex-basis: 64px; padding: 0 4px; }
+.ms-window.phone .ms-eqcard-kind { padding: 0 2px 0 9px; font-size: 12px; }
 .ms-window.phone .ms-eqcard-head { gap: 4px; }
 
 .ms-eqlab-warmth { margin-top: 14px; }
@@ -212,3 +224,7 @@
    inside its own parent) */
 .ms-window.phone .ms-eq-studio, .ms-window.phone .ms-eq-main, .ms-window.phone .ms-eq-rail { display: contents; }
 .ms-window.phone .ms-eq-studio > .ms-eq-main > *, .ms-window.phone .ms-eq-rail > * { margin-bottom: 14px; }
+/* a phone on its side is too short for a pinned graph: it would cover everything under it */
+@media (max-height: 540px) {
+  .ms-window.phone .ms-eq-hero { position: relative; top: auto; }
+}

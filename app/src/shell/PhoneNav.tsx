@@ -12,7 +12,8 @@ import { WaveTrack } from './WaveTrack'
  * The phone layout: a phone held upright (narrow), or turned sideways (short), or a very narrow window. Turned
  * sideways a phone is wider than 640 px but only about 400 px tall: the PC layout's sidebar and player bar don't fit.
  */
-const PHONE_QUERY = '(max-width: 640px), (max-height: 540px), (orientation: landscape) and (pointer: coarse)'
+// a touch screen on its side counts as a phone only while short: a tablet in landscape (800+ px tall) gets the wide layout
+const PHONE_QUERY = '(max-width: 640px), (max-height: 540px), (orientation: landscape) and (pointer: coarse) and (max-height: 600px)'
 
 const query = typeof window !== 'undefined' && window.matchMedia ? window.matchMedia(PHONE_QUERY) : null
 export const usePhone = () =>

@@ -10,9 +10,18 @@ import { getSetting } from './settings/store'
  */
 export const WAVE = {
   /** Tallest hump at a song's usual level, px above the bar. */
-  height: 10,
-  /** The two layers' lengths as shares of the played part, and their drift (px/s). */
-  long: 1.1, short: 0.75, driftLong: 80, driftShort: 52,
+  height: 12,
+  /**
+   * §97: three layers, back to front, each moved by its own part of the music. Lengths are shares of the whole track
+   * (not the played part, which grows and would stretch them every frame); drift in px/s; weight = height share.
+   * Back: faint cover colour, the rumble (20-250 Hz). Middle: grey at 70 %, the mids (250 Hz-2 kHz).
+   * Front: solid cover colour, the highs (2-16 kHz) together with the overall level.
+   */
+  layers: [
+    { length: 0.31, drift: 38, weight: 1, alpha: 0.32, grey: false },
+    { length: 0.22, drift: 62, weight: 0.85, alpha: 0.7, grey: true },
+    { length: 0.16, drift: 90, weight: 0.8, alpha: 1, grey: false },
+  ],
   /** Humps fade in over this much at the start and before the handle. */
   fade: 28,
   rampMs: 400, tickMs: 16,
@@ -40,13 +49,13 @@ export function edgeFade(x: number, start: number, end: number): number {
 
 /**
  * The level's pull on the humps' height: 1 at the song's recent average, lower in quiet parts, taller in loud ones.
- * Rises in about 150 ms and falls in about 700 ms, so it breathes with the music instead of flickering.
+ * Rises in about 80 ms and falls in about 350 ms: it kicks with the beat and settles without flickering.
  */
 export function levelStep(state: { mean: number; amount: number }, db: number, dtMs: number) {
   state.mean += (db - state.mean) * Math.min(1, dtMs / 6000)
-  // 6 dB over the song's average doubles the humps; quiet parts settle to a quarter
-  const target = Math.min(2, Math.max(0.25, 1 + (db - state.mean) / 6))
-  const tau = target > state.amount ? 150 : 700
+  // 4 dB over the song's average doubles the humps; quiet parts nearly flatten, so a beat reads clearly
+  const target = Math.min(2.2, Math.max(0.15, 1 + (db - state.mean) / 4))
+  const tau = target > state.amount ? 80 : 350
   state.amount += (target - state.amount) * Math.min(1, dtMs / tau)
   return state.amount
 }
@@ -61,6 +70,25 @@ function levelDb(): number | null {
   for (let i = 0; i < samples.length; i++) sum += samples[i] * samples[i]
   const rms = Math.sqrt(sum / samples.length)
   return rms < 1e-4 ? null : 20 * Math.log10(rms)
+}
+
+const BANDS: [number, number][] = [[20, 250], [250, 2000], [2000, 16000]]
+let spectrum = new Float32Array(0)
+/** Each band's level now (dB, the bins' mean power): rumble, mids, highs. Null as for levelDb. */
+function bandsDb(): number[] | null {
+  const meter = engineAnalyser()
+  if (!meter || isDirectOutput()) return null
+  if (spectrum.length !== meter.frequencyBinCount) spectrum = new Float32Array(meter.frequencyBinCount)
+  meter.getFloatFrequencyData(spectrum)
+  const hzPerBin = meter.context.sampleRate / meter.fftSize
+  return BANDS.map(([lo, hi]) => {
+    let sum = 0, n = 0
+    for (let i = Math.max(1, Math.floor(lo / hzPerBin)); i <= Math.min(spectrum.length - 1, Math.ceil(hi / hzPerBin)); i++) {
+      sum += 10 ** (spectrum[i] / 10)
+      n++
+    }
+    return n ? 10 * Math.log10(sum / n + 1e-12) : -120
+  })
 }
 
 export type WaveMode = 'Waves' | 'Squiggly' | 'Flat'
@@ -85,6 +113,9 @@ export function WaveTrack({ share, moving, compact = false }: { share: number; m
     s.color = getComputedStyle(el).color
     const mode = waveMode()
     const level = { mean: -18, amount: 1 }
+    // one level follower per band (the means differ a lot: rumble sits far above treble in dB)
+    const bands = [{ mean: -50, amount: 1 }, { mean: -60, amount: 1 }, { mean: -75, amount: 1 }]
+    const amounts = [1, 1, 1]
     const squiggly = mode === 'Squiggly' && !compact
     const bar = compact ? 3 : squiggly ? SQUIGGLE.stroke : 6
     const tallest = compact ? 7 : WAVE.height
@@ -97,6 +128,9 @@ export function WaveTrack({ share, moving, compact = false }: { share: number; m
     let onScreen = true
     let last = 0
     let lastTick = 0
+    let lastColor = 0
+    // each layer's drift, added up frame by frame (time × speed would jump whenever a length changed)
+    const shifts = [0, 0, 0]
 
     s.draw = () => {
       // a soft wave needs no more than 2 pixels per point: a phone's 3x screen would triple the work for nothing
@@ -132,21 +166,25 @@ export function WaveTrack({ share, moving, compact = false }: { share: number; m
       ctx.moveTo(start, y)
       ctx.lineTo(end, y)
       ctx.stroke()
-      const lift = Math.min(y - bar / 2 - 1, easeInOutCubic(s.ramp) * tallest * level.amount)
-      if (lift < 0.2 || end - start < WAVE.fade) return
-      const t = performance.now() / 1000
-      const span = Math.max(120, end - start)
-      const top = y - bar / 2 + 0.5
-      ctx.globalAlpha = 0.45
-      for (const [share_, drift, weight] of [[WAVE.long, WAVE.driftLong, 1], [WAVE.short, WAVE.driftShort, 0.7]] as const) {
-        const length = span * share_
+      const room = y - bar / 2 - 1
+      const base = easeInOutCubic(s.ramp) * tallest
+      if (base < 0.2 || end - start < WAVE.fade) return
+      // the bar itself swells: the front layer is solid and overlaps the bar by a pixel, so the two are one shape;
+      // the grey and the faint layers behind it give the liquid depth
+      const top = y - bar / 2 + 1
+      WAVE.layers.forEach((layer, k) => {
+        const lift = Math.min(room, base * layer.weight * amounts[k])
+        if (lift < 0.2) return
+        const length = Math.max(48, w * layer.length)
+        ctx.fillStyle = layer.grey ? 'rgb(160 160 160)' : s.color
+        ctx.globalAlpha = layer.alpha
         ctx.beginPath()
         ctx.moveTo(start, top)
-        for (let x = start; x <= end; x += 4) ctx.lineTo(x, top - lift * weight * humpAt(x, length, t * drift) * edgeFade(x, start, end))
+        for (let x = start; x <= end; x += 3) ctx.lineTo(x, top - lift * humpAt(x, length, shifts[k]) * edgeFade(x, start, end))
         ctx.lineTo(end, top)
         ctx.closePath()
         ctx.fill()
-      }
+      })
       ctx.globalAlpha = 1
     }
 
@@ -161,9 +199,20 @@ export function WaveTrack({ share, moving, compact = false }: { share: number; m
       last = now
       s.ramp = target ? Math.min(1, s.ramp + dt / WAVE.rampMs) : Math.max(0, s.ramp - dt / WAVE.rampMs)
       if (mode === 'Waves' && dt) {
+        // kept small: a huge shift loses the float precision that keeps the motion smooth
+        WAVE.layers.forEach((layer, k) => { shifts[k] = (shifts[k] + (dt / 1000) * layer.drift) % Math.max(48, w * layer.length) })
+        // the cover colour eases in after a song change: follow it, as the handle does (a style read, no layout)
+        if (now - lastColor > 500) {
+          lastColor = now
+          s.color = getComputedStyle(el).color
+        }
         const db = levelDb()
+        const parts = db === null ? null : bandsDb()
         // no reading (Direct USB, a gap between songs): drift back to the usual height
         levelStep(level, db ?? level.mean, dt)
+        bands.forEach((b, k) => { amounts[k] = levelStep(b, parts?.[k] ?? b.mean, dt) })
+        // the front layer: the highs and the overall intensity together
+        amounts[2] = (amounts[2] + level.amount) / 2
       }
       // at most 60 a second; the frame that finishes a ramp is drawn at once. (This used to also pass on every frame
       // once the ramp was done, so a playing wave redrew at the screen's full rate: 100-120 a second.)

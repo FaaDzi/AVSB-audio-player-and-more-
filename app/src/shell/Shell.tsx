@@ -1,6 +1,7 @@
-import { checkDaily, openUpdate } from './updates'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Icon, IconButton, placeholderCoverImage } from './ui'
+import { checkDaily, openUpdate, type Update } from './updates'
+import { version as appVersion } from '../../package.json'
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
+import { Dialog, Icon, IconButton, placeholderCoverImage } from './ui'
 import { sleepStopsAfterThisSong, useSleepTimerRunner } from './sleepTimer'
 import { useLockScreenLyric } from './lockLyrics'
 import { MiniPlayer } from './MiniPlayer'
@@ -20,7 +21,7 @@ import { LEARN_AFTER, pickAutoplay } from './autoplay'
 import { host } from './host'
 import { getListening, recordListen } from './stats'
 import { logLine } from './logs'
-import { getSetting, setSetting } from './settings/store'
+import { getSetting, setSetting, subscribeSettings } from './settings/store'
 import { libraryStatus, onTracks, refresh, scan, scanIsDue, useLibraryStatus, useMetaBanner } from './localLibrary'
 import { FirstRun } from './FirstRun'
 import { HomePage } from './pages/HomePage'
@@ -107,6 +108,8 @@ export function Shell() {
   const [data, setData] = useState<LibraryData | null>(null)
   const [failed, setFailed] = useState('')
   const libraryNow = useLibraryStatus()
+  // re-renders only when this one flag flips (FirstRun sets it as its scan starts)
+  const emptyOk = useSyncExternalStore(subscribeSettings, () => getSetting('library.emptyok') === true)
   const phone = usePhone()
   const typing = useKeyboardOpen(phone)
   const [expanded, setExpanded] = useState(true)
@@ -134,9 +137,11 @@ export function Shell() {
   const metaBanner = useMetaBanner()
 
   // Local Library: songs come from the chosen folders, and arrive part-way through a scan too
-  // §83: a newer release on GitHub gets one toast a day, with the download for this platform
+  // §83: a newer release on GitHub gets a popup at start (a toast was easy to miss), with the download for this
+  // platform; "Later" asks again on the next start
+  const [update, setUpdate] = useState<Update | null>(null)
   useEffect(() => {
-    void checkDaily().then((u) => { if (u) setToast({ message: `AVSB ${u.version} is out`, action: { label: 'Download', onClick: () => openUpdate(u) } }) })
+    void checkDaily().then(setUpdate)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   useEffect(() => {
@@ -542,7 +547,9 @@ export function Shell() {
 
   // the first run, or every folder removed: choose one before anything else
   // Android scans its media index at every start: no first run while that's still going
-  if (libraryNow.loaded && !libraryNow.folders.length && !libraryNow.scanning) return <FirstRun />
+  // a device with no music at all (a tablet that only streams from the PC) still gets in once its scan is done
+  // (FirstRun sets the flag when its scan starts: it's swapped out while the scan runs, so it can't wait for the end)
+  if (libraryNow.loaded && !libraryNow.folders.length && !libraryNow.scanning && !emptyOk) return <FirstRun />
 
   return (
     <ShellContext.Provider value={value}>
@@ -585,6 +592,21 @@ export function Shell() {
             </>
           ) : <PlayerBar />}
           {nowPlaying && current && <NowPlaying />}
+          {update && (
+            <Dialog
+              title="A new version is out"
+              onClose={() => setUpdate(null)}
+              footer={<>
+                <button type="button" className="ms-btn text" onClick={() => setUpdate(null)}>Later</button>
+                <button type="button" className="ms-btn text" onClick={() => { openUpdate(update); setUpdate(null) }}>Download</button>
+              </>}
+            >
+              <p>AVSB {update.version} is on GitHub. You have {appVersion}.</p>
+              <p>{Capacitor.getPlatform() === 'android'
+                ? 'Download opens the APK; Android then asks to update the app. Your library, settings and pairing stay.'
+                : 'Download opens the zip; unpack it over this folder. Your settings stay (they live in AppData).'}</p>
+            </Dialog>
+          )}
           {toast && (
             <div className="ms-toast" role="status">
               <span>{typeof toast === 'string' ? toast : toast.message}</span>

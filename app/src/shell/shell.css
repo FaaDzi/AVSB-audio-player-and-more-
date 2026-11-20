@@ -18,6 +18,8 @@ small { display: block; color: var(--text-faint); font-size: 13px; }
 
 /* window */
 .ms-window { height: 100%; display: flex; flex-direction: column; position: relative; }
+/* a tablet (wide layout on Android) draws edge to edge: keep the top bar and the player clear of the status and navigation bars (0 on the PC) */
+.ms-window:not(.phone) { box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
 .ms-body { flex: 1; min-height: 0; display: flex; }
 .ms-content { flex: 1; min-width: 0; position: relative; overflow: hidden; }
 

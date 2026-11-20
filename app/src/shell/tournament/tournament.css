@@ -618,7 +618,7 @@ button.ms-tourney-row:hover { background: var(--control-hover); }
 .ms-vs-fighter.b .ms-vs-kind { align-self: flex-end; }
 
 /* ---------------------------------------------------------------- landscape phone fit (§71 V1) ---- */
-@media (max-height: 540px) and (orientation: landscape), (orientation: landscape) and (pointer: coarse) {
+@media (max-height: 540px) and (orientation: landscape), (orientation: landscape) and (pointer: coarse) and (max-height: 600px) {
   .ms-vs-round { top: 10px; padding: 5px 14px; font-size: 12px; }
   .ms-vs-fighter { gap: 14px; max-width: 44vw; }
   .ms-vs-fighter.a { top: 14%; left: 4%; }

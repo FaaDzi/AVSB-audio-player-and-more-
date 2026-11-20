@@ -3,6 +3,7 @@ import { Icon } from './ui'
 import { host } from './host'
 import { Capacitor } from '@capacitor/core'
 import { addFolder, scan } from './localLibrary'
+import { setSetting } from './settings/store'
 
 /** The first run: one music folder, then the Library fills in as it's read. More folders are added in Settings. */
 export function FirstRun() {
@@ -29,7 +30,9 @@ export function FirstRun() {
     const find = () => {
       setBusy(true)
       setError('')
-      scan().catch((e: unknown) => {
+      // a device with no music at all (a tablet that only streams from the PC) still gets in once this scan ends;
+      // before, this screen came back after an empty scan and the app never opened
+      scan().then(() => setSetting('library.emptyok', true), (e: unknown) => {
         setError(/DENIED/.test(String(e)) ? 'Music and audio access is needed to list your songs' : `Couldn't read your songs (${String(e)})`)
         setBusy(false)
       })

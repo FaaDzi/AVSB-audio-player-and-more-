@@ -34,7 +34,7 @@ import { BALANCE_BANDS, bandCurves, setChannels, useChannels } from '../sound/ch
 import { AutoEqCard, EqGraph, FilterCards, FineTuneCard, ImportDeviceDialog, TargetPills, SWEEP_FULL, SWEEP_TREBLE, getLab, setLab, useHrtfTilt } from './EqStudio'
 import { curveAt, eqScene, TUNE_STEP_DB, tuneAt, type AutoEqResult } from '../eqStudio'
 import { setTone as playToneAt, stopTone } from '../eqTone'
-import { gearName } from '../sound/phoneSpeaker'
+import { gearName, isPhoneSpeaker, typicalSpeakerDb } from '../sound/phoneSpeaker'
 import { checkNow, openUpdate, type Update } from '../updates'
 import { PEQ_MAX_FILTERS, tidyFilter } from '../../eq/peq'
 import { useRefs } from '../tournament/engine'
@@ -426,6 +426,9 @@ export function Equalizer() {
     [db, refs, activeGear, lab, hrtf],
   )
   const grid = scene?.grid ?? PLAIN_GRID
+  // §97: the phone speaker isn't in the catalog; drawing it flat read as "this speaker is perfect", so the graph
+  // shows a typical phone speaker instead (display only: no AutoEQ for it)
+  const speakerDb = useMemo(() => (isPhoneSpeaker(activeGear) ? typicalSpeakerDb(grid, Math.min(screen.width, screen.height) >= 600) : null), [activeGear, grid])
   const eqDb = useMemo(() => chainDb(eqFilters(eq), grid, 48000), [eq, grid])
   const peak = Math.max(0, ...eqDb)
   // the Sound aim, while it's on, is part of what you hear
@@ -647,7 +650,8 @@ export function Equalizer() {
           grid={grid}
           eqDb={eqDb}
           extraDb={extraDb}
-          device={scene?.device ?? null}
+          device={speakerDb ?? scene?.device ?? null}
+          deviceLabel={speakerDb ? (Math.min(screen.width, screen.height) >= 600 ? 'Typical tablet speaker' : 'Typical phone speaker') : undefined}
           target={scene?.target ?? null}
           ears={ears}
           handles={handles}
@@ -738,7 +742,7 @@ export function Equalizer() {
           />
         )}
 
-        {mode === 'advanced+' && <FilterCards filters={peq} on={on} onBypass={() => setEq({ on: !on })} onChange={(filters) => onEqTweaked({ filters })} />}
+        {mode === 'advanced+' && <FilterCards filters={peq} onChange={(filters) => onEqTweaked({ filters })} />}
 
         {/* §96: Fine-tune by ear sits under the filters it adds to */}
         <FineTuneCard
@@ -896,6 +900,8 @@ export function Equalizer() {
       {presetMenu && <Menu x={presetMenu.x} y={presetMenu.y} onClose={() => setPresetMenu(null)} items={[
         { label: 'Import preset', icon: 'file_open', onSelect: () => importer.current?.click() },
         { label: 'Export preset', icon: 'ios_share', onSelect: exportPreset },
+        // §97: clearing the filters belongs with the EQ set, not beside the cards
+        ...(mode === 'advanced+' && peq.length ? [{ label: 'Clear all filters', icon: 'delete_sweep', danger: true, onSelect: () => onEqTweaked({ filters: [] }) }] : []),
         ...(mine ? [
           { label: 'Rename preset', icon: 'edit', onSelect: () => setNaming({ was: mine.name, name: mine.name }) },
           { label: 'Delete preset', icon: 'delete', onSelect: () => { setPresets(saved.filter((p) => p !== mine)); setEq({ preset: 'Custom' }) } },

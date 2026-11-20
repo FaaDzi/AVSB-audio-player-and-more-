@@ -585,7 +585,7 @@ export function MetadataNamingSection() {
               </div>
             </div>
             <button type="button" className="ms-btn primary" onClick={() => setReviewMode('candidates')}>
-              Review matches →
+              Review →
             </button>
           </div>
         </div>
