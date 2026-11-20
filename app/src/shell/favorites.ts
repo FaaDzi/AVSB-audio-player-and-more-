@@ -26,6 +26,11 @@ function saveFavorites(set: Set<string>) {
   listeners.forEach((l) => l())
 }
 
+/** §98: Favorites emptied: every heart on this device goes. */
+export function clearFavorites() {
+  saveFavorites(new Set())
+}
+
 export function isLiked(trackId: string): boolean {
   return loadFavorites().has(trackId)
 }

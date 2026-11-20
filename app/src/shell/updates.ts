@@ -1,13 +1,12 @@
-// Update check (plan §83 A, B): asks GitHub which releases exist, at most once a day, and says so when one is newer
-// than this build. "Download" opens that release's file for this platform; nothing is installed behind your back.
+// Update check (plan §83 A, B; §97): asks GitHub which releases exist at every start (and on a phone when a page is
+// pulled down from its top), and says so when one is newer than this build. "Download" opens that release's file for this platform; nothing is installed behind your back.
 // Android installs the APK over the app (same signing key); on Windows it's the zip (your data lives in %APPDATA%).
 import { registerPlugin } from '@capacitor/core'
 import { version } from '../../package.json'
 import { isAndroid, openExternal } from '../platform'
-import { getSetting, setSetting } from './settings/store'
+import { getSetting } from './settings/store'
 
 const RELEASES = 'https://api.github.com/repos/FaaDzi/AVSB-audio-player-and-more-/releases?per_page=20'
-const DAY_MS = 24 * 60 * 60 * 1000
 
 export interface Release {
   tag_name: string
@@ -55,18 +54,15 @@ export async function checkNow(): Promise<Update | null> {
     const r = await fetch(RELEASES, { headers: { Accept: 'application/vnd.github+json' } })
     if (!r.ok) return null
     const found = pickUpdate((await r.json()) as Release[], version, getSetting('channel') === 'Preview', isAndroid())
-    // only "nothing new" rests for a day: a found update is said again on the next start (the toast is short)
-    if (!found) setSetting('updates_checked', Date.now())
     return found
   } catch {
     return null
   }
 }
 
-/** The automatic check: only with "Check for Updates" on, and not more than once a day. */
-export async function checkDaily(): Promise<Update | null> {
+/** §97: the automatic check, at every start (it used to rest a day, so a new release went unseen), with "Check for Updates" on. */
+export async function checkOnStart(): Promise<Update | null> {
   if (getSetting('updates') === false) return null
-  if (Date.now() - Number(getSetting('updates_checked') ?? 0) < DAY_MS) return null
   return checkNow()
 }
 

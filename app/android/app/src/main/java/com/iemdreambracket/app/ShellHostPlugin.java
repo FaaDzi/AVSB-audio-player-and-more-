@@ -473,6 +473,8 @@ public class ShellHostPlugin extends Plugin {
                     t.put("id", key);
                     t.put("path", uri.toString());
                     t.put("folder", "/" + relative);
+                    // §98: the file's own name, so an imported playlist (paths from another player) can find it
+                    t.put("file", name);
                     t.put("root", root);
                     t.put("playable", playable(ext));
                     t.put("title", col(c, MediaStore.Audio.Media.TITLE).isEmpty() ? name : col(c, MediaStore.Audio.Media.TITLE));

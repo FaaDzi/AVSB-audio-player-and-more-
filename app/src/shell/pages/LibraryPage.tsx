@@ -8,6 +8,9 @@ import {
 import { TrackTable } from './TrackTable'
 import { sharePlaylist } from './playlistCover'
 import { DeletePlaylistDialog, useTrackMenu } from './TrackMenu'
+import { setPlaylistHidden, useHiddenPlaylists } from '../playlistLink'
+import { matchEntries, parsePlaylist, type Entry } from '../playlistImport'
+import { isPcPlaylist } from '../library'
 import { SearchResults } from './SearchResults'
 import { useLeaving } from '../motion'
 import { useArtistSeparators, useArtistsByAlbumArtist } from '../settings/store'
@@ -385,7 +388,7 @@ function ArtistList({ artists }: { artists: ReturnType<typeof groupArtists> }) {
 }
 
 function Playlists() {
-  const { data, openPlaylist, replaceData } = useShell()
+  const { data, openPlaylist, replaceData, showToast } = useShell()
   const tracks = useLibrary()
   const byId = useMemo(() => new Map(tracks.map((t) => [t.id, t])), [tracks])
   const create = () => replaceData({ ...data, playlists: [...data.playlists, { id: `p-${Date.now()}`, name: `Playlist ${data.playlists.length + 1}`, tracks: [] }] })
@@ -394,14 +397,41 @@ function Playlists() {
   const [renaming, setRenaming] = useState<{ id: string; name: string } | null>(null)
   const [deleting, setDeleting] = useState<string | null>(null)
   const deletingList = data.playlists.find((p) => p.id === deleting)
+  // §98: the PC's playlists this phone has hidden sit in their own row at the bottom
+  const hidden = useHiddenPlaylists()
+  const [showHidden, setShowHidden] = useState(false)
+  const all = useMemo(() => visiblePlaylists(data.playlists, byId), [data.playlists, byId])
+  const shownPlaylists = useMemo(() => all.filter((p) => !(isPcPlaylist(p) && hidden.has(p.id))), [all, hidden])
+  const hiddenLists = useMemo(() => all.filter((p) => isPcPlaylist(p) && hidden.has(p.id)), [all, hidden])
+  const menuList = menu ? data.playlists.find((p) => p.id === menu.id) : undefined
 
-  const shownPlaylists = useMemo(() => visiblePlaylists(data.playlists, byId), [data.playlists, byId])
+  // §98: a playlist file from another player becomes this device's own playlist
+  const picker = useRef<HTMLInputElement>(null)
+  const [notFound, setNotFound] = useState<{ name: string; entries: Entry[] } | null>(null)
+  const importFile = async (file: File) => {
+    try {
+      const parsed = parsePlaylist(file.name, await file.text())
+      const hits = matchEntries(parsed.entries, data.tracks)
+      const ids = [...new Set(hits.filter((t): t is Track => !!t).map((t) => t.id))]
+      if (!parsed.entries.length) return showToast(`No songs in "${file.name}"`)
+      replaceData({ ...data, playlists: [...data.playlists, { id: `p-${Date.now()}`, name: parsed.name, tracks: ids }] })
+      const missing = parsed.entries.filter((_, i) => !hits[i])
+      showToast(`Imported "${parsed.name}": ${parsed.entries.length - missing.length} of ${parsed.entries.length} songs found`)
+      if (missing.length) setNotFound({ name: parsed.name, entries: missing })
+    } catch (e) {
+      showToast(`Couldn't read that playlist (${String(e)})`)
+    }
+  }
 
   return (
     <>
       <div className="ms-row">
         <span className="ms-count">{playlistCount(shownPlaylists.length)}</span>
-        <button type="button" className="ms-link" onClick={create}><Icon name="add" size={18} /> Create playlist</button>
+        <span style={{ display: 'inline-flex', gap: 16 }}>
+          <button type="button" className="ms-link" onClick={() => picker.current?.click()}><Icon name="file_open" size={18} /> Import</button>
+          <button type="button" className="ms-link" onClick={create}><Icon name="add" size={18} /> Create playlist</button>
+        </span>
+        <input ref={picker} type="file" hidden onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) void importFile(f) }} />
       </div>
       <div className="ms-grid square">
         {shownPlaylists.map((p) => {
@@ -416,16 +446,39 @@ function Playlists() {
           )
         })}
       </div>
-      {menu && (
+      {hiddenLists.length > 0 && (
+        <>
+          <button type="button" className="ms-link" style={{ margin: '20px 0 10px' }} onClick={() => setShowHidden(!showHidden)}>
+            <Icon name={showHidden ? 'expand_less' : 'visibility_off'} size={18} /> Hidden from the PC ({hiddenLists.length})
+          </button>
+          {showHidden && (
+            <div className="ms-grid square">
+              {hiddenLists.map((p) => (
+                <article className="ms-card" key={p.id} style={{ opacity: 0.6 }} onClick={() => openPlaylist(p.id)} {...press((x, y) => setMenu({ x, y, id: p.id }))}>
+                  <div className="ms-card-art"><Cover id={p.cover || (p.tracks.map((id) => byId.get(id)?.cover).find(Boolean) ?? '')} alt="" /></div>
+                  <button type="button" className="ms-card-title as-button">{p.name}</button>
+                  <div className="ms-card-sub">{trackCount(p.tracks.length)}</div>
+                </article>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+      {menu && menuList && (
         <Menu
           x={menu.x}
           y={menu.y}
           onClose={() => setMenu(null)}
           items={[
             { label: 'Open playlist', icon: 'queue_music', onSelect: () => openPlaylist(menu.id) },
-            { label: 'Rename', icon: 'edit', divider: true, onSelect: () => setRenaming({ id: menu.id, name: data.playlists.find((p) => p.id === menu.id)?.name ?? '' }) },
-            { label: 'Share', icon: 'ios_share', onSelect: () => { const p = data.playlists.find((x) => x.id === menu.id); if (p) void sharePlaylist(p.name, p.tracks.map((id) => byId.get(id)).filter((t): t is Track => !!t)) } },
-            { label: 'Delete playlist', icon: 'delete', danger: true, onSelect: () => setDeleting(menu.id) },
+            // §98: the PC's playlists can't be renamed or deleted on a phone; they're hidden instead
+            ...(isPcPlaylist(menuList) ? [] : [{ label: 'Rename', icon: 'edit', divider: true, onSelect: () => setRenaming({ id: menu.id, name: menuList.name }) }]),
+            { label: 'Share', icon: 'ios_share', onSelect: () => void sharePlaylist(menuList.name, menuList.tracks.map((id) => byId.get(id)).filter((t): t is Track => !!t)) },
+            isPcPlaylist(menuList)
+              ? hidden.has(menuList.id)
+                ? { label: 'Show again', icon: 'visibility', onSelect: () => setPlaylistHidden(menuList.id, false) }
+                : { label: 'Hide on this phone', icon: 'visibility_off', onSelect: () => { setPlaylistHidden(menuList.id, true); showToast(`Hid "${menuList.name}". It's under Hidden from the PC`) } }
+              : { label: 'Delete playlist', icon: 'delete', danger: true, onSelect: () => setDeleting(menu.id) },
           ]}
         />
       )}
@@ -454,6 +507,17 @@ function Playlists() {
         </Dialog>
       )}
       {deletingList && <DeletePlaylistDialog playlist={deletingList} onClose={() => setDeleting(null)} />}
+      {notFound && (
+        <Dialog title={`Not in your library (${notFound.entries.length})`} onClose={() => setNotFound(null)} footer={<button type="button" className="ms-btn text" onClick={() => setNotFound(null)}>OK</button>}>
+          <p>These songs from "{notFound.name}" aren't on this device, so they were left out:</p>
+          {notFound.entries.slice(0, 200).map((e, i) => (
+            <div className="ms-list-row" key={i}>
+              <Icon name="music_off" />
+              <span className="grow ms-ellipsis">{e.title || e.path?.replace(/^.*[\\/]/, '') || '?'}<small>{e.artist ?? ''}</small></span>
+            </div>
+          ))}
+        </Dialog>
+      )}
     </>
   )
 }

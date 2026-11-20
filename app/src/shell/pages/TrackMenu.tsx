@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { Dialog, Icon, IconButton, Menu, type MenuItem } from '../ui'
 import { useShell } from '../context'
-import { albumKey, deletePlaylist, folderName, folderPath, hideFolder as hideLibraryFolder, isPcTrack, isPlaylistSaved, playlistNamesForTrack, removeFromPlaylist, trashTrackOnHost, type Playlist, type Track } from '../library'
+import { albumKey, deletePlaylist, folderName, folderPath, hideFolder as hideLibraryFolder, isFavoritesList, isPcPlaylist, isPcTrack, isPlaylistSaved, playlistNamesForTrack, removeFromPlaylist, trashTrackOnHost, type Playlist, type Track } from '../library'
 import { android, hideFolder as hideHostFolder } from '../localLibrary'
 import { savedDetails, undoTrackDetails } from '../metadata'
-import { isLiked, toggleLike } from '../favorites'
+import { clearFavorites, isLiked, toggleLike } from '../favorites'
+import { setPlaylistHidden } from '../playlistLink'
 import { logLine } from '../logs'
 import { phoneLink } from '../linkClient'
 
@@ -88,7 +89,7 @@ export function useTrackMenu(playlistId?: string) {
     const parentFolder = parentFolderOf(t)
     const remotePc = isPcTrack(t)
     return [
-      ...(inPlaylist
+      ...(inPlaylist && !isPcPlaylist(inPlaylist)
         ? [{
             label: `Remove from "${inPlaylist.name}"`,
             icon: 'do_not_disturb_on',
@@ -197,12 +198,15 @@ export function useTrackMenu(playlistId?: string) {
 
 function AddToPlaylist({ tracks, onClose }: { tracks: Track[]; onClose: () => void }) {
   const { data, replaceData, showToast } = useShell()
-  const [ticked, setTicked] = useState(() => new Set(data.playlists.filter((p) => tracks.every((t) => p.tracks.includes(t.id))).map((p) => p.id)))
+  // §98: the PC's playlists are read-only on a phone, so they aren't offered here
+  const own = data.playlists.filter((p) => !isPcPlaylist(p))
+  const [ticked, setTicked] = useState(() => new Set(own.filter((p) => tracks.every((t) => p.tracks.includes(t.id))).map((p) => p.id)))
   const [name, setName] = useState('')
   const [creating, setCreating] = useState(false)
 
   const done = () => {
     const playlists = data.playlists.map((p) => {
+      if (isPcPlaylist(p)) return p
       const ids = tracks.map((t) => t.id)
       const hasAll = ids.every((id) => p.tracks.includes(id))
       if (ticked.has(p.id) && !hasAll) return { ...p, tracks: [...p.tracks, ...ids.filter((id) => !p.tracks.includes(id))] }
@@ -229,7 +233,7 @@ function AddToPlaylist({ tracks, onClose }: { tracks: Track[]; onClose: () => vo
           <span>Create playlist</span>
         </button>
       )}
-      {data.playlists.map((p) => (
+      {own.map((p) => (
         <label className="ms-list-row" key={p.id}>
           <Icon name="queue_music" />
           <span className="grow">{p.name}<small>{p.tracks.length} {p.tracks.length === 1 ? 'track' : 'tracks'}</small></span>
@@ -249,33 +253,47 @@ function AddToPlaylist({ tracks, onClose }: { tracks: Track[]; onClose: () => vo
   )
 }
 
-/** "Delete playlist?" with its songs kept in the library. */
+/**
+ * "Delete playlist?" with its songs kept in the library. §98: Favorites is never deleted, only emptied (hearts too);
+ * the PC's playlist on a phone is hidden there instead.
+ */
 export function DeletePlaylistDialog({ playlist, onClose, onDeleted }: { playlist: Playlist; onClose: () => void; onDeleted?: () => void }) {
   const { data, replaceData, showToast } = useShell()
+  const kind = isFavoritesList(playlist) ? 'empty' : isPcPlaylist(playlist) ? 'hide' : 'delete'
+  const act = () => {
+    if (kind === 'empty') {
+      clearFavorites()
+      replaceData({ ...data, playlists: data.playlists.map((p) => (p.id === playlist.id ? { ...p, tracks: [] } : p)) })
+      showToast('Emptied Favorites')
+    } else if (kind === 'hide') {
+      setPlaylistHidden(playlist.id, true)
+      showToast(`Hid "${playlist.name}". It's under Hidden from the PC`)
+    } else {
+      replaceData(deletePlaylist(data, playlist.id))
+      logLine('INFO', 'Library', `Deleted playlist "${playlist.name}" (${playlist.tracks.length} songs)`)
+      showToast(`Deleted "${playlist.name}"`)
+    }
+    onClose()
+    if (kind !== 'empty') onDeleted?.()
+  }
   return (
     <Dialog
-      title="Delete playlist?"
+      title={kind === 'empty' ? 'Empty Favorites?' : kind === 'hide' ? 'Hide this playlist?' : 'Delete playlist?'}
       onClose={onClose}
       footer={
         <>
           <button type="button" className="ms-btn text" onClick={onClose}>Cancel</button>
-          <button
-            type="button"
-            className="ms-btn danger"
-            onClick={() => {
-              replaceData(deletePlaylist(data, playlist.id))
-              logLine('INFO', 'Library', `Deleted playlist "${playlist.name}" (${playlist.tracks.length} songs)`)
-              showToast(`Deleted "${playlist.name}"`)
-              onClose()
-              onDeleted?.()
-            }}
-          >
-            Delete
-          </button>
+          <button type="button" className="ms-btn danger" onClick={act}>{kind === 'empty' ? 'Empty' : kind === 'hide' ? 'Hide' : 'Delete'}</button>
         </>
       }
     >
-      <p>Delete playlist "<b>{playlist.name}</b>"? Its songs remain in your Library.</p>
+      <p>
+        {kind === 'empty'
+          ? <>Favorites stays, with no songs in it, and every heart on this device is cleared. Its songs remain in your Library.</>
+          : kind === 'hide'
+            ? <>"<b>{playlist.name}</b>" belongs to the PC, so it can only be deleted there. Hide it on this phone? It stays under Hidden from the PC at the bottom of Playlists.</>
+            : <>Delete playlist "<b>{playlist.name}</b>"? Its songs remain in your Library.</>}
+      </p>
     </Dialog>
   )
 }

@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Cover, Icon, IconButton, Menu, TopBar } from '../ui'
 import { useShell } from '../context'
 import {
-  NO_FILTERS, activeFilterCount, filterTracks, folderPath, groupAlbums, groupArtists, isPcTrack, mergeTwins, isPremiumQuality, shuffled, sortByFileName, sortTracks, trackCount, useLibrary,
+  NO_FILTERS, activeFilterCount, filterTracks, folderPath, groupAlbums, groupArtists, isPcPlaylist, isPcTrack, mergeTwins, isPremiumQuality, shuffled, sortByFileName, sortTracks, trackCount, useLibrary,
   type Filters, type SortMode, type Track,
 } from '../library'
 import { missingTrack } from '../playlistSync'
@@ -157,6 +157,8 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
   if (!playlist) return <div className="ms-empty"><p>{shelfId ? 'This mix has been refreshed. Home has new ones.' : 'This playlist no longer exists.'}</p></div>
   const update = (patch: Partial<typeof playlist>) => replaceData({ ...data, playlists: data.playlists.map((p) => (p.id === id ? { ...p, ...patch } : p)) })
   const cover = playlist.cover || (tracks.find((t) => t.cover)?.cover ?? '')
+  // §98: a Home mix, or the PC's playlist on a phone: play it or save a copy of your own, no edits here
+  const fixed = Boolean(shelf) || isPcPlaylist(playlist)
   const save = () => {
     const copy = { id: `p-${Date.now()}`, name: playlist.name, tracks: [...playlist.tracks] }
     replaceData({ ...data, playlists: [...data.playlists, copy] })
@@ -170,7 +172,7 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
   const currentFilterLabel = PLAYLIST_SOURCE_CHIPS.find(([k]) => k === sourceFilter)?.[1] ?? 'All'
 
   // §91 C/D: songs move right in the list, only while it shows the playlist's own order; each move is saved at once
-  const canMove = !shelf && sortMode === 'custom' && sourceFilter === 'all' && !query
+  const canMove = !fixed && sortMode === 'custom' && sourceFilter === 'all' && !query
   const reorder = (ids: string[]) => {
     const before = playlist.tracks
     // a song missing from the library keeps its place at the end, so a move can't lose it
@@ -186,9 +188,9 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
         <DetailHeader
           cover={cover}
           title={playlist.name}
-          kicker={shelf ? 'Mix' : 'Playlist'}
+          kicker={shelf ? 'Mix' : isPcPlaylist(playlist) ? 'Playlist from the PC' : 'Playlist'}
           style={coverStyle}
-          onCover={shelf ? undefined : (e) => (playlist.cover ? setCoverMenu(below(e)) : chooseCover())}
+          onCover={fixed ? undefined : (e) => (playlist.cover ? setCoverMenu(below(e)) : chooseCover())}
           sub={
             <>
               <Icon name="queue_music" size={18} />{' '}
@@ -200,8 +202,8 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
           }
           actions={
             <>
-              {shelf
-                ? <IconButton icon="playlist_add" label="Save playlist" filled onClick={save} />
+              {fixed
+                ? <IconButton icon="playlist_add" label={shelf ? 'Save playlist' : 'Save a copy'} filled onClick={save} />
                 : <IconButton icon="download" label="Download" filled onClick={() => showToast('Download is here for layout only')} />}
               <button
                 type="button"
@@ -254,7 +256,7 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
               <Icon name="filter_list" size={20} /> {sourceFilter === 'all' ? 'Filter' : currentFilterLabel}
             </button>
             {/* the PC drags rows directly; edit mode (checks and handles) is the phone's way to move songs */}
-            {phone && !shelf && tracks.length > 1 && (
+            {phone && !fixed && tracks.length > 1 && (
               <button type="button" className={`ms-tool${editing ? ' on' : ''}`} onClick={() => setEditing(!editing)}>
                 <Icon name="drag_handle" size={20} /> Edit order
               </button>
@@ -269,7 +271,7 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
         )}
         <TrackTable
           tracks={visibleTracks}
-          playlistId={shelf ? undefined : playlist.id}
+          playlistId={fixed ? undefined : playlist.id}
           playlistName={playlist.name}
           editing={editing}
           onEditing={setEditing}

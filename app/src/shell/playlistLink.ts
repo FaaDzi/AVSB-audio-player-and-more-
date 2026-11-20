@@ -1,13 +1,13 @@
-// Moves playlists between the PC and the phone (plan §80 A); the merging itself is in playlistSync.ts.
-// PC: the page hands its copy to the link worker, which phones fetch; a phone's copy comes back through the window.
-// Phone: fetches the PC's copy whenever the link reports a change, merges, and sends its merged copy back.
-import { useEffect, useRef } from 'react'
-import { getSetting, setSetting } from './settings/store'
+// Moves playlists from the PC to the phones (plan §80 A, §98). The PC is king: its playlists go to every paired phone,
+// one way, and a phone shows them read-only (it can hide them or save a copy). A phone's own playlists and every
+// device's Favorites stay on that device; they travel only as a shared .m3u8 file and Import.
+import { useEffect, useRef, useSyncExternalStore } from 'react'
+import { getSetting, setSetting, subscribeSettings } from './settings/store'
 import { host } from './host'
 import { phoneLink } from './linkClient'
 import { scan } from './localLibrary'
-import { asState, fromWire, merge, pruneDeleted, resolveMissing, sameState, stamp, toWire, type SyncState } from './playlistSync'
-import type { LibraryData, Playlist, Track } from './library'
+import { asState, fromWire, pruneDeleted, resolveMissing, sameState, stamp, type SyncState } from './playlistSync'
+import { isFavoritesList, isPcPlaylist, type LibraryData, type Playlist, type Track } from './library'
 
 const DELETED_KEY = 'playlists.deleted'
 
@@ -21,20 +21,57 @@ function loadDeleted(): Record<string, number> {
 }
 const saveDeleted = (d: Record<string, number>) => setSetting(DELETED_KEY, JSON.stringify(pruneDeleted(d)))
 
-/** Sends this side's copy: to the link worker on the PC, to the PC on the phone (quietly, if it's not connected). */
-function send(s: SyncState, tracks: Track[]) {
-  const pc = host()?.link?.pushPlaylists
-  if (pc) return pc(JSON.stringify(s))
-  void phoneLink?.putPlaylists?.({ json: JSON.stringify({ lists: toWire(s.lists, tracks), deleted: s.deleted }) }).catch(() => {})
+/** PC: what the phones get: every playlist but Favorites (each device keeps its own). */
+const forPhones = (s: SyncState) => JSON.stringify({ lists: s.lists.filter((p) => !isFavoritesList(p)), deleted: s.deleted })
+
+/** PC: hands its copy to the link worker. A phone sends nothing back (§98). */
+function send(s: SyncState) {
+  host()?.link?.pushPlaylists?.(forPhones(s))
+}
+
+/**
+ * Phone: the PC's playlists (marked as the PC's) followed by this phone's own. A PC playlist the PC no longer has
+ * goes; the phone's own and its Favorites are never touched.
+ */
+export function withPcLists(mine: Playlist[], pc: Playlist[]): Playlist[] {
+  const fromPc = pc.filter((p) => !isFavoritesList(p)).map((p) => ({ ...p, origin: 'pc' as const }))
+  const pcIds = new Set(fromPc.map((p) => p.id))
+  return [...fromPc, ...mine.filter((p) => (isFavoritesList(p) || !isPcPlaylist(p)) && !pcIds.has(p.id))]
+}
+
+// ---- §98: the PC's playlists a phone has hidden (setting 'playlists.hidden', ids)
+const HIDDEN_KEY = 'playlists.hidden'
+export function hiddenPlaylists(): string[] {
+  try {
+    const v = JSON.parse(String(getSetting(HIDDEN_KEY) || '[]')) as unknown
+    return Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : []
+  } catch {
+    return []
+  }
+}
+export const setPlaylistHidden = (id: string, hidden: boolean) =>
+  setSetting(HIDDEN_KEY, JSON.stringify(hidden ? [...new Set([...hiddenPlaylists(), id])] : hiddenPlaylists().filter((x) => x !== id)))
+let hiddenRaw = ''
+let hiddenSet = new Set<string>()
+/** The hidden ids, re-rendering when they change. */
+export function useHiddenPlaylists(): Set<string> {
+  return useSyncExternalStore(subscribeSettings, () => {
+    const raw = String(getSetting(HIDDEN_KEY) || '')
+    if (raw !== hiddenRaw) {
+      hiddenRaw = raw
+      hiddenSet = new Set(hiddenPlaylists())
+    }
+    return hiddenSet
+  })
 }
 
 /** A local edit: new or changed playlists get the time, deletes are remembered, and the other side is told. */
-export function localEdit(prev: Playlist[], next: Playlist[], tracks: Track[]): Playlist[] {
+export function localEdit(prev: Playlist[], next: Playlist[], _tracks: Track[]): Playlist[] {
   const before = { lists: prev, deleted: loadDeleted() }
   const s = stamp(prev, next, before.deleted)
   if (sameState(s, before)) return s.lists
   saveDeleted(s.deleted)
-  send(s, tracks)
+  send(s)
   return s.lists
 }
 
@@ -49,17 +86,10 @@ export function usePlaylistLink(data: LibraryData | null, save: (lists: Playlist
   useEffect(() => {
     const link = host()?.link
     if (!loaded || !link?.pushPlaylists) return
-    link.pushPlaylists(JSON.stringify(mine()))
-    const offLists = link.onPlaylists?.((sent) => {
-      const theirs = asState(sent)
-      if (!theirs) return
-      const was = mine()
-      const m = merge(was, theirs)
-      const next = { lists: resolveMissing(m.lists, ref.current?.tracks ?? []), deleted: m.deleted }
-      saveDeleted(next.deleted)
-      if (!sameState(next, was)) save(next.lists)
-      link.pushPlaylists?.(JSON.stringify(next))
-    })
+    link.pushPlaylists(forPhones(mine()))
+    // §98: the PC is king. A phone on an older version may still send its copy: it's not merged, just answered
+    // with the PC's own, so that phone comes back in line
+    const offLists = link.onPlaylists?.(() => { link.pushPlaylists?.(forPhones(mine())) })
     const offUploads = link.onUploaded?.(() => { void scan().catch(() => {}) })
     return () => { offLists?.(); offUploads?.() }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -75,7 +105,7 @@ export function usePlaylistLink(data: LibraryData | null, save: (lists: Playlist
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tracks, save])
 
-  // phone: fetch the PC's copy whenever the link says something changed, merge, and send the merged copy back
+  // phone: fetch the PC's playlists whenever the link says something changed; nothing is sent back
   useEffect(() => {
     const link = phoneLink
     if (!loaded || !link?.playlists) return
@@ -87,13 +117,9 @@ export function usePlaylistLink(data: LibraryData | null, save: (lists: Playlist
         const r = await link.playlists!()
         const wire = r?.json ? asState(JSON.parse(r.json)) : null
         if (!wire) return
-        const songs = ref.current?.tracks ?? []
         const was = mine()
-        const m = merge(was, { lists: fromWire(wire.lists, songs), deleted: wire.deleted })
-        saveDeleted(m.deleted)
-        if (!sameState(m, was)) save(m.lists)
-        const back = { lists: toWire(m.lists, songs), deleted: m.deleted }
-        if (!sameState(back, wire)) await link.putPlaylists?.({ json: JSON.stringify(back) })
+        const next = { lists: withPcLists(was.lists, fromWire(wire.lists, ref.current?.tracks ?? [])), deleted: was.deleted }
+        if (!sameState(next, was) || next.lists.some((p, i) => p.origin !== was.lists[i]?.origin)) save(next.lists)
       } catch {
         // not connected: the next change tries again
       } finally {

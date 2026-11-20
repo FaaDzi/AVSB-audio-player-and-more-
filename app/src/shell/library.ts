@@ -91,6 +91,8 @@ export interface Track {
   path: string
   /** The folder the file sits in, full path. */
   folder: string
+  /** Android: the file's name (its path is a content:// link). §98 imports match on it. */
+  file?: string
   /** The library folder it was found under. */
   root?: string
   /** Source of the track ('pc' when streamed from a paired PC). */
@@ -153,6 +155,8 @@ export interface Playlist {
   missing?: Record<string, { title: string; artist: string; sec: number }>
   /** A cover of your own (a small square JPEG data URL); without one the first song's cover shows. */
   cover?: string
+  /** §98: set on a phone for the PC's playlists. The PC owns them: the phone can play, hide or copy them, not edit. */
+  origin?: 'pc'
 }
 
 export interface LibraryData {
@@ -1145,7 +1149,9 @@ export function genreBadge(genre: string): string {
 }
 
 // ---- playlists (plan Phase 4C). "Favorites" is the heart's own list, so it doesn't light the yellow +.
-const isFavoritesList = (p: Playlist) => p.name.toLowerCase() === 'favorites'
+export const isFavoritesList = (p: Playlist) => p.name.toLowerCase() === 'favorites'
+/** §98: the PC's playlist seen on a phone: no edits here, Delete hides it. */
+export const isPcPlaylist = (p: Playlist) => p.origin === 'pc'
 
 /** Names of the user's own playlists holding this song (not Favorites). */
 export const playlistNamesForTrack = (playlists: Playlist[], trackId: string): string[] =>

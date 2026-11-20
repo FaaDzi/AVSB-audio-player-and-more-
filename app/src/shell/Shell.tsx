@@ -1,4 +1,4 @@
-import { checkDaily, getUpdate, type Update } from './updates'
+import { checkNow, checkOnStart, getUpdate, type Update } from './updates'
 import { version as appVersion } from '../../package.json'
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { Dialog, Icon, IconButton, placeholderCoverImage } from './ui'
@@ -142,8 +142,33 @@ export function Shell() {
   const [update, setUpdate] = useState<Update | null>(null)
   // the download's progress (0-1) while the app fetches it, or the reason it stopped
   const [fetching, setFetching] = useState<number | string | null>(null)
+  // §97: on Android (phone or tablet), pulling a page down from its very top asks GitHub again (at most every 10 s)
   useEffect(() => {
-    void checkDaily().then(setUpdate)
+    if (Capacitor.getPlatform() !== 'android') return
+    let start: number | null = null
+    let last = 0
+    const down = (e: TouchEvent) => {
+      const page = (e.target as Element | null)?.closest?.('.ms-scroll, .ms-settings-body, .ms-settings-list')
+      start = page && page.scrollTop <= 0 && e.touches.length === 1 ? e.touches[0].clientY : null
+    }
+    const up = (e: TouchEvent) => {
+      if (start === null) return
+      const pulled = e.changedTouches[0].clientY - start
+      start = null
+      if (pulled < 140 || Date.now() - last < 10000) return
+      last = Date.now()
+      setToast('Checking for a new version…')
+      void checkNow().then((u) => (u ? setUpdate(u) : setToast(`AVSB ${appVersion} is the newest`)))
+    }
+    document.addEventListener('touchstart', down, { passive: true })
+    document.addEventListener('touchend', up, { passive: true })
+    return () => {
+      document.removeEventListener('touchstart', down)
+      document.removeEventListener('touchend', up)
+    }
+  }, [])
+  useEffect(() => {
+    void checkOnStart().then(setUpdate)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   useEffect(() => {

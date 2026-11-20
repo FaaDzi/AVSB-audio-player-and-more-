@@ -35,6 +35,8 @@ import { AutoEqCard, EqGraph, FilterCards, FineTuneCard, ImportDeviceDialog, Tar
 import { curveAt, eqScene, TUNE_STEP_DB, tuneAt, type AutoEqResult } from '../eqStudio'
 import { setTone as playToneAt, stopTone } from '../eqTone'
 import { gearName, isPhoneSpeaker, typicalSpeakerDb } from '../sound/phoneSpeaker'
+import { phoneLink } from '../linkClient'
+import { SongCacheRow } from './DataNetworkSection'
 import { checkNow, getUpdate, type Update } from '../updates'
 import { PEQ_MAX_FILTERS, tidyFilter } from '../../eq/peq'
 import { useRefs } from '../tournament/engine'
@@ -1048,6 +1050,7 @@ export function Storage() {
       <section className="ms-set-section">
         <h3>Cached Data</h3>
         <div className="ms-set-group">
+          {phoneLink && <SongCacheRow />}
           {CACHES.map(([name, sub, icon, , files], i) => (
             <div className="ms-set-row" key={name}>
               <Icon name={icon} />
