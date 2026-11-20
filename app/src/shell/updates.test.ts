@@ -20,9 +20,9 @@ describe('update check (plan §83)', () => {
   })
   it('Stable takes the newest full release and this platform\'s file; Preview may take a pre-release', () => {
     const list = [rel('v1.1.0'), rel('v1.3.0-preview.2', true), rel('v1.2.0'), rel('v9.0.0', false, true)]
-    expect(pickUpdate(list, '1.1.0', false, true)).toEqual({ version: '1.2.0', url: 'https://x/v1.2.0.apk' })
+    expect(pickUpdate(list, '1.1.0', false, true)).toEqual({ version: '1.2.0', preview: false, url: 'https://x/v1.2.0.apk' })
     expect(pickUpdate(list, '1.1.0', false, false)?.url).toBe('https://x/v1.2.0.zip')
-    expect(pickUpdate(list, '1.1.0', true, true)?.version).toBe('1.3.0-preview.2')
+    expect(pickUpdate(list, '1.1.0', true, true)).toMatchObject({ version: '1.3.0-preview.2', preview: true })
     expect(pickUpdate(list, '1.2.0', false, true)).toBeNull()
     expect(pickUpdate([{ ...rel('v1.2.0'), assets: [] }], '1.1.0', false, true)?.url).toBe('https://x/v1.2.0')
   })

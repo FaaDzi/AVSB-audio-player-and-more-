@@ -16,6 +16,7 @@ import { BulkMetaRows, DuplicatesPage, LibraryCount, LibraryFolders, MetadataNam
 import { scan, triggerMetadataRefresh } from '../localLibrary'
 import { About, DataNetworkSection, Equalizer, HeaderSlot, SwapPage, Logs, NetworkEmpty, Phone, PriorityPage, Shortcuts, Storage } from './CustomPages'
 import { ProfileCard } from './LinkPage'
+import { AppUpdateRow, UpdateDot } from './AppUpdate'
 import { SavedEqPage } from './SavedEqPage'
 import { onPhoneBack, usePhone } from '../PhoneNav'
 
@@ -126,6 +127,7 @@ export function SettingsPage({ initial }: { initial?: string }) {
                     <button type="button" key={p.id} className={`ms-settings-item${selected === p.id ? ' on' : ''}`} aria-current={selected === p.id ? 'page' : undefined} onClick={() => show(p.id)}>
                       <Icon name={p.icon} fill={selected === p.id} />
                       <span className="grow">{p.title}</span>
+                      {p.id === 'app' && <UpdateDot />}
                     </button>
                   ))}
                 </div>
@@ -182,6 +184,7 @@ function Sections({ page, ctx }: { page: Page; ctx: Ctx }) {
             {section.block === 'separator-preview' && <SeparatorPreview />}
             {section.block === 'metadata-naming' && <MetadataNamingSection />}
             {section.block === 'metadata-bulk' && <BulkMetaRows />}
+            {section.block === 'app-update' && <AppUpdateRow />}
             {rows.length > 0 && (
               <div className="ms-set-group">
                 {rows.map((row) => <SettingRow key={row.label} row={row} ctx={ctx} />)}

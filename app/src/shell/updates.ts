@@ -2,6 +2,7 @@
 // pulled down from its top), and says so when one is newer than this build. "Download" opens that release's file for this platform; nothing is installed behind your back.
 // Android installs the APK over the app (same signing key); on Windows it's the zip (your data lives in %APPDATA%).
 import { registerPlugin } from '@capacitor/core'
+import { useSyncExternalStore } from 'react'
 import { version } from '../../package.json'
 import { isAndroid, openExternal } from '../platform'
 import { getSetting } from './settings/store'
@@ -18,6 +19,8 @@ export interface Release {
 
 export interface Update {
   version: string
+  /** A pre-release (the Preview channel): its dot is blue, a stable one's red. */
+  preview: boolean
   /** The file for this platform, or the release page when it has none. */
   url: string
 }
@@ -45,7 +48,7 @@ export function pickUpdate(releases: Release[], current: string, preview: boolea
   }
   if (!best) return null
   const file = best.assets.find((a) => (android ? /\.apk$/i : /windows.*\.zip$|\.exe$/i).test(a.name))
-  return { version: best.tag_name.replace(/^v/i, ''), url: file?.browser_download_url ?? best.html_url }
+  return { version: best.tag_name.replace(/^v/i, ''), preview: best.prerelease, url: file?.browser_download_url ?? best.html_url }
 }
 
 /** Asks GitHub now. Null when there's nothing newer or GitHub can't be reached. */
@@ -54,11 +57,22 @@ export async function checkNow(): Promise<Update | null> {
     const r = await fetch(RELEASES, { headers: { Accept: 'application/vnd.github+json' } })
     if (!r.ok) return null
     const found = pickUpdate((await r.json()) as Release[], version, getSetting('channel') === 'Preview', isAndroid())
+    setFound(found)
     return found
   } catch {
     return null
   }
 }
+
+// §97: the newest release the last check found, for the dot on Settings → App and its Download row
+let found: Update | null = null
+const watchers = new Set<() => void>()
+function setFound(u: Update | null) {
+  if (u?.version === found?.version && u?.url === found?.url) return
+  found = u
+  watchers.forEach((w) => w())
+}
+export const useFoundUpdate = () => useSyncExternalStore((w) => { watchers.add(w); return () => { watchers.delete(w) } }, () => found)
 
 /** §97: the automatic check, at every start (it used to rest a day, so a new release went unseen), with "Check for Updates" on. */
 export async function checkOnStart(): Promise<Update | null> {

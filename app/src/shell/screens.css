@@ -878,3 +878,6 @@ kbd { flex: none; font: 400 15px var(--font-ui); color: var(--text-dim); white-s
 .ms-detail-cover-btn:hover .ms-detail-cover-edit, .ms-detail-cover-edit:focus-visible, .ms-window.phone .ms-detail-cover-edit { opacity: 1; }
 .ms-detail-cover-edit:hover { transform: scale(1.06); }
 .ms-detail-cover-edit:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* §97: a new version on GitHub: red for stable, blue for preview */
+.ms-update-dot { width: 9px; height: 9px; flex: none; border-radius: 50%; }

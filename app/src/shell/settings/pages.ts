@@ -50,7 +50,7 @@ export interface Section {
   when?: Rule
   rows: Row[]
   /** A card drawn instead of, or after, the group of rows. */
-  block?: 'style-preview' | 'library-count' | 'network-empty' | 'separator-preview' | 'library-folders' | 'metadata-naming' | 'metadata-bulk' | 'data-network'
+  block?: 'style-preview' | 'library-count' | 'network-empty' | 'separator-preview' | 'library-folders' | 'metadata-naming' | 'metadata-bulk' | 'data-network' | 'app-update'
   /** A dim info card. */
   card?: { icon: string; title?: string; text: string }
 }
@@ -332,7 +332,7 @@ export const PAGE_GROUPS: Page[][] = [
   [
     {
       id: 'app', title: 'App', icon: 'tune', sections: [
-        { title: 'App', rows: [
+        { title: 'App', block: 'app-update', rows: [
           toggle('updates', 'Check for Updates', 'Notify when new version is available', 'system_update', true),
           seg('channel', 'Update Channel', words('Stable', 'Preview'), 'Stable', { sub: 'Stable releases only', icon: 'verified', note: 'Preview may contain bugs or incomplete features' }),
           choice('rewind_frequency', 'Rewind recap check', ['1 Day', '1 Week', '1 Month', '1 Year'], '1 Week', 'auto_awesome'),
