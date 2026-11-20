@@ -683,7 +683,7 @@ export function MetadataNamingSection() {
               </div>
             </div>
             <button type="button" className="ms-btn tonal" onClick={() => setReviewMode('matched')}>
-              Manage matched tags →
+              Tags →
             </button>
           </div>
         </div>

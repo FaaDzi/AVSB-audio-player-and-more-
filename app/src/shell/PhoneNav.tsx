@@ -55,7 +55,34 @@ export function PhoneTabs({ route, go }: { route: Route; go: (r: Route) => void 
 }
 
 /** The bar above the tabs: tap opens Now Playing; play/pause and next stay one tap away. */
+/** §91 C: while songs are being picked, their actions take the mini player's place (Samsung Music). */
+export interface SelectionAction { icon: string; label: string; onClick: () => void; disabled?: boolean }
+let selectionBar: SelectionAction[] | null = null
+const barListeners = new Set<() => void>()
+export function setSelectionBar(actions: SelectionAction[] | null) {
+  selectionBar = actions
+  barListeners.forEach((l) => l())
+}
+const useSelectionBar = () => useSyncExternalStore((l) => { barListeners.add(l); return () => { barListeners.delete(l) } }, () => selectionBar)
+
 export function PhoneMini() {
+  const bar = useSelectionBar()
+  if (bar) {
+    return (
+      <div className="ms-pselect" role="toolbar" aria-label="Selected songs">
+        {bar.map((a) => (
+          <button type="button" key={a.label} disabled={a.disabled} onClick={a.onClick}>
+            <Icon name={a.icon} size={24} />
+            <span>{a.label}</span>
+          </button>
+        ))}
+      </div>
+    )
+  }
+  return <PhoneMiniPlayer />
+}
+
+function PhoneMiniPlayer() {
   const position = useLivePosition()
   const { current, playing, loading, setPlaying, setNowPlaying, step, data, replaceData } = useShell()
   const isBuffering = useIsBuffering()

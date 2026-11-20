@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { Cover, Dialog, Icon, IconButton, Menu, TopBar } from '../ui'
+import { useMemo, useState } from 'react'
+import { Cover, Icon, IconButton, Menu, TopBar } from '../ui'
 import { useShell } from '../context'
 import {
-  NO_FILTERS, activeFilterCount, filterTracks, folderPath, groupAlbums, groupArtists, isPcTrack, mergeTwins, isPremiumQuality, moveItem, shuffled, sortByFileName, sortTracks, trackCount, useLibrary,
+  NO_FILTERS, activeFilterCount, filterTracks, folderPath, groupAlbums, groupArtists, isPcTrack, mergeTwins, isPremiumQuality, shuffled, sortByFileName, sortTracks, trackCount, useLibrary,
   type Filters, type SortMode, type Track,
 } from '../library'
 import { missingTrack } from '../playlistSync'
@@ -36,6 +36,12 @@ export const PLAYLIST_SORTS: readonly [PlaylistSortMode, string, string][] = [
   ['duration-desc', 'Track Duration (Longest)', 'timelapse'],
   ['quality', 'Audio Quality / Format (Hi-Res FLAC, CD FLAC, Lossy)', 'high_quality'],
 ]
+
+/** §94 B: the tool row's button says only this, so sort, Filter and Edit order fit on one line on the phone. */
+const SHORT_SORT: Record<PlaylistSortMode, string> = {
+  custom: 'Playlist order', title: 'Title', artist: 'Artist', album: 'Album', 'added-desc': 'Newest', 'added-asc': 'Oldest',
+  'duration-asc': 'Shortest', 'duration-desc': 'Longest', quality: 'Quality',
+}
 
 export type PlaylistSourceFilter = 'all' | 'local' | 'pc' | 'lossless'
 
@@ -119,7 +125,7 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
     [shelfId, libraryTracks, listening],
   )
   const playlist = data.playlists.find((p) => p.id === id) ?? (shelf ? { id, name: shelf.title, tracks: shelf.tracks.map((t) => t.id) } : undefined)
-  const [editingOrder, setEditingOrder] = useState(false)
+  const [editing, setEditing] = useState(false)
   const [coverMenu, setCoverMenu] = useState<{ x: number; y: number } | null>(null)
   const [query, setQuery] = useState('')
   const [sourceFilter, setSourceFilter] = useState<PlaylistSourceFilter>('all')
@@ -160,21 +166,13 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
   const currentSortLabel = PLAYLIST_SORTS.find(([k]) => k === sortMode)?.[1] ?? 'Custom / Playlist Order'
   const currentFilterLabel = PLAYLIST_SOURCE_CHIPS.find(([k]) => k === sourceFilter)?.[1] ?? 'All'
 
-  if (editingOrder) {
-    return (
-      <OrderEditor
-        name={playlist.name}
-        cover={cover}
-        tracks={tracks}
-        onClose={() => setEditingOrder(false)}
-        onSave={(ids) => {
-          // a song missing from the library keeps its place at the end, so saving an order can't lose it
-          update({ tracks: [...ids, ...playlist.tracks.filter((x) => !tracks.some((t) => t.id === x))] })
-          setEditingOrder(false)
-          showToast('Order saved')
-        }}
-      />
-    )
+  // §91 C/D: songs move right in the list, only while it shows the playlist's own order; each move is saved at once
+  const canMove = !shelf && sortMode === 'custom' && sourceFilter === 'all' && !query
+  const reorder = (ids: string[]) => {
+    const before = playlist.tracks
+    // a song missing from the library keeps its place at the end, so a move can't lose it
+    update({ tracks: [...ids, ...playlist.tracks.filter((x) => !tracks.some((t) => t.id === x))] })
+    showToast({ message: 'Order saved', action: { label: 'Undo', onClick: () => update({ tracks: before }) } })
   }
 
   return (
@@ -232,14 +230,14 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
           </label>
           {/* §86 F: one row. Sort on the left, the filter as one button beside it, and "Edit order" while the
               playlist shows in its own order */}
-          <div className="ms-tools" style={{ flexWrap: 'wrap', gap: 8 }}>
+          <div className="ms-tools ms-pl-tools">
             <button
               type="button"
               className="ms-tool"
               aria-label={`Sort playlist: ${currentSortLabel}`}
               onClick={(e) => setSortMenu(below(e))}
             >
-              <Icon name="sort" size={20} /> {currentSortLabel}
+              <Icon name="sort" size={20} /> {SHORT_SORT[sortMode]}
             </button>
             <button
               type="button"
@@ -249,15 +247,27 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
             >
               <Icon name="filter_list" size={20} /> {sourceFilter === 'all' ? 'Filter' : currentFilterLabel}
             </button>
-            {!shelf && sortMode === 'custom' && sourceFilter === 'all' && !query && tracks.length > 1 && (
-              <button type="button" className="ms-tool" onClick={() => setEditingOrder(true)}>
+            {!shelf && tracks.length > 1 && (
+              <button type="button" className={`ms-tool${editing ? ' on' : ''}`} onClick={() => setEditing(!editing)}>
                 <Icon name="drag_handle" size={20} /> Edit order
               </button>
             )}
           </div>
         </div>
 
-        <TrackTable tracks={visibleTracks} playlistId={shelf ? undefined : playlist.id} />
+        {editing && !canMove && (
+          <button type="button" className="ms-move-hint" onClick={() => { setSortMode('custom'); setSourceFilter('all'); setQuery('') }}>
+            <Icon name="swap_vert" size={18} /> Switch to Playlist order to move songs
+          </button>
+        )}
+        <TrackTable
+          tracks={visibleTracks}
+          playlistId={shelf ? undefined : playlist.id}
+          playlistName={playlist.name}
+          editing={editing}
+          onEditing={setEditing}
+          onReorder={canMove ? reorder : undefined}
+        />
       </div>
 
       {filterMenu && (
@@ -333,131 +343,6 @@ export function AlbumPage({ albumKey, back }: { albumKey: string; back: () => vo
         </header>
         <TrackTable tracks={album.tracks} columns={['artist', 'quality']} numbers="track" thumbs={false} />
       </div>
-    </div>
-  )
-}
-
-function OrderEditor({ name, cover, tracks, onClose, onSave }: {
-  name: string
-  cover: string
-  tracks: Track[]
-  onClose: () => void
-  onSave: (ids: string[]) => void
-}) {
-  const [before] = useState(() => tracks.map((t) => t.id))
-  const [ids, setIds] = useState(before)
-  const [discarding, setDiscarding] = useState(false)
-  const [drag, setDrag] = useState<{ id: string; offset: number } | null>(null)
-  const held = useRef<{ id: string; pointer: number; startY: number; startIndex: number; rowHeight: number; scroller: HTMLElement } | null>(null)
-  const byId = useMemo(() => new Map(tracks.map((t) => [t.id, t])), [tracks])
-  const changed = ids.some((id, i) => id !== before[i])
-
-  const follow = () => {
-    const h = held.current
-    if (!h) return
-    const moved = h.pointer + h.scroller.scrollTop - h.startY
-    const to = Math.max(0, Math.min(before.length - 1, h.startIndex + Math.round(moved / h.rowHeight)))
-    setIds((list) => moveItem(list, list.indexOf(h.id), to))
-    setDrag({ id: h.id, offset: moved - (to - h.startIndex) * h.rowHeight })
-  }
-
-  // holding a row near the top or bottom edge keeps the list moving
-  const dragging = drag !== null
-  useEffect(() => {
-    if (!dragging) return
-    let frame = 0
-    const tick = () => {
-      const h = held.current
-      if (h) {
-        const box = h.scroller.getBoundingClientRect()
-        const edge = 48
-        const speed = h.pointer < box.top + edge ? -8 : h.pointer > box.bottom - edge ? 8 : 0
-        if (speed) {
-          h.scroller.scrollTop += speed
-          follow()
-        }
-      }
-      frame = requestAnimationFrame(tick)
-    }
-    frame = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(frame)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dragging])
-
-  const grab = (e: React.PointerEvent<HTMLButtonElement>, id: string) => {
-    const row = e.currentTarget.closest<HTMLElement>('.ms-order-row')
-    const scroller = e.currentTarget.closest<HTMLElement>('.ms-scroll')
-    if (!row || !scroller) return
-    e.currentTarget.setPointerCapture(e.pointerId)
-    held.current = { id, pointer: e.clientY, startY: e.clientY + scroller.scrollTop, startIndex: ids.indexOf(id), rowHeight: row.offsetHeight, scroller }
-    setDrag({ id, offset: 0 })
-  }
-  const release = () => {
-    held.current = null
-    setDrag(null)
-  }
-
-  return (
-    <div className="ms-scroll">
-      <div className="ms-topbar">
-        <div className="ms-topbar-side"><IconButton icon="close" label="Close" filled onClick={() => (changed ? setDiscarding(true) : onClose())} /></div>
-        <div className="ms-topbar-title">Edit order</div>
-        <div className="ms-topbar-side end">
-          <button type="button" className="ms-btn text ms-order-save" disabled={!changed} onClick={() => onSave(ids)}>Save</button>
-        </div>
-      </div>
-      <div className="ms-detail">
-        <DetailHeader cover={cover} title={name} sub={<><Icon name="queue_music" size={18} /> {trackCount(ids.length)}</>} />
-        <p className="ms-hint">Drag a track by its handle, or touch and hold it, to move it.</p>
-        <div className="ms-order">
-          {ids.map((id, i) => {
-            const t = byId.get(id)
-            if (!t) return null
-            const moving = drag?.id === id
-            return (
-              <div className={`ms-order-row${moving ? ' moving' : ''}`} key={id} style={moving ? { transform: `translateY(${drag.offset}px)` } : undefined}>
-                <Cover id={t.cover} className="ms-order-cover" genre={t.genre} speciality={t.category} title={t.title} />
-                <div className="grow ms-order-text"><div className="ms-ellipsis">{t.title}</div><small className="ms-ellipsis">{t.artist || 'Unknown Artist'}</small></div>
-                <button
-                  type="button"
-                  className="ms-order-handle"
-                  aria-label={`Move ${t.title}. Use the up and down arrow keys.`}
-                  onPointerDown={(e) => grab(e, id)}
-                  onPointerMove={(e) => {
-                    if (!held.current) return
-                    held.current.pointer = e.clientY
-                    follow()
-                  }}
-                  onPointerUp={release}
-                  onPointerCancel={release}
-                  onKeyDown={(e) => {
-                    const step = e.key === 'ArrowUp' ? -1 : e.key === 'ArrowDown' ? 1 : 0
-                    if (!step) return
-                    e.preventDefault()
-                    setIds((list) => moveItem(list, i, i + step))
-                  }}
-                >
-                  <Icon name="drag_handle" />
-                </button>
-              </div>
-            )
-          })}
-        </div>
-      </div>
-      {discarding && (
-        <Dialog
-          title="Discard changes?"
-          onClose={() => setDiscarding(false)}
-          footer={
-            <>
-              <button type="button" className="ms-btn text" onClick={() => setDiscarding(false)}>Cancel</button>
-              <button type="button" className="ms-btn danger" onClick={onClose}>Discard</button>
-            </>
-          }
-        >
-          <p>Your new track order hasn't been saved.</p>
-        </Dialog>
-      )}
     </div>
   )
 }

@@ -296,6 +296,26 @@
 .ms-window.phone .ms-tabs { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
 .ms-window.phone .ms-tabs > * { flex: none; }
 
+/* §91 C: the playlist tool row fits one line (Playlist order · Filter · Edit order) */
+.ms-window.phone .ms-pl-tools .ms-tool { padding: 0 12px; gap: 6px; font-size: 13px; }
+.ms-window.phone .ms-tr .ms-td.title { gap: 10px; }
+
+/* §91 C: "✕ · All · n selected" sits below the status bar, over the page's header */
+.ms-window.phone .ms-select-bar { top: 0; height: calc(64px + var(--sat)); padding-top: var(--sat); z-index: 6; background: var(--page); }
+:root[data-style='gameshow'] .ms-window.phone .ms-select-bar { background: var(--gs-rail, #1b0d26); }
+:root[data-style='gameshow'] .ms-select-bar b { color: #fff; }
+
+/* §91 C: the mini player's place while songs are picked: Play · Add · Share · Remove */
+.ms-pselect {
+  flex: none; height: 72px; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; align-items: center;
+  background: color-mix(in srgb, var(--chrome) 88%, var(--accent) 12%); border-top: 1px solid var(--hairline);
+}
+.ms-pselect button { display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: center; font-size: 12px; color: var(--text-strong); }
+.ms-pselect button:disabled { opacity: 0.38; }
+:root[data-style='gameshow'] .ms-pselect { background: var(--gs-player, #1b0d26); border-top: 1px solid rgba(255, 255, 255, 0.1); }
+:root[data-style='gameshow'] .ms-pselect button { color: #fff; font-weight: 600; }
+:root[data-style='gameshow'] .ms-check.on, :root[data-style='gameshow'] .ms-select-all.on .ms-check { background: var(--gs-gold, #f5b335); border-color: var(--gs-gold, #f5b335); color: var(--gs-card-cream-text, #210f2c); }
+
 /* no hover on a phone: each row's ⋮ is always there */
 .ms-window.phone .ms-rowmenu { opacity: 0.8; }
 

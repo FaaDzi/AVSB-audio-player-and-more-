@@ -184,7 +184,8 @@ export function Shell() {
 
   useEffect(() => {
     if (!toast) return
-    const id = window.setTimeout(() => setToast(null), 3800)
+    // one with a button (Undo) stays longer, so there's time to reach it
+    const id = window.setTimeout(() => setToast(null), typeof toast !== 'string' && toast.action ? 6000 : 3800)
     return () => window.clearTimeout(id)
   }, [toast])
 
@@ -395,8 +396,13 @@ export function Shell() {
     }
     const listener = CapApp.addListener('backButton', () => {
       // a menu or dialog closes first; then panel/Now Playing, which covers every page's own back
+      // (§94 D: this used to return here, so back did nothing while a menu or dialog was open; the newest handler is
+      // the popup's own, which closes it)
       const popup = document.querySelector('.ms-menu-scrim:not(.ms-exit), .ms-scrim:not(.ms-exit)')
-      if (popup) return
+      if (popup) {
+        runPhoneBack(() => {})
+        return
+      }
       if (backState.current.panel) {
         setPanel(null)
       } else if (backState.current.nowPlaying) {

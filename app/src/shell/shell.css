@@ -331,6 +331,16 @@ small, .ms-card-sub, .ms-player-artist, .ms-queue-sub, .ms-sr-text small, .ms-se
 .ms-tr.picked, .ms-tr.picked:hover { background: var(--nav-selected); }
 .ms-select-bar { position: absolute; left: 0; right: 0; top: 0; z-index: 5; height: 52px; padding: 0 16px; display: flex; align-items: center; background: var(--page); }
 .ms-select-bar b { flex: 1; text-align: center; padding-right: 40px; font-weight: 600; font-size: 17px; color: var(--text-strong); }
+/* §91 C/D: selection and moving songs. Round checks on the phone, highlighted rows on the PC. */
+.ms-select-all { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; margin-left: 8px; font-size: 11px; color: var(--text-dim); }
+.ms-check { width: 22px; height: 22px; flex: none; border-radius: 50%; border: 2px solid var(--text-dim); display: inline-flex; align-items: center; justify-content: center; color: transparent; transition: background var(--motion-fast), border-color var(--motion-fast); }
+.ms-check.on, .ms-select-all.on .ms-check { background: var(--accent); border-color: var(--accent); color: var(--on-accent, #fff); }
+.ms-tr.moving { z-index: 3; overflow: visible; background: var(--control-hover); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45); }
+.ms-table.movable .ms-tr:not(.head) { cursor: grab; }
+.ms-table.movable .ms-tr.moving { cursor: grabbing; }
+.ms-drag-handle { width: 44px; height: 44px; margin-left: -8px; display: flex; align-items: center; justify-content: center; color: var(--text-dim); touch-action: none; cursor: grab; }
+.ms-pl-tools { flex-wrap: nowrap; gap: 8px; }
+.ms-move-hint { display: flex; align-items: center; gap: 8px; margin: 12px 0 0; padding: 8px 14px; border-radius: 20px; background: var(--accent-container); color: var(--on-accent-container); font-size: 14px; }
 .ms-td.dim { color: var(--text); }
 .ms-td { min-width: 0; }
 .ms-td.num { text-align: right; color: var(--text); font-variant-numeric: tabular-nums; }
@@ -361,16 +371,6 @@ small, .ms-card-sub, .ms-player-artist, .ms-queue-sub, .ms-sr-text small, .ms-se
 
 /* edit order */
 .ms-hint { margin-top: 44px; padding: 0 16px; font-size: 14px; color: var(--text); }
-.ms-order { margin-top: 13px; }
-.ms-order-row { position: relative; display: flex; align-items: center; gap: 12px; min-height: 76px; padding: 0 16px 0 20px; border-radius: 10px; background: var(--page); }
-.ms-order-row:hover { background: rgb(var(--ink) / 0.05); }
-.ms-order-row.moving { z-index: 2; background: var(--control-hover); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5); }
-.ms-order-cover { width: 40px; height: 40px; flex: none; border-radius: var(--radius-thumb); object-fit: cover; }
-.ms-order-text { font-size: 17px; line-height: 24px; color: var(--text-strong); }
-.ms-order-text small { font-size: 14px; line-height: 20px; color: var(--text-dim); }
-.ms-order-handle { user-select: none; width: 48px; height: 48px; flex: none; display: flex; align-items: center; justify-content: center; color: var(--text-dim); cursor: grab; touch-action: none; }
-.ms-order-row.moving .ms-order-handle { cursor: grabbing; }
-.ms-order-save:disabled { color: var(--text-faint); opacity: 0.7; }
 
 /* menus and dialogs */
 .ms-menu-scrim { position: fixed; inset: 0; z-index: 20; }
