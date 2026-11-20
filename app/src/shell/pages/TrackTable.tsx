@@ -197,7 +197,8 @@ export function TrackTable({ tracks, columns = ['artist', 'album', 'quality'], n
               if (!phone && e.shiftKey && lastClicked.current !== null) {
                 const [a, b] = [Math.min(lastClicked.current, place), Math.max(lastClicked.current, place)]
                 setPicked(new Set(order.slice(a, b + 1).map((j) => tracks[j].id)))
-              } else if (!phone && (e.ctrlKey || e.metaKey)) {
+              } else if (!phone && (e.ctrlKey || e.metaKey || e.shiftKey)) {
+                // Ctrl, or a first Shift-click with nothing to extend from: this row joins the selection
                 toggle(t.id)
                 lastClicked.current = place
               } else if (selecting) {

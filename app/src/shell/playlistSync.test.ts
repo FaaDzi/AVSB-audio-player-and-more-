@@ -59,4 +59,12 @@ describe('playlists shared between PC and phone (§80 A)', () => {
     expect(s.deleted).toEqual({ a: 1 })
     expect(sameState({ lists: [list('a', ['1'], 3)], deleted: {} }, { lists: [{ ...list('a', ['1'], 3), missing: {} }], deleted: {} })).toBe(true)
   })
+
+  it('an edit stamped by a clock running ahead does not beat a newer edit made here (§94 C)', () => {
+    // the other side edited earlier, but its clock is 5 minutes fast
+    const theirs = asState({ lists: [list('a', ['1', '2'], Date.now() + 300_000)], deleted: {} })!
+    const mine = { lists: [list('a', ['2', '1'], Date.now())], deleted: {} }
+    expect(theirs.lists[0].updated).toBeLessThanOrEqual(mine.lists[0].updated)
+    expect(merge(mine, theirs).lists[0].tracks).toEqual(['2', '1'])
+  })
 })

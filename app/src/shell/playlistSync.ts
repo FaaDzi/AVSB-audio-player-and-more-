@@ -65,11 +65,13 @@ export function asState(v: unknown): SyncState | null {
       id: p.id.slice(0, 100),
       name: p.name.slice(0, 200),
       tracks: p.tracks.slice(0, 20000),
-      updated: Number(p.updated) || 0,
+      // §94 C: a stamp from the future (the other device's clock runs ahead) counts as now, so an older edit made
+      // there can't beat a newer one made here; a tie keeps this side's copy
+      updated: Math.min(Number(p.updated) || 0, Date.now()),
       ...(p.missing && typeof p.missing === 'object' ? { missing: p.missing } : {}),
       ...(typeof p.cover === 'string' && p.cover.startsWith('data:image/') && p.cover.length <= MAX_COVER ? { cover: p.cover } : {}),
     })),
-    deleted: Object.fromEntries(Object.entries(deleted).filter(([, at]) => typeof at === 'number')),
+    deleted: Object.fromEntries(Object.entries(deleted).filter(([, at]) => typeof at === 'number').map(([id, at]) => [id, Math.min(at as number, Date.now())])),
   }
 }
 

@@ -150,6 +150,7 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
     () => sortAndFilterPlaylistTracks(tracks, query, sourceFilter, sortMode),
     [tracks, query, sourceFilter, sortMode],
   )
+  const coverStyle = useCoverStyle(playlist?.cover || tracks.find((t) => t.cover)?.cover)
 
   if (!playlist) return <div className="ms-empty"><p>{shelfId ? 'This mix has been refreshed. Home has new ones.' : 'This playlist no longer exists.'}</p></div>
   const update = (patch: Partial<typeof playlist>) => replaceData({ ...data, playlists: data.playlists.map((p) => (p.id === id ? { ...p, ...patch } : p)) })
@@ -183,6 +184,8 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
         <DetailHeader
           cover={cover}
           title={playlist.name}
+          kicker={shelf ? 'Mix' : 'Playlist'}
+          style={coverStyle}
           onCover={shelf ? undefined : (e) => (playlist.cover ? setCoverMenu(below(e)) : chooseCover())}
           sub={
             <>
@@ -190,6 +193,7 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
               {visibleTracks.length !== tracks.length
                 ? `${visibleTracks.length} of ${trackCount(tracks.length)}`
                 : trackCount(tracks.length)}
+              {' · '}{totalTime(visibleTracks)}
             </>
           }
           actions={
@@ -426,14 +430,22 @@ export function FolderPage({ folder, back }: { folder: string; back: () => void 
   )
 }
 
-function DetailHeader({ cover, title, sub, actions, genre, speciality, onCover }: { cover: string; title: string; sub: React.ReactNode; actions?: React.ReactNode; genre?: string; speciality?: string; onCover?: (e: React.MouseEvent<HTMLElement>) => void }) {
+/** "1 hr 12 min" / "48 min": a list's total length, as Spotify writes it. */
+export function totalTime(tracks: Track[]): string {
+  const min = Math.round(tracks.reduce((sum, t) => sum + (t.sec || 0), 0) / 60)
+  return min >= 60 ? `${Math.floor(min / 60)} hr ${min % 60} min` : `${min} min`
+}
+
+function DetailHeader({ cover, title, sub, actions, genre, speciality, onCover, kicker, style }: { cover: string; title: string; sub: React.ReactNode; actions?: React.ReactNode; genre?: string; speciality?: string; onCover?: (e: React.MouseEvent<HTMLElement>) => void; kicker?: string; style?: React.CSSProperties }) {
   const art = <Cover id={cover} alt={title} className="ms-detail-cover" genre={genre} speciality={speciality} title={title} />
   return (
-    <header className="ms-detail-head">
+    // §91 D: with a kicker ("Playlist") the PC shows Spotify's header: a band tinted from the cover, a large title
+    <header className={`ms-detail-head${kicker ? ' band' : ''}`} style={style}>
       {/* §91 B: only the photo button changes the cover; a tap on the cover itself does nothing */}
       {onCover ? <div className="ms-detail-cover-btn">{art}<button type="button" className="ms-detail-cover-edit" aria-label="Change cover" title="Change cover" onClick={onCover}><Icon name="photo_camera" size={20} /></button></div> : art}
       <div className="ms-detail-info">
         <div>
+          {kicker && <span className="ms-detail-kicker">{kicker}</span>}
           <h1>{title}</h1>
           <p className="ms-detail-sub">{sub}</p>
         </div>

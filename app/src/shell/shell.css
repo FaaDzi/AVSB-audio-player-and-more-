@@ -301,6 +301,17 @@ small, .ms-card-sub, .ms-player-artist, .ms-queue-sub, .ms-sr-text small, .ms-se
 .ms-detail-head { display: flex; gap: 28px; padding: 0 20px; }
 .ms-detail-cover { width: 300px; height: 300px; border-radius: var(--radius-card); object-fit: cover; flex: none; }
 .ms-detail-info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: space-between; }
+/* §91 D: the PC's playlist header, Spotify style: a band from the cover colour, "Playlist", a large title */
+.ms-detail-kicker { display: block; font-size: 13px; font-weight: 600; color: var(--text-strong); }
+.ms-window:not(.phone) .ms-detail-head.band {
+  margin: 0 -8px; padding: 28px 28px 24px; align-items: flex-end; border-radius: var(--radius-card);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--cover-primary) 42%, transparent) 0%, color-mix(in srgb, var(--cover-primary) 10%, transparent) 100%);
+}
+.ms-window:not(.phone) .ms-detail-head.band .ms-detail-cover { width: 232px; height: 232px; box-shadow: 0 8px 36px rgba(0, 0, 0, 0.45); }
+.ms-window:not(.phone) .ms-detail-head.band h1 { margin: 6px 0 10px; font-size: clamp(40px, 5.5vw, 80px); line-height: 1.02; font-weight: 800; letter-spacing: -0.02em; overflow-wrap: anywhere; }
+.ms-window:not(.phone) .ms-detail-head.band .ms-detail-actions { margin-top: 18px; }
+.ms-window:not(.phone) .ms-detail-head.band .ms-btn.play { flex: none; min-width: 132px; padding: 0 28px; font-weight: 600; background: var(--cover-primary); color: var(--cover-on-primary); }
+.ms-window.phone .ms-detail-kicker { display: none; }
 .ms-detail-info h1 { margin-top: 96px; font-size: 32px; font-weight: 600; color: var(--text-strong); }
 .ms-detail-sub { margin-top: 6px; display: flex; align-items: center; gap: 6px; font-weight: 500; font-size: 14px; color: var(--text); }
 .ms-detail-actions { display: flex; align-items: center; gap: 8px; }
@@ -336,6 +347,8 @@ small, .ms-card-sub, .ms-player-artist, .ms-queue-sub, .ms-sr-text small, .ms-se
 .ms-check { width: 22px; height: 22px; flex: none; border-radius: 50%; border: 2px solid var(--text-dim); display: inline-flex; align-items: center; justify-content: center; color: transparent; transition: background var(--motion-fast), border-color var(--motion-fast); }
 .ms-check.on, .ms-select-all.on .ms-check { background: var(--accent); border-color: var(--accent); color: var(--on-accent, #fff); }
 .ms-tr.moving { z-index: 3; overflow: visible; background: var(--control-hover); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45); }
+/* Shift-click selects rows, not the text in them */
+.ms-tr:not(.head) { user-select: none; }
 .ms-table.movable .ms-tr:not(.head) { cursor: grab; }
 .ms-table.movable .ms-tr.moving { cursor: grabbing; }
 .ms-drag-handle { width: 44px; height: 44px; margin-left: -8px; display: flex; align-items: center; justify-content: center; color: var(--text-dim); touch-action: none; cursor: grab; }
