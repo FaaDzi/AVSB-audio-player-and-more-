@@ -403,7 +403,8 @@ export function Shell() {
 
   const push = useCallback((r: Route) => {
     setNowPlaying(false)
-    setStack((s) => [...s, r])
+    // §100: one song's details over another's is replaced, so Back leaves details instead of showing the last song
+    setStack((s) => (r.page === 'song' && s[s.length - 1]?.page === 'song' ? [...s.slice(0, -1), r] : [...s, r]))
   }, [])
   const go = useCallback((r: Route) => {
     setNowPlaying(false)

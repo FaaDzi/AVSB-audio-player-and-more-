@@ -434,8 +434,9 @@ async function lookUpAs(t: Track, coversFirst = false): Promise<Lookup> {
     ])
     : null
   const coveredQuickly = quick?.some((c) => c?.cover && matchOf(t, c) === 'strong') ?? false
-  let mbResting = false
-  if (!off.has('musicbrainz') && !coveredQuickly) {
+  // §100: while the namer runs, MusicBrainz is its own; song art takes what Deezer and iTunes have and asks again later
+  let mbResting = Boolean(coversFirst && !coveredQuickly && namingLoopActive && !off.has('musicbrainz'))
+  if (!off.has('musicbrainz') && !coveredQuickly && !mbResting) {
     const c = await fromMusicBrainz(t, coverArt, missing).catch((e) => {
       // song art carries on with Deezer and iTunes; everything else waits and asks again
       if (isRateLimited(e) && coversFirst) { mbResting = true; return null }
@@ -767,6 +768,8 @@ export interface NamingStatus {
   done: number
   total: number
   currentTitle: string
+  /** why it is paused, e.g. a site asked to slow down */
+  waiting: string
   possible: PossibleMatchEntry[]
 }
 
@@ -777,6 +780,7 @@ export const isNamingRunning = () => namingLoopActive
 let namingDoneCount = 0
 let namingTotalCount = 0
 let namingCurrentTitle = ''
+let namingWaiting = ''
 let cachedNamingSnapshot: NamingStatus | null = null
 
 export function isNamingEnabled(): boolean {
@@ -893,7 +897,11 @@ async function startNamingRunner() {
       } catch (e) {
         // MusicBrainz asked to slow down: the same song is tried again in a minute
         logLine('INFO', 'Details', `Song naming: ${String(e)}, waiting a minute`)
+        namingWaiting = 'The site asked to slow down: waiting a minute'
+        cachedNamingSnapshot = null
+        notifyNamingChanged()
         await waitMs(60_000)
+        namingWaiting = ''
         continue
       }
       namingDoneCount++
@@ -961,6 +969,7 @@ function getNamingSnapshot(): NamingStatus {
     done: namingDoneCount,
     total,
     currentTitle: namingCurrentTitle,
+    waiting: namingWaiting,
     possible: getPossibleMatches(),
   }
   return cachedNamingSnapshot

@@ -428,9 +428,10 @@ function SettingRow({ row, ctx }: { row: Row; ctx: Ctx }) {
     case 'segment': {
       const disabled = matches(row.disabledWhen, ctx)
       const value = String(ctx.get(row.id))
+      const sub = row.options.find((o) => o.label === value)?.sub ?? row.sub
       return (
         <div className={`ms-set-row column segment${row.icon ? ' has-icon' : ''}${disabled ? ' dim' : ''}`} style={disabled ? { pointerEvents: 'none' } : undefined}>
-          {!row.hideLabel && <div className="ms-set-line">{icon}{row.sub ? text(row.sub) : <span className="grow ms-set-head">{row.label}</span>}</div>}
+          {!row.hideLabel && <div className="ms-set-line">{icon}{sub ? text(sub) :<span className="grow ms-set-head">{row.label}</span>}</div>}
           <div className="ms-segment-small big" role="radiogroup" aria-label={row.label}>
             {row.options.map((o) => (
               <button

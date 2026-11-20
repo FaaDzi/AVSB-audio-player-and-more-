@@ -26,6 +26,8 @@ interface Common {
 export interface Tile {
   label: string
   icon?: string
+  /** a segment row's subtitle while this option is chosen */
+  sub?: string
 }
 
 export type Row = Common & (
@@ -71,7 +73,6 @@ const action = (label: string, sub?: string, icon?: string, extra?: { plain?: bo
 const choice = (id: string, label: string, options: string[], value: string, icon?: string, format?: (value: string) => string): Row => ({ kind: 'choice', id, label, options, value, icon, format })
 const pick = (id: string, label: string, sub: string | undefined, icon: string, selected = false, mark: 'tick' | 'circle' = 'tick', badge?: string): Row => ({ kind: 'pick', id, label, sub, icon, selected, mark, badge })
 const seg = (id: string, label: string, options: Tile[], value: string, extra?: Partial<Common> & { hideLabel?: boolean; note?: string }): Row => ({ kind: 'segment', id, label, options, value, ...extra })
-const words = (...labels: string[]): Tile[] => labels.map((label) => ({ label }))
 
 export const LYRICS_ORDER_SAMPLE = 'LRCLIB. Lyrics in the file always come first'
 
@@ -334,7 +335,7 @@ export const PAGE_GROUPS: Page[][] = [
       id: 'app', title: 'App', icon: 'tune', sections: [
         { title: 'App', block: 'app-update', rows: [
           toggle('updates', 'Check for Updates', 'Notify when new version is available', 'system_update', true),
-          seg('channel', 'Update Channel', words('Stable', 'Preview'), 'Stable', { sub: 'Stable releases only', icon: 'verified', note: 'Preview may contain bugs or incomplete features' }),
+          seg('channel', 'Update Channel', [{ label: 'Stable', sub: 'Stable releases only' }, { label: 'Preview', sub: 'Stable and preview releases' }], 'Stable', { sub: 'Stable releases only', icon: 'verified', note: 'Preview may contain bugs or incomplete features' }),
           choice('rewind_frequency', 'Rewind recap check', ['1 Day', '1 Week', '1 Month', '1 Year'], '1 Week', 'auto_awesome'),
           choice('home_shelves_refresh', 'Home playlists refresh', ['1 Day', '3 Days', '1 Week'], '3 Days', 'refresh'),
         ] },

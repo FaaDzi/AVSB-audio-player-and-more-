@@ -92,6 +92,7 @@ export function EqGraph(props: {
   onHandle?: (i: number, to: Partial<GraphHandle>) => void
   onHandleQ?: (i: number, factor: number) => void
   onAdd?: (at: GraphHandle) => void
+  onDoubleTap?: () => void
   onRemove?: (i: number) => void
   /** The test tone's frequency while it plays; the graph then moves it instead of showing a readout. */
   toneHz: number | null
@@ -198,7 +199,10 @@ export function EqGraph(props: {
           props.onTone?.(at(e).hz)
         }}
         onDoubleClick={(e) => {
-          if (!(e.target as Element).closest('button')) props.onAdd?.({ hz: Math.round(at(e).hz), db: Math.round(at(e).db * 2) / 2 })
+          if ((e.target as Element).closest('button')) return
+          // §100: on a phone a double tap brings the card up instead of adding a filter
+          if (props.onDoubleTap) props.onDoubleTap()
+          else props.onAdd?.({ hz: Math.round(at(e).hz), db: Math.round(at(e).db * 2) / 2 })
         }}
       >
         <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true">

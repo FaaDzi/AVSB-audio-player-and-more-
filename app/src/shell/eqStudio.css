@@ -228,3 +228,6 @@
 @media (max-height: 540px) {
   .ms-window.phone .ms-eq-hero { position: relative; top: auto; }
 }
+/* §100 (phone): the graph card rests nearly see-through; a double tap on the graph lifts it, a tap off it lets it rest */
+.ms-window.phone .ms-eq-hero.resting { background: color-mix(in srgb, var(--chrome) 8%, transparent); box-shadow: none; transition: background 0.2s; }
+.ms-window.phone .ms-eq-hero.lifted { background: color-mix(in srgb, var(--chrome) 88%, transparent); transition: background 0.2s; }

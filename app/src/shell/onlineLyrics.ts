@@ -158,11 +158,21 @@ function sameName(a: string, b: string) {
   return x.length > 2 && !['the', 'dj', 'mc'].includes(x) && x === name(b)
 }
 
-async function getJson<T>(url: string): Promise<T | null> {
-  const response = await fetch(url)
-  if (response.status === 404) return null
-  if (!response.ok) throw new Error(`HTTP ${response.status}`)
-  return response.json() as Promise<T>
+// §100: LRCLIB asked a phone to slow down after about 30 requests in a burst; one request a second, like MusicBrainz
+let lrcQueue: Promise<unknown> = Promise.resolve()
+const LRC_GAP_MS = 1000
+
+function getJson<T>(url: string): Promise<T | null> {
+  const run = lrcQueue.then(async () => {
+    const response = await fetch(url)
+    // 400: the exact lookup refuses a song with no artist or album; the searches after it still run (§100)
+    if (response.status === 404 || response.status === 400) return null
+    const after = Number(response.headers.get('retry-after'))
+    if (!response.ok) throw new Error(`HTTP ${response.status}${after > 0 ? ` (retry after ${after} s)` : ''}`)
+    return response.json() as Promise<T>
+  })
+  lrcQueue = run.catch(() => null).then(() => new Promise((done) => setTimeout(done, LRC_GAP_MS)))
+  return run
 }
 
 /**
@@ -197,7 +207,9 @@ export async function searchVersions(song: Track): Promise<string[]> {
   const rankLyrics = (records: LrcLibRecord[], sec: number, tol: number) => rankAll(records.filter((r) => versionKey(r.trackName ?? '') === version), sec, tol)
   const exact = new URLSearchParams({ track_name: t.title, artist_name: t.artist, album_name: t.album, duration: String(seconds) })
   const loose = new URLSearchParams({ track_name: t.title, artist_name: t.artist })
-  const [one, many] = await Promise.all([getJson<LrcLibRecord>(`${API}/get?${exact}`), getJson<LrcLibRecord[]>(`${API}/search?${loose}`)])
+  // one request at a time: LRCLIB answers 429 to several at once (§100)
+  const one = await getJson<LrcLibRecord>(`${API}/get?${exact}`)
+  const many = await getJson<LrcLibRecord[]>(`${API}/search?${loose}`)
   ranked = rankLyrics([...(one ? [one] : []), ...(many ?? [])], t.sec, mainTol)
   // then without "(2011 Remaster)", "(feat. ...)" and the like, and with the first artist only
   const title = plainTitle(t.title)

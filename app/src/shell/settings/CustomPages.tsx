@@ -1,6 +1,7 @@
 import { SpatialCrossfeedSection } from '../sound/SoundSection'
 import { version } from '../../../package.json'
 import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { isAndroid } from '../../platform'
 import { createPortal } from 'react-dom'
 import { Chip, Dialog, Icon, IconButton, Menu } from '../ui'
 import { useShell } from '../context'
@@ -461,6 +462,14 @@ export function Equalizer() {
   // states, so there is nothing to bounce; the room it gives up is handed to a spacer under it, so the page below
   // never moves because of it.
   const [compact, setCompact] = useState(false)
+  // §100: on a phone the card rests nearly see-through; a double tap on the graph lifts it until a tap lands off it
+  const [lifted, setLifted] = useState(false)
+  useEffect(() => {
+    if (!lifted) return
+    const off = (e: PointerEvent) => { if (!hero.current?.contains(e.target as Node)) setLifted(false) }
+    document.addEventListener('pointerdown', off, true)
+    return () => document.removeEventListener('pointerdown', off, true)
+  }, [lifted])
   const sentinel = useRef<HTMLDivElement>(null)
   const hero = useRef<HTMLDivElement>(null)
   const spacer = useRef<HTMLDivElement>(null)
@@ -622,7 +631,7 @@ export function Equalizer() {
       <div className="ms-eq-studio">
       <div className="ms-eq-main">
       <div ref={sentinel} className="ms-eq-sentinel" />
-      <div ref={hero} className={`ms-eq-hero${on ? ' on' : ''}${compact ? ' compact' : ''}`}>
+      <div ref={hero} className={`ms-eq-hero${on ? ' on' : ''}${compact ? ' compact' : ''}${lifted ? ' lifted' : ' resting'}`}>
         <div className="ms-eq-head">
           <div className="grow">
             <h3>{preset}</h3>
@@ -662,6 +671,7 @@ export function Equalizer() {
           onHandleQ={mode === 'advanced+' ? (i, k) => onEqTweaked({ filters: peq.map((f, n) => (n === i ? tidyFilter({ ...f, q: f.q * k }) : f)) }) : undefined}
           onAdd={mode === 'advanced+' && peq.length < PEQ_MAX_FILTERS ? (at) => onEqTweaked({ filters: [...peq, tidyFilter({ kind: 'peak', fc: at.hz, gain: at.db, q: 1.4 })] }) : undefined}
           onRemove={mode === 'advanced+' ? (i) => onEqTweaked({ filters: peq.filter((_, n) => n !== i) }) : undefined}
+          onDoubleTap={isAndroid() ? () => setLifted(true) : undefined}
           toneHz={toneUi.playing ? toneUi.hz : null}
           onTone={(hz) => setToneUi((s) => ({ ...s, hz: Math.round(hz), sweeping: false }))}
         />

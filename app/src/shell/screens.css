@@ -881,3 +881,7 @@ kbd { flex: none; font: 400 15px var(--font-ui); color: var(--text-dim); white-s
 
 /* §97: a new version on GitHub: red for stable, blue for preview */
 .ms-update-dot { width: 9px; height: 9px; flex: none; border-radius: 50%; }
+/* §100: the pull-to-check answer, dropping in at the top in the theme's card colour */
+.ms-update-pop { position: fixed; z-index: 60; top: calc(var(--sat, 0px) + 12px); left: 16px; right: 16px; max-width: 520px; margin: 0 auto; display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 8px 10px 8px 16px; border-radius: 16px; background: var(--chrome); color: var(--text); border: 1px solid rgb(var(--ink) / 0.1); box-shadow: 0 10px 28px rgb(0 0 0 / 0.35); font-size: 14px; animation: ms-update-drop 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.2); }
+.ms-update-pop > .ms-icon, .ms-update-pop > span:first-child { color: var(--accent); }
+@keyframes ms-update-drop { from { transform: translateY(-140%); opacity: 0; } }

@@ -187,7 +187,7 @@ export function NowPlaying() {
     <div className={`ms-np${panel || landscape ? ' split' : ''}${fullArt ? ' art-full' : ''}${artOnly ? ' art-only' : ''}${idle ? ' compact' : ''}`} style={coverStyle} role="dialog" aria-label="Now Playing" onPointerMove={wake}>
       {current.cover && <div className="ms-np-back" style={{ backgroundImage: `url(${coverUrl(current.cover)})` }} />}
       {fullArt && <Artwork track={current} className="ms-np-fullart" playing={playing} />}
-      <div className="ms-np-close"><IconButton icon="close" label="Close" filled onClick={() => setNowPlaying(false)} /></div>
+      <div className="ms-np-close"><IconButton icon="close" label="Close" filled onClick={() => { setPanel(null); setNowPlaying(false) }} /></div>
       <div className="ms-np-info"><IconButton icon="info" label="Track details & audio quality" filled onClick={() => { setPanel(null); setNowPlaying(false); push({ page: 'song', id: current.id }) }} /></div>
       <div className="ms-np-volume"><VolumeControl value={volume} onChange={setVolume} /></div>
 

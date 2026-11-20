@@ -225,7 +225,7 @@ function BulkRow({ kind }: { kind: BulkKind }) {
     ? st.waiting || `${st.done} of ${st.total} · ${st.found} found${st.current ? ` · ${st.current}` : ''}`
     : st.total
       ? `${st.found} found in ${st.done} songs`
-      : job.idle
+      : st.note || job.idle
   return (
     <>
       <div className="ms-set-row">
@@ -535,7 +535,9 @@ export function MetadataNamingSection() {
           <span className="grow ms-set-text">
             <span className="ms-set-label">Find missing artist, title, album and cover</span>
             <small>
-              {status.running
+              {status.running && status.waiting
+                ? status.waiting
+                : status.running
                 ? `Checking "${status.currentTitle || 'song'}" (${status.done} of ${status.total}) · ${percent}%…`
                 : isFinished
                   ? `✓ Checked all ${status.total} songs · All metadata is up to date`

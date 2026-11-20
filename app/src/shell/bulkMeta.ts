@@ -12,7 +12,7 @@ import { onMobileData } from './linkClient'
 import { allowBulkNotifications, finishBulkProgress, onBulkStop, showBulkProgress, waitMs } from '../platform'
 
 export type BulkKind = 'art' | 'lyrics'
-export interface BulkStatus { running: boolean; done: number; total: number; found: number; current: string; waiting: string }
+export interface BulkStatus { running: boolean; done: number; total: number; found: number; current: string; waiting: string; note?: string }
 
 const IDLE: BulkStatus = { running: false, done: 0, total: 0, found: 0, current: '', waiting: '' }
 const status: Record<BulkKind, BulkStatus> = { art: IDLE, lyrics: IDLE }
@@ -29,6 +29,7 @@ const stopSignal: Record<BulkKind, () => void> = { art: () => {}, lyrics: () => 
 export const stopBulk = (k: BulkKind) => { stopAsked[k] = true; stopSignal[k]() }
 /** A song taking longer than this is skipped (left unchecked) so one stuck lookup can't hold up the job. */
 const SONG_LIMIT_MS = 60_000
+export const LYRICS_GAP_MS = 500
 
 /** Covers smaller than this (shortest side, px) are replaced when a bigger one is found. */
 export const SMALL_COVER = 300
@@ -67,7 +68,7 @@ export function imageSide(src: string): Promise<number> {
   })
 }
 
-// shortcut: art and lyrics running together can both ask MusicBrainz for a rip in the same second; fine for a few rips, queue them if it trips the limit
+// §100: the namer, art and lyrics run side by side; only a rip waits, for the namer to name it first
 async function waitForTurn(k: BulkKind, mbToo: boolean, stopped: Promise<unknown>) {
   while (!stopAsked[k] && (onMobileData() || (mbToo && isNamingRunning()))) {
     set(k, { waiting: onMobileData() ? 'Waiting for Wi-Fi' : 'Waiting for the song naming to finish' })
@@ -100,7 +101,8 @@ async function run(k: BulkKind, tracks: Track[], step: (t: Track) => Promise<boo
   stopAsked[k] = false
   set(k, { ...IDLE, running: true, total: tracks.length })
   if (!tracks.length) {
-    set(k, { running: false })
+    // §100: said on the row too, so a job with nothing to do doesn't look like it never ran
+    set(k, { running: false, note: 'Every song was checked in the last 2 weeks' })
     logLine('INFO', 'Details', `${k === 'art' ? 'Import song art' : 'Sync lyrics'}: nothing to check (every song was checked in the last 2 weeks)`)
     return
   }
@@ -111,7 +113,7 @@ async function run(k: BulkKind, tracks: Track[], step: (t: Track) => Promise<boo
   let next = 0
   const worker = async () => {
     while (next < tracks.length) {
-      await waitForTurn(k, mbToo, stopped)
+      await waitForTurn(k, mbToo && Boolean(tracks[next]) && waitsForName(tracks[next]), stopped)
       if (stopAsked[k]) return
       const t = tracks[next++]
       if (!t) return
@@ -136,9 +138,13 @@ async function run(k: BulkKind, tracks: Track[], step: (t: Track) => Promise<boo
           // a site asking us to slow down (429, MusicBrainz 503): wait and try the same song again; any other failure isn't marked
           // checked, so the next run asks again instead of skipping the song for 2 weeks
           if (isRateLimited(e) && tries++ < 3 && !stopAsked[k]) {
-            set(k, { waiting: 'The site asked to slow down: waiting a minute' })
+            // the site's own Retry-After when it gives one (LRCLIB does), a minute otherwise
+            const after = Number(/retry after (\d+)/.exec(String(e))?.[1] ?? 60)
+            const wait = Math.min(300, Math.max(5, after))
+            logLine('WARN', 'Details', `${k === 'art' ? 'Song art' : 'Lyrics'} for "${t.title}": ${String(e)}, waiting ${wait} s`)
+            set(k, { waiting: `The site asked to slow down: waiting ${wait} s` })
             notify(k)
-            await Promise.race([sleep(60_000), stopped])
+            await Promise.race([sleep(wait * 1000), stopped])
             set(k, { waiting: '' })
             if (stopAsked[k]) return
             continue
@@ -169,11 +175,14 @@ export async function importSongArt(library: Track[]) {
   const albums = new Map<string, Promise<Lookup>>()
   // each song's own cover is measured as the job reaches it, so progress shows from the first second (measuring
   // the whole library first left the row silent for minutes)
-  await run('art', library.filter((t) => !isPcTrack(t) && !checkedRecently('art', t.id)), async (t) => {
+  const todo = library.filter((t) => !isPcTrack(t) && !checkedRecently('art', t.id))
+  const rips = new Set(todo.filter(waitsForName))
+  await run('art', [...todo.filter((t) => !rips.has(t)), ...rips], async (t) => {
     const had = t.cover ? await imageSide(coverUrl(t.cover)) : 0
     if (had >= SMALL_COVER) return false
-    // a rip goes through the namer first; that lookup brings a cover (and a genre) with it when the song had none
-    if (waitsForName(t) || needsNaming(t)) {
+    // a rip goes through the namer first; that lookup brings a cover (and a genre) with it when the song had none.
+    // While the namer runs it has that song in its own lane, so art only looks for the cover.
+    if (waitsForName(t) || (needsNaming(t) && !isNamingRunning())) {
       try {
         await nameOne(t)
       } catch (e) {
@@ -216,16 +225,19 @@ export async function syncLyrics(library: Track[]) {
   const wanted = (t: Track) => !isPcTrack(t) && !t.lyrics && !savedOnlineLyrics(t.id) && !checkedRecently('lyrics', t.id)
   const todo = library.filter(wanted)
   // songs with a clear name go first; a rip is named first and searched by the name found (or its cleaned title)
-  const rips = todo.filter(waitsForName)
-  await run('lyrics', [...todo.filter((t) => !rips.includes(t)), ...rips], async (t) => {
+  const rips = new Set(todo.filter(waitsForName))
+  await run('lyrics', [...todo.filter((t) => !rips.has(t)), ...rips], async (t) => {
     let song = t
     if (waitsForName(t)) {
       await nameOne(t)
       const d = savedDetails(t.id)
       song = d?.confirmedMatch ? { ...t, title: d.title ?? t.title, artist: d.artist ?? t.artist } : searchable(t)
     }
-    const text = await searchOnline(searchable(song))
-    await sleep(300)
-    return Boolean(text)
+    try {
+      return Boolean(await searchOnline(searchable(song)))
+    } finally {
+      // §100: LRCLIB answered 429 at 0.3 s between songs, and a failed song used to skip the pause
+      await sleep(LYRICS_GAP_MS)
+    }
   }, true)
 }
