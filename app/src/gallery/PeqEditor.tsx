@@ -16,7 +16,7 @@ const yOf = (db: number) => H / 2 - (db / DB) * (H / 2 - PAD)
 const dbOf = (y: number) => ((H / 2 - y) / (H / 2 - PAD)) * DB
 const GRID_HZ = [20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000]
 const PLOT_HZ = Array.from({ length: 200 }, (_, i) => 20 * 1000 ** (i / 199))
-const KIND_LABEL: Record<Biquad['kind'], string> = { peak: 'Peak', lowshelf: 'Low shelf', highshelf: 'High shelf' }
+const KIND_LABEL: Record<Biquad['kind'], string> = { peak: 'Peak', lowshelf: 'Low shelf', highshelf: 'High shelf', lowpass: 'Low-pass', highpass: 'High-pass' }
 const fmtHz = (f: number) => (f >= 1000 ? `${+(f / 1000).toFixed(f >= 10000 ? 1 : 2)}k` : `${f}`)
 
 export function PeqEditor(props: { filters: Biquad[]; onChange: (f: Biquad[]) => void; sampleRate: number; maxFilters?: number; /** The page has its own graph with the handles (the shell's EQ tab): only the table shows, each row in its handle's colour. */ tableOnly?: (i: number) => string }) {
@@ -163,7 +163,7 @@ export function PeqEditor(props: { filters: Biquad[]; onChange: (f: Biquad[]) =>
 }
 
 /** A number box that only commits a valid number (typing "1." or clearing it mid-edit doesn't jump). */
-function NumField(props: { label: string; value: number; min: number; max: number; step: number; onChange: (v: number) => void }) {
+export function NumField(props: { label: string; value: number; min: number; max: number; step: number; onChange: (v: number) => void }) {
   const [draft, setDraft] = useState<string | null>(null)
   return (
     <label className="peq-field">

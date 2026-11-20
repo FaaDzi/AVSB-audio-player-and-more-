@@ -25,14 +25,13 @@ import { kindOfIem } from '../../data/catalog'
 import { DevicePickerModal } from '../sound/AudioProfileSheet'
 import { getSetting, setSetting, useSettings } from './store'
 import { chainDb, type Biquad } from '../../eq/biquad'
-import { PeqEditor } from '../../gallery/PeqEditor'
 import { clearCrash, clearLogs, lastCrash, useLogs } from '../logs'
 import { host, type AppProcessMetric } from '../host'
 import { PROVIDERS } from '../metadata'
 import { hearingNote, loadHearing, saveHearing, summarise } from '../../hearing/hearing'
 import { AudioToolsPage, playDiagnosticTone } from '../sound/AudioTools'
 import { BALANCE_BANDS, bandCurves, setChannels, useChannels } from '../sound/channels'
-import { AutoEqCard, EqGraph, filterColor, FineTuneCard, ImportDeviceDialog, SWEEP_FULL, SWEEP_TREBLE, getLab, setLab, useHrtfTilt } from './EqStudio'
+import { AutoEqCard, EqGraph, FilterCards, FineTuneCard, ImportDeviceDialog, TargetPills, SWEEP_FULL, SWEEP_TREBLE, getLab, setLab, useHrtfTilt } from './EqStudio'
 import { curveAt, eqScene, TUNE_STEP_DB, tuneAt, type AutoEqResult } from '../eqStudio'
 import { setTone as playToneAt, stopTone } from '../eqTone'
 import { gearName } from '../sound/phoneSpeaker'
@@ -444,7 +443,7 @@ export function Equalizer() {
     return { left: ear(curves.left), right: ear(curves.right) }
   }, [channels, grid])
   const handles = useMemo(
-    () => (mode === 'advanced' ? bands.map((hz, i) => ({ hz, db: gains[i] ?? 0 })) : mode === 'advanced+' ? peq.map((f) => ({ hz: f.fc, db: f.gain, q: f.q })) : []),
+    () => (mode === 'advanced' ? bands.map((hz, i) => ({ hz, db: gains[i] ?? 0 })) : mode === 'advanced+' ? peq.map((f) => ({ hz: f.fc, db: f.gain, q: f.q, kind: f.kind })) : []),
     [mode, bands, gains, peq],
   )
   const moveHandle = (i: number, to: { hz?: number; db?: number }) => {
@@ -471,6 +470,14 @@ export function Equalizer() {
       const [mark, pinned, pad] = [sentinel.current, hero.current, spacer.current]
       const plot = pinned?.querySelector<HTMLElement>('.ms-eqg-plot')
       if (!mark || !pinned || !pad || !plot) return
+      // §96: on a wide screen the graph keeps its size beside the controls; only the phone shrinks it as you scroll
+      if (!pinned.closest('.ms-window.phone')) {
+        pinned.style.removeProperty('--eqg-shrink')
+        pinned.style.removeProperty('--eqg-fade')
+        pad.style.height = '0px'
+        if (switchLayout) setCompact(false)
+        return
+      }
       // the mark scrolls away, the pinned graph doesn't: the distance between them is how far the page has moved
       const past = pinned.getBoundingClientRect().top - mark.getBoundingClientRect().top
       if (past <= 0 && !pinned.classList.contains('compact')) rest.current = { hero: pinned.offsetHeight, graph: plot.offsetHeight }
@@ -536,6 +543,15 @@ export function Equalizer() {
       : [...from, tidyFilter({ kind, fc: kind === 'highshelf' ? 8000 : 105, gain, q: 0.7 })]
     onEqTweaked({ ...carried, mode: 'advanced+', filters: next, on: true })
   }
+  // §96 D: the phone speaker's Warmth is one low shelf at 400 Hz in its own Advanced+ filters, capped at +3 dB
+  const WARMTH_HZ = 400
+  const warmth = (mode === 'advanced+' ? peq : []).find((f) => f.kind === 'lowshelf' && f.fc === WARMTH_HZ)?.gain ?? 0
+  const setWarmth = (db: number) => {
+    const gain = Math.max(0, Math.min(3, db))
+    const carried = mode === 'advanced+' ? null : carryOver(eq, 'advanced+')
+    const from = (mode === 'advanced+' ? peq : carried?.filters ?? []).filter((f) => !(f.kind === 'lowshelf' && f.fc === WARMTH_HZ))
+    onEqTweaked({ ...carried, mode: 'advanced+', filters: gain ? [...from, tidyFilter({ kind: 'lowshelf', fc: WARMTH_HZ, gain, q: 0.7 })] : from, on: true })
+  }
   const lean = (side: 'left' | 'right') => {
     const i = BALANCE_BANDS.reduce((best, hz, k) => (Math.abs(Math.log(hz / toneUi.hz)) < Math.abs(Math.log(BALANCE_BANDS[best] / toneUi.hz)) ? k : best), 0)
     const next = BALANCE_BANDS.map((_, k) => channels.bands[k] ?? 0)
@@ -596,13 +612,17 @@ export function Equalizer() {
   return (
     <div className="ms-eq">
       {navBar}
+      {/* §96: PEQdB's layout. Wide screens: the controls in a left column, the graph and target pills filling the rest;
+          a phone stacks them: graph, pills, then the controls */}
+      <div className="ms-eq-studio">
+      <div className="ms-eq-main">
       <div ref={sentinel} className="ms-eq-sentinel" />
       <div ref={hero} className={`ms-eq-hero${on ? ' on' : ''}${compact ? ' compact' : ''}`}>
         <div className="ms-eq-head">
           <div className="grow">
             <h3>{preset}</h3>
             <p>
-              <em className="ms-set-badge">{mode === 'basic' ? (basicSubMode === 'shaper' ? '3-Zone' : 'Radar') : mode === 'advanced' ? `${count} bands` : `${peq.length} filters`}</em>
+              <em className="ms-set-badge">{mode === 'basic' ? (basicSubMode === 'shaper' ? '3-Zone' : 'Radar') : mode === 'advanced' ? `${count} bands` : `${peq.length} ${peq.length === 1 ? 'filter' : 'filters'}`}</em>
               {' '}· Preamp {tone.preamp.toFixed(1)} dB
             </p>
           </div>
@@ -641,52 +661,104 @@ export function Equalizer() {
         />
       </div>
       <div ref={spacer} className="ms-eq-spacer" />
+      {availableTargets.length > 0 && <TargetPills
+        targets={availableTargets}
+        items={profile.items}
+        activeId={profile.activeItemId ?? null}
+        onToggle={(t) => {
+          const was = profile.items.some((i) => i.id === t.id)
+          toggleProfileTarget(t, activeGear)
+          showToast(was ? `Removed ${t.name} from your quick palette` : `Added ${t.name} to your quick palette`)
+        }}
+        onRemoveDevice={(id) => removeProfileItem(id, activeGear)}
+        onAddDevice={() => setAddingDevice(true)}
+      />}
+      </div>
 
-      {db && (
-        <AutoEqCard
-          db={db}
-          deviceId={activeGear}
-          deviceName={activeGearName}
-          lab={lab}
-          scene={scene}
-          hrtfName={hrtf?.name ?? null}
-          onLab={(patch) => setLab(activeGear, patch)}
-          onApply={applyAuto}
-          onPickGear={() => go({ page: 'settings', section: 'gear' })}
-          onPickHrtf={() => go({ page: 'settings', section: 'spatial' })}
+      <aside className="ms-eq-rail">
+        {/* §96 C: one menu instead of a dozen preset chips */}
+        <div className="ms-eq-presetbar">
+          <label className="ms-eq-presetpick">
+            <Icon name="library_music" size={18} />
+            <select
+              aria-label="Preset"
+              value={preset}
+              onChange={(e) => {
+                const name = e.target.value
+                const mineToo = saved.find((p) => p.name === name)
+                if (mineToo) applySaved(mineToo)
+                else if (PRESETS[name]) applyPreset(name)
+              }}
+            >
+              {!PRESETS[preset] && !saved.some((p) => p.name === preset) && <option value={preset}>{preset}</option>}
+              <optgroup label="Built in">
+                {Object.keys(PRESETS).map((name) => <option key={name} value={name}>{name}</option>)}
+              </optgroup>
+              {saved.length > 0 && (
+                <optgroup label="Saved">
+                  {saved.map((p) => <option key={p.name} value={p.name}>{p.name}</option>)}
+                </optgroup>
+              )}
+            </select>
+          </label>
+          <IconButton icon="bookmark_add" label="Save as a preset" onClick={() => setNaming({ was: null, name: '' })} />
+          <IconButton icon="restart_alt" label="Reset" onClick={() => setResetting(true)} />
+          <IconButton icon="more_vert" label="More preset options" onClick={(e) => setPresetMenu({ x: e.clientX, y: e.clientY })} />
+        </div>
+
+        <div className="ms-segment-small big ms-eq-mode" role="radiogroup" aria-label="Equalizer mode">
+          {(['basic', 'advanced', 'advanced+'] as const).map((m) => (
+            <button
+              type="button"
+              key={m}
+              role="radio"
+              aria-checked={m === mode}
+              className={m === mode ? 'on' : ''}
+              onClick={() => setMode(m)}
+            >
+              {m === 'basic' ? 'Basic' : m === 'advanced' ? 'Advanced' : 'Advanced +'}
+            </button>
+          ))}
+        </div>
+
+        {db && (
+          <AutoEqCard
+            db={db}
+            deviceId={activeGear}
+            deviceName={activeGearName}
+            lab={lab}
+            scene={scene}
+            hrtfName={hrtf?.name ?? null}
+            onLab={(patch) => setLab(activeGear, patch)}
+            onApply={applyAuto}
+            onPickGear={() => go({ page: 'settings', section: 'gear' })}
+            onPickHrtf={() => go({ page: 'settings', section: 'spatial' })}
+            warmth={warmth}
+            onWarmth={setWarmth}
+          />
+        )}
+
+        {mode === 'advanced+' && <FilterCards filters={peq} on={on} onBypass={() => setEq({ on: !on })} onChange={(filters) => onEqTweaked({ filters })} />}
+
+        {/* §96: Fine-tune by ear sits under the filters it adds to */}
+        <FineTuneCard
+          hz={toneUi.hz}
+          playing={toneUi.playing}
+          sweeping={toneUi.sweeping}
+          fullRange={toneUi.full}
+          onFullRange={(full) => setToneUi((s) => ({ ...s, full }))}
+          canUndo={undo.length > 0}
+          onHz={(hz) => setToneUi((s) => ({ ...s, hz }))}
+          onPlay={playTone}
+          onSweep={(sweeping) => { if (sweeping && !toneUi.playing) setPaused(true); setToneUi((s) => ({ ...s, sweeping, playing: s.playing || sweeping })) }}
+          onNudge={nudge}
+          onLean={lean}
+          onUndo={() => { onEqTweaked({ mode: 'advanced+', filters: undo[undo.length - 1] }); setUndo(undo.slice(0, -1)) }}
+          treble={shelfGain('highshelf')}
+          bass={shelfGain('lowshelf')}
+          onShelf={setShelf}
         />
-      )}
-      <FineTuneCard
-        hz={toneUi.hz}
-        playing={toneUi.playing}
-        sweeping={toneUi.sweeping}
-        fullRange={toneUi.full}
-        onFullRange={(full) => setToneUi((s) => ({ ...s, full }))}
-        canUndo={undo.length > 0}
-        onHz={(hz) => setToneUi((s) => ({ ...s, hz }))}
-        onPlay={playTone}
-        onSweep={(sweeping) => { if (sweeping && !toneUi.playing) setPaused(true); setToneUi((s) => ({ ...s, sweeping, playing: s.playing || sweeping })) }}
-        onNudge={nudge}
-        onLean={lean}
-        onUndo={() => { onEqTweaked({ mode: 'advanced+', filters: undo[undo.length - 1] }); setUndo(undo.slice(0, -1)) }}
-        treble={shelfGain('highshelf')}
-        bass={shelfGain('lowshelf')}
-        onShelf={setShelf}
-      />
-
-      <div className="ms-segment-small big ms-eq-mode" role="radiogroup" aria-label="Equalizer mode">
-        {(['basic', 'advanced', 'advanced+'] as const).map((m) => (
-          <button
-            type="button"
-            key={m}
-            role="radio"
-            aria-checked={m === mode}
-            className={m === mode ? 'on' : ''}
-            onClick={() => setMode(m)}
-          >
-            {m === 'basic' ? 'Basic' : m === 'advanced' ? 'Advanced' : 'Advanced +'}
-          </button>
-        ))}
+      </aside>
       </div>
 
       {mode === 'basic' && (
@@ -781,122 +853,6 @@ export function Equalizer() {
           </div>
         </section>
       )}
-
-      {mode === 'advanced+' && (
-        <section className="ms-set-section ms-eq-advanced">
-          <h3>Parametric Filters</h3>
-          <PeqEditor
-            tableOnly={filterColor}
-            filters={peq}
-            sampleRate={48000}
-            onChange={(filters) => onEqTweaked({ filters })}
-          />
-        </section>
-      )}
-
-      {/* Target Preferences & Devices to Test Selection */}
-      <section className="ms-set-section">
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-          <h3 style={{ padding: 0 }}>Target Preferences &amp; Devices to Test</h3>
-          <small style={{ color: 'var(--text-dim)' }}>Configured for: <b>{activeGearName}</b></small>
-        </div>
-        <p style={{ fontSize: 13, color: 'var(--text-dim)', margin: '0 0 12px' }}>
-          Choose which reference targets and test devices appear in your circle quick-palette. Clicking a target toggles it on or off.
-        </p>
-
-        {/* Target selection chips */}
-        <div style={{ marginBottom: 12 }}>
-          <b style={{ fontSize: 13, color: 'var(--text-strong)', display: 'block', marginBottom: 6 }}>
-            {isSpeakerDevice(activeGear) ? 'In-Room Reference Targets:' : isHeadphone ? 'Over-Ear Reference Targets:' : 'In-Ear Reference Targets:'}
-          </b>
-          <div className="ms-chips" style={{ flexWrap: 'wrap', gap: 8 }}>
-            {availableTargets.map((t) => {
-              const selected = profile.items.some((i) => i.id === t.id)
-              return (
-                <button
-                  type="button"
-                  key={t.id}
-                  className={`ms-chip${selected ? ' on' : ''}`}
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, height: 36, padding: '0 14px', borderRadius: 18 }}
-                  onClick={() => {
-                    toggleProfileTarget(t, activeGear)
-                    showToast(selected ? `Removed ${t.name} from quick-palette` : `Added ${t.name} to quick-palette`)
-                  }}
-                >
-                  <span className="ms-gear-circle-dot" style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: t.color, display: 'inline-block' }} />
-                  <span>{t.name}</span>
-                  {selected && <Icon name="check" size={16} />}
-                </button>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Devices to Test section */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6, marginTop: 14 }}>
-          <b style={{ fontSize: 13, color: 'var(--text-strong)' }}>
-            Devices to Test ({profile.items.filter((i) => i.kind === 'device').length})
-          </b>
-          <button
-            type="button"
-            className="ms-btn text small"
-            onClick={() => setAddingDevice(true)}
-          >
-            <Icon name="add" size={16} /> Add Device to Test
-          </button>
-        </div>
-
-        {profile.items.filter((i) => i.kind === 'device').length > 0 ? (
-          <div className="ms-chips" style={{ flexWrap: 'wrap', gap: 8, marginBottom: 8 }}>
-            {profile.items.filter((i) => i.kind === 'device').map((d) => (
-              <span
-                key={d.id}
-                className="ms-chip selected"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, height: 34, padding: '0 8px 0 12px', borderRadius: 17 }}
-              >
-                <span className="ms-gear-circle-dot" style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: d.color, display: 'inline-block' }} />
-                <span>{d.name} ({d.strength}%)</span>
-                <IconButton
-                  icon="close"
-                  label="Remove"
-                  small
-                  onClick={() => {
-                    removeProfileItem(d.id, activeGear)
-                    showToast(`Removed ${d.name}`)
-                  }}
-                />
-              </span>
-            ))}
-          </div>
-        ) : (
-          <small style={{ display: 'block', color: 'var(--text-dim)', marginBottom: 8 }}>
-            No test devices added yet. Tap 'Add Device to Test' to audition headphones or IEMs.
-          </small>
-        )}
-
-        {profile.items.length === 0 && (
-          <div style={{ padding: '10px 14px', borderRadius: 12, background: 'rgba(255, 255, 255, 0.05)', color: 'var(--text-dim)', fontSize: 13, display: 'flex', alignItems: 'center', gap: 8, marginTop: 8 }}>
-            <Icon name="info" size={18} />
-            <span>Raw audio with no changes (no targets or test devices selected).</span>
-          </div>
-        )}
-      </section>
-
-      <section className="ms-set-section">
-        <h3>Presets</h3>
-        <div className="ms-chips ms-eq-presets">
-          {Object.keys(PRESETS).map((name) => <Chip key={name} label={name} selected={preset === name} onClick={() => applyPreset(name)} />)}
-          {saved.map((p) => <Chip key={p.name} label={p.name} selected={preset === p.name} onClick={() => applySaved(p)} />)}
-        </div>
-        <div className="ms-eq-preset-actions">
-          <button type="button" className="ms-btn" onClick={() => setNaming({ was: null, name: '' })}><Icon name="bookmark_add" size={20} /> Save preset</button>
-          <button type="button" className="ms-btn tonal" onClick={() => go({ page: 'settings', section: 'saved-eq' })}><Icon name="tune" size={20} /> Manage Saved EQs</button>
-          <span className="center">
-            <IconButton icon="restart_alt" label="Reset" onClick={() => setResetting(true)} />
-            <IconButton icon="more_vert" label="More preset options" onClick={(e) => setPresetMenu({ x: e.clientX, y: e.clientY })} />
-          </span>
-        </div>
-      </section>
 
       <section className="ms-set-section">
         <h3>Tone &amp; stereo</h3>

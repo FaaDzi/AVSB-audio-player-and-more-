@@ -1,5 +1,5 @@
 import { smoothLog } from '../audio/filter'
-import { addBiquadDb, chainDb, type Biquad } from './biquad'
+import { addBiquadDb, chainDb, isPass, type Biquad } from './biquad'
 
 export interface ParametricOptions {
   maxFilters: number
@@ -191,9 +191,9 @@ function refine(
 
 /** Equalizer APO / Peace text, also read by Wavelet's and Poweramp's parametric import. */
 export function parametricText(eq: ParametricEq): string {
-  const kind = { peak: 'PK', lowshelf: 'LSC', highshelf: 'HSC' }
+  const kind = { peak: 'PK', lowshelf: 'LSC', highshelf: 'HSC', lowpass: 'LPQ', highpass: 'HPQ' }
   return [
     `Preamp: ${eq.preampDb.toFixed(1)} dB`,
-    ...eq.filters.map((b, i) => `Filter ${i + 1}: ON ${kind[b.kind]} Fc ${b.fc} Hz Gain ${b.gain.toFixed(1)} dB Q ${b.q.toFixed(2)}`),
+    ...eq.filters.map((b, i) => `Filter ${i + 1}: ON ${kind[b.kind]} Fc ${b.fc} Hz${isPass(b) ? '' : ` Gain ${b.gain.toFixed(1)} dB`} Q ${b.q.toFixed(2)}`),
   ].join('\n')
 }

@@ -9,6 +9,9 @@ import { DevicePickerModal } from '../sound/AudioProfileSheet'
 import { familyOf, targetsFor, type Aim } from '../sound/soundCurve'
 import { autoEq, CANAL_PEAK_HZ, curveAt, midLevel, NO_PREFS, type AutoEqResult, type EqPrefs, type EqScene, type FitDepth } from '../eqStudio'
 import { getSetting, setSetting } from './store'
+import type { Biquad } from '../../eq/biquad'
+import { PEQ_LIMITS, PEQ_MAX_FILTERS, tidyFilter } from '../../eq/peq'
+import { NumField } from '../../gallery/PeqEditor'
 import { smoothLog } from '../../audio/filter'
 import { getSpeakerKind, isPhoneSpeaker, setSpeakerKind, SPEAKER_KINDS } from '../sound/phoneSpeaker'
 
@@ -57,12 +60,17 @@ const signed = (db: number) => `${db > 0 ? '+' : db < 0 ? '−' : ''}${Math.abs(
 /** One colour per filter, the same on the graph and in the table. */
 export const FILTER_COLORS = ['#7cc4ff', '#ffb86b', '#9be28a', '#ff8fa3', '#c9a5ff', '#ffe066', '#5ee0d0', '#ff9d5c']
 export const filterColor = (i: number) => FILTER_COLORS[i % FILTER_COLORS.length]
+/** §96: like PEQdB, a filter's colour says its type: the card, its dot and its label share it. */
+export const KIND_COLOR: Record<Biquad['kind'], string> = { peak: '#ffb86b', lowshelf: '#ff7ab6', highshelf: '#c9a5ff', lowpass: '#5ee0d0', highpass: '#9be28a' }
+export const KIND_SHORT: Record<Biquad['kind'], string> = { peak: 'PK', lowshelf: 'LSC', highshelf: 'HSC', lowpass: 'LPQ', highpass: 'HPQ' }
 
 export interface GraphHandle {
   hz: number
   db: number
   /** A parametric filter's width, shown beside its dot while it's touched. */
   q?: number
+  /** Its type, for the dot's colour. */
+  kind?: Biquad['kind']
 }
 
 export function EqGraph(props: {
@@ -208,7 +216,7 @@ export function EqGraph(props: {
             type="button"
             key={i}
             className={`ms-eqg-handle${sel === i ? ' on' : ''}`}
-            style={{ left: `${xOf(h.hz) / 10}%`, top: `${(yOf(h.db) / H) * 100}%`, '--c': props.freeHz ? filterColor(i) : undefined } as React.CSSProperties}
+            style={{ left: `${xOf(h.hz) / 10}%`, top: `${(yOf(h.db) / H) * 100}%`, '--c': props.freeHz ? (h.kind ? KIND_COLOR[h.kind] : filterColor(i)) : undefined } as React.CSSProperties}
             aria-label={`${hzLabel(h.hz)}, ${signed(h.db)}`}
             onPointerDown={(e) => {
               e.stopPropagation()
@@ -285,6 +293,9 @@ export function AutoEqCard(props: {
   onPickGear: () => void
   /** Opens the HRTF test (Spatial). */
   onPickHrtf: () => void
+  /** §96 D: the phone speaker's Warmth (a gentle low shelf, 0 to +3 dB). */
+  warmth: number
+  onWarmth: (db: number) => void
 }) {
   const { db, deviceId, lab, scene } = props
   // §91 E5: the HRTF test first, for a closer match; asked once, Skip remembered
@@ -309,6 +320,12 @@ export function AutoEqCard(props: {
             <button type="button" key={kind} role="radio" aria-checked={getSpeakerKind() === kind} className={getSpeakerKind() === kind ? 'on' : ''} onClick={() => setSpeakerKind(kind)}>{label}</button>
           ))}
         </div>
+        {/* §96 D (council 2026-11-20): flat and guarded; a bass lift only if you want it, and never past +3 dB */}
+        <label className="ms-eqlab-pref ms-eqlab-warmth">
+          <span><Icon name="local_fire_department" size={18} />Warmth<b>{props.warmth > 0 ? '+' : ''}{props.warmth.toFixed(1)} dB</b></span>
+          <Slider thick label="Warmth" min={0} max={3} step={0.5} value={props.warmth} onChange={props.onWarmth} />
+        </label>
+        <p className="ms-eqlab-note">Speaker correction (limited). No standard target exists for phone speakers, so it plays flat; the speaker guard keeps the small drivers safe.</p>
       </section>
     )
   }
@@ -333,16 +350,24 @@ export function AutoEqCard(props: {
         <button type="button" className="ms-eqlab-device" onClick={props.onPickGear}><Icon name="headphones" size={18} />{props.deviceName}</button>
       </header>
 
-      <div className="ms-chips ms-eqlab-targets" role="radiogroup" aria-label="Target">
-        {targets.map((t) => (
-          <button type="button" role="radio" aria-checked={lab.aim.kind === 'target' && lab.aim.name === t.name} key={t.name} className={`ms-chip${lab.aim.kind === 'target' && lab.aim.name === t.name ? ' on' : ''}`} onClick={() => props.onLab({ aim: { kind: 'target', name: t.name } })}>
-            {t.name}
-          </button>
-        ))}
-        <button type="button" role="radio" aria-checked={Boolean(aimDevice)} className={`ms-chip${aimDevice ? ' on' : ''}`} onClick={() => setPicking(true)}>
-          <Icon name="swap_horiz" size={18} />{aimDevice ? aimDevice.name : 'Another device'}
-        </button>
-      </div>
+      {/* §96: the AutoEQ target is one menu, as in PEQdB; "Another device" opens the picker */}
+      <label className="ms-eqlab-target">
+        <span>Aim at</span>
+        <select
+          aria-label="AutoEQ target"
+          value={lab.aim.kind === 'target' ? `t:${lab.aim.name}` : aimDevice ? 'device' : ''}
+          onChange={(e) => {
+            const v = e.target.value
+            if (v === 'pick') setPicking(true)
+            else if (v.startsWith('t:')) props.onLab({ aim: { kind: 'target', name: v.slice(2) } })
+          }}
+        >
+          {lab.aim.kind === 'off' && <option value="">Choose a target…</option>}
+          {targets.map((t) => <option key={t.name} value={`t:${t.name}`}>{t.name}</option>)}
+          {aimDevice && <option value="device">{aimDevice.name}</option>}
+          <option value="pick">Another device…</option>
+        </select>
+      </label>
 
       {lab.aim.kind !== 'off' && (
         <>
@@ -592,5 +617,97 @@ export function ImportDeviceDialog(props: { db: Database; presetName: string; ac
         <DevicePickerModal db={props.db} onPick={(id) => props.onDone(id)} />
       </div>
     </Dialog>
+  )
+}
+
+// ---- §96: the filters as PEQdB's cards, coloured by type
+
+export function FilterCards(props: {
+  filters: Biquad[]
+  onChange: (filters: Biquad[]) => void
+  /** The EQ is on (the bypass button shows its state). */
+  on: boolean
+  onBypass: () => void
+}) {
+  const { filters, onChange } = props
+  const set = (i: number, patch: Partial<Biquad>) => onChange(filters.map((f, k) => (k === i ? tidyFilter({ ...f, ...patch }) : f)))
+  const add = () => {
+    if (filters.length >= PEQ_MAX_FILTERS) return
+    // a new peak goes into the widest gap between the filters already there
+    const at = [20, ...filters.map((f) => f.fc).sort((a, b) => a - b), 20000]
+    let best = 1000, gap = 0
+    for (let k = 1; k < at.length; k++) {
+      const g = Math.log2(at[k] / at[k - 1])
+      if (g > gap) { gap = g; best = Math.round(Math.sqrt(at[k] * at[k - 1])) }
+    }
+    onChange([...filters, tidyFilter({ kind: 'peak', fc: best, gain: 0, q: 1.41 })])
+  }
+  return (
+    <section className="ms-eqcards">
+      <div className="ms-eqcards-tools">
+        <IconButton icon="add" label="Add a filter" onClick={add} />
+        <IconButton icon="swap_vert" label="Sort low to high" onClick={() => onChange([...filters].sort((a, b) => a.fc - b.fc))} />
+        <IconButton icon={props.on ? 'power_settings_new' : 'power_off'} label={props.on ? 'Bypass the EQ' : 'Turn the EQ on'} onClick={props.onBypass} />
+        <IconButton icon="delete_sweep" label="Clear all filters" onClick={() => onChange([])} />
+        <span className="ms-eqcards-count">{filters.length} / {PEQ_MAX_FILTERS}</span>
+      </div>
+      {filters.map((f, i) => (
+        <div key={i} className="ms-eqcard" style={{ '--c': KIND_COLOR[f.kind] } as React.CSSProperties}>
+          <div className="ms-eqcard-head">
+            <b>{i + 1}</b>
+            <select aria-label={`Filter ${i + 1} type`} value={f.kind} onChange={(e) => set(i, { kind: e.target.value as Biquad['kind'] })}>
+              {(Object.keys(KIND_SHORT) as Biquad['kind'][]).map((k) => <option key={k} value={k}>{KIND_SHORT[k]}</option>)}
+            </select>
+            <IconButton icon="close" label={`Remove filter ${i + 1}`} small onClick={() => onChange(filters.filter((_, k) => k !== i))} />
+          </div>
+          <div className="ms-eqcard-fields">
+            <NumField label="Freq" value={f.fc} min={PEQ_LIMITS.fMin} max={PEQ_LIMITS.fMax} step={1} onChange={(v) => set(i, { fc: v })} />
+            {f.kind === 'lowpass' || f.kind === 'highpass'
+              ? <span className="peq-field off"><input disabled value="—" aria-label="No gain" /><span>Gain</span></span>
+              : <NumField label="Gain" value={f.gain} min={PEQ_LIMITS.gainMin} max={PEQ_LIMITS.gainMax} step={0.1} onChange={(v) => set(i, { gain: v })} />}
+            <NumField label="Q" value={f.q} min={PEQ_LIMITS.qMin} max={PEQ_LIMITS.qMax} step={0.05} onChange={(v) => set(i, { q: v })} />
+          </div>
+        </div>
+      ))}
+      {!filters.length && <p className="ms-eqcards-empty">No filters yet. Press AutoEQ, tap the EQ line on the graph, or add one with +.</p>}
+    </section>
+  )
+}
+
+// ---- §96: preference targets and devices to test as one row of pills under the graph
+
+export function TargetPills(props: {
+  targets: { id: string; name: string; color: string }[]
+  items: { id: string; kind: string; name: string; color: string; strength: number }[]
+  activeId: string | null
+  onToggle: (t: { id: string; name: string; color: string }) => void
+  onRemoveDevice: (id: string) => void
+  onAddDevice: () => void
+}) {
+  const on = new Set(props.items.map((i) => i.id))
+  const devices = props.items.filter((i) => i.kind === 'device')
+  return (
+    <div className="ms-tpills" role="group" aria-label="Your targets and devices to test">
+      {props.targets.map((t) => (
+        <button
+          type="button"
+          key={t.id}
+          aria-pressed={on.has(t.id)}
+          className={`ms-tpill${on.has(t.id) ? ' on' : ''}${props.activeId === t.id ? ' live' : ''}`}
+          style={{ '--c': t.color } as React.CSSProperties}
+          title={on.has(t.id) ? 'In your quick palette: tap to remove' : 'Tap to add to your quick palette'}
+          onClick={() => props.onToggle(t)}
+        >
+          {t.name}
+        </button>
+      ))}
+      {devices.map((d) => (
+        <span key={d.id} className={`ms-tpill on device${props.activeId === d.id ? ' live' : ''}`} style={{ '--c': d.color } as React.CSSProperties}>
+          {d.name} <small>{d.strength}%</small>
+          <button type="button" aria-label={`Remove ${d.name}`} onClick={() => props.onRemoveDevice(d.id)}><Icon name="close" size={14} /></button>
+        </span>
+      ))}
+      <button type="button" className="ms-tpill add" onClick={props.onAddDevice}><Icon name="add" size={16} />Device</button>
+    </div>
   )
 }

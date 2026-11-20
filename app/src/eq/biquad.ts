@@ -1,6 +1,7 @@
 /** One second-order EQ filter, as EQ apps and Equalizer APO describe it. */
 export interface Biquad {
-  kind: 'peak' | 'lowshelf' | 'highshelf'
+  /** §96: PEQdB's PK, LSC, HSC, plus LPQ / HPQ (low- and high-pass with Q; their gain is unused). */
+  kind: 'peak' | 'lowshelf' | 'highshelf' | 'lowpass' | 'highpass'
   fc: number
   gain: number
   q: number
@@ -13,6 +14,8 @@ function coeffs(f: Biquad, fs: number): number[] {
   const c = Math.cos(w0)
   const alpha = Math.sin(w0) / (2 * f.q)
   const s = 2 * Math.sqrt(a) * alpha
+  if (f.kind === 'lowpass') return [(1 - c) / 2, 1 - c, (1 - c) / 2, 1 + alpha, -2 * c, 1 - alpha]
+  if (f.kind === 'highpass') return [(1 + c) / 2, -(1 + c), (1 + c) / 2, 1 + alpha, -2 * c, 1 - alpha]
   if (f.kind === 'peak') return [1 + alpha * a, -2 * c, 1 - alpha * a, 1 + alpha / a, -2 * c, 1 - alpha / a]
   if (f.kind === 'lowshelf')
     return [
@@ -35,7 +38,7 @@ function coeffs(f: Biquad, fs: number): number[] {
 
 /** Magnitude (dB) of one filter at `freqs`, added into `out` (so chains just sum). */
 export function addBiquadDb(f: Biquad, freqs: ArrayLike<number>, out: Float64Array, fs = 48000): Float64Array {
-  if (!f.gain) return out
+  if (!f.gain && !isPass(f)) return out
   const [b0, b1, b2, a0, a1, a2] = coeffs(f, fs)
   for (let i = 0; i < freqs.length; i++) {
     const w = (2 * Math.PI * freqs[i]) / fs
@@ -46,6 +49,9 @@ export function addBiquadDb(f: Biquad, freqs: ArrayLike<number>, out: Float64Arr
   }
   return out
 }
+
+/** A low- or high-pass: shapes the sound with no gain of its own. */
+export const isPass = (f: Biquad) => f.kind === 'lowpass' || f.kind === 'highpass'
 
 /** Summed magnitude (dB) of a filter chain at `freqs`. */
 export function chainDb(filters: Biquad[], freqs: ArrayLike<number>, fs = 48000): Float64Array {

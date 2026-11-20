@@ -43,8 +43,12 @@ export function generateEqualizerApoConfig(preset: SavedPreset): string {
       let typeStr = 'PK'
       if (f.kind === 'lowshelf') typeStr = 'LSC'
       else if (f.kind === 'highshelf') typeStr = 'HSC'
+      else if (f.kind === 'lowpass') typeStr = 'LPQ'
+      else if (f.kind === 'highpass') typeStr = 'HPQ'
       lines.push(
-        `Filter ${i + 1}: ON ${typeStr} Fc ${Math.round(f.fc)} Hz Gain ${f.gain > 0 ? '+' : ''}${f.gain.toFixed(1)} dB Q ${f.q.toFixed(2)}`,
+        typeStr === 'LPQ' || typeStr === 'HPQ'
+          ? `Filter ${i + 1}: ON ${typeStr} Fc ${Math.round(f.fc)} Hz Q ${f.q.toFixed(2)}`
+          : `Filter ${i + 1}: ON ${typeStr} Fc ${Math.round(f.fc)} Hz Gain ${f.gain > 0 ? '+' : ''}${f.gain.toFixed(1)} dB Q ${f.q.toFixed(2)}`,
       )
     })
   } else if (preset.gains && preset.gains.length > 0) {

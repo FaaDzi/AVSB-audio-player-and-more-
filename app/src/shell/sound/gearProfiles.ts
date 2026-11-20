@@ -82,7 +82,10 @@ export const isSoundbarDevice = (deviceId?: string | null) => isSpeakerDevice(de
 export const isRoomTarget = (id: string) => id.toLowerCase().startsWith('in-room')
 
 /** The targets a device can take: in-room for speakers, over-ear for headphones, in-ear for the rest. */
-export function targetListFor(deviceId: string | null | undefined, headphone = isHeadphoneDevice(deviceId)) {
+export function targetListFor(deviceId: string | null | undefined, headphone = isHeadphoneDevice(deviceId)): Omit<GearProfileItem, 'strength' | 'kind'>[] {
+  // §96 D: no published target fits a phone's own speaker (in-ear, over-ear and in-room ones all assume another
+  // listening setup), so it has none: it plays flat, guarded, with Warmth to taste
+  if (deviceId?.startsWith('phone-speaker-')) return []
   return isSpeakerDevice(deviceId) ? AVAILABLE_ROOM_TARGETS : headphone ? AVAILABLE_HP_TARGETS : AVAILABLE_IEM_TARGETS
 }
 

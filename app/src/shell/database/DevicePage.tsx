@@ -160,7 +160,7 @@ export function DevicePage({ id, back }: { id: string; back: () => void }) {
   )
 }
 
-const KIND_WORD: Record<Biquad['kind'], string> = { peak: 'Peak', lowshelf: 'Low shelf', highshelf: 'High shelf' }
+const KIND_WORD: Record<Biquad['kind'], string> = { peak: 'Peak', lowshelf: 'Low shelf', highshelf: 'High shelf', lowpass: 'Low-pass', highpass: 'High-pass' }
 
 /** One of your saved EQs on its device (§85): the device as it comes against the device with the EQ, and the EQ itself. */
 function CustomEqPage({ db, model, back }: { db: Database; model: Model; back: () => void }) {

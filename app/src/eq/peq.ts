@@ -55,7 +55,7 @@ export function parseFilters(v: unknown): Biquad[] | null {
   if (!Array.isArray(v) || v.length > PEQ_MAX_FILTERS) return null
   const ok = v.every(
     (f) =>
-      !!f && typeof f === 'object' && ['peak', 'lowshelf', 'highshelf'].includes(f.kind) &&
+      !!f && typeof f === 'object' && ['peak', 'lowshelf', 'highshelf', 'lowpass', 'highpass'].includes(f.kind) &&
       [f.fc, f.gain, f.q].every((x) => typeof x === 'number' && Number.isFinite(x)) && f.fc > 0 && f.q > 0,
   )
   return ok ? (v as Biquad[]).map(tidyFilter) : null

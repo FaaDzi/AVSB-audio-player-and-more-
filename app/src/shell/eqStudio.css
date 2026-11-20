@@ -145,3 +145,70 @@
 .ms-eq-steps { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 10px; color: var(--text); line-height: 1.45; }
 .ms-eq-steps b { color: var(--text-strong); }
 .ms-eq-steps code { padding: 1px 5px; border-radius: 5px; background: rgb(var(--ink) / 0.08); font-size: 0.92em; overflow-wrap: anywhere; }
+
+/* ---- §96: the Equalizer laid out like PEQdB (our look). Phone: one column, graph first. Wider: controls on the left. */
+.ms-eq-studio { display: flex; flex-direction: column; gap: 14px; }
+.ms-eq-main, .ms-eq-rail { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.ms-window:not(.phone) .ms-eq-studio { display: grid; grid-template-columns: minmax(260px, 300px) minmax(0, 1fr); grid-template-areas: 'rail main'; align-items: start; gap: 18px; }
+.ms-window:not(.phone) .ms-eq-main { grid-area: main; position: sticky; top: 0; z-index: 5; }
+.ms-window:not(.phone) .ms-eq-rail { grid-area: rail; }
+/* the graph is the work area on a wide screen: tall, and it stays put while the left column scrolls */
+.ms-window:not(.phone) .ms-eq-main .ms-eqg { --eqg-h: clamp(280px, 52vh, 520px); }
+.ms-window:not(.phone) .ms-eq-main .ms-eq-hero { position: static; }
+.ms-window:not(.phone) .ms-eq-rail .ms-eqlab { margin: 0; }
+
+/* preset menu */
+.ms-eq-presetbar { display: flex; align-items: center; gap: 4px; padding: 6px 6px 6px 12px; border-radius: var(--radius-card); background: var(--chrome); }
+.ms-eq-presetpick { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; color: var(--text-dim); }
+.ms-eq-presetpick select, .ms-eqlab-target select, .ms-eqcard select {
+  min-width: 0; flex: 1; height: 38px; padding: 0 10px; border-radius: 10px; border: 1px solid var(--hairline);
+  background: rgb(var(--ink) / 0.05); color: var(--text-strong); font: inherit; font-size: 14px;
+}
+.ms-eq-presetpick select { font-weight: 600; }
+.ms-eqlab-target { display: flex; align-items: center; gap: 10px; margin-top: 10px; color: var(--text-dim); font-size: 13px; }
+
+/* filter cards, coloured by type */
+.ms-eqcards { display: flex; flex-direction: column; gap: 8px; }
+.ms-eqcards-tools { display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: 14px; background: var(--chrome); }
+.ms-eqcards-count { margin-left: auto; padding-right: 10px; font-size: 12px; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+.ms-eqcard {
+  padding: 8px 10px 10px; border-radius: 14px; border: 1px solid color-mix(in srgb, var(--c) 45%, transparent);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c) 22%, var(--chrome)) 0%, var(--chrome) 70%);
+}
+.ms-eqcard-head { display: flex; align-items: center; gap: 8px; }
+.ms-eqcard-head b { width: 22px; color: var(--c); font-variant-numeric: tabular-nums; }
+.ms-eqcard select { flex: 0 1 84px; height: 30px; font-weight: 700; color: var(--c); text-align: center; }
+.ms-eqcard-head .ms-iconbtn { margin-left: auto; }
+.ms-eqcard-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 6px; }
+.ms-eqcard-fields .peq-field { display: flex; flex-direction: column-reverse; gap: 2px; align-items: stretch; }
+.ms-eqcard-fields .peq-field span { font-size: 11px; color: var(--text-dim); text-align: center; }
+.ms-eqcard-fields input { width: 100%; min-width: 0; height: 30px; padding: 0 6px; border-radius: 8px; border: 1px solid var(--hairline); background: rgb(var(--ink) / 0.05); color: var(--text-strong); font: inherit; font-size: 13px; font-variant-numeric: tabular-nums; text-align: center; }
+.ms-eqcard-fields .off input { opacity: 0.4; }
+.ms-eqcards-empty { margin: 4px 2px; font-size: 13px; color: var(--text-dim); }
+.ms-window.phone .ms-eqcards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.ms-window.phone .ms-eqcards-tools, .ms-window.phone .ms-eqcards-empty { grid-column: 1 / -1; }
+
+/* target pills: the pill takes the target's colour when it's yours (no dots) */
+.ms-tpills { display: flex; flex-wrap: wrap; gap: 8px; }
+.ms-window.phone .ms-tpills { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.ms-tpill {
+  flex: none; display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 14px; border-radius: 17px;
+  border: 1px solid color-mix(in srgb, var(--c, var(--text-dim)) 55%, transparent); color: var(--text); background: transparent; font-size: 13px; white-space: nowrap;
+}
+.ms-tpill.on { background: var(--c); border-color: var(--c); color: #12101a; font-weight: 600; }
+.ms-tpill.live { box-shadow: 0 0 0 2px var(--chrome), 0 0 0 4px var(--c); }
+.ms-tpill small { opacity: 0.75; font-weight: 500; }
+.ms-tpill button { display: inline-flex; margin-right: -6px; color: inherit; opacity: 0.8; }
+.ms-tpill.add { border-style: dashed; color: var(--text-dim); }
+.ms-window.phone .ms-eqcard { padding: 6px 7px 8px; }
+.ms-window.phone .ms-eqcard-fields { gap: 3px; }
+.ms-window.phone .ms-eqcard-fields input { padding: 0 1px; font-size: 12px; letter-spacing: -0.02em; }
+.ms-window.phone .ms-eqcard select { flex-basis: 64px; padding: 0 4px; }
+.ms-window.phone .ms-eqcard-head { gap: 4px; }
+
+.ms-eqlab-warmth { margin-top: 14px; }
+.ms-eqlab-note { margin: 10px 0 0; font-size: 12.5px; line-height: 1.45; color: var(--text-dim); }
+/* on the phone the wrappers step aside, so the graph pins to the whole page as before (a sticky box only sticks
+   inside its own parent) */
+.ms-window.phone .ms-eq-studio, .ms-window.phone .ms-eq-main, .ms-window.phone .ms-eq-rail { display: contents; }
+.ms-window.phone .ms-eq-studio > .ms-eq-main > *, .ms-window.phone .ms-eq-rail > * { margin-bottom: 14px; }

@@ -766,28 +766,35 @@ export function SongPage({ id, back }: { id: string; back: () => void }) {
   useEffect(() => {
     setDecoded(analysisCache.get(id) ?? null)
     setDecodeErr(null)
+    decodingFor.current = null
+    setDecoding(false)
   }, [id])
 
   // Trigger real audio decoding whenever Audio Quality Analysis or Hi-Res Authenticity is opened
+  // §96: the decode belongs to the song, not to this effect's run. It used to depend on `decoding` too, so setting
+  // decoding = true re-ran the effect, whose clean-up then threw away its own result: "Decoding…" forever, until
+  // leaving the page and coming back read the finished result from the cache.
+  const decodingFor = useRef<string | null>(null)
   useEffect(() => {
-    if ((!analysis && !checked) || !track || decoded || decoding) return
-    let alive = true
+    if ((!analysis && !checked) || !track || decoded || decodingFor.current === track.id) return
+    const forId = track.id
+    decodingFor.current = forId
     setDecoding(true)
     setDecodeErr(null)
     decodeAndAnalyzeTrack(track)
       .then((res) => {
-        if (alive) setDecoded(res)
+        if (decodingFor.current === forId) setDecoded(res)
       })
       .catch((e) => {
-        if (alive) setDecodeErr(e instanceof Error ? e.message : String(e))
+        if (decodingFor.current === forId) setDecodeErr(e instanceof Error ? e.message : String(e))
       })
       .finally(() => {
-        if (alive) setDecoding(false)
+        if (decodingFor.current === forId) {
+          decodingFor.current = null
+          setDecoding(false)
+        }
       })
-    return () => {
-      alive = false
-    }
-  }, [analysis, checked, track, decoded, decoding])
+  }, [analysis, checked, track, decoded])
 
   useEffect(() => {
     let live = true

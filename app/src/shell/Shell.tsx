@@ -100,6 +100,9 @@ async function loadPlaylists(): Promise<LibraryData['playlists']> {
   return []
 }
 
+/** §96 E: what was playing, kept so the app can open where you left off. */
+const RESUME_KEY = 'shell.resume'
+
 export function Shell() {
   const [data, setData] = useState<LibraryData | null>(null)
   const [failed, setFailed] = useState('')
@@ -213,6 +216,43 @@ export function Shell() {
     recordListen({ id: t.id, heard, length: t.sec, finished, viaAutoplay: autoPicked.current === t.id, learning: Boolean(getSetting('personal')), at: Date.now() })
     if (autoPicked.current === t.id) autoPicked.current = ''
   })
+
+  // §96 E: Android can close the app while it's paused in the background (a memory-hungry app like YouTube Shorts in
+  // front). The song, the place in it and the queue are kept, so it opens again paused where it was, not at 0:00.
+  useEffect(() => {
+    if (!current) return
+    const save = () => {
+      try {
+        localStorage.setItem(RESUME_KEY, JSON.stringify({ id: current.id, at: livePosition(), queue: queue.map((t) => t.id).slice(0, 500), saved: Date.now() }))
+      } catch { /* storage full: nothing to resume */ }
+    }
+    save()
+    const id = window.setInterval(save, 5000)
+    const hide = () => { if (document.hidden) save() }
+    document.addEventListener('visibilitychange', hide)
+    return () => { save(); window.clearInterval(id); document.removeEventListener('visibilitychange', hide) }
+  }, [current, queue, playing])
+  const resumed = useRef(false)
+  useEffect(() => {
+    if (resumed.current || !data?.tracks.length) return
+    resumed.current = true
+    if (currentRef.current) return
+    let saved: { id?: string; at?: number; queue?: string[]; saved?: number } = {}
+    try { saved = JSON.parse(localStorage.getItem(RESUME_KEY) ?? '{}') } catch { return }
+    // a week later it's a new session, not a resume
+    if (!saved.id || !saved.saved || Date.now() - saved.saved > 7 * 86_400_000) return
+    const byId = new Map(data.tracks.map((t) => [t.id, t]))
+    const t = byId.get(saved.id)
+    if (!t || !canPlay(t)) return
+    const at = Math.max(0, Math.min(Number(saved.at) || 0, t.sec - 2))
+    currentRef.current = t
+    setCurrent(t)
+    setQueue((saved.queue ?? []).map((x) => byId.get(x)).filter((x): x is Track => !!x))
+    setPlayingState(false)
+    showPosition(at)
+    void playTrack(t, false, at)
+    logLine('INFO', 'Player', `Opened where you left off: "${t.title}" at ${Math.round(at)} s`)
+  }, [data])
 
   /** Every song change goes through here, so the screen and the player move together. */
   const startSong = useCallback((t: Track) => {

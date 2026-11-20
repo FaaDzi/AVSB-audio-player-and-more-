@@ -214,12 +214,12 @@ const MAX_PRESET_BYTES = 64 * 1024
 const isNumber = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v)
 
 /** Reads a preset file. Throws with a message fit to show if it isn't a usable one. */
-const APO_KIND: Record<string, Biquad['kind']> = { PK: 'peak', PEQ: 'peak', LS: 'lowshelf', LSC: 'lowshelf', LSQ: 'lowshelf', HS: 'highshelf', HSC: 'highshelf', HSQ: 'highshelf' }
+const APO_KIND: Record<string, Biquad['kind']> = { PK: 'peak', PEQ: 'peak', LS: 'lowshelf', LSC: 'lowshelf', LSQ: 'lowshelf', HS: 'highshelf', HSC: 'highshelf', HSQ: 'highshelf', LP: 'lowpass', LPQ: 'lowpass', HP: 'highpass', HPQ: 'highpass' }
 
 /**
  * An Equalizer APO / AutoEq / squig.link text file as an Advanced+ preset (plan §84 A); null when it has no filters.
  * Comments and lines we don't use (Device:, Channel:, Include:, …) are skipped; filters that are OFF or of a kind
- * we don't play (LP, HP, notch, …) are left out; a GraphicEQ line is fitted with parametric filters.
+ * we don't play (notch, band-pass, …) are left out; a GraphicEQ line is fitted with parametric filters.
  */
 function readApoText(text: string, fileName: string): SavedPreset | null {
   let preamp = 0
@@ -233,7 +233,9 @@ function readApoText(text: string, fileName: string): SavedPreset | null {
     if (pre) preamp = Number(pre[1])
     const f = /^Filter\s*\d*:\s*ON\s+([A-Z]+)\s+Fc\s+([\d.]+)\s*Hz(?:\s+Gain\s+([+-]?[\d.]+)\s*dB)?(?:\s+Q\s+([\d.]+))?/i.exec(line)
     const kind = f && APO_KIND[f[1].toUpperCase()]
-    if (f && kind && f[3] !== undefined) filters.push({ kind, fc: Number(f[2]), gain: Number(f[3]), q: f[4] ? Number(f[4]) : 0.71 })
+    // a low- or high-pass has no Gain in the file (§96)
+    const pass = kind === 'lowpass' || kind === 'highpass'
+    if (f && kind && (f[3] !== undefined || pass)) filters.push({ kind, fc: Number(f[2]), gain: pass ? 0 : Number(f[3]), q: f[4] ? Number(f[4]) : 0.71 })
     const graphic = /^GraphicEQ:\s*(.+)$/i.exec(line)
     if (graphic) {
       const pts = graphic[1].split(';').map((p) => p.trim().split(/\s+/).map(Number)).filter((p) => p.length === 2 && p.every(Number.isFinite) && p[0] > 0)
