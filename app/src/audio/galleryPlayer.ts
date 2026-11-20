@@ -1,5 +1,6 @@
 import { notePlayback, registerAudioContext } from '../platform'
-import { firPeak, headroomDb, loudWindows, peakingPeak, rawPeak } from './headroom'
+import { headroomDb, loudWindows, peakingPeak, rawPeak } from './headroom'
+import { firPeakAsync } from './headroomAsync'
 import { longTermSpectrum, loudnessMatchDb, type Spectrum } from './loudness'
 import { measureLoudness, songGainDb } from './smartVolume'
 import { followSpatialSettings } from '../spatial/settings'
@@ -80,6 +81,9 @@ function rampTo(p: AudioParam, to: number, t: number) {
 const LEVEL_FREQS = Array.from({ length: 31 }, (_, i) => 20 * 2 ** (i / 3))
 
 /** What's measured on a song once (spectrum, loudest stretches, loudness), kept with its buffer. */
+/** A stage's peak on a song's loud windows: right away, or later from a worker. */
+type Measure = (windows: Float32Array[][]) => number | Promise<number>
+
 const analysed = new WeakMap<AudioBuffer, { spectrum: Spectrum; windows: Float32Array[][]; loudness: { lufs: number; peak: number } }>()
 
 /** What happens to the outgoing song during a mix. */
@@ -225,9 +229,9 @@ export class GalleryPlayer {
   /** The stage's response (dB on `grid`), kept to re-level it for each song. */
   private stageCurve: { grid: ArrayLike<number>; db: ArrayLike<number> } | null = null
   /** How to measure the current stage's peak on a song's loud windows. */
-  private measure: (windows: Float32Array[][]) => number = rawPeak
+  private measure: Measure = rawPeak
   /** The last colouring stage played, which Off is levelled to with fairOffOn. */
-  private lastStage: { curve: { grid: ArrayLike<number>; db: ArrayLike<number> }; measure: (windows: Float32Array[][]) => number } | null = null
+  private lastStage: { curve: { grid: ArrayLike<number>; db: ArrayLike<number> }; measure: Measure } | null = null
   private swapToken = 0
   /** How long the queued song overlaps the end of this one (0: gapless). */
   private overlapS = 0
@@ -410,8 +414,8 @@ export class GalleryPlayer {
     const t = this.makeTrack(buffer, level)
     // measured now: it has to be right the moment it starts, which may be with the screen off
     const stage = this.levelStage
-    if (stage) t.stagePeak = stage.measure(t.windows)
     this.applyGain(t, 0)
+    if (stage) this.measureStage(t, stage.measure, 0)
     this.next = t
     clearTimeout(this.nearTimer)
     if (this.playing) this.scheduleNext()
@@ -493,7 +497,7 @@ export class GalleryPlayer {
     conv.buffer = ir
     const links: StageLink[] = [conv]
     if (opts.space) links.push(createBackSpace(this.ctx))
-    this.rebuild(opts.linear ? links : this.aligned(links), { grid, db: curveDb }, (w) => firPeak(w, taps))
+    this.rebuild(opts.linear ? links : this.aligned(links), { grid, db: curveDb }, (w) => firPeakAsync(w, taps))
   }
 
   /** Custom peaking EQ, one band per CUSTOM_EQ_FREQS entry, loudness-matched to no EQ. */
@@ -694,8 +698,8 @@ export class GalleryPlayer {
       t.spectrum = done.spectrum
       t.windows = done.windows
       const stage = this.levelStage
-      if (stage) t.stagePeak = stage.measure(t.windows)
       this.applyGain(t, 0.05)
+      if (stage) this.measureStage(t, stage.measure, 0.05)
     }, ANALYSE_AFTER_MS)
     return t
   }
@@ -915,7 +919,7 @@ export class GalleryPlayer {
     t.media.el.load()
   }
 
-  private rebuild(links: StageLink[], curve: { grid: ArrayLike<number>; db: ArrayLike<number> } | null, measure: (w: Float32Array[][]) => number) {
+  private rebuild(links: StageLink[], curve: { grid: ArrayLike<number>; db: ArrayLike<number> } | null, measure: Measure) {
     const ctx = this.ctx
     const t = ctx.currentTime
     const playing = this.playing
@@ -985,10 +989,28 @@ export class GalleryPlayer {
       for (const t of tracks) {
         if (t !== this.cur && t !== this.next) continue
         if (!t.windows.length) continue // not measured yet: makeTrack's own timer does it
-        t.stagePeak = stage.measure(t.windows)
-        this.applyGain(t, 0.03)
+        this.measureStage(t, stage.measure, 0.03)
       }
     }, 0)
+  }
+
+  /**
+   * The stage's peak on the song's loud windows, then its level. The FIR check comes back from a worker (§95 D); it's
+   * used only if the song and the EQ are still the ones it was measured for.
+   */
+  private measureStage(t: Track, measure: Measure, tau: number) {
+    const peak = measure(t.windows)
+    if (typeof peak === 'number') {
+      t.stagePeak = peak
+      this.applyGain(t, tau)
+      return
+    }
+    const windows = t.windows
+    void peak.then((p) => {
+      if (t.windows !== windows || (t !== this.cur && t !== this.next) || this.levelStage?.measure !== measure) return
+      t.stagePeak = p
+      this.applyGain(t, tau)
+    })
   }
 
   /** The stage songs are levelled for: the current one, or in Off (with fairOffOn) the last EQ played. */
