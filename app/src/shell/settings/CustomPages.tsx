@@ -35,7 +35,7 @@ import { AutoEqCard, EqGraph, FilterCards, FineTuneCard, ImportDeviceDialog, Tar
 import { curveAt, eqScene, TUNE_STEP_DB, tuneAt, type AutoEqResult } from '../eqStudio'
 import { setTone as playToneAt, stopTone } from '../eqTone'
 import { gearName, isPhoneSpeaker, typicalSpeakerDb } from '../sound/phoneSpeaker'
-import { checkNow, openUpdate, type Update } from '../updates'
+import { checkNow, getUpdate, type Update } from '../updates'
 import { PEQ_MAX_FILTERS, tidyFilter } from '../../eq/peq'
 import { useRefs } from '../tournament/engine'
 import { currentSound, setPaused } from '../engine'
@@ -1239,6 +1239,14 @@ export function About() {
   const { showToast } = useShell()
   const [found, setFound] = useState<Update | null>(null)
   const [checking, setChecking] = useState(false)
+  const [share, setShare] = useState<number | null>(null)
+  const download = (u: Update) => {
+    setShare(0)
+    void getUpdate(u, setShare).then((error) => {
+      setShare(null)
+      if (error) showToast(error)
+    })
+  }
   const check = () => {
     setChecking(true)
     void checkNow().then((u) => {
@@ -1251,9 +1259,9 @@ export function About() {
     <>
       <section className="ms-set-section">
         <div className="ms-set-group">
-          <button type="button" className="ms-set-row clickable" disabled={checking} onClick={() => (found ? openUpdate(found) : check())}>
+          <button type="button" className="ms-set-row clickable" disabled={checking || share !== null} onClick={() => (found ? download(found) : check())}>
             <Icon name={found ? 'download' : 'system_update'} />
-            <span className="grow ms-set-text">{found ? `Download AVSB ${found.version}` : checking ? 'Checking…' : 'Check for updates'}</span>
+            <span className="grow ms-set-text">{share !== null ? `Downloading ${Math.round(share * 100)}%` : found ? `Download AVSB ${found.version}` : checking ? 'Checking…' : 'Check for updates'}</span>
             <Icon name="chevron_right" />
           </button>
           <div className="ms-set-row"><Icon name="info" /><span className="grow ms-set-text">AVSB {version}<small>Free software under the GNU GPL 3.0</small></span></div>

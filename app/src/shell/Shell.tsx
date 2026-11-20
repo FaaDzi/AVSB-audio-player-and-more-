@@ -1,4 +1,4 @@
-import { checkDaily, openUpdate, type Update } from './updates'
+import { checkDaily, getUpdate, type Update } from './updates'
 import { version as appVersion } from '../../package.json'
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { Dialog, Icon, IconButton, placeholderCoverImage } from './ui'
@@ -140,6 +140,8 @@ export function Shell() {
   // §83: a newer release on GitHub gets a popup at start (a toast was easy to miss), with the download for this
   // platform; "Later" asks again on the next start
   const [update, setUpdate] = useState<Update | null>(null)
+  // the download's progress (0-1) while the app fetches it, or the reason it stopped
+  const [fetching, setFetching] = useState<number | string | null>(null)
   useEffect(() => {
     void checkDaily().then(setUpdate)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -595,15 +597,29 @@ export function Shell() {
           {update && (
             <Dialog
               title="A new version is out"
-              onClose={() => setUpdate(null)}
+              onClose={() => { setUpdate(null); setFetching(null) }}
               footer={<>
-                <button type="button" className="ms-btn text" onClick={() => setUpdate(null)}>Later</button>
-                <button type="button" className="ms-btn text" onClick={() => { openUpdate(update); setUpdate(null) }}>Download</button>
+                <button type="button" className="ms-btn text" onClick={() => { setUpdate(null); setFetching(null) }}>Later</button>
+                <button
+                  type="button"
+                  className="ms-btn text"
+                  disabled={typeof fetching === 'number'}
+                  onClick={() => {
+                    setFetching(0)
+                    void getUpdate(update, setFetching).then((error) => {
+                      setFetching(error)
+                      if (!error) setUpdate(null)
+                    })
+                  }}
+                >
+                  {typeof fetching === 'number' ? `Downloading ${Math.round(fetching * 100)}%` : 'Download'}
+                </button>
               </>}
             >
               <p>AVSB {update.version} is on GitHub. You have {appVersion}.</p>
+              {typeof fetching === 'string' && <p style={{ color: 'var(--error, #ffb4ab)' }}>{fetching}</p>}
               <p>{Capacitor.getPlatform() === 'android'
-                ? 'Download opens the APK; Android then asks to update the app. Your library, settings and pairing stay.'
+                ? 'AVSB downloads it, then Android asks to update the app. Your library, settings and pairing stay.'
                 : 'Download opens the zip; unpack it over this folder. Your settings stay (they live in AppData).'}</p>
             </Dialog>
           )}

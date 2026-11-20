@@ -921,6 +921,92 @@ public class ShellHostPlugin extends Plugin {
         call.resolve();
     }
 
+    /**
+     * Updates the app from inside it (plan §97): downloads the APK from GitHub into the cache, checks it is this app
+     * with a higher version code, then opens Android's own "Update this app?" screen. The browser used to do the
+     * download, and Brave's in-app tab could hang before the installer ever opened. Android itself refuses an APK
+     * signed with another key, so a wrong file can't replace the app.
+     */
+    @PluginMethod
+    public void installUpdate(PluginCall call) {
+        String url = call.getString("url");
+        if (url == null || !url.startsWith("https://github.com/") || !url.endsWith(".apk")) {
+            call.reject("Not an AVSB release file");
+            return;
+        }
+        Context ctx = getContext();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !ctx.getPackageManager().canRequestPackageInstalls()) {
+            // asked once: Settings -> Install unknown apps -> AVSB; the page tries again when you come back
+            try {
+                android.content.Intent allow = new android.content.Intent(android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:" + ctx.getPackageName()));
+                allow.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
+                ctx.startActivity(allow);
+            } catch (Exception ignored) {}
+            call.reject("Allow AVSB to install updates, then press Download again", "NEEDS_PERMISSION");
+            return;
+        }
+        new Thread(() -> {
+            File dir = new File(ctx.getCacheDir(), "update");
+            File apk = new File(dir, "AVSB-update.apk");
+            try {
+                dir.mkdirs();
+                java.net.HttpURLConnection con = null;
+                String at = url;
+                // GitHub answers with a redirect to its file host; follow a few, https only
+                for (int hop = 0; hop < 5; hop++) {
+                    con = (java.net.HttpURLConnection) new java.net.URL(at).openConnection();
+                    con.setInstanceFollowRedirects(false);
+                    con.setConnectTimeout(15000);
+                    con.setReadTimeout(30000);
+                    int code = con.getResponseCode();
+                    if (code >= 300 && code < 400) {
+                        at = con.getHeaderField("Location");
+                        con.disconnect();
+                        if (at == null || !at.startsWith("https://")) throw new Exception("Bad redirect");
+                        continue;
+                    }
+                    if (code != 200) throw new Exception("GitHub answered " + code);
+                    break;
+                }
+                long total = con.getContentLengthLong();
+                long done = 0, told = 0;
+                try (InputStream in = con.getInputStream(); FileOutputStream out = new FileOutputStream(apk)) {
+                    byte[] buf = new byte[1 << 16];
+                    int n;
+                    while ((n = in.read(buf)) > 0) {
+                        out.write(buf, 0, n);
+                        done += n;
+                        if (done - told > (1 << 20)) {
+                            told = done;
+                            JSObject p = new JSObject();
+                            p.put("done", done);
+                            p.put("total", total);
+                            notifyListeners("updateProgress", p);
+                        }
+                    }
+                } finally {
+                    con.disconnect();
+                }
+                if (total > 0 && done != total) throw new Exception("The download was cut short");
+                android.content.pm.PackageInfo got = ctx.getPackageManager().getPackageArchiveInfo(apk.getPath(), 0);
+                android.content.pm.PackageInfo mine = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0);
+                if (got == null || !ctx.getPackageName().equals(got.packageName)) throw new Exception("That file isn't AVSB");
+                long gotCode = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? got.getLongVersionCode() : got.versionCode;
+                long mineCode = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? mine.getLongVersionCode() : mine.versionCode;
+                if (gotCode <= mineCode) throw new Exception("That file isn't newer than this app");
+                Uri uri = androidx.core.content.FileProvider.getUriForFile(ctx, ctx.getPackageName() + ".fileprovider", apk);
+                android.content.Intent install = new android.content.Intent(android.content.Intent.ACTION_VIEW);
+                install.setDataAndType(uri, "application/vnd.android.package-archive");
+                install.addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION | android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
+                ctx.startActivity(install);
+                call.resolve();
+            } catch (Exception e) {
+                apk.delete();
+                call.reject(e.getMessage() == null ? "Download failed" : e.getMessage());
+            }
+        }).start();
+    }
+
     @Override
     protected void handleOnDestroy() {
         if (namingWakeLock != null && namingWakeLock.isHeld()) {

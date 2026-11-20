@@ -1,6 +1,7 @@
 // Update check (plan §83 A, B): asks GitHub which releases exist, at most once a day, and says so when one is newer
 // than this build. "Download" opens that release's file for this platform; nothing is installed behind your back.
 // Android installs the APK over the app (same signing key); on Windows it's the zip (your data lives in %APPDATA%).
+import { registerPlugin } from '@capacitor/core'
 import { version } from '../../package.json'
 import { isAndroid, openExternal } from '../platform'
 import { getSetting, setSetting } from './settings/store'
@@ -70,3 +71,30 @@ export async function checkDaily(): Promise<Update | null> {
 }
 
 export const openUpdate = (u: Update) => openExternal(u.url)
+
+interface Installer {
+  installUpdate(o: { url: string }): Promise<void>
+  addListener(event: 'updateProgress', f: (p: { done: number; total: number }) => void): Promise<{ remove: () => Promise<void> }>
+}
+const installer = isAndroid() ? registerPlugin<Installer>('ShellHost') : null
+
+/**
+ * §97: Download. On Android the app fetches the APK itself and opens Android's "Update this app?" screen (the browser
+ * could hang before the installer); `onShare` gets 0-1 as it arrives. Elsewhere it opens the file as before.
+ * Resolves with an error to show, or null when the installer (or the browser) took over.
+ */
+export async function getUpdate(u: Update, onShare?: (share: number) => void): Promise<string | null> {
+  if (!installer || !/\.apk$/i.test(u.url)) {
+    openUpdate(u)
+    return null
+  }
+  const sub = await installer.addListener('updateProgress', (p) => onShare?.(p.total > 0 ? p.done / p.total : 0))
+  try {
+    await installer.installUpdate({ url: u.url })
+    return null
+  } catch (e) {
+    return (e as { message?: string }).message ?? String(e)
+  } finally {
+    void sub.remove()
+  }
+}
