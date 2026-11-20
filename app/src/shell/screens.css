@@ -19,7 +19,9 @@
 .ms-play { transition: border-radius var(--press-ms) var(--spring-press); }
 .ms-play.on { border-radius: 12px; }
 .ms-play:active { border-radius: 8px; }
-.ms-wave { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--text-strong); pointer-events: none; }
+.ms-wave { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: calc(100% + 14px); color: var(--text-strong); pointer-events: none; }
+/* §95: the phone mini player's top line, with room above it for small humps */
+.ms-wave.compact { height: 12px; bottom: auto; top: -10px; color: var(--cover-primary, var(--accent)); }
 .ms-player-title-row { display: flex; align-items: center; gap: 6px; min-width: 0; }
 .ms-slider.thick { height: 44px; }
 .ms-slider.centred .ms-slider-active { left: var(--from); width: var(--span); z-index: 1; border-radius: 0; }

@@ -19,6 +19,8 @@ function load(): SettingValues {
 let values = load()
 // §79 E: "Automatic duration" + "Mix length" became one slider whose 0 is Auto; a length you had chosen carries over
 if (values.mixsecs === undefined && values.autoduration === false) values = { ...values, mixsecs: Number(values.mixlength ?? 5) }
+// §95: the seek bar's "Moving with the music" is now called Waves
+if (values.seekwave === 'Moving with the music') values = { ...values, seekwave: 'Waves' }
 const listeners = new Set<() => void>()
 
 export const getSettings = () => values

@@ -218,7 +218,7 @@ export const PAGE_GROUPS: Page[][] = [
     },
     {
       id: 'playback', title: 'Playback', icon: 'play_circle', sections: [
-        ...(ONPHONE ? [] : [{ title: 'Player', rows: [pick('player', 'External player', 'Open songs in your default Windows music app. Only in the installed app.', 'open_in_new'), pick('player', 'Built-in player', 'Play your music right inside this app', 'play_circle', true)] }]),
+        ...(ONPHONE ? [] : [{ title: 'Player', rows: [pick('player', 'External player', 'Open songs in your default Windows music app. Only in the installed app.', 'open_in_new', false, 'circle'), pick('player', 'Built-in player', 'Play your music right inside this app', 'play_circle', true, 'circle')] }]),
         // §86 D: what shapes the sound, then the tools and tests (pages of their own), then levels and transitions
         { title: 'Sound', rows: [
           nav('Equalizer', 'AutoEQ to a target, fine-tune by ear, bands and filters', 'equalizer', 'equalizer'),
@@ -254,7 +254,13 @@ export const PAGE_GROUPS: Page[][] = [
           toggle('analysis', 'Song analysis', 'Learn how each Library song sounds, privately on this device, so Autoplay picks songs that sound like what you play and flow into each other.', 'graphic_eq'),
           action('Clear song analysis', '0 of 635 songs analyzed', 'delete', { when: { id: 'analysis', is: true } }),
         ] },
-        { title: 'Cover art', rows: [pick('cover', 'Card', 'Artwork as a card above the controls', 'crop_square', true), pick('cover', 'Full screen', 'Artwork fills the top of the player and fades into a blur.', 'fullscreen'), toggle('artlyrics', 'Album art beside lyrics', 'Show album art instead of track details while lyrics are open.', 'splitscreen'), toggle('compact', 'Compact player', 'When lyrics are left alone for a few seconds, shrink the player to a slim bar so the lyrics get more room.', 'short_text')] },
+        { title: 'Cover art', rows: [pick('cover', 'Card', 'Artwork as a card above the controls', 'crop_square', true, 'circle'), pick('cover', 'Full screen', 'Artwork fills the top of the player and fades into a blur.', 'fullscreen', false, 'circle'), toggle('artlyrics', 'Album art beside lyrics', 'Show album art instead of track details while lyrics are open.', 'splitscreen'), toggle('compact', 'Compact player', 'When lyrics are left alone for a few seconds, shrink the player to a slim bar so the lyrics get more room.', 'short_text')] },
+        // §95: Samsung-style humps on the seek bar
+        { title: 'Seek bar', rows: [
+          pick('seekwave', 'Waves', 'Soft waves that rise with the loud parts of the song and settle in the quiet ones', 'graphic_eq', true, 'circle'),
+          pick('seekwave', 'Squiggly', 'A thin line that wiggles while the music plays', 'waves', false, 'circle'),
+          pick('seekwave', 'Flat', 'A plain bar', 'horizontal_rule', false, 'circle'),
+        ] },
         { title: 'Animated artwork', rows: [toggle('animated', 'Enable animated artwork', 'Play a GIF or animated WebP in the player if the song has one, either in its file or beside it with the same name. Only in the installed app.', 'motion_photos_on')] },
         { title: 'Statistics', rows: [nav('Listening statistics', 'What you play, kept on this computer.', 'bar_chart', 'stats')] },
       ],

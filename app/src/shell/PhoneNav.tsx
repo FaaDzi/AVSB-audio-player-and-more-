@@ -6,6 +6,7 @@ import { useShell, type Route } from './context'
 import { useCoverStyle } from './cover'
 import { isLiked, toggleLike, useFavorites } from './favorites'
 import { useIsBuffering, useLivePosition } from './engine'
+import { WaveTrack } from './WaveTrack'
 
 /**
  * The phone layout: a phone held upright (narrow), or turned sideways (short), or a very narrow window. Turned
@@ -92,7 +93,7 @@ function PhoneMiniPlayer() {
   const done = current.sec ? Math.min(1, position / current.sec) : 0
   return (
     <div className="ms-pmini" style={coverStyle}>
-      <span className="ms-pmini-progress" aria-hidden="true"><span style={{ transform: `scaleX(${done})` }} /></span>
+      <WaveTrack share={done} moving={playing} compact />
       <button type="button" className="ms-pmini-open" aria-label="Open Now Playing" onClick={() => setNowPlaying(true)}>
         <div className={`ms-pmini-art-wrap ${playing ? 'playing' : 'paused'}`} style={{ position: 'relative', display: 'inline-flex', overflow: 'hidden', flex: 'none' }}>
           <Cover id={current.cover} className="ms-pmini-art" genre={current.genre} speciality={current.category} title={current.title} />

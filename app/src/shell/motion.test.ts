@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { easeInOutCubic, easeOutCubic, lyricLag, lyricScrollAt, springAt } from './motion'
-import { WAVE, waveY } from './WaveTrack'
+import { SQUIGGLE, edgeFade, humpAt, levelStep, waveY } from './WaveTrack'
 
 describe('springAt', () => {
   it('starts at 0 and settles on 1', () => {
@@ -40,16 +40,35 @@ describe('lyric motion', () => {
   })
 })
 
-describe('seek wave', () => {
+describe('seek wave (§95)', () => {
+  it('humps never dip below the bar and repeat every length', () => {
+    for (let x = 0; x < 300; x += 7) expect(humpAt(x, 100, 13)).toBeGreaterThanOrEqual(0)
+    expect(humpAt(40, 100, 13)).toBeCloseTo(humpAt(140, 100, 13), 9)
+  })
+  it('fade to nothing at both ends of the played part', () => {
+    expect(edgeFade(0, 0, 200)).toBe(0)
+    expect(edgeFade(200, 0, 200)).toBe(0)
+    expect(edgeFade(100, 0, 200)).toBe(1)
+  })
+  it('follow the level against the song average, rising fast and falling slowly', () => {
+    const s = { mean: -18, amount: 1 }
+    levelStep(s, -9, 80)
+    const risen = s.amount
+    expect(risen).toBeGreaterThan(1.3)
+    const fall = { mean: -18, amount: 1 }
+    levelStep(fall, -30, 80)
+    expect(1 - fall.amount).toBeLessThan(risen - 1)
+    for (let i = 0; i < 400; i++) levelStep(s, -9, 100)
+    expect(s.amount).toBeCloseTo(1, 1)
+  })
+})
+
+describe('squiggly seek line', () => {
   it('is flat at no amplitude and bounded by the amplitude', () => {
     expect(waveY(13, 1.2, 0)).toBeCloseTo(0, 9)
-    for (let x = 0; x < 80; x++) expect(Math.abs(waveY(x, 0.7, 1))).toBeLessThanOrEqual(WAVE.amplitude + 1e-9)
+    for (let x = 0; x < 80; x++) expect(Math.abs(waveY(x, 0.7, 1))).toBeLessThanOrEqual(SQUIGGLE.amplitude + 1e-9)
   })
   it('repeats every wavelength', () => {
-    expect(waveY(5, 0.3, 1)).toBeCloseTo(waveY(5 + WAVE.wavelength, 0.3, 1), 9)
-  })
-  it('travels left as the phase rises', () => {
-    const quarter = (Math.PI * 2) / 4
-    expect(waveY(0, quarter, 1)).toBeCloseTo(waveY(WAVE.wavelength / 4, 0, 1), 9)
+    expect(waveY(5, 0.3, 1)).toBeCloseTo(waveY(5 + SQUIGGLE.wavelength, 0.3, 1), 9)
   })
 })

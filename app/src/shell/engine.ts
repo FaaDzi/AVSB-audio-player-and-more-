@@ -885,6 +885,8 @@ export const onPositionShown = subscribePosition
 export const isLive = () => !switching && (direct ? directState.playing : Boolean(player?.playing))
 /** The output analyser (after volume), for visuals that follow the music; null before the first song. */
 export const engineAnalyser = () => player?.analyser ?? null
+/** Direct USB output plays outside Web Audio, so the analyser hears nothing (§95: the seek wave keeps its usual height). */
+export const isDirectOutput = () => direct
 /** The output sample rate (48 kHz until the first song opens the audio device). */
 export const engineSampleRate = () => ctx?.sampleRate ?? 48000
 

@@ -9,6 +9,7 @@ import { missingTrack } from '../playlistSync'
 import { TrackTable } from './TrackTable'
 import { FilterDialog, FolderActions, Tile, below, sortMenuItems } from './LibraryPage'
 import { useCoverStyle } from '../cover'
+import { usePhone } from '../PhoneNav'
 import { useListening } from '../stats'
 import { buildHomeShelves } from './HomePage'
 import { pickSquareImage, SHELF_PREFIX } from './playlistCover'
@@ -126,6 +127,7 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
   )
   const playlist = data.playlists.find((p) => p.id === id) ?? (shelf ? { id, name: shelf.title, tracks: shelf.tracks.map((t) => t.id) } : undefined)
   const [editing, setEditing] = useState(false)
+  const phone = usePhone()
   const [coverMenu, setCoverMenu] = useState<{ x: number; y: number } | null>(null)
   const [query, setQuery] = useState('')
   const [sourceFilter, setSourceFilter] = useState<PlaylistSourceFilter>('all')
@@ -251,7 +253,8 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
             >
               <Icon name="filter_list" size={20} /> {sourceFilter === 'all' ? 'Filter' : currentFilterLabel}
             </button>
-            {!shelf && tracks.length > 1 && (
+            {/* the PC drags rows directly; edit mode (checks and handles) is the phone's way to move songs */}
+            {phone && !shelf && tracks.length > 1 && (
               <button type="button" className={`ms-tool${editing ? ' on' : ''}`} onClick={() => setEditing(!editing)}>
                 <Icon name="drag_handle" size={20} /> Edit order
               </button>
