@@ -28,7 +28,7 @@ function toIem(c: Catalog, r: Row, source: string): Iem {
 }
 
 /** Adds them to the catalog in place; a file that's missing or on another grid is skipped. */
-export function addListeningDevices(c: Catalog, generic: unknown, speakers: unknown) {
+export function addListeningDevices(c: Catalog, generic: unknown, speakers: unknown, phoneSpeakers: unknown = null) {
   const sameGrid = (g: unknown) => Array.isArray(g) && g.length === c.data.grid.length
   const rows: Iem[] = []
   const gen = generic as { grid?: number[]; devices?: Row[] }
@@ -40,6 +40,9 @@ export function addListeningDevices(c: Catalog, generic: unknown, speakers: unkn
       if (r.photo && !c.images[r.id]) c.images[r.id] = { src: r.photo, store: 'spinorama.org', url: 'https://www.spinorama.org', title: r.name }
     }
   }
+  // §106 F: phone and tablet speakers (scripts/build_phone_speakers.py), so a deleted one can be found and added again
+  const phones = phoneSpeakers as { grid?: number[]; speakers?: Row[] } | null
+  if (phones && sameGrid(phones.grid)) for (const r of phones.speakers ?? []) rows.push(toIem(c, r, r.source ?? 'Notebookcheck'))
   for (const r of rows) {
     if (c.byId.has(r.id)) continue
     c.data.iems.push(r)

@@ -10,7 +10,7 @@ import { buildBracket, entrantsOf, isComplete, nextMatch, placings, playedIds, t
 import type { Iem } from '../../audio/data'
 import { imgUrl } from '../../reviews/reviews'
 import { DatabaseStatus } from '../database/DatabasePage'
-import type { Database } from '../database/catalog'
+import type { Database, Model } from '../database/catalog'
 import { priceOf } from '../../data/catalog'
 import { Graph, Reviews } from '../database/DevicePage'
 import { BracketPage, contenderName } from './BracketPage'
@@ -21,6 +21,7 @@ import { SetupPage, SONGS_KEY, songsFor } from './SetupPage'
 import { QuestionsPage } from './QuestionsPage'
 import type { Preferences } from '../../prefs/types'
 import { VsScreen, type VsSide } from './VsScreen'
+import { SimilarPage } from './SimilarPage'
 import { QuickPage, type QuickPick } from './QuickPage'
 import { DEFAULT_PREFS } from '../../prefs/types'
 import { kindOfIem } from '../../data/catalog'
@@ -35,7 +36,7 @@ function when(iso: string) {
   return Number.isNaN(d.getTime()) ? '' : d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })
 }
 
-function TournamentHome({ db, running, onNew, onContinue, onQuick }: { db: Database; running: TournamentSave | null; onNew: () => void; onContinue: () => void; onQuick: () => void }) {
+function TournamentHome({ db, running, onNew, onContinue, onQuick, onSimilar }: { db: Database; running: TournamentSave | null; onNew: () => void; onContinue: () => void; onQuick: () => void; onSimilar: () => void }) {
   // read on every render: the page records a just-finished save into History after this first draws
   const history = loadHistory().slice().reverse()
   const name = (id: string) => db.catalog.byId.get(id)?.name ?? id
@@ -123,6 +124,16 @@ function TournamentHome({ db, running, onNew, onContinue, onQuick }: { db: Datab
             </div>
           )}
         </section>
+
+        {/* §106 C: same sound, other prices */}
+        <button type="button" className="ms-tourney-hero similar" onClick={onSimilar}>
+          <span className="ms-tourney-lines" aria-hidden="true" />
+          <Icon name="compare_arrows" size={44} fill />
+          <span className="ms-tourney-hero-text">
+            <b>Find similar</b>
+            <small>Same sound, every price: pick one, see what tunes like it</small>
+          </span>
+        </button>
       </div>
 
       {selectedHistory && (
@@ -256,7 +267,7 @@ function TournamentHome({ db, running, onNew, onContinue, onQuick }: { db: Datab
 }
 
 type Rounds = ReturnType<typeof libraryRounds>
-type View = { v: 'home' } | { v: 'quick' } | { v: 'quickmatch'; q: QuickPick; rounds: Rounds } | { v: 'questions' } | { v: 'setup'; prefs: Preferences } | { v: 'bracket' } | { v: 'results' } | { v: 'match'; m: BracketMatch; rounds: Rounds }
+type View = { v: 'home' } | { v: 'quick'; initial?: [Model, Model] } | { v: 'similar'; refId: string | null; pickId: string | null } | { v: 'quickmatch'; q: QuickPick; rounds: Rounds } | { v: 'questions' } | { v: 'setup'; prefs: Preferences } | { v: 'bracket' } | { v: 'results' } | { v: 'match'; m: BracketMatch; rounds: Rounds }
 type Vs = { m: BracketMatch; rounds: Rounds; first: Promise<unknown> }
 
 export function TournamentPage() {
@@ -267,6 +278,8 @@ export function TournamentPage() {
   const [view, setView] = useState<View>({ v: 'home' })
   const [vs, setVs] = useState<Vs | null>(null)
   const [quickVs, setQuickVs] = useState<{ q: QuickPick; rounds: Rounds; first: Promise<unknown> } | null>(null)
+  /** §106 C: a Quick match started from Find similar goes back to its graph when it ends (and to its pair on Back). */
+  const quickFrom = useRef<{ back: View; initial: [Model, Model] } | null>(null)
   /** The next match's rounds, started while the bracket is open. */
   const prefetched = useRef<Vs | null>(null)
   // bursts, speed lines and sounds into the cache before the first VS screen
@@ -359,8 +372,34 @@ export function TournamentPage() {
   }
 
   let page
-  if (view.v === 'quick') {
-    page = <QuickPage db={db} onCancel={() => setView({ v: 'home' })} onStart={startQuick} />
+  if (view.v === 'similar') {
+    page = (
+      <SimilarPage
+        db={db}
+        refId={view.refId}
+        pickId={view.pickId}
+        onChange={(refId, pickId) => setView({ v: 'similar', refId, pickId })}
+        onBack={() => setView({ v: 'home' })}
+        onListen={(a, b) => {
+          quickFrom.current = { back: view, initial: [a, b] }
+          setView({ v: 'quick', initial: [a, b] })
+        }}
+      />
+    )
+  } else if (view.v === 'quick') {
+    page = (
+      <QuickPage
+        key={view.initial?.map((m) => m.id).join('|') ?? 'quick'}
+        db={db}
+        initial={view.initial}
+        onCancel={() => {
+          const from = quickFrom.current
+          quickFrom.current = null
+          setView(from && view.initial ? from.back : { v: 'home' })
+        }}
+        onStart={startQuick}
+      />
+    )
   } else if (view.v === 'quickmatch' && refs) {
     const prefs = quickPrefs()
     const entrants: [Iem, Iem] = [db.catalog.byId.get(view.q.ids[0])!, db.catalog.byId.get(view.q.ids[1])!]
@@ -384,8 +423,15 @@ export function TournamentPage() {
         isGrandFinal={false}
         fullTreble={matchFullTreble(refs, prefs, view.q.ids)}
         getRound={rounds.getRound}
-        onDone={() => setView({ v: 'home' })}
-        onLeave={() => setView({ v: 'quick' })}
+        loadProgress={rounds.progress}
+        // from Find similar: back to the pair's graph, 5 s after the result or on Continue
+        autoContinueMs={quickFrom.current ? 5000 : undefined}
+        onDone={() => {
+          const from = quickFrom.current
+          quickFrom.current = null
+          setView(from ? from.back : { v: 'home' })
+        }}
+        onLeave={() => setView({ v: 'quick', initial: quickFrom.current?.initial })}
       />
     )
   } else if (view.v === 'questions') {
@@ -417,16 +463,17 @@ export function TournamentPage() {
         candidateDb={(iem) => candidateFr(db.catalog, iem, save.prefs)}
         mode={save.prefs.mode}
         bestOf={m.bestOf}
-        heading={`Match ${m.playOrder} of ${bracket.matches.length} · ${m.label}`}
+        heading={`Match ${m.playOrder} of ${bracket.matches.length}`}
         isGrandFinal={m.bracket === 'grand'}
         fullTreble={matchFullTreble(refs, save.prefs, [a, b])}
         getRound={rounds.getRound}
+        loadProgress={rounds.progress}
         onDone={(winner, st) => finish(m, winner, st.wins, rounds)}
         onLeave={() => setView({ v: 'bracket' })}
       />
     )
   } else {
-    page = <TournamentHome db={db} running={save} onNew={() => setView({ v: 'questions' })} onQuick={() => setView({ v: 'quick' })} onContinue={() => setView({ v: done ? 'results' : 'bracket' })} />
+    page = <TournamentHome db={db} running={save} onNew={() => setView({ v: 'questions' })} onQuick={() => { quickFrom.current = null; setView({ v: 'quick' }) }} onSimilar={() => setView({ v: 'similar', refId: null, pickId: null })} onContinue={() => setView({ v: done ? 'results' : 'bracket' })} />
   }
 
   const vsSide = (s: TournamentSave, seed: number | null): VsSide => {
@@ -444,7 +491,7 @@ export function TournamentPage() {
       <VsScreen
         left={vsSide(save, seeds[0])}
         right={vsSide(save, seeds[1])}
-        round={`${m.label} · Match ${m.playOrder} of ${bracket.matches.length} · Best of ${m.bestOf}`}
+        round={`Match ${m.playOrder} of ${bracket.matches.length}`}
         stakes={m.bracket === 'grand' ? 'Grand final · the title is on the line' : m.bracket === 'lower' ? 'Lower bracket · the loser is out' : 'Upper bracket · the winner advances'}
         ready={vs.first}
         onStart={() => {

@@ -3,6 +3,11 @@
 .ms-eq-hero { position: sticky; top: 0; z-index: 6; overflow-anchor: none; }
 .ms-eq-spacer { overflow-anchor: none; }
 .ms-eq-hero .ms-eq-head p, .ms-eqg-legend { opacity: var(--eqg-fade, 1); }
+/* §106 E: the title shrinks with the fold (a transform: no reflow, so nothing under it moves) */
+.ms-window.phone .ms-eq-hero .ms-eq-head h3 { transform: scale(calc(0.62 + 0.38 * var(--eqg-fade, 1))); transform-origin: left center; }
+/* the subtitle and the legend fold away with it too, so the whole card ends near half its height */
+.ms-window.phone .ms-eq-hero .ms-eq-head p { max-height: calc(var(--eqg-fade, 1) * 44px); overflow: hidden; }
+.ms-window.phone .ms-eq-hero .ms-eqg-legend { max-height: calc(var(--eqg-fade, 1) * 60px); margin-top: calc(var(--eqg-fade, 1) * 26px); overflow: hidden; }
 .ms-eq-hero.compact { padding: 8px 12px; border-radius: 0 0 var(--radius-card) var(--radius-card); box-shadow: 0 10px 28px rgb(0 0 0 / 0.45); }
 .ms-eq-hero.compact .ms-eq-head { align-items: center; }
 .ms-eq-hero.compact .ms-eq-head h3 { font-size: 16px; line-height: 20px; }
@@ -111,6 +116,10 @@
 .ms-db-legend { display: inline-flex; align-items: center; gap: 6px; margin-left: 14px; font-size: 13px; color: var(--text-dim); }
 .ms-db-legend i { display: inline-block; width: 18px; border-top: 3px solid var(--accent); }
 .ms-db-legend i.base { margin-left: 10px; border-top: 2px solid var(--text-dim); }
+/* §106 C: two devices on one graph (Find similar) */
+.ms-db-graph .curve.two { stroke: #ff8a65; }
+.ms-db-legend.two { flex-wrap: wrap; margin-left: 0; }
+.ms-db-legend i.two { margin-left: 10px; border-top: 3px solid #ff8a65; }
 .ms-db-filters { list-style: none; margin: 12px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 8px; }
 .ms-db-filters li { display: flex; align-items: baseline; gap: 10px; padding: 10px 14px; border-radius: 12px; background: var(--group); font-variant-numeric: tabular-nums; }
 .ms-db-filters em { font-style: normal; font-size: 12px; color: var(--text-dim); min-width: 68px; }
@@ -170,6 +179,9 @@
 /* preset menu */
 .ms-eq-presetbar { display: flex; align-items: center; gap: 4px; padding: 6px 6px 6px 12px; border-radius: var(--radius-card); background: var(--chrome); }
 .ms-eq-presetpick { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; color: var(--text-dim); }
+/* §106 G: the AutoEQ button at the left of the preset name (was a plain music icon) */
+.ms-eq-autobtn { flex: none; width: 40px; height: 40px; margin-left: -6px; display: grid; place-items: center; border-radius: 50%; background: color-mix(in srgb, var(--accent) 22%, transparent); color: var(--accent); touch-action: manipulation; }
+.ms-eq-autobtn:active { background: var(--accent); color: var(--on-accent); }
 .ms-eq-presetpick select, .ms-eqlab-target select {
   min-width: 0; flex: 1; height: 38px; padding: 0 10px; border-radius: 10px; border: 1px solid var(--hairline);
   background: rgb(var(--ink) / 0.05); color: var(--text-strong); font: inherit; font-size: 14px;
@@ -224,10 +236,17 @@
    inside its own parent) */
 .ms-window.phone .ms-eq-studio, .ms-window.phone .ms-eq-main, .ms-window.phone .ms-eq-rail { display: contents; }
 .ms-window.phone .ms-eq-studio > .ms-eq-main > *, .ms-window.phone .ms-eq-rail > * { margin-bottom: 14px; }
+/* §106 E: the scroll mark sits flush on the graph card: the 14 px gap above put it 15 px "scrolled" at rest, so its
+   full height was never taken and the card never folded or faded on the phone */
+.ms-window.phone .ms-eq-studio > .ms-eq-main > .ms-eq-sentinel { margin-bottom: -1px; }
+/* §106 E: pinned under the page's top bar, not behind it (the faded card let the bar's title show through its own) */
+.ms-window.phone .ms-eq-hero { top: calc(var(--topbar-height) + 4px); }
 /* a phone on its side is too short for a pinned graph: it would cover everything under it */
 @media (max-height: 540px) {
   .ms-window.phone .ms-eq-hero { position: relative; top: auto; }
 }
 /* §100 (phone): the graph card rests nearly see-through; a double tap on the graph lifts it, a tap off it lets it rest */
-.ms-window.phone .ms-eq-hero.resting { background: color-mix(in srgb, var(--chrome) 8%, transparent); box-shadow: none; transition: background 0.2s; }
-.ms-window.phone .ms-eq-hero.lifted { background: color-mix(in srgb, var(--chrome) 88%, transparent); transition: background 0.2s; }
+.ms-window.phone .ms-eq-hero.resting { background: color-mix(in srgb, var(--chrome) 8%, transparent); box-shadow: none; transition: background 0.2s, opacity 0.2s; }
+/* §105 A: the whole card fades as it shrinks (the background alone left the curve and labels solid), to 25 % when small */
+.ms-window.phone .ms-eq-hero.resting { opacity: calc(0.25 + 0.75 * var(--eqg-fade, 1)); }
+.ms-window.phone .ms-eq-hero.lifted { opacity: 1; background: color-mix(in srgb, var(--chrome) 88%, transparent); transition: background 0.2s, opacity 0.2s; }

@@ -133,7 +133,8 @@ class MediaVoice {
     // events arrive late: the pause from a seek's own stop lands after the play that followed it, so only a pause the
     // element is still in counts
     el.onpause = () => { if (el.paused && !el.ended) this.onInterrupted?.() }
-    const go = () => void el.play().catch((e: unknown) => console.warn(`Stream wouldn't start: ${String(e)}`))
+    // AbortError = stopped (skip, pause, seek) before its first sound came: expected on a slow stream, not a fault
+    const go = () => void el.play().catch((e: unknown) => { if ((e as Error)?.name !== 'AbortError') console.warn(`Stream wouldn't start: ${String(e)}`) })
     const wait = (when - ctx.currentTime) * 1000
     if (wait > 20) this.timer = setTimeout(go, wait)
     else go()

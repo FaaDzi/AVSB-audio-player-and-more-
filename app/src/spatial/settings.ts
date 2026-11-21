@@ -5,8 +5,8 @@ import type { HeadTracking, SpatialMode, SpatialSettings, SpatialStageApi } from
 
 const KEY = 'spatial-v1'
 export const SPATIAL_MODES: SpatialMode[] = ['off', 'crossfeed', 'speakers', 'room', '360']
-const TRACKING: HeadTracking[] = ['off', 'webcam', 'phone-camera', 'earbuds']
-export const DEFAULT_SPATIAL: SpatialSettings = { mode: 'off', hrirId: 'generic', headTracking: 'off', headCm: null, headCmBy: null, xfAmount: 100, xfAngle: 30, frontFollows: true }
+const TRACKING: HeadTracking[] = ['off', 'webcam', 'phone-camera', 'earbuds', 'rough']
+export const DEFAULT_SPATIAL: SpatialSettings = { mode: 'off', hrirId: 'generic', headTracking: 'off', headCm: null, headCmBy: null, xfAmount: 100, xfAngle: 30, frontFollows: true, modeBeforeTracking: null }
 export const XF_AMOUNT_RANGE = [0, 150] as const
 export const XF_ANGLE_RANGE = [30, 90] as const
 const inRange = (v: unknown, [lo, hi]: readonly [number, number], dflt: number) =>
@@ -24,6 +24,7 @@ export function sanitizeSpatial(v: unknown): SpatialSettings {
     xfAmount: inRange(o.xfAmount, XF_AMOUNT_RANGE, DEFAULT_SPATIAL.xfAmount),
     xfAngle: inRange(o.xfAngle, XF_ANGLE_RANGE, DEFAULT_SPATIAL.xfAngle),
     frontFollows: o.frontFollows !== false,
+    modeBeforeTracking: SPATIAL_MODES.includes(o.modeBeforeTracking as SpatialMode) ? (o.modeBeforeTracking as SpatialMode) : null,
   }
 }
 

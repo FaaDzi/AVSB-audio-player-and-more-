@@ -7,7 +7,7 @@ import { BudsPose, LookCalibration, normalize, normalizeQ, type LookStep, type Q
 import { logLine } from '../shell/logs'
 
 interface BudsPlugin {
-  find(): Promise<{ devices: { name: string; address: string }[] }>
+  find(): Promise<{ devices: { name: string; address: string; connected?: boolean }[] }>
   start(o: { address: string }): Promise<void>
   stop(): Promise<void>
   addListener(e: 'pose', f: (p: { x: number; y: number; z: number; w: number; t: number }) => void): Promise<PluginListenerHandle>
@@ -17,12 +17,18 @@ const plugin = isAndroid() ? registerPlugin<BudsPlugin>('BudsHeadTracker') : nul
 
 export interface Earbuds { name: string; address: string }
 
-/** Galaxy Buds (Buds+ and later) paired with this phone, the ones playing right now first. Empty off Android. */
+/** Earbuds tracking found no connected pair with head sensors: the Spatial card offers the camera or a rough estimation. */
+export const NO_HEAD_SENSORS = "This device doesn't have head sensors."
+
+/** Earbuds with head sensors that are connected now, the ones playing first (§105 B: a pair that is only paired,
+ * while other earbuds play, isn't tried). Empty off Android. */
 export async function findEarbuds(): Promise<Earbuds[]> {
   if (!plugin) return []
   const { devices } = await plugin.find()
   const playing = await AudioRoute.output().then((o) => (o.type === 'bluetooth' ? o.name ?? '' : ''), () => '')
-  return [...devices].sort((a, b) => Number(b.name === playing) - Number(a.name === playing))
+  return devices
+    .filter((d) => d.name === playing || d.connected === true)
+    .sort((a, b) => Number(b.name === playing) - Number(a.name === playing))
 }
 
 const liftKey = (address: string) => `buds-lift-${address}`
@@ -73,7 +79,7 @@ export function createBudsTracker(): BudsTracker {
     async start() {
       if (!plugin) throw new Error('Head tracking from earbuds works on the phone.')
       const found = await findEarbuds()
-      if (!found.length) throw new Error('No earbuds with head sensors found. Supported now: Galaxy Buds+ and later.')
+      if (!found.length) throw new Error(NO_HEAD_SENSORS)
       earbuds = found[0]
       logLine('INFO', 'Spatial', `Earbuds head tracking: connecting to ${earbuds.name}`)
       const cal = savedCal(earbuds.address)
@@ -116,7 +122,7 @@ export function createBudsTracker(): BudsTracker {
         await plugin.start({ address: earbuds.address })
       } catch (e) {
         this.stop()
-        throw new Error(`Couldn't reach ${earbuds.name}'s motion sensor (${e instanceof Error ? e.message : String(e)}). If Samsung's Galaxy Wearable app is open, close it and try again.`)
+        throw new Error(`Couldn't reach the earbuds' motion sensor (${e instanceof Error ? e.message : String(e)}). If the earbuds' own app is open, close it and try again.`)
       }
     },
     stop() {

@@ -5167,6 +5167,7 @@ function createLink(opts) {
   let ep = null;
   let online = false;
   let watches = [];
+  let pinnedRelay;
   let restarting = null;
   let lanServer = null;
   let lanPort = 0;
@@ -5808,12 +5809,14 @@ function createLink(opts) {
     }
     const known = pairing.phones().find((p) => p.id === phoneId);
     const name = known?.customName || known?.name || "Phone";
+    const since = Date.now();
     log(`${name} connected`);
     const conns = live.get(phoneId) ?? /* @__PURE__ */ new Set();
     conns.add(conn);
     live.set(phoneId, conns);
     onChange();
     let active = 0;
+    let why = "";
     try {
       for (; ; ) {
         const bi = await conn.acceptBi();
@@ -5841,11 +5844,12 @@ function createLink(opts) {
           }
         })();
       }
-    } catch {
+    } catch (e) {
+      why = e?.message ?? String(e);
     } finally {
       conns.delete(conn);
       if (!conns.size) live.delete(phoneId);
-      log(`${name} disconnected`);
+      log(`${name} disconnected after ${Math.round((Date.now() - since) / 1e3)} s${why ? ` (${why})` : ""}`);
       onChange();
     }
   }
@@ -5855,7 +5859,14 @@ function createLink(opts) {
       await startLanServer();
       const b = iroh.Endpoint.builder();
       if (opts.relay === false) b.applyN0DisableRelay();
-      else b.applyN0();
+      else {
+        b.applyN0();
+        if (pinnedRelay === void 0) pinnedRelay = await closestRelay();
+        if (pinnedRelay) {
+          b.relayMode(iroh.RelayMode.customFromUrls([pinnedRelay]));
+          log(`relay pinned to the closest: ${pinnedRelay}`);
+        }
+      }
       b.secretKey(secretKey());
       b.alpns([alpnBytes]);
       for (const a of opts.bind ?? []) b.bindAddr(a);
@@ -5875,6 +5886,7 @@ function createLink(opts) {
             const urls = Array.isArray(a) ? a : Array.isArray(b2) ? b2 : [];
             if (ep !== mine || opts.relay === false) return;
             log(urls.length ? `relay: ${urls.join(", ")}` : "relay: none (phones away from this network cannot reach the PC)");
+            if (!urls.length && online && pinnedRelay) pinnedRelay = null;
             online = urls.length > 0;
             onChange();
           })
@@ -5984,6 +5996,16 @@ function createLink(opts) {
     /** For tests: this end's address. */
     addr: () => ep?.addr()
   };
+}
+var N0_RELAYS = ["aps1", "euc1", "usw1", "use1"].map((r) => `https://${r}-1.relay.n0.iroh.link./`);
+async function closestRelay() {
+  const timed = (url) => {
+    const t0 = Date.now();
+    return fetch(`${url.replace("./", "/")}ping`, { signal: AbortSignal.timeout(5e3) }).then((r) => r.ok ? Date.now() - t0 : Infinity, () => Infinity);
+  };
+  const ms = await Promise.all(N0_RELAYS.map(timed));
+  const best = ms.indexOf(Math.min(...ms));
+  return Number.isFinite(ms[best]) ? N0_RELAYS[best] : null;
 }
 
 // electron/link/index.mjs

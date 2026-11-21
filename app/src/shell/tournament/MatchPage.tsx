@@ -33,6 +33,10 @@ const preppedByBuffer = new WeakMap<AudioBuffer, PreppedRound>()
 const inflightByBuffer = new WeakMap<AudioBuffer, Promise<PreppedRound>>()
 let lastWarmed: PreppedRound | null = null
 
+/** §105 D: after this long without the song, "Try another song" can be tapped. */
+const LOAD_SLOW_MS = 20_000
+const AUTO_SKIPS = 2
+
 export function prepRoundAudio(a: RoundAudio): Promise<PreppedRound> {
   const hit = preppedByBuffer.get(a.buffer)
   if (hit) return Promise.resolve(hit)
@@ -85,6 +89,10 @@ export function MatchPage(p: {
   /** The listening device from settings/currentId, if any (used for adaptive driver protection). */
   device?: Iem | null
   getRound: (round: number, attempt: number) => Promise<RoundAudio>
+  /** §106 C: the result moves on by itself after this long (Continue still works sooner). */
+  autoContinueMs?: number
+  /** How far the round's song has downloaded (total 0 = size unknown). */
+  loadProgress?: (round: number) => { got: number; total: number } | null
   onDone: (winner: Side, state: MatchState) => void
   onLeave: () => void
 }) {
@@ -93,6 +101,11 @@ export function MatchPage(p: {
   const [attempt, setAttempt] = useState(0)
   const [audio, setAudio] = useState<RoundAudio | null>(() => lastWarmed?.audio ?? null)
   const [error, setError] = useState<string | null>(null)
+  /** §105 D: "Loading the song… 40%", and after LOAD_SLOW_MS the swap button works before the song is in. */
+  const [loaded, setLoaded] = useState<string | null>(null)
+  const [slow, setSlow] = useState(false)
+  /** Songs skipped by themselves this round after an error (a few, then the error shows). */
+  const autoSkips = useRef(0)
   const [swap, setSwap] = useState(false)
   const [active, setActive] = useState(0)
   const [heard, setHeard] = useState<Set<number>>(new Set())
@@ -121,6 +134,13 @@ export function MatchPage(p: {
     if (warmed) lastWarmed = null
     else setAudio(null)
     setError(null)
+    setSlow(false)
+    setLoaded(null)
+    const slowTimer = window.setTimeout(() => !cancelled && setSlow(true), LOAD_SLOW_MS)
+    const shown = window.setInterval(() => {
+      const pr = p.loadProgress?.(round)
+      if (!cancelled && pr) setLoaded(pr.total > 0 ? `${Math.min(99, Math.round((pr.got / pr.total) * 100))}%` : `${(pr.got / 1e6).toFixed(1)} MB`)
+    }, 400)
     const s = Math.random() < 0.5
     const applyPrepped = (prepped: PreppedRound) => {
       if (cancelled) return
@@ -185,6 +205,9 @@ export function MatchPage(p: {
       setPlaying(false)
       setPosition(0)
       setAudio(a)
+      autoSkips.current = 0
+      window.clearTimeout(slowTimer)
+      window.clearInterval(shown)
     }
     if (warmed) {
       applyPrepped(warmed)
@@ -195,11 +218,21 @@ export function MatchPage(p: {
         .then(prepRoundAudio)
         .then(
           applyPrepped,
-          (e) => !cancelled && setError(String(e?.message ?? e)),
+          (e) => {
+            if (cancelled) return
+            window.clearInterval(shown)
+            // a song that won't load is skipped by itself a couple of times before the error shows
+            if (autoSkips.current < AUTO_SKIPS) {
+              autoSkips.current++
+              setAttempt((n) => n + 1)
+            } else setError(String(e?.message ?? e))
+          },
         )
     }
     return () => {
       cancelled = true
+      window.clearTimeout(slowTimer)
+      window.clearInterval(shown)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [round, attempt, decided])
@@ -316,19 +349,19 @@ export function MatchPage(p: {
         </div>
 
         {decided ? (
-          <Reveal names={p.names} photos={p.photos} hideNames={p.hideNames} winner={state.winner!} wins={state.wins} grandFinal={p.isGrandFinal} onContinue={() => p.onDone(state.winner!, state)} />
+          <Reveal names={p.names} photos={p.photos} hideNames={p.hideNames} winner={state.winner!} wins={state.wins} grandFinal={p.isGrandFinal} autoContinueMs={p.autoContinueMs} onContinue={() => p.onDone(state.winner!, state)} />
         ) : (
           <>
             <div className="ms-tz-song">
               <small>Round {round + 1}</small>
-              <b>{audio ? audio.title : error ? 'This song failed' : 'Loading the song…'}</b>
+              <b>{audio ? audio.title : error ? 'This song failed' : `Loading the song…${loaded ? ` ${loaded}` : ''}`}</b>
               <span>{audio?.subtitle ?? error ?? ''}</span>
               <div className="ms-tz-song-actions">
                 {error ? (
                   <button type="button" className="ms-btn tonal" onClick={() => setAttempt((a) => a + 1)}>Try another song</button>
                 ) : (
-                  <button type="button" className="ms-btn text" disabled={!audio} onClick={() => { player.pause(); setPlaying(false); setAttempt((a) => a + 1) }} title="Pick a different song for this round">
-                    <Icon name="shuffle" size={18} /> Swap song
+                  <button type="button" className={`ms-btn ${!audio && slow ? 'tonal' : 'text'}`} disabled={!audio && !slow} onClick={() => { player.pause(); setPlaying(false); setAttempt((a) => a + 1) }} title="Pick a different song for this round">
+                    <Icon name="shuffle" size={18} /> {!audio && slow ? 'Try another song' : 'Swap song'}
                   </button>
                 )}
                 {showRaw && (
@@ -402,7 +435,7 @@ export function MatchPage(p: {
  * After the deciding vote, as in the old app: a drumroll and "And the winner is…", then both contenders turn over,
  * the winner lifted and the loser dimmed.
  */
-function Reveal({ names, photos, hideNames, winner, wins, grandFinal, onContinue }: {
+function Reveal({ names, photos, hideNames, winner, wins, grandFinal, onContinue, autoContinueMs }: {
   names: [string, string]
   photos: [string | null, string | null]
   hideNames: boolean
@@ -410,8 +443,15 @@ function Reveal({ names, photos, hideNames, winner, wins, grandFinal, onContinue
   wins: [number, number]
   grandFinal: boolean
   onContinue: () => void
+  autoContinueMs?: number
 }) {
   const [shown, setShown] = useState(reducedMotion())
+  // counts from when the winner shows, not from the drumroll
+  useEffect(() => {
+    if (!shown || !autoContinueMs) return
+    const t = setTimeout(onContinue, autoContinueMs)
+    return () => clearTimeout(t)
+  }, [shown, autoContinueMs]) // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (shown) {
       sfx.playFanfare()

@@ -36,6 +36,23 @@
 .ms-tourney-hero.main { background: linear-gradient(120deg, var(--kind-iems), var(--kind-headphones) 55%, var(--kind-tws)); }
 /* white like "New tournament" (owner, 2026-11-12): the accent's own on-colour was black on light accents */
 .ms-tourney-hero.quick { background: linear-gradient(140deg, var(--accent), color-mix(in srgb, var(--accent) 55%, #000)); color: #fff; }
+/* §106 C: Find similar, the card at the foot of the Tournament page and its page */
+.ms-tourney-hero.similar { width: 100%; min-height: 140px; margin-top: 28px; background: linear-gradient(140deg, #0f766e, #134e4a); }
+.ms-tz-similar { display: flex; flex-direction: column; gap: 14px; }
+.ms-tz-similar .ms-tz-list { max-height: none; }
+.ms-tz-similar .ms-tz-row .grow { display: flex; flex-direction: column; min-width: 0; }
+.ms-tz-similar .ms-tz-row .grow small { color: var(--text-dim); font-size: 13px; }
+.ms-tz-simref { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 18px; background: var(--chip); }
+.ms-tz-simref .grow { display: flex; flex-direction: column; min-width: 0; }
+.ms-tz-simref small { color: var(--text-dim); }
+.ms-tz-simband .ms-h2 { margin: 6px 0 0; font-size: 18px; }
+.ms-tz-simmeter { flex: none; width: 64px; height: 28px; display: grid; place-items: center; border-radius: 14px; background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 45%, transparent) var(--match), var(--chip) var(--match)); font-size: 13px; }
+.ms-tz-simpair { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; text-align: center; }
+.ms-tz-simpair > span { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
+.ms-tz-simpair .ms-tz-photo { width: 72px; height: 72px; }
+.ms-tz-simpair b { overflow-wrap: anywhere; }
+.ms-tz-simpair small { color: var(--text-dim); }
+.ms-tz-simscore b { font-size: 30px; }
 .ms-tourney-hero:hover { box-shadow: 0 10px 28px rgb(0 0 0 / 0.22); transform: translateY(-2px); }
 .ms-tourney-hero:active { transform: scale(0.98); }
 /* speed lines, the VS scene's motif, as a light texture */
@@ -207,9 +224,12 @@ button.ms-tourney-row:hover { background: var(--control-hover); }
 :root[data-style='gameshow'] .ms-vs-badge { font-style: normal; letter-spacing: 0; }
 :root[data-style='gameshow'] .ms-vs-badge span { text-shadow: 8px 8px 0 var(--kind-iems), 14px 14px 0 var(--kind-headphones); }
 @media (orientation: portrait) {
-  .ms-vs-fighter { max-width: 86vw; }
-  .ms-vs-fighter.a { top: 11%; left: 5%; }
-  .ms-vs-fighter.b { bottom: 18%; right: 5%; }
+  /* §105 E: sized from the screen width, so corner B (rotated, with its shadow) stays on a phone screen */
+  .ms-vs-fighter { max-width: 84vw; gap: 14px; }
+  .ms-vs-fighter.a { top: 11%; left: 6%; }
+  .ms-vs-fighter.b { bottom: 18%; right: 6%; }
+  .ms-vs-photo { width: clamp(92px, 27vw, 150px); }
+  .ms-vs-label b { font-size: clamp(20px, 6vw, 34px); }
 }
 :root[data-reduce-motion='on'] :is(.ms-vs, .ms-vs *) { animation: none !important; }
 
@@ -410,7 +430,8 @@ button.ms-tourney-row:hover { background: var(--control-hover); }
   font-family: 'Fredoka', var(--font-ui);
   transition: color 180ms ease, text-shadow 180ms ease;
 }
-:root[data-style='gameshow'] .ms-layer:has(.ms-tourney, .ms-tz-bracket, .ms-tz-matchpage, .ms-tz-results, .ms-tz-setup, .ms-tz-questions) .ms-topbar { background: transparent; }
+/* §106 B: the pinned bar takes the stage's top colour, fading out at its foot, so scrolled text doesn't run under the title */
+:root[data-style='gameshow'] .ms-layer:has(.ms-tourney, .ms-tz-bracket, .ms-tz-matchpage, .ms-tz-results, .ms-tz-setup, .ms-tz-questions) .ms-topbar { background: linear-gradient(180deg, #2b0f3f 78%, rgb(43 15 63 / 0)) !important; }
 :root[data-style='gameshow'] :is(.ms-tourney, .ms-tz-bracket, .ms-tz-matchpage, .ms-tz-results, .ms-tz-setup, .ms-tz-questions) :is(small, .ms-tz-note, .ms-time) { color: rgb(255 255 255 / 0.85); }
 
 /* Top match headers: dynamic contrast shift between white and black based on stage wash */
@@ -477,6 +498,9 @@ button.ms-tourney-row:hover { background: var(--control-hover); }
   font-weight: 500;
 }
 
+/* §106 B: a note on a cream card is ink (the white above is for notes on the stage gradient) */
+:root[data-style='gameshow'] :is(.ms-tz-qcard, .ms-tz-device, .ms-tourney-row, .ms-tz-match, .ms-tz-place, .ms-tz-award) .ms-tz-note { color: var(--gs-ink) !important; text-shadow: none; }
+
 /* Raw mode chip in Party Mode */
 :root[data-style='gameshow'] .ms-tz-raw-chip { border-color: var(--gs-ink, #1a0f24); box-shadow: 2px 2px 0 var(--gs-ink, #1a0f24); }
 :root[data-style='gameshow'] .ms-tz-raw-chip.live { background: #fff; color: #dc2626; box-shadow: 0 0 14px #ef4444; }
@@ -488,6 +512,11 @@ button.ms-tourney-row:hover { background: var(--control-hover); }
 }
 :root[data-style='gameshow'] :is(.ms-tourney-row, .ms-tz-match, .ms-tz-qcard, .ms-tz-qopt, .ms-tz-device, .ms-tz-place, .ms-tz-award) { background: #fff3e6; color: var(--gs-ink); }
 :root[data-style='gameshow'] :is(.ms-tourney-row, .ms-tz-match, .ms-tz-qcard, .ms-tz-qopt, .ms-tz-place, .ms-tz-award) :is(small, b, span, .ms-tz-slot) { color: var(--gs-ink); text-shadow: none; }
+:root[data-style='gameshow'] :is(.ms-tourney-row, .ms-tz-match, .ms-tz-qcard, .ms-tz-qopt, .ms-tz-device, .ms-tz-place, .ms-tz-award) :is(h2, h3, p, label, .ms-tz-note, .ms-chip:not(.on)) { color: var(--gs-ink); text-shadow: none; }
+/* §106 B: on cream, the title, the unpicked chips and notes are ink (they kept the page's white); a picked chip is ink with light text */
+:root[data-style='gameshow'] :is(.ms-tz-qcard, .ms-tz-device) .ms-chip:not(.on) { border-color: var(--gs-ink); }
+:root[data-style='gameshow'] :is(.ms-tz-qcard, .ms-tz-device) .ms-chip.on { background: var(--gs-ink); color: #fff3e6; border-color: var(--gs-ink); }
+:root[data-style='gameshow'] .ms-tourney-empty { color: var(--gs-ink); font-weight: 600; text-shadow: none; }
 :root[data-style='gameshow'] .ms-tz-award .ms-tz-award-icon { border: 2px solid var(--gs-ink); color: #fff; }
 :root[data-style='gameshow'] .ms-tz-award:is(.flawless, .comeback, .pick) .ms-tz-award-icon { color: var(--gs-ink); }
 :root[data-style='gameshow'] :is(.ms-tourney-hero, .ms-tourney-row, .ms-tz-kind, .ms-tz-qopt, .ms-tz-abbtn, .ms-tz-play, .ms-btn.primary):active { transform: translate(4px, 5px); box-shadow: 2px 2px 0 var(--gs-ink); }
@@ -559,10 +588,12 @@ button.ms-tourney-row:hover { background: var(--control-hover); }
 }
 
 /* buzzers: A and B as big round 3D buttons */
-:root[data-style='gameshow'] .ms-tz-ab { gap: 40px; justify-items: center; }
+:root[data-style='gameshow'] .ms-tz-ab { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(14px, 5vw, 40px); justify-items: center; }
+/* §105 E: never wider than its half of the row (B ran off a phone's right edge) */
 :root[data-style='gameshow'] .ms-tz-abbtn {
-  width: clamp(170px, 24vh, 240px);
-  height: clamp(170px, 24vh, 240px);
+  width: min(clamp(150px, 24vh, 240px), 100%);
+  height: auto;
+  aspect-ratio: 1;
   border-radius: 50%;
   background: radial-gradient(circle at 35% 30%, #ff8a8a, #e0323f 60%, #9c1020);
   color: #fff;
@@ -678,7 +709,7 @@ button.ms-tourney-row:hover { background: var(--control-hover); }
 :root[data-style='gameshow'] .ms-tz-qslot { border: 3px solid var(--gs-ink); box-shadow: 6px 7px 0 var(--gs-ink); background: #fff3e6; color: var(--gs-ink); }
 :root[data-style='gameshow'] .ms-tz-qslot :is(b, small, .ms-tz-row) { color: var(--gs-ink); }
 :root[data-style='gameshow'] .ms-tz-qvs { color: #fff; text-shadow: 4px 4px 0 var(--gs-ink); font-family: 'Fredoka', var(--font-ui); font-weight: 700; }
-:root[data-style='gameshow'] .ms-layer:has(.ms-tz-quick) { background: var(--gs-sunset); }
+:root[data-style='gameshow'] .ms-layer:has(.ms-tz-quick, .ms-tz-similar) { background: var(--gs-sunset); }
 @media (max-width: 760px) { .ms-tz-qslots { grid-template-columns: 1fr; } }
 /* the reveal keeps the VS screen's corners: A on the left, B on the right, in their colours (§84 G) */
 .ms-tz-reveal-card { position: relative; }

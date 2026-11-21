@@ -11,7 +11,7 @@ const DATABASE_FILES = ['iems.json', 'headphones.json', 'reviews.json', 'review_
   // also fetched by shared code the app uses: DAC/dongle detection (fit/detect.ts), the ear-tip guide, the song list
   'devices.json', 'eartips.json', 'eartips_jay.json', 'songs.json',
   // generic presets, speakers and the soundbar (§78 B, C)
-  'generic.json', 'speakers.json']
+  'generic.json', 'speakers.json', 'phone_speakers.json']
 
 /**
  * The library list, covers and lyrics are read at /shell-fixture/ until Local Library replaces them.

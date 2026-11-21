@@ -147,10 +147,10 @@ export function loadDatabase(): Promise<Database> {
   loading ??= (async () => {
     const started = performance.now()
     const json = (f: string) => fetch(`${import.meta.env.BASE_URL}data/${f}`).then((r) => (r.ok ? r.json() : {})).catch(() => ({}))
-    const [iems, headphones, generic, speakers] = await Promise.all([loadCatalog('iems'), loadCatalog('headphones'), json('generic.json'), json('speakers.json')])
+    const [iems, headphones, generic, speakers, phoneSpeakers] = await Promise.all([loadCatalog('iems'), loadCatalog('headphones'), json('generic.json'), json('speakers.json'), json('phone_speakers.json')])
     const catalog = mergeCatalogs(iems, headphones)
     // generic presets and speakers (§78 B, C): here only, so a bracket never gets them
-    addListeningDevices(catalog, generic, speakers)
+    addListeningDevices(catalog, generic, speakers, phoneSpeakers)
     const models = buildModels(catalog)
     logLine('INFO', 'Database', `Loaded ${models.length} models in ${Math.round(performance.now() - started)} ms`)
     return { catalog, models }

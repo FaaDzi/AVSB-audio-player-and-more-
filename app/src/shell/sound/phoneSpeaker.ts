@@ -71,3 +71,42 @@ export function typicalSpeakerDb(grid: ArrayLike<number>, tablet = false): Float
   const ppo = Math.round(1 / Math.log2(grid[1] / grid[0]))
   return smoothLog(raw, ppo, 1 / 3)
 }
+
+/** §106 F: measured phone and tablet speakers (scripts/build_phone_speakers.py), and which phone this is. */
+interface SpeakerRow { id: string; name: string; models: string[]; tablet: boolean; fr: number[] }
+let rows: SpeakerRow[] = []
+let rowGrid: number[] = []
+let ownModel = ''
+let loadingRows: Promise<void> | null = null
+export function loadPhoneSpeakers(): Promise<void> {
+  loadingRows ??= Promise.all([
+    fetch(`${import.meta.env.BASE_URL}data/phone_speakers.json`).then((r) => r.json()).then((d: { grid: number[]; speakers: SpeakerRow[] }) => {
+      rows = d.speakers ?? []
+      rowGrid = d.grid ?? []
+    }),
+    isAndroid() ? AudioRoute.status().then((r) => { ownModel = r.model ?? '' }) : Promise.resolve(),
+  ]).then(() => {}, () => {})
+  return loadingRows
+}
+
+const KIND_IDS = new Set(SPEAKER_KINDS.map(([k]) => phoneSpeakerId(k)))
+/** This phone's (or tablet's) own measured speakers, when Notebookcheck measured its model. */
+export const ownSpeakerRow = (): SpeakerRow | undefined =>
+  ownModel ? rows.find((r) => r.models.some((m) => ownModel.toUpperCase().startsWith(m.toUpperCase()))) : undefined
+
+/**
+ * The curve drawn for a phone speaker: a measured model's own; for the three kinds (both / top / bottom), this phone's
+ * own when its model was measured, else the typical phone or tablet. Top-only and bottom-only use the same curve until
+ * they're measured (§106 F3).
+ */
+export function phoneSpeakerDb(id: string, grid: ArrayLike<number>, tablet: boolean): Float64Array {
+  const row = KIND_IDS.has(id) ? ownSpeakerRow() : rows.find((r) => r.id === id)
+  if (!row || rowGrid.length !== row.fr.length) return typicalSpeakerDb(grid, tablet)
+  return interpLog(rowGrid, row.fr, grid)
+}
+
+/** The graph's name for that curve ("Xiaomi 14 speakers", or "Typical phone speaker"). */
+export function phoneSpeakerLabel(id: string, tablet: boolean): string {
+  const row = KIND_IDS.has(id) ? ownSpeakerRow() : rows.find((r) => r.id === id)
+  return row && rowGrid.length === row.fr.length ? row.name : tablet ? 'Typical tablet speaker' : 'Typical phone speaker'
+}

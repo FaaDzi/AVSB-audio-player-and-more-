@@ -49,9 +49,10 @@ function Slot({ db, label, model, onPick, onClear }: { db: Database; label: stri
   )
 }
 
-export function QuickPage({ db, onCancel, onStart }: { db: Database; onCancel: () => void; onStart: (q: QuickPick) => void }) {
-  const [a, setA] = useState<Model | null>(null)
-  const [b, setB] = useState<Model | null>(null)
+export function QuickPage({ db, onCancel, onStart, initial }: { db: Database; onCancel: () => void; onStart: (q: QuickPick) => void; initial?: [Model, Model] }) {
+  // §106 C: from Find similar both corners come filled in; only Best of is left, or just Start
+  const [a, setA] = useState<Model | null>(initial?.[0] ?? null)
+  const [b, setB] = useState<Model | null>(initial?.[1] ?? null)
   const [bestOf, setBestOf] = useState(3)
   const ready = Boolean(a && b && a.id !== b.id)
   return (

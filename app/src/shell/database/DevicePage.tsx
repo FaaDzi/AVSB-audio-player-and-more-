@@ -36,8 +36,9 @@ function centred(grid: number[], values: ArrayLike<number>) {
 
 const pathOf = (grid: number[], values: number[]) => grid.map((hz, i) => `${hzToX(hz).toFixed(1)},${dbToY(values[i]).toFixed(1)}`).join(' ')
 
-/** `base`: the device a custom EQ sits on (§85), drawn thin behind it so the difference shows. */
-export function Graph({ catalog, iem, base }: { catalog: Catalog; iem: Iem; base?: Iem }) {
+/** `base`: the device a custom EQ sits on (§85), drawn thin behind it so the difference shows. `compare` (§106 C): a
+ * second device drawn as fully as the first, both named in the legend. */
+export function Graph({ catalog, iem, base, compare }: { catalog: Catalog; iem: Iem; base?: Iem; compare?: Iem }) {
   const [targetIndex, setTargetIndex] = useState(0)
   const [menu, setMenu] = useState<{ x: number; y: number } | null>(null)
   const graph = useMemo(() => graphOf(catalog, [iem]), [catalog, iem])
@@ -45,12 +46,14 @@ export function Graph({ catalog, iem, base }: { catalog: Catalog; iem: Iem; base
   const target = graph.targets[targetIndex] ?? graph.targets[0]
   const curve = useMemo(() => pathOf(grid, centred(grid, graph.fr(iem))), [grid, graph, iem])
   const baseLine = useMemo(() => (base ? pathOf(grid, centred(grid, graph.fr(base))) : ''), [grid, graph, base])
+  const compareLine = useMemo(() => (compare ? pathOf(grid, centred(grid, graph.fr(compare))) : ''), [grid, graph, compare])
   const targetLine = useMemo(() => (target ? pathOf(grid, centred(grid, target.values)) : ''), [grid, target])
   return (
     <section className="ms-db-card">
       <div className="ms-db-card-head">
         <h3>Frequency response</h3>
         {base && <span className="ms-db-legend"><i className="eq" />With your EQ<i className="base" />As it comes</span>}
+        {compare && <span className="ms-db-legend two"><i className="eq" />{iem.name}<i className="two" />{compare.name}</span>}
         {target && (
           <button type="button" className="ms-db-pill" onClick={(e) => setMenu({ x: e.clientX, y: e.clientY })}>
             <i className="dash" /> {target.name} <Icon name="arrow_drop_down" size={20} />
@@ -63,6 +66,7 @@ export function Graph({ catalog, iem, base }: { catalog: Catalog; iem: Iem; base
           {X_MARKS.map((hz) => <line key={hz} x1={hzToX(hz)} x2={hzToX(hz)} y1="0" y2={HEIGHT} />)}
           {targetLine && <polyline className="target" points={targetLine} />}
           {baseLine && <polyline className="base" points={baseLine} />}
+          {compareLine && <polyline className="curve two" points={compareLine} />}
           <polyline className="curve" points={curve} />
         </svg>
         {X_MARKS.slice(1, -1).map((hz) => <span key={hz} style={{ left: `${hzToX(hz) / 10}%` }}>{hz >= 1000 ? `${hz / 1000}k` : hz}</span>)}

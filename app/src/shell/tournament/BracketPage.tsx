@@ -69,7 +69,7 @@ export function BracketPage({ db, save, bracket, masked, onBack, onPlay }: { db:
         <div className={`ms-tz-next ${kind}`}>
           <span className="ms-tourney-lines" aria-hidden="true" />
           <div className="grow">
-            <small>{next ? `Match ${next.playOrder} of ${bracket.matches.length} · ${next.label} · best of ${next.bestOf}` : 'All matches played'}</small>
+            <small>{next ? `Match ${next.playOrder} of ${bracket.matches.length}` : 'All matches played'}</small>
             <b>{next ? entrantsOf(bracket, next, save.results).map((s) => contenderName(db, save, s, masked(s))).join('  vs  ') : 'The results are in'}</b>
             <div className="ms-tz-progress"><span style={{ width: `${(played / bracket.matches.length) * 100}%` }} /></div>
           </div>

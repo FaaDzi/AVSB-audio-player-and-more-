@@ -64,7 +64,7 @@ export interface SpatialStageApi {
 }
 
 /** Camera face tracking: the webcam on PC, the front camera (phone propped up facing you) on Android. */
-export type HeadTracking = 'off' | 'webcam' | 'phone-camera' | 'earbuds'
+export type HeadTracking = 'off' | 'webcam' | 'phone-camera' | 'earbuds' | 'rough'
 
 /** What is saved (localStorage) and stored with each match result while spatial mode is on. */
 export interface SpatialSettings {
@@ -83,4 +83,6 @@ export interface SpatialSettings {
   /** Head tracking: after facing a new way for a while, that becomes the front (turning a chair). In "360" only
    * big turns do, so looking at an instrument stays put (§104 D). */
   frontFollows: boolean
+  /** §106 A: the stage mode from before head tracking moved it to Speakers (Crossfeed / Off); back when tracking goes off. */
+  modeBeforeTracking: SpatialMode | null
 }

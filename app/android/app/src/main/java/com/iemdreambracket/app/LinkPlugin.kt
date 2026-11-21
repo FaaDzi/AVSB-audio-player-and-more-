@@ -445,9 +445,19 @@ class LinkPlugin : Plugin() {
         networkJob = scope.launch {
             delay(800L) // one switch reports several times
             if (!paired()) return@launch
-            Log.i(TAG, "network changed: reconnecting")
             activeLanBase = null
             activeLanToken = null
+            // §105 F: iroh moves a live connection to the new network by itself. Only when it doesn't answer within
+            // 3 s is it rebuilt; every Wi-Fi ↔ mobile data flicker used to cost a whole new dial.
+            val live = conn
+            if (live != null && runCatching { live.closeReason() }.getOrNull() == null &&
+                runCatching { withTimeout(3_000L) { ask(live, withAbout(JSONObject().put("op", "hello"))) } }.isSuccess
+            ) {
+                Log.i(TAG, "network changed: connection kept (${buildStatusJson().optString("transport")})")
+                runCatching { pingNow() }
+                return@launch
+            }
+            Log.i(TAG, "network changed: reconnecting")
             // the endpoint first and outside connLock: a dial stuck on the dead network holds that lock until this ends it
             val oldConn = conn
             val oldEndpoint = endpointLock.withLock { endpoint.also { endpoint = null } }
@@ -574,8 +584,16 @@ class LinkPlugin : Plugin() {
         // a dial that can't finish (no network, PC off) gives up instead of holding connLock for good
         val c = withTimeout(15_000L) { endpoint().connect(EndpointTicket.fromString(t).endpointAddr(), ALPN) }
         conn = c
+        val since = SystemClock.elapsedRealtime()
+        Log.i(TAG, "connected")
+        // §105 F: the path (LAN / direct / relayed) once it has settled, and why it closed, so a drop explains itself
+        scope.launch {
+            delay(5_000L)
+            if (conn === c) Log.i(TAG, "connection path: ${buildStatusJson().optString("transport")}")
+        }
         scope.launch {
             val why = runCatching { c.closed() }.getOrNull() ?: ""
+            Log.i(TAG, "connection closed after ${(SystemClock.elapsedRealtime() - since) / 1000} s: ${why.ifEmpty { "no reason" }}")
             if (isUnpairedReason(why)) {
                 onPcMasterDisconnect()
             }

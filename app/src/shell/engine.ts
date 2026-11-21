@@ -78,11 +78,12 @@ const bufferKey = (id: string, low = wantsLowData()) => `${id}:${low ? 'low' : '
 /** Low data is for songs streamed from the PC; a file on this device always plays as it is. */
 const lowDataFor = (t: Track) => isPcTrack(t) && wantsLowData()
 
-export const audioUrl = (t: Track) => {
-  const isLowData = lowDataFor(t)
+export const audioUrl = (t: Track, isLowData = lowDataFor(t)) => {
   const base = `/shell-host/audio?path=${encodeURIComponent(t.path)}`
   return isLowData ? `${base}&lowdata=1` : base
 }
+/** §105 D: a tournament round takes the 128 kbps copy of a PC song on mobile data too (A and B hear the same file). */
+export const roundLowData = (t: Track) => isPcTrack(t) && (wantsLowData() || onMobileData())
 
 /** Where normalization puts songs. Quiet songs only come up as far as their own peak allows, so nothing clips. */
 export const NORMALIZE_TARGET_LUFS = -14
@@ -90,6 +91,8 @@ export const NORMALIZE_TARGET_LUFS = -14
 /** Skipping faster than this counts as spamming: nothing loads until the skipping pauses. */
 const SPAM_WINDOW_MS = 300
 const SPAM_WAIT_MS = 150
+/** A full-quality PC stream still silent after this switches to Low Data (§105). */
+const SLOW_START_MS = 8000
 
 const GRID = Array.from({ length: 256 }, (_, i) => 20 * 1000 ** (i / 255))
 
@@ -613,13 +616,25 @@ export async function playTrack(t: Track, autostart = true, startAt = 0) {
     pendingSeek = null
     if (wantPlaying) p.play()
     const local = findMatchingLocalTrack(t)
-    const ready = await new Promise<boolean>((resolve) => {
+    const ready = await new Promise<boolean | 'low'>((resolve) => {
       song.el.addEventListener('canplay', () => resolve(true), { once: true })
       song.el.addEventListener('error', () => resolve(false), { once: true })
-      // a copy on this phone takes over when the PC is slow to answer; without one, only an error ends the wait
+      // a copy on this phone takes over when the PC is slow to answer
       if (local) window.setTimeout(() => resolve(song.el.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA), 4500)
+      // §105: without one, a full-quality stream with no sound yet after a while comes again as Low Data
+      else if (!lowDataFor(t) && getSetting('auto_lowdata_on_weak') !== false)
+        window.setTimeout(() => resolve(song.el.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA || 'low'), SLOW_START_MS)
     })
     if (mine !== token) return
+    if (ready === 'low') {
+      adaptiveLowData = true
+      logLine('INFO', 'Network', `"${t.title}" had no sound after ${took()}: Low Data (auto) is on until the connection is better`)
+      lowDataListeners.forEach((l) => l())
+      switching = false
+      p.switching = false
+      void playTrack(t, wantPlaying, livePosition())
+      return
+    }
     if (ready) {
       finishSwitch()
       logLine('INFO', 'Player', `Streaming ${t.path} (sound after ${took()})`)

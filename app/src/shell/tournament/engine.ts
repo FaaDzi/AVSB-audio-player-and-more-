@@ -13,8 +13,10 @@ import type { Preferences } from '../../prefs/types'
 import { clipCandidates, sliceBuffer } from '../../songs/clip'
 import type { HeardBy } from '../../songs/rounds'
 import type { RoundAudio } from '../../match/MatchView'
-import { audioUrl } from '../engine'
-import { canPlay, type Track } from '../library'
+import { audioUrl, findMatchingLocalTrack, roundLowData } from '../engine'
+import { canPlay, isPcTrack, type Track } from '../library'
+import { onMobileData } from '../linkClient'
+import { logLine } from '../logs'
 import { likedWeight } from '../favorites'
 import { getSetting } from '../settings/store'
 
@@ -93,12 +95,20 @@ export function libraryRounds(opts: { pool: Track[]; heardBy: HeardBy; entrants:
   const usable = opts.pool.filter(canPlay)
   const used: Track[] = []
   const loading = new Map<number, Promise<RoundAudio>>()
+  /** Per round: bytes in so far and the size when known, for "Loading the song… 40%". */
+  const progress = new Map<number, { got: number; total: number }>()
+  const aborts = new Map<number, AbortController>()
 
   const pick = (skip: Set<string>): Track => {
     const heard = new Set(opts.entrants.flatMap((id) => opts.heardBy[id] ?? []))
     const fresh = usable.filter((t) => !skip.has(t.id) && !used.includes(t))
     const unheard = fresh.filter((t) => !heard.has(t.id))
-    const from = unheard.length ? unheard : fresh.length ? fresh : usable
+    let from = unheard.length ? unheard : fresh.length ? fresh : usable
+    // §105 D: on mobile data a song already on the phone starts at once; PC songs only when there's none left
+    if (onMobileData()) {
+      const here = from.filter((t) => !isPcTrack(t) || findMatchingLocalTrack(t))
+      if (here.length) from = here
+    }
     const weights = from.map((t) => likedWeight(t.id))
     const total = weights.reduce((a, b) => a + b, 0)
     let roll = Math.random() * total
@@ -110,10 +120,18 @@ export function libraryRounds(opts: { pool: Track[]; heardBy: HeardBy; entrants:
   }
 
   // as in the old app: each song's liveliest sections are found once, and each round plays one of them at random
-  const load = async (t: Track): Promise<RoundAudio> => {
-    const res = await fetch(audioUrl(t))
+  const load = async (round: number, song: Track): Promise<RoundAudio> => {
+    const t = (isPcTrack(song) && findMatchingLocalTrack(song)) || song
+    const low = roundLowData(t)
+    const control = new AbortController()
+    aborts.set(round, control)
+    const began = performance.now()
+    const res = await fetch(audioUrl(t, low), { signal: control.signal })
     if (!res.ok) throw new Error(`couldn't read ${t.title}`)
-    const buf = await ctx.decodeAudioData(await res.arrayBuffer())
+    const bytes = await readAll(res, (got, total) => progress.set(round, { got, total }))
+    const mb = (bytes.byteLength / 1e6).toFixed(1) // decoding empties the buffer
+    const buf = await ctx.decodeAudioData(bytes)
+    logLine('INFO', 'Player', `Tournament round ${round + 1}: "${t.title}" ready after ${Math.round(performance.now() - began)} ms (${isPcTrack(t) ? (low ? 'PC, Low Data' : 'PC') : 'on the phone'}, ${mb} MB)`)
     let sections = sectionCache.get(t.id)
     if (!sections) {
       const chans = Array.from({ length: buf.numberOfChannels }, (_, i) => buf.getChannelData(i))
@@ -130,7 +148,8 @@ export function libraryRounds(opts: { pool: Track[]; heardBy: HeardBy; entrants:
       if (!usable.length) return Promise.reject(new Error('No playable songs in the chosen list'))
       const t = pick(skip)
       used[round] = t
-      p = load(t)
+      p = load(round, t)
+      p.catch((e) => logLine('WARN', 'Player', `Tournament round ${round + 1}: "${t.title}" failed (${String(e?.message ?? e)})`))
       loading.set(round, p)
     }
     return p
@@ -144,6 +163,8 @@ export function libraryRounds(opts: { pool: Track[]; heardBy: HeardBy; entrants:
         // the song failed or was skipped: pick another for this round
         const bad = used[round]
         loading.delete(round)
+        aborts.get(round)?.abort()
+        progress.delete(round)
         return roundAt(round, new Set(bad ? [bad.id] : []))
       }
       const p = roundAt(round)
@@ -155,6 +176,8 @@ export function libraryRounds(opts: { pool: Track[]; heardBy: HeardBy; entrants:
       })
       return p
     },
+    /** How far this round's song has downloaded (total 0 when the size isn't known); null before it starts. */
+    progress: (round: number): { got: number; total: number } | null => progress.get(round) ?? null,
     /** Record which songs each entrant has now been heard on, so later matches pick others. */
     commit: (heardBy: HeardBy): HeardBy => {
       const ids = used.filter(Boolean).map((t) => t.id)
@@ -163,4 +186,27 @@ export function libraryRounds(opts: { pool: Track[]; heardBy: HeardBy; entrants:
       return next
     },
   }
+}
+
+/** The whole body, reporting bytes as they arrive (total 0 when the server didn't say: a live Low Data transcode). */
+async function readAll(res: Response, onProgress: (got: number, total: number) => void): Promise<ArrayBuffer> {
+  const total = Number(res.headers.get('content-length') ?? 0) || 0
+  const reader = res.body?.getReader()
+  if (!reader) return res.arrayBuffer()
+  const parts: Uint8Array[] = []
+  let got = 0
+  for (;;) {
+    const { done, value } = await reader.read()
+    if (done) break
+    parts.push(value)
+    got += value.byteLength
+    onProgress(got, total)
+  }
+  const out = new Uint8Array(got)
+  let at = 0
+  for (const p of parts) {
+    out.set(p, at)
+    at += p.byteLength
+  }
+  return out.buffer
 }

@@ -115,7 +115,16 @@ const waveMode = (): WaveMode => {
 /** The played part of a seek track. `compact`: the phone mini player's thin top line (no handle, smaller humps). */
 export function WaveTrack({ share, moving, compact = false }: { share: number; moving: boolean; compact?: boolean }) {
   const canvas = useRef<HTMLCanvasElement>(null)
-  const state = useRef({ share, ramp: 0, color: '', draw: () => {} })
+  // §105 F: the drift and level followers live here, not in the effect: a stalling stream flips `moving` off and on,
+  // and each restart snapped every hump back to its start (the wave shook while the connection was bad)
+  const state = useRef({
+    share, ramp: 0, color: '', draw: () => {},
+    shifts: [0, 0, 0],
+    level: { mean: -18, amount: 1 },
+    // one level follower per band (the means differ a lot: rumble sits far above treble in dB)
+    bands: [{ mean: -50, amount: 1 }, { mean: -60, amount: 1 }, { mean: -75, amount: 1 }],
+    amounts: [1, 1, 1],
+  })
   state.current.share = share
 
   useEffect(() => {
@@ -126,10 +135,7 @@ export function WaveTrack({ share, moving, compact = false }: { share: number; m
     // the colour, read once here and on each position update instead of on every frame
     s.color = getComputedStyle(el).color
     const mode = waveMode()
-    const level = { mean: -18, amount: 1 }
-    // one level follower per band (the means differ a lot: rumble sits far above treble in dB)
-    const bands = [{ mean: -50, amount: 1 }, { mean: -60, amount: 1 }, { mean: -75, amount: 1 }]
-    const amounts = [1, 1, 1]
+    const { level, bands, amounts, shifts } = s
     const squiggly = mode === 'Squiggly' && !compact
     const bar = compact ? 3 : squiggly ? SQUIGGLE.stroke : 6
     const tallest = compact ? 7 : WAVE.height
@@ -143,8 +149,7 @@ export function WaveTrack({ share, moving, compact = false }: { share: number; m
     let last = 0
     let lastTick = 0
     let lastColor = 0
-    // each layer's drift, added up frame by frame (time × speed would jump whenever a length changed)
-    const shifts = [0, 0, 0]
+    // each layer's drift (s.shifts) is added up frame by frame: time × speed would jump whenever a length changed
     // §99: where the player's buttons sit over the track (the PC bar), in canvas px; none elsewhere
     const calm = { from: 0, to: 0 }
     const measureCalm = () => {

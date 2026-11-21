@@ -7,7 +7,7 @@ import { useSyncExternalStore } from 'react'
 import { loadSpatial, onSpatialChange, updateSpatial } from '../spatial/settings'
 import type { HeadTracking, SpatialSettings, SpatialStageApi } from '../spatial/types'
 import { createCameraTracker, type CameraTracker } from './camera'
-import { createBudsTracker, type BudsTracker } from './buds'
+import { createBudsTracker, NO_HEAD_SENSORS, type BudsTracker } from './buds'
 import { STILL_DEG } from './budsMath'
 
 /** 360 mode: the front only follows a turn bigger than this (a chair, not a glance at an instrument). */
@@ -33,7 +33,9 @@ const providers = new Set<StageList>()
 let tracker: CameraTracker | BudsTracker | null = null
 let unPose: (() => void) | null = null
 let unSpatial: (() => void) | null = null
-let beforeStart: ((kind: Exclude<HeadTracking, 'off'>) => Promise<void>) | null = null
+/** A failed start is switching tracking off: its error stays on screen. */
+let failedOff = false
+let beforeStart: ((kind: Exclude<HeadTracking, 'off' | 'rough'>) => Promise<void>) | null = null
 
 function setState(patch: Partial<HeadTrackState>) {
   state = { ...state, ...patch }
@@ -61,9 +63,19 @@ function apply(s: SpatialSettings = loadSpatial()) {
       sendYaw(0)
       setState({ status: 'off', kind: 'off', yaw: 0, face: false })
     }
+    // switched off by hand: an old note goes with it (not when a failed start switched it off: that error stays)
+    if (s.headTracking === 'off' && state.error && !failedOff) setState({ error: null })
+    failedOff = false
     return
   }
-  const kind = s.headTracking as Exclude<HeadTracking, 'off'>
+  // §106 A: rough estimation follows nothing: the speakers stay in front (a "no head sensors" note stays with it)
+  if (s.headTracking === 'rough') {
+    stopTracker()
+    sendYaw(0)
+    if (state.kind !== 'rough' || state.status !== 'on') setState({ status: 'on', kind: 'rough', yaw: 0, face: true, error: state.error === NO_HEAD_SENSORS ? state.error : null })
+    return
+  }
+  const kind = s.headTracking as Exclude<HeadTracking, 'off' | 'rough'>
   // 360: only a big turn (a chair) moves the front, so looking toward an instrument keeps it there
   const follow = (t: CameraTracker | BudsTracker | null) => {
     if (t?.kind === 'earbuds') (t as BudsTracker).setFollow(s.frontFollows ? (s.mode === '360' ? BIG_TURN_DEG : STILL_DEG) : null)
@@ -95,8 +107,11 @@ function apply(s: SpatialSettings = loadSpatial()) {
       if (tracker !== t) return
       stopTracker()
       sendYaw(0)
-      setState({ status: 'off', kind: 'off', yaw: 0, face: false, error: e instanceof Error ? e.message : String(e) })
-      updateSpatial({ headTracking: 'off' })
+      const error = e instanceof Error ? e.message : String(e)
+      setState({ status: 'off', kind: 'off', yaw: 0, face: false, error })
+      // §106 A: no head sensors on this device: tracking stays on, as the rough estimation
+      failedOff = error !== NO_HEAD_SENSORS
+      updateSpatial({ headTracking: error === NO_HEAD_SENSORS ? 'rough' : 'off' })
     }
   })()
 }
@@ -127,7 +142,7 @@ export function followHeadTracking(stages: StageList): () => void {
 }
 
 /** Optional step before the camera opens (e.g. the Android runtime camera permission). */
-export function setHeadTrackingBeforeStart(fn: ((kind: Exclude<HeadTracking, 'off'>) => Promise<void>) | null) {
+export function setHeadTrackingBeforeStart(fn: ((kind: Exclude<HeadTracking, 'off' | 'rough'>) => Promise<void>) | null) {
   beforeStart = fn
 }
 

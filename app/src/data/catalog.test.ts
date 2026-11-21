@@ -47,6 +47,8 @@ describe('bracket kinds', () => {
     expect(kindOfIem(row('moondrop-aria', 'Moondrop Aria'))).toBe('iems')
     expect(kindOfIem(row('apple-airpods-pro', 'Apple AirPods Pro'))).toBe('tws')
     expect(kindOfIem(row('hp-sennheiser-hd-600', 'Sennheiser HD 600'))).toBe('headphones')
+    // §106 F: a phone's own speakers are speakers, not in-ears
+    expect(kindOfIem(row('phone-speaker-xiaomi-14', 'Xiaomi 14 speakers'))).toBe('speakers')
     expect(gearWords('headphones').upper).toBe('HEADPHONE')
   })
   it('keeps one in-ear kind per bracket, with duplicate ids still resolving', () => {

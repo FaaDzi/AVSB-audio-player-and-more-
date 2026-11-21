@@ -303,6 +303,8 @@ export function AutoEqCard(props: {
   /** §96 D: the phone speaker's Warmth (a gentle low shelf, 0 to +3 dB). */
   warmth: number
   onWarmth: (db: number) => void
+  /** §106 G: bumped by the preset bar's AutoEQ button: runs AutoEQ as this card's own button does. */
+  run?: number
 }) {
   const { db, deviceId, lab, scene } = props
   // §91 E5: the HRTF test first, for a closer match; asked once, Skip remembered
@@ -315,6 +317,18 @@ export function AutoEqCard(props: {
   const aimDevice = lab.aim.kind === 'device' ? db.catalog.byId.get(lab.aim.id) : undefined
   const targetName = lab.aim.kind === 'target' ? lab.aim.name : aimDevice?.name ?? ''
   const result = useMemo(() => (scene ? autoEq(scene, lab.filters, lab.gentle ? 'standard' : 'precise', family === 'iem') : null), [scene, lab.filters, lab.gentle, family])
+  const runAuto = () => {
+    if (!result) return
+    if (!props.hrtfName && family !== 'room' && !getSetting('hrtfskip')) setAskHrtf(true)
+    else props.onApply(result, targetName)
+  }
+  // the preset bar's button: the same as pressing AutoEQ here (nothing for the phone speaker: no target to aim at)
+  const ran = useRef(props.run)
+  useEffect(() => {
+    if (props.run === ran.current) return
+    ran.current = props.run
+    if (!isPhoneSpeaker(deviceId)) runAuto()
+  }, [props.run]) // eslint-disable-line react-hooks/exhaustive-deps
   const touched = PREFS.some((p) => lab.prefs[p.key] !== 0)
 
   // the phone's own speaker (§86 G): no measurement to aim from, but which speakers play is yours to say
@@ -388,11 +402,7 @@ export function AutoEqCard(props: {
               type="button"
               className="ms-btn primary ms-eqlab-apply"
               disabled={!result}
-              onClick={() => {
-                if (!result) return
-                if (!props.hrtfName && family !== 'room' && !getSetting('hrtfskip')) setAskHrtf(true)
-                else props.onApply(result, targetName)
-              }}
+              onClick={runAuto}
             >
               <Icon name="auto_fix_high" size={22} /> AutoEQ
             </button>

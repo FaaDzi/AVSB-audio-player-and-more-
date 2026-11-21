@@ -40,7 +40,7 @@ export interface BluetoothCodec {
 
 interface AudioRoute {
   /** `stereo`: false when the phone says its own speaker takes one channel only (so there is one speaker). */
-  status(): Promise<{ speaker: boolean; stereo?: boolean }>
+  status(): Promise<{ speaker: boolean; stereo?: boolean; model?: string }>
   output(): Promise<AndroidOutput>
   codec(): Promise<BluetoothCodec>
   openBluetoothSettings(): Promise<void>

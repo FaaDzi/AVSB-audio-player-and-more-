@@ -35,6 +35,7 @@ import { AVERAGE_HEAD_CM, HEAD_CM_MAX, HEAD_CM_MIN } from '../../spatial/headSiz
 import { loadEarCorrection } from '../../spatial/earCorrection'
 import { HrtfPicker } from '../../spatial/hrtfPicker'
 import { earbudsTracker, followHeadTracking, recenterHeadTracking, useHeadTracking } from '../../headtrack/driver'
+import { findEarbuds, NO_HEAD_SENSORS } from '../../headtrack/buds'
 import { EarbudsCalibration } from './EarbudsCalibration'
 import { isAndroid } from '../../platform'
 import type { HeadTracking, SpatialMode, SpatialSettings } from '../../spatial/types'
@@ -49,11 +50,14 @@ const LAST_SOURCE_KEY = 'spatial-last-tracking'
 const lastSource = (): HeadTracking | null => {
   try {
     const v = localStorage.getItem(LAST_SOURCE_KEY)
-    return v === 'earbuds' || v === 'webcam' || v === 'phone-camera' ? v : null
+    return v === 'earbuds' || v === 'webcam' || v === 'phone-camera' || v === 'rough' ? v : null
   } catch {
     return null
   }
 }
+
+/** §106 A: the head-tracking sources as the row names them. */
+const SOURCE_LABEL: Record<HeadTracking, string> = { off: 'Off', earbuds: 'Sensors', 'phone-camera': 'Camera', webcam: 'Camera', rough: 'Rough estimation' }
 
 const SPATIAL_MODE_OPTS: readonly { mode: SpatialMode; label: string; hint: string }[] = [
   { mode: 'off', label: 'Off', hint: 'Standard headphone stereo' },
@@ -175,6 +179,15 @@ export function SpatialCrossfeedSection() {
   const sofaInputRef = useRef<HTMLInputElement | null>(null)
   const trackState = useHeadTracking()
   const [calibrating, setCalibrating] = useState(false)
+  // §106 A: rough estimation picked while earbuds with head sensors are connected: say Sensors would do better
+  const [sensorsHere, setSensorsHere] = useState(false)
+  useEffect(() => {
+    setSensorsHere(false)
+    if (spatial.headTracking !== 'rough' || !isAndroid()) return
+    let live = true
+    void findEarbuds().then((f) => live && setSensorsHere(f.length > 0), () => {})
+    return () => { live = false }
+  }, [spatial.headTracking])
   const closeCalibration = useCallback(() => setCalibrating(false), [])
   // §104 C: earbuds that were never calibrated get the calibration as soon as their tracking starts
   useEffect(() => {
@@ -275,7 +288,7 @@ export function SpatialCrossfeedSection() {
       {/* Mode Selector */}
       <div className="ms-snd-row">
         <small>Spatial stage mode</small>
-        <div className="ms-tz-seg" role="radiogroup" aria-label="Spatial stage mode">
+        <div className="ms-tz-seg modes" role="radiogroup" aria-label="Spatial stage mode">
           {SPATIAL_MODE_OPTS.map((m) => (
             <button
               type="button"
@@ -283,7 +296,8 @@ export function SpatialCrossfeedSection() {
               role="radio"
               aria-checked={spatial.mode === m.mode}
               className={spatial.mode === m.mode ? 'on' : ''}
-              onClick={() => updateSpatial({ mode: m.mode })}
+              // a mode picked by hand is the one to keep: head tracking going off no longer brings back the old one
+              onClick={() => updateSpatial({ mode: m.mode, modeBeforeTracking: null })}
               title={m.hint}
             >
               {m.label}
@@ -548,7 +562,7 @@ export function SpatialCrossfeedSection() {
         <div className="ms-snd-row">
           <div className="ms-snd-switchline">
             <div>
-              <b>Head Tracking ({spatial.headTracking === 'earbuds' ? 'Head sensors' : isAndroid() ? 'Front camera sensor' : 'Webcam pose sensor'})</b>
+              <b>Head Tracking{spatial.headTracking !== 'off' ? ` (${SOURCE_LABEL[spatial.headTracking]})` : ''}</b>
               <p className="ms-tz-note tight">
                 Keeps the virtual speakers anchored in the room when you turn your head (±60° smooth convolver crossfade).
               </p>
@@ -560,24 +574,30 @@ export function SpatialCrossfeedSection() {
               className="ms-switch"
               checked={spatial.headTracking !== 'off'}
               onChange={(e) =>
-                updateSpatial({
-                  // back on: the source used last (earbuds or camera), not always the camera
-                  headTracking: e.target.checked ? lastSource() ?? camKind : 'off',
-                  mode: e.target.checked && !speakersOn ? 'speakers' : spatial.mode,
-                })
+                updateSpatial(
+                  e.target.checked
+                    ? {
+                        // back on: the source used last (sensors, camera or rough), not always the camera
+                        headTracking: lastSource() ?? camKind,
+                        // tracking needs speakers to turn: Crossfeed / Off move to Speakers, and come back when it's off
+                        ...(speakersOn ? {} : { mode: 'speakers' as const, modeBeforeTracking: spatial.mode }),
+                      }
+                    : { headTracking: 'off', ...(spatial.modeBeforeTracking ? { mode: spatial.modeBeforeTracking, modeBeforeTracking: null } : {}) },
+                )
               }
             />
           </div>
-          {spatial.headTracking !== 'off' && isAndroid() && (
+          {spatial.headTracking !== 'off' && (
             <div className="ms-tz-seg" role="radiogroup" aria-label="Head tracking source">
-              {([['earbuds', 'Earbuds'], [camKind, 'Front camera']] as const).map(([k, label]) => (
+              {((isAndroid() ? ['earbuds', camKind, 'rough'] : [camKind, 'rough']) as HeadTracking[]).map((k) => [k, SOURCE_LABEL[k]] as const).map(([k, label]) => (
                 <button type="button" key={k} role="radio" aria-checked={spatial.headTracking === k} className={spatial.headTracking === k ? 'on' : ''} onClick={() => updateSpatial({ headTracking: k })}>
                   {label}
                 </button>
               ))}
             </div>
           )}
-          {spatial.headTracking !== 'off' && (
+          {/* rough estimation follows nothing: no yaw, recentre or front-follows */}
+          {spatial.headTracking !== 'off' && spatial.headTracking !== 'rough' && (
             <div className="ms-snd-track">
               <span className="ms-set-badge">
                 {trackState.status === 'starting'
@@ -608,7 +628,10 @@ export function SpatialCrossfeedSection() {
               </label>
             </div>
           )}
-          {trackState.error && <p className="ms-tz-note danger">{trackState.error}</p>}
+          {spatial.headTracking === 'rough' && (trackState.error === NO_HEAD_SENSORS || sensorsHere) && (
+            <p className="ms-tz-note">{trackState.error === NO_HEAD_SENSORS ? `${NO_HEAD_SENSORS} Rough estimation keeps the speakers in front of you.` : 'Your earbuds can track your head: Sensors gives a better result.'}</p>
+          )}
+          {trackState.error && trackState.error !== NO_HEAD_SENSORS && <p className="ms-tz-note danger">{trackState.error}</p>}
         </div>
       </div>
     </section>

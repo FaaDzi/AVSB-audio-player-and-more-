@@ -51,10 +51,14 @@ class BudsHeadTrackerPlugin : Plugin() {
         val bonded = try { adapter()?.bondedDevices ?: emptySet() } catch (e: SecurityException) { emptySet<BluetoothDevice>() }
         for (d in bonded) {
             val uuids = d.uuids?.map { it.uuid } ?: emptyList()
-            if (service in uuids) list.put(JSObject().put("name", d.name ?: "Galaxy Buds").put("address", d.address))
+            if (service in uuids) list.put(JSObject().put("name", d.name ?: "Earbuds").put("address", d.address).put("connected", isConnected(d)))
         }
         call.resolve(JSObject().put("devices", list))
     }
+
+    /** §105 B: connected now, not only paired. BluetoothDevice.isConnected is hidden API: false when it can't be read. */
+    private fun isConnected(d: BluetoothDevice): Boolean =
+        try { d.javaClass.getMethod("isConnected").invoke(d) as? Boolean ?: false } catch (_: Exception) { false }
 
     @PermissionCallback
     private fun findAfterPermission(call: PluginCall) {

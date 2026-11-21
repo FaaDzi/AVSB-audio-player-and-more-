@@ -148,15 +148,26 @@ HEADPHONES_ON_IEM_RIGS = {
     "Hifiman Susvara Unveiled", "Moondrop Cosmo", "MOONDROP JOKER", "Moondrop Laputa", "Moondrop Para",
     "Moondrop Para 2", "Moondrop Venus", "Sennheiser HD 600", "Sennheiser HD620s", "Sennheiser HD660s2",
     "Sennheiser HD800s", "Sony MDR-7506", "Sony MDR-M1", "Sony MDR-MV1", "ZMF Atrium", "ZMF Atrium Closed",
+    # §105 G: from squig pages that list headphones beside IEMs (fernandagunsan, hbb, ianfann, dchpgall, Jay Audio)
+    "Audeze LCD-MX4", "Dan Clark Audio Aeon 2 Noire", "HarmonicDyne ZEUS", "HarmonicDyne ZEUS Elite", "HIFIMAN DEVA PRO",
+    "HIFIMAN SUNDARA 2022", "Kiwi Ears ELLIPSE HP", "Sennheiser HD 650 ZMF Pads",
 }
 # Not headphones or in-ears at all: a reviewer's own speaker ("My Q350" = KEF Q350).
 SPEAKERS_ON_IEM_RIGS = {"My Q350"}
 
 
-def headphone_name(name: str) -> bool:
+NOT_IN_EAR = {key(n) for n in HEADPHONES_ON_IEM_RIGS | SPEAKERS_ON_IEM_RIGS}
+HEADPHONES = ROOT / "app" / "public" / "data" / "headphones.json"
+# §105 G: models the headphone catalog has (measured on a headphone rig). A squig page that mixes headphones in with
+# its IEMs (fernandagunsan: JT7, HD600, M50x…) can't file one as an IEM; the AutoEq in-ear folders are in-ear already.
+HEADPHONE_MODELS = ({key(i["name"].split("(")[0]) for i in json.loads(HEADPHONES.read_text(encoding="utf-8"))["iems"]}
+                    if HEADPHONES.exists() else set())
+
+
+def headphone_name(name: str, mixed_source: bool = False) -> bool:
     """A row that isn't an in-ear: a headphone or speaker some IEM reviewer measured."""
-    model = name.split("(")[0].strip().lower()  # nested brackets: "X (Susvara U (IEC711))"
-    return model in {n.lower() for n in HEADPHONES_ON_IEM_RIGS | SPEAKERS_ON_IEM_RIGS}
+    model = key(name.split("(")[0])  # nested brackets: "X (Susvara U (IEC711))"
+    return model in NOT_IN_EAR or (mixed_source and model in HEADPHONE_MODELS)
 
 
 def key_words(name: str) -> str:
@@ -244,7 +255,7 @@ def main():
     per_model = defaultdict(int)
     for src in SOURCES + squig_sources:
         for name, y in curves.get(src, {}).items():
-            if junk_name(name) or headphone_name(name):
+            if junk_name(name) or headphone_name(name, src in GRAPH_DBS or src in squig_sources):
                 continue
             # existing rows stay as they are (scripts/build_iem_aliases.py merges their duplicates)
             if key(name) in seen or (key(name) not in old and loose(name) in seen_loose):

@@ -446,6 +446,8 @@ export function createLink(opts) {
   let ep = null
   let online = false
   let watches = []
+  /** §105 F: the relay this PC answers on, from closestRelay(); null = iroh's own pick (after the pinned one failed). */
+  let pinnedRelay
   let restarting = null
   let lanServer = null
   let lanPort = 0
@@ -1080,12 +1082,14 @@ export function createLink(opts) {
     }
     const known = pairing.phones().find((p) => p.id === phoneId)
     const name = known?.customName || known?.name || 'Phone'
+    const since = Date.now()
     log(`${name} connected`)
     const conns = live.get(phoneId) ?? new Set()
     conns.add(conn)
     live.set(phoneId, conns)
     onChange()
     let active = 0
+    let why = ''
     try {
       for (;;) {
         const bi = await conn.acceptBi()
@@ -1110,12 +1114,13 @@ export function createLink(opts) {
           }
         })()
       }
-    } catch {
-      // the phone went away
+    } catch (e) {
+      // the phone went away; §105 F: the reason goes in the log, so the next drop explains itself
+      why = e?.message ?? String(e)
     } finally {
       conns.delete(conn)
       if (!conns.size) live.delete(phoneId)
-      log(`${name} disconnected`)
+      log(`${name} disconnected after ${Math.round((Date.now() - since) / 1000)} s${why ? ` (${why})` : ''}`)
       onChange()
     }
   }
@@ -1126,7 +1131,16 @@ export function createLink(opts) {
       await startLanServer()
       const b = iroh.Endpoint.builder()
       if (opts.relay === false) b.applyN0DisableRelay()
-      else b.applyN0()
+      else {
+        b.applyN0()
+        // §105 F: iroh kept picking Frankfurt (~200 ms from here) over Singapore (~30 ms); the closest one by a real
+        // round trip is pinned, so a phone on mobile data isn't sent round the world
+        if (pinnedRelay === undefined) pinnedRelay = await closestRelay()
+        if (pinnedRelay) {
+          b.relayMode(iroh.RelayMode.customFromUrls([pinnedRelay]))
+          log(`relay pinned to the closest: ${pinnedRelay}`)
+        }
+      }
       b.secretKey(secretKey())
       b.alpns([alpnBytes])
       for (const a of opts.bind ?? []) b.bindAddr(a)
@@ -1143,6 +1157,9 @@ export function createLink(opts) {
             const urls = Array.isArray(a) ? a : Array.isArray(b) ? b : []
             if (ep !== mine || opts.relay === false) return
             log(urls.length ? `relay: ${urls.join(', ')}` : 'relay: none (phones away from this network cannot reach the PC)')
+            // the pinned relay went away after working (every start reports "none" first): the next restart leaves
+            // the choice to iroh
+            if (!urls.length && online && pinnedRelay) pinnedRelay = null
             online = urls.length > 0
             onChange()
           }),
@@ -1259,4 +1276,18 @@ export function createLink(opts) {
     /** For tests: this end's address. */
     addr: () => ep?.addr(),
   }
+}
+
+/** n0's public relays (the ones applyN0 uses). */
+const N0_RELAYS = ['aps1', 'euc1', 'usw1', 'use1'].map((r) => `https://${r}-1.relay.n0.iroh.link./`)
+
+/** §105 F: the relay with the shortest HTTPS round trip from here (its /ping), or null when none answers in 5 s. */
+async function closestRelay() {
+  const timed = (url) => {
+    const t0 = Date.now()
+    return fetch(`${url.replace('./', '/')}ping`, { signal: AbortSignal.timeout(5000) }).then((r) => (r.ok ? Date.now() - t0 : Infinity), () => Infinity)
+  }
+  const ms = await Promise.all(N0_RELAYS.map(timed))
+  const best = ms.indexOf(Math.min(...ms))
+  return Number.isFinite(ms[best]) ? N0_RELAYS[best] : null
 }

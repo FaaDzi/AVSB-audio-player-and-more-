@@ -72,6 +72,8 @@ public class AudioRoutePlugin extends Plugin {
         ret.put("speaker", onSpeaker());
         Boolean stereo = speakerIsStereo();
         if (stereo != null) ret.put("stereo", stereo.booleanValue());
+        // §106 F: which phone this is, so its own measured speaker curve can be used
+        ret.put("model", Build.MODEL == null ? "" : Build.MODEL);
         call.resolve(ret);
     }
 

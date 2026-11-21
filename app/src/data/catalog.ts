@@ -19,6 +19,8 @@ export type CatalogKind = 'iems' | 'tws' | 'headphones' | 'speakers' | 'soundbar
 export function kindOfIem(iem: { id: string; name: string }): CatalogKind {
   // speakers and soundbars (§78 B, scripts/build_speakers.py): "what you listen on" only, never a bracket entrant
   if (iem.id.startsWith('spk-')) return /soundbar/i.test(iem.name) ? 'soundbar' : 'speakers'
+  // §106 F: a phone's or tablet's own loudspeakers
+  if (iem.id.startsWith('phone-speaker-')) return 'speakers'
   return iem.id.startsWith('hp-')
     ? 'headphones'
     : isWirelessName(iem.name) || isWirelessName(iem.id.replace(/-/g, ' '))

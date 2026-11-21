@@ -3,7 +3,7 @@ import { version } from '../../../package.json'
 import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { isAndroid } from '../../platform'
 import { createPortal } from 'react-dom'
-import { Chip, Dialog, Icon, IconButton, Menu } from '../ui'
+import { Chip, Dialog, Icon, IconButton, Menu, useLongPress } from '../ui'
 import { useShell } from '../context'
 import { Slider } from '../PlayerBar'
 import { BANDS, carryOver, DEFAULT_POLAR, DEFAULT_SHAPER, EQ_DEFAULT, eqFilters, getPresets, presetFields, presetFrom, readPreset, setEq, setPresets, useEq, withPreset, type EqState, type SavedPreset, type PolarParams, type ShaperParams } from '../eqState'
@@ -35,7 +35,7 @@ import { BALANCE_BANDS, bandCurves, setChannels, useChannels } from '../sound/ch
 import { AutoEqCard, EqGraph, FilterCards, FineTuneCard, ImportDeviceDialog, TargetPills, SWEEP_FULL, SWEEP_TREBLE, getLab, setLab, useHrtfTilt } from './EqStudio'
 import { curveAt, eqScene, TUNE_STEP_DB, tuneAt, type AutoEqResult } from '../eqStudio'
 import { setTone as playToneAt, stopTone } from '../eqTone'
-import { gearName, isPhoneSpeaker, typicalSpeakerDb } from '../sound/phoneSpeaker'
+import { gearName, isPhoneSpeaker, loadPhoneSpeakers, phoneSpeakerDb, phoneSpeakerLabel } from '../sound/phoneSpeaker'
 import { phoneLink } from '../linkClient'
 import { SongCacheRow } from './DataNetworkSection'
 import { checkNow, getUpdate, type Update } from '../updates'
@@ -431,7 +431,10 @@ export function Equalizer() {
   const grid = scene?.grid ?? PLAIN_GRID
   // §97: the phone speaker isn't in the catalog; drawing it flat read as "this speaker is perfect", so the graph
   // shows a typical phone speaker instead (display only: no AutoEQ for it)
-  const speakerDb = useMemo(() => (isPhoneSpeaker(activeGear) ? typicalSpeakerDb(grid, Math.min(screen.width, screen.height) >= 600) : null), [activeGear, grid])
+  // §106 F: this phone's own measured speakers when its model was measured (Xiaomi 14, Galaxy S21 FE, …)
+  const [speakerRows, setSpeakerRows] = useState(0)
+  useEffect(() => { void loadPhoneSpeakers().then(() => setSpeakerRows(1)) }, [])
+  const speakerDb = useMemo(() => (isPhoneSpeaker(activeGear) ? phoneSpeakerDb(activeGear!, grid, Math.min(screen.width, screen.height) >= 600) : null), [activeGear, grid, speakerRows])
   const eqDb = useMemo(() => chainDb(eqFilters(eq), grid, 48000), [eq, grid])
   const peak = Math.max(0, ...eqDb)
   // the Sound aim, while it's on, is part of what you hear
@@ -462,6 +465,14 @@ export function Equalizer() {
   // states, so there is nothing to bounce; the room it gives up is handed to a spacer under it, so the page below
   // never moves because of it.
   const [compact, setCompact] = useState(false)
+  // §106 G: the preset bar's AutoEQ button: bring the AutoEQ card into view, and run it on a tap (not on a hold)
+  const autoCard = useRef<HTMLDivElement>(null)
+  const [autoRun, setAutoRun] = useState(0)
+  const holdAuto = useLongPress()
+  const showAuto = (run: boolean) => {
+    autoCard.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    if (run) setAutoRun((n) => n + 1)
+  }
   // §100: on a phone the card rests nearly see-through; a double tap on the graph lifts it until a tap lands off it
   const [lifted, setLifted] = useState(false)
   useEffect(() => {
@@ -494,16 +505,21 @@ export function Equalizer() {
       }
       // the mark scrolls away, the pinned graph doesn't: the distance between them is how far the page has moved
       const past = pinned.getBoundingClientRect().top - mark.getBoundingClientRect().top
-      if (past <= 0 && !pinned.classList.contains('compact')) rest.current = { hero: pinned.offsetHeight, graph: plot.offsetHeight }
+      // its full size, taken at rest (and once anyway, so a gap above the mark can't leave it at 0: nothing would fold)
+      if ((past <= 0 || !rest.current.graph) && !pinned.classList.contains('compact')) rest.current = { hero: pinned.offsetHeight, graph: plot.offsetHeight }
       const { graph } = rest.current
-      const most = Math.max(0, graph - Math.max(88, graph * 0.42))
-      const shrink = Math.max(0, Math.min(most, past - graph / 2))
+      // §106 E: an accordion: it folds from the first pixel the page moves, pixel for pixel with the scroll (a slow
+      // scroll folds it slowly), down to half its height; the fade below follows the same value
+      const most = Math.max(0, graph - Math.max(64, graph * 0.5))
+      const shrink = Math.max(0, Math.min(most, past))
       pinned.style.setProperty('--eqg-shrink', `${shrink}px`)
       // the title and legend fade as it shrinks, and step down to the small layout once it is as small as it gets
       pinned.style.setProperty('--eqg-fade', String(most ? 1 - shrink / most : 1))
       // a margin before it grows again: on a page barely taller than the screen the small layout's own change in
       // height moved the scroll back over the line, and the two layouts flipped until React gave up (error #185)
-      if (switchLayout) setCompact((was) => most > 0 && (was ? shrink >= most - 12 : shrink >= most - 0.5))
+      // §106 E: no small layout on the phone any more: it hid the legend and subtitle at one scroll position, so the card
+      // changed height there and the fold jumped back (the old "jumping" bug). The title scales with --eqg-fade instead.
+      if (switchLayout) setCompact(false)
       pad.style.height = `${Math.max(0, rest.current.hero - pinned.offsetHeight)}px`
     }
     fit.current = check
@@ -662,7 +678,7 @@ export function Equalizer() {
           eqDb={eqDb}
           extraDb={extraDb}
           device={speakerDb ?? scene?.device ?? null}
-          deviceLabel={speakerDb ? (Math.min(screen.width, screen.height) >= 600 ? 'Typical tablet speaker' : 'Typical phone speaker') : undefined}
+          deviceLabel={speakerDb ? phoneSpeakerLabel(activeGear!, Math.min(screen.width, screen.height) >= 600) : undefined}
           target={scene?.target ?? null}
           ears={ears}
           handles={handles}
@@ -694,8 +710,18 @@ export function Equalizer() {
       <aside className="ms-eq-rail">
         {/* §96 C: one menu instead of a dozen preset chips */}
         <div className="ms-eq-presetbar">
+          {/* §106 G: AutoEQ where you can see it: a tap runs it for what you listen on, a hold opens its options */}
+          <button
+            type="button"
+            className="ms-eq-autobtn"
+            aria-label="AutoEQ"
+            title="AutoEQ (hold for its options)"
+            {...holdAuto(() => showAuto(false))}
+            onClick={() => showAuto(true)}
+          >
+            <Icon name="auto_fix_high" size={20} />
+          </button>
           <label className="ms-eq-presetpick">
-            <Icon name="library_music" size={18} />
             <select
               aria-label="Preset"
               value={preset}
@@ -738,7 +764,9 @@ export function Equalizer() {
         </div>
 
         {db && (
+          <div ref={autoCard} className="ms-eq-autocard">
           <AutoEqCard
+            run={autoRun}
             db={db}
             deviceId={activeGear}
             deviceName={activeGearName}
@@ -752,6 +780,7 @@ export function Equalizer() {
             warmth={warmth}
             onWarmth={setWarmth}
           />
+          </div>
         )}
 
         {mode === 'advanced+' && <FilterCards filters={peq} onChange={(filters) => onEqTweaked({ filters })} />}

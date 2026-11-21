@@ -19,6 +19,8 @@
 .ms-snd.spatial { margin-top: 16px; padding: 16px; background: var(--chrome); }
 .ms-snd.spatial .ms-tz-seg { align-self: stretch; background: var(--chip); }
 .ms-snd.spatial .ms-tz-seg button { flex: 1 1 auto; min-width: 0; padding: 0 10px; white-space: nowrap; }
+/* §105 C: five modes on a phone: labels wrap to two lines and step down in size instead of running out of their pill */
+.ms-snd.spatial .ms-tz-seg.modes button { flex: 1 1 0; height: auto; min-height: 40px; padding: 4px 4px; white-space: normal; line-height: 1.15; font-size: clamp(10.5px, 3vw, 14px); }
 .ms-snd.spatial .ms-snd-target { background: var(--chip); }
 .ms-snd-part { padding-top: 14px; border-top: 1px solid var(--hairline); }
 .ms-snd-switchline { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
@@ -27,7 +29,9 @@
 .ms-snd-hrtf { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .ms-snd-select { flex: 1 1 220px; min-width: 0; height: 40px; padding: 0 12px; border-radius: 12px; background: var(--chip); color: var(--text-strong); border: 1px solid var(--outline); }
 .ms-btn.text.ms-snd-reset { margin-left: 8px; padding: 0 6px; min-height: 22px; }
-.ms-snd-track { display: flex; align-items: center; gap: 12px; }
+.ms-snd-track { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+/* §106 A: "Front follows me" takes its own line (it was squeezed beside the yaw and Recentre) */
+.ms-snd-track > .ms-snd-switchline { flex: 1 1 100%; }
 .ms-snd-graph { padding: 10px 12px 8px; border-radius: 16px; background: var(--page); }
 .ms-snd-graph svg { display: block; width: 100%; height: 130px; }
 .ms-snd-graph line { stroke: var(--outline); stroke-width: 1; vector-effect: non-scaling-stroke; }
