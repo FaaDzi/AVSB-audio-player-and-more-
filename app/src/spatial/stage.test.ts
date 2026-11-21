@@ -138,3 +138,17 @@ describe('crossfeedParams (CanOpener-style amount and angle)', () => {
     expect(d90).toBeLessThan(0.0007)
   })
 })
+
+describe('head yaw steps (§104: no jumps on fast turns)', () => {
+  it('walks toward the head at most YAW_STEP_DEG per crossfade, the short way round', async () => {
+    const { nextYaw, YAW_STEP_DEG } = await import('./stage')
+    expect(nextYaw(0, 4)).toBe(4)
+    expect(nextYaw(0, 45)).toBe(YAW_STEP_DEG)
+    expect(nextYaw(0, -45)).toBe(-YAW_STEP_DEG)
+    // 170° → -170° is 20° the short way (through 180), not 340° back through the front
+    expect(nextYaw(170, -170)).toBe(170 + YAW_STEP_DEG)
+    let y = 0
+    for (let i = 0; i < 12; i++) y = nextYaw(y, 100)
+    expect(y).toBe(100)
+  })
+})

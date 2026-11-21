@@ -8,6 +8,8 @@ import type { HrirSet, SpatialMode, SpatialStageApi } from './types'
 const MODE_FADE_S = 0.04
 /** Head-yaw moves crossfade between two convolver banks over this long; also the fastest update rate. */
 const YAW_FADE_S = 0.05
+/** Largest move per crossfade: a fast head turn walks through the ring instead of skipping 10–20° at once. */
+export const YAW_STEP_DEG = 10
 /** The virtual speakers sit at ±this many degrees, like a usual stereo triangle. */
 export const SPEAKER_DEG = 30
 /** "360" mode (§104 D): where the upmix's sources sit, + = left: hard left … hard right, then ambience left/right
@@ -134,6 +136,12 @@ export function crossfeedMatchGain(sampleRate: number, cutHz = XF_CUT_HZ, feedDb
 }
 
 // ---------- HRIR ring ----------
+
+/** One crossfade's move from `shown` toward `target` (the short way round), at most YAW_STEP_DEG. */
+export function nextYaw(shown: number, target: number): number {
+  const d = ((((target - shown + 180) % 360) + 360) % 360) - 180
+  return Math.abs(d) <= YAW_STEP_DEG ? target : shown + Math.sign(d) * YAW_STEP_DEG
+}
 
 /** Ring index for a source at `azDeg` (counter-clockwise, 90 = left), rounded to the nearest measured one. */
 export function ringIndex(azDeg: number, stepDeg: number, count: number): number {
@@ -353,6 +361,8 @@ export class SpatialStage implements SpatialStageApi {
   private vOn = false
   private offTimer: ReturnType<typeof setTimeout> | undefined
   private yaw = 0
+  /** The yaw the banks are aimed at: walks toward `yaw` by at most YAW_STEP_DEG per crossfade (§104: no jumps). */
+  private shownYaw = 0
   private yawTimer: ReturnType<typeof setTimeout> | undefined
   private idleTimer: ReturnType<typeof setTimeout> | undefined
   private fadeEnd = 0
@@ -545,6 +555,13 @@ export class SpatialStage implements SpatialStageApi {
     p.linearRampToValueAtTime(to, t + MODE_FADE_S)
   }
 
+  /** Moves the aimed yaw one step toward the head; schedules the next step while it isn't there yet. */
+  private stepYaw(): number {
+    this.shownYaw = nextYaw(this.shownYaw, this.yaw)
+    if (this.shownYaw !== this.yaw) queueMicrotask(() => this.scheduleYaw())
+    return this.shownYaw
+  }
+
   /** Apply the latest yaw now, or as soon as the running crossfade has finished. */
   private scheduleYaw() {
     if (this.yawTimer !== undefined) return
@@ -559,7 +576,7 @@ export class SpatialStage implements SpatialStageApi {
     if (this.upOn) return this.applyUpYaw()
     const s = this.set
     if (!s || !this.vOn) return
-    const idx = speakerIndices(this.yaw, s.stepDeg, s.ring.length)
+    const idx = speakerIndices(this.stepYaw(), s.stepDeg, s.ring.length)
     const cur = this.banks[this.active]
     if (cur.idx && cur.idx[0] === idx[0] && cur.idx[1] === idx[1]) return
     const next = this.banks[1 - this.active]
@@ -657,7 +674,8 @@ export class SpatialStage implements SpatialStageApi {
     const s = this.set
     const up = this.up
     if (!s || !up) return
-    const idx = UP_AZ.map((az) => ringIndex(az - this.yaw, s.stepDeg, s.ring.length))
+    const shown = this.stepYaw()
+    const idx = UP_AZ.map((az) => ringIndex(az - shown, s.stepDeg, s.ring.length))
     const cur = up.banks[up.active]
     if (cur.idx && cur.idx.every((v, k) => v === idx[k])) {
       this.wireUp(cur, true)

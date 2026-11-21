@@ -45,6 +45,16 @@ const KINDS = new Set(['iems', 'tws', 'headphones'] as const)
 const LISTEN_KINDS = new Set(['iems', 'tws', 'headphones', 'speakers', 'soundbar'] as const)
 const ROOM_KINDS = new Set(['speakers', 'soundbar'] as const)
 
+const LAST_SOURCE_KEY = 'spatial-last-tracking'
+const lastSource = (): HeadTracking | null => {
+  try {
+    const v = localStorage.getItem(LAST_SOURCE_KEY)
+    return v === 'earbuds' || v === 'webcam' || v === 'phone-camera' ? v : null
+  } catch {
+    return null
+  }
+}
+
 const SPATIAL_MODE_OPTS: readonly { mode: SpatialMode; label: string; hint: string }[] = [
   { mode: 'off', label: 'Off', hint: 'Standard headphone stereo' },
   { mode: 'crossfeed', label: 'Crossfeed', hint: 'CanOpener natural stereo blend' },
@@ -171,6 +181,10 @@ export function SpatialCrossfeedSection() {
     if (trackState.status === 'on' && spatial.headTracking === 'earbuds' && earbudsTracker()?.calibrated === false) setCalibrating(true)
   }, [trackState.status, spatial.headTracking])
   const camKind: HeadTracking = isAndroid() ? 'phone-camera' : 'webcam'
+  // remember which source was picked, so switching head tracking back on brings it back
+  useEffect(() => {
+    if (spatial.headTracking !== 'off') try { localStorage.setItem(LAST_SOURCE_KEY, spatial.headTracking) } catch { /* not kept */ }
+  }, [spatial.headTracking])
 
   useEffect(() => onSpatialChange(setSpatialState), [])
 
@@ -547,7 +561,8 @@ export function SpatialCrossfeedSection() {
               checked={spatial.headTracking !== 'off'}
               onChange={(e) =>
                 updateSpatial({
-                  headTracking: e.target.checked ? camKind : 'off',
+                  // back on: the source used last (earbuds or camera), not always the camera
+                  headTracking: e.target.checked ? lastSource() ?? camKind : 'off',
                   mode: e.target.checked && !speakersOn ? 'speakers' : spatial.mode,
                 })
               }

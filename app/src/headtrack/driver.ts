@@ -12,7 +12,7 @@ import { STILL_DEG } from './budsMath'
 
 /** 360 mode: the front only follows a turn bigger than this (a chair, not a glance at an instrument). */
 const BIG_TURN_DEG = 60
-import { clampYaw } from './pose'
+import { clampYaw, wrap } from './pose'
 
 export interface HeadTrackState {
   status: 'off' | 'starting' | 'on'
@@ -75,7 +75,8 @@ function apply(s: SpatialSettings = loadSpatial()) {
   tracker = t
   let lastUi = 0
   unPose = t.onPose((p) => {
-    const yaw = clampYaw(p.yaw)
+    // the camera only follows a face so far (±60°); the earbuds' own sensor goes all the way round
+    const yaw = t.kind === 'earbuds' ? wrap(p.yaw) : clampYaw(p.yaw)
     sendYaw(yaw)
     // the readout doesn't need every frame
     if (p.t - lastUi >= 66 || t.faceVisible !== state.face) {
