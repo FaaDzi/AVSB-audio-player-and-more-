@@ -64,6 +64,8 @@ const matches = (patterns: string[], label: string) =>
     }
   })
 
+const words = (s: string) => s.toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 1)
+
 /** What the current output is, as far as the app can tell from its Windows name. */
 export function classifyOutput(dev: OutputDevice, table: DeviceTable): Detected {
   const label = dev.label
@@ -75,7 +77,13 @@ export function classifyOutput(dev: OutputDevice, table: DeviceTable): Detected 
     const byId = table.dacs.find((d) => d.usb.map((u) => u.toLowerCase()).includes(dev.usb!))
     if (byId) return { kind: 'dac', name: byId.name, outputOhm: byId.outputOhm, source: byId.source ?? null }
   }
-  const byName = table.dacs.filter((d) => matches(d.match, label))
+  const named = table.dacs.filter((d) => matches(d.match, label))
+  // §102: a brand-wide pattern ("questyle", "hidizs") and a model's own both match: the entry whose name shares the
+  // most words with the label wins, so the model beats its brand
+  const said = new Set(words(label))
+  const score = (d: DacEntry) => words(d.name).filter((w) => said.has(w)).length
+  const top = Math.max(0, ...named.map(score))
+  const byName = named.filter((d) => score(d) === top)
   if (byName.length) {
     // the same Windows name can belong to different devices (e.g. Apple's and Google's USB-C adapters);
     // if their impedances disagree, name them all and leave the value unknown rather than pick one

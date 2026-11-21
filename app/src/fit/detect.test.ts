@@ -61,7 +61,8 @@ group('the real device list (public/data/devices.json)', async () => {
   })
 
   it("a DSP cable isn't mistaken for a same-brand dongle, and dongles stay dongles", () => {
-    expect(name('Headphones (TANCHJIM-SPACE PRO)')).toBe('dac:Tanchjim Space / Space Lite / Space II')
+    expect(name('Headphones (TANCHJIM-SPACE PRO)')).toBe('dac:TANCHJIM Space Pro')
+    expect(name('Headphones (SPACE)')).toBe('dac:Tanchjim Space / Space Lite / Space II')
     expect(name('Headphones (TANCHJIM-STARGATE II)')).toBe('dac:TANCHJIM Stargate II')
     expect(name('Headphones (Protocol Max)')).toBe('dac:CrinEar Protocol Max')
     expect(name('Headphones (MOONRIVER 3)')).toBe('dac:Moondrop Moonriver 3')
@@ -83,6 +84,23 @@ group('the real device list (public/data/devices.json)', async () => {
     expect(android('Octave')).toBe('dac:NiceHCK Octave')
     expect(android('Shanling UA4')).toBe('dac:Shanling UA4')
     expect(android('Questyle M18i')).toBe('dac:Questyle M18i')
+  })
+
+  // §102: DAPs, desktop units and Bluetooth receivers from the 2026-11-21 research
+  it('finds a model over its brand-wide entry, and the new kinds of source', () => {
+    const android = (label: string) => {
+      const d = classifyOutput({ id: 'android', label, usb: null }, real)
+      return d.kind === 'dac' ? d.name : d.kind === 'bt-adapter' ? `bt:${d.name}` : d.kind
+    }
+    expect(android('Questyle M18i')).toBe('Questyle M18i')
+    expect(android('iBasso-DC03-Pro')).toMatch(/DC03 Pro/)
+    expect(android('PAW-S2')).toMatch(/PAW S1 \/ S2/)
+    expect(android('Qudelix-5K')).toBe('bt:Qudelix 5K')
+    const ohm = (label: string) => {
+      const d = classifyOutput({ id: 'x', label: `Headphones (${label})`, usb: null }, real)
+      return d.kind === 'dac' ? d.outputOhm : undefined
+    }
+    expect(ohm('Sennheiser HDV 820')).toBeGreaterThan(10)
   })
 
   it('no pattern carries a control character (a heredoc once turned \\b into a backspace)', () => {
