@@ -7,6 +7,7 @@ import { useSyncExternalStore } from 'react'
 import { loadSpatial, onSpatialChange, updateSpatial } from '../spatial/settings'
 import type { HeadTracking, SpatialSettings, SpatialStageApi } from '../spatial/types'
 import { createCameraTracker, type CameraTracker } from './camera'
+import { createBudsTracker, type BudsTracker } from './buds'
 import { clampYaw } from './pose'
 
 export interface HeadTrackState {
@@ -25,7 +26,7 @@ type StageList = () => Pick<SpatialStageApi, 'setHeadYaw'>[]
 let state: HeadTrackState = { status: 'off', kind: 'off', yaw: 0, face: false, error: null }
 const stateListeners = new Set<() => void>()
 const providers = new Set<StageList>()
-let tracker: CameraTracker | null = null
+let tracker: CameraTracker | BudsTracker | null = null
 let unPose: (() => void) | null = null
 let unSpatial: (() => void) | null = null
 let beforeStart: ((kind: Exclude<HeadTracking, 'off'>) => Promise<void>) | null = null
@@ -61,7 +62,7 @@ function apply(s: SpatialSettings = loadSpatial()) {
   const kind = s.headTracking as Exclude<HeadTracking, 'off'>
   if (tracker && tracker.kind === kind) return
   stopTracker()
-  const t = createCameraTracker(kind)
+  const t = kind === 'earbuds' ? createBudsTracker() : createCameraTracker(kind)
   tracker = t
   let lastUi = 0
   unPose = t.onPose((p) => {
@@ -118,6 +119,11 @@ export function followHeadTracking(stages: StageList): () => void {
 /** Optional step before the camera opens (e.g. the Android runtime camera permission). */
 export function setHeadTrackingBeforeStart(fn: ((kind: Exclude<HeadTracking, 'off'>) => Promise<void>) | null) {
   beforeStart = fn
+}
+
+/** Earbuds only: look straight ahead, then nod within 3 s (measures how the earbuds sit in the ear). */
+export function calibrateEarbuds(): Promise<'saved' | 'too-small' | 'not-earbuds'> {
+  return tracker && tracker.kind === 'earbuds' ? (tracker as BudsTracker).calibrate() : Promise.resolve('not-earbuds')
 }
 
 /** Make the current head direction straight ahead. */

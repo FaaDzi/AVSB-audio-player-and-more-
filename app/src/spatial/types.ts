@@ -38,7 +38,7 @@ export interface HeadPose {
 
 /** A source of head poses (webcam, phone sensors, …). Poses are relative to the last recentre. */
 export interface HeadTracker {
-  readonly kind: 'webcam' | 'phone-camera'
+  readonly kind: 'webcam' | 'phone-camera' | 'earbuds'
   /** Asks for the camera/sensor if needed; rejects with a readable message when unavailable. */
   start(): Promise<void>
   stop(): void
@@ -64,7 +64,7 @@ export interface SpatialStageApi {
 }
 
 /** Camera face tracking: the webcam on PC, the front camera (phone propped up facing you) on Android. */
-export type HeadTracking = 'off' | 'webcam' | 'phone-camera'
+export type HeadTracking = 'off' | 'webcam' | 'phone-camera' | 'earbuds'
 
 /** What is saved (localStorage) and stored with each match result while spatial mode is on. */
 export interface SpatialSettings {

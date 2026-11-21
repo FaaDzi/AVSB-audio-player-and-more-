@@ -34,7 +34,7 @@ import { importSofa } from '../../spatial/sofa'
 import { AVERAGE_HEAD_CM, HEAD_CM_MAX, HEAD_CM_MIN } from '../../spatial/headSize'
 import { loadEarCorrection } from '../../spatial/earCorrection'
 import { HrtfPicker } from '../../spatial/hrtfPicker'
-import { followHeadTracking, recenterHeadTracking, useHeadTracking } from '../../headtrack/driver'
+import { calibrateEarbuds, followHeadTracking, recenterHeadTracking, useHeadTracking } from '../../headtrack/driver'
 import { isAndroid } from '../../platform'
 import type { HeadTracking, SpatialMode, SpatialSettings } from '../../spatial/types'
 import type { Biquad } from '../../eq/biquad'
@@ -162,6 +162,7 @@ export function SpatialCrossfeedSection() {
   const baseEarFiltersRef = useRef<Biquad[] | null>(null)
   const sofaInputRef = useRef<HTMLInputElement | null>(null)
   const trackState = useHeadTracking()
+  const [nodMsg, setNodMsg] = useState<string | null>(null)
   const camKind: HeadTracking = isAndroid() ? 'phone-camera' : 'webcam'
 
   useEffect(() => onSpatialChange(setSpatialState), [])
@@ -526,7 +527,7 @@ export function SpatialCrossfeedSection() {
         <div className="ms-snd-row">
           <div className="ms-snd-switchline">
             <div>
-              <b>Head Tracking ({isAndroid() ? 'Front camera sensor' : 'Webcam pose sensor'})</b>
+              <b>Head Tracking ({spatial.headTracking === 'earbuds' ? 'Galaxy Buds sensor' : isAndroid() ? 'Front camera sensor' : 'Webcam pose sensor'})</b>
               <p className="ms-tz-note tight">
                 Keeps the virtual speakers anchored in the room when you turn your head (±60° smooth convolver crossfade).
               </p>
@@ -545,15 +546,24 @@ export function SpatialCrossfeedSection() {
               }
             />
           </div>
+          {spatial.headTracking !== 'off' && isAndroid() && (
+            <div className="ms-tz-seg" role="radiogroup" aria-label="Head tracking source">
+              {([['earbuds', 'Earbuds'], [camKind, 'Front camera']] as const).map(([k, label]) => (
+                <button type="button" key={k} role="radio" aria-checked={spatial.headTracking === k} className={spatial.headTracking === k ? 'on' : ''} onClick={() => updateSpatial({ headTracking: k })}>
+                  {label}
+                </button>
+              ))}
+            </div>
+          )}
           {spatial.headTracking !== 'off' && (
             <div className="ms-snd-track">
               <span className="ms-set-badge">
                 {trackState.status === 'starting'
-                  ? 'Starting camera…'
+                  ? (spatial.headTracking === 'earbuds' ? 'Connecting to the earbuds…' : 'Starting camera…')
                   : trackState.status === 'on'
                     ? trackState.face
                       ? `Yaw ${trackState.yaw >= 0 ? `+${Math.round(trackState.yaw)}` : Math.round(trackState.yaw)}°`
-                      : 'No face in view — centering'
+                      : spatial.headTracking === 'earbuds' ? 'Earbuds not in the ears' : 'No face in view — centering'
                     : 'Standby'}
               </span>
               {trackState.status === 'on' && (
@@ -561,9 +571,18 @@ export function SpatialCrossfeedSection() {
                   Recentre straight ahead
                 </button>
               )}
+              {trackState.status === 'on' && spatial.headTracking === 'earbuds' && (
+                <button type="button" className="ms-btn text" onClick={() => {
+                  setNodMsg('Look straight ahead, then nod down and up within 3 seconds…')
+                  void calibrateEarbuds().then((r) => setNodMsg(r === 'saved' ? 'Saved: these earbuds are calibrated.' : 'The nod was too small. Try a bigger nod.'))
+                }}>
+                  Look ahead, then nod
+                </button>
+              )}
+              {nodMsg && <p className="ms-tz-note">{nodMsg}</p>}
             </div>
           )}
-          {trackState.error && <p className="ms-tz-note danger">Camera: {trackState.error}</p>}
+          {trackState.error && <p className="ms-tz-note danger">{trackState.error}</p>}
         </div>
       </div>
     </section>
