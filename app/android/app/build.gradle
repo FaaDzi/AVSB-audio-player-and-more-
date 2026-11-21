@@ -8,8 +8,8 @@ android {
         applicationId "com.iemdreambracket.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 11
-        versionName "1.1.4-preview.5"
+        versionCode 12
+        versionName "1.1.5"
         // the owner's phone (and the emulator, which translates ARM) only need 64-bit ARM: the x86 and 32-bit copies of
         // the native libraries were 36 MB of the APK (plan §76 J)
         ndk { abiFilters 'arm64-v8a' }
