@@ -48,6 +48,8 @@ export interface BudsTracker extends HeadTracker {
   calibrate(progress: (p: { step: LookStep; hold: number; angle: number }) => void): Promise<'saved' | 'failed'>
   /** Stop a calibration that is running (Cancel). */
   cancelCalibration(): void
+  /** The front follows turns bigger than `minDeg` held for a while; null = never (a fixed room). */
+  setFollow(minDeg: number | null): void
   onState(cb: (state: string) => void): () => void
 }
 
@@ -128,6 +130,10 @@ export function createBudsTracker(): BudsTracker {
     calibrate(progress) {
       measuring?.done('failed')
       return new Promise((done) => { measuring = { cal: new LookCalibration(), progress, done } })
+    },
+    setFollow(minDeg) {
+      pose.autoRecentre = minDeg !== null
+      if (minDeg !== null) pose.followMinDeg = minDeg
     },
     cancelCalibration() {
       const m = measuring

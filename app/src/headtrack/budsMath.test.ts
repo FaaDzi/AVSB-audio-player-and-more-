@@ -161,3 +161,18 @@ describe('look ahead → up → down calibration (§104 C)', () => {
     expect(cal.step).toBe('failed')
   })
 })
+
+describe('front follows (360: big turns only)', () => {
+  it('a 40° look stays put when only turns over 60° move the front; a 90° chair turn still does', () => {
+    const p = new BudsPose(lift)
+    p.followMinDeg = 60
+    p.update(tilt, 0)
+    const look = turned(axisAngle(WORLD_UP, 40))
+    let a = p.update(look, 20)
+    for (let t = 40; t <= 20000; t += 20) a = p.update(look, t)
+    expect(Math.abs(a.yaw)).toBeGreaterThan(35)
+    const chair = turned(axisAngle(WORLD_UP, 90))
+    for (let t = 20020; t <= 40000; t += 20) a = p.update(chair, t)
+    expect(Math.abs(a.yaw)).toBeLessThan(60)
+  })
+})

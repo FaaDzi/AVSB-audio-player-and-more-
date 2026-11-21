@@ -8,6 +8,10 @@ import { loadSpatial, onSpatialChange, updateSpatial } from '../spatial/settings
 import type { HeadTracking, SpatialSettings, SpatialStageApi } from '../spatial/types'
 import { createCameraTracker, type CameraTracker } from './camera'
 import { createBudsTracker, type BudsTracker } from './buds'
+import { STILL_DEG } from './budsMath'
+
+/** 360 mode: the front only follows a turn bigger than this (a chair, not a glance at an instrument). */
+const BIG_TURN_DEG = 60
 import { clampYaw } from './pose'
 
 export interface HeadTrackState {
@@ -41,7 +45,7 @@ function sendYaw(yaw: number) {
 }
 
 const wanted = (s: SpatialSettings) =>
-  s.headTracking !== 'off' && (s.mode === 'speakers' || s.mode === 'room') && providers.size > 0 && !document.hidden
+  s.headTracking !== 'off' && (s.mode === 'speakers' || s.mode === 'room' || s.mode === '360') && providers.size > 0 && !document.hidden
 
 function stopTracker() {
   unPose?.()
@@ -60,9 +64,14 @@ function apply(s: SpatialSettings = loadSpatial()) {
     return
   }
   const kind = s.headTracking as Exclude<HeadTracking, 'off'>
-  if (tracker && tracker.kind === kind) return
+  // 360: only a big turn (a chair) moves the front, so looking toward an instrument keeps it there
+  const follow = (t: CameraTracker | BudsTracker | null) => {
+    if (t?.kind === 'earbuds') (t as BudsTracker).setFollow(s.frontFollows ? (s.mode === '360' ? BIG_TURN_DEG : STILL_DEG) : null)
+  }
+  if (tracker && tracker.kind === kind) return follow(tracker)
   stopTracker()
   const t = kind === 'earbuds' ? createBudsTracker() : createCameraTracker(kind)
+  follow(t)
   tracker = t
   let lastUi = 0
   unPose = t.onPose((p) => {

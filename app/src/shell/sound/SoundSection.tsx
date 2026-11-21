@@ -50,6 +50,7 @@ const SPATIAL_MODE_OPTS: readonly { mode: SpatialMode; label: string; hint: stri
   { mode: 'crossfeed', label: 'Crossfeed', hint: 'CanOpener natural stereo blend' },
   { mode: 'speakers', label: 'Speakers', hint: 'Nearfield ±30° studio monitors' },
   { mode: 'room', label: 'Room Stage', hint: 'Speakers in an acoustic listening room' },
+  { mode: '360', label: '360', hint: 'The mix spread around you by where each sound is panned; turn toward an instrument to bring it in front' },
 ]
 
 const XF_PRESETS: readonly { label: string; amount: number; angle: number; cutHz: number }[] = [
@@ -214,7 +215,7 @@ export function SpatialCrossfeedSection() {
   }, [earResonancePct])
 
   const crossfeedOn = spatial.mode === 'crossfeed'
-  const speakersOn = spatial.mode === 'speakers' || spatial.mode === 'room'
+  const speakersOn = spatial.mode === 'speakers' || spatial.mode === 'room' || spatial.mode === '360'
   const xfAmount = spatial.xfAmount ?? DEFAULT_SPATIAL.xfAmount
   const xfAngle = spatial.xfAngle ?? DEFAULT_SPATIAL.xfAngle
   const xfParams = crossfeedParams(xfAmount, xfAngle)
@@ -583,6 +584,13 @@ export function SpatialCrossfeedSection() {
                 </button>
               )}
               {calibrating && <EarbudsCalibration onClose={closeCalibration} />}
+              <label className="ms-snd-switchline">
+                <div>
+                  <b>Front follows me</b>
+                  <p className="ms-tz-note tight">{spatial.mode === '360' ? 'After a big turn (like your chair), that way becomes the front. Looking at an instrument stays put.' : 'After you face a new way for a few seconds, that way becomes the front.'}</p>
+                </div>
+                <input type="checkbox" role="switch" className="ms-switch" aria-label="Front follows me" checked={spatial.frontFollows} onChange={(e) => updateSpatial({ frontFollows: e.target.checked })} />
+              </label>
             </div>
           )}
           {trackState.error && <p className="ms-tz-note danger">{trackState.error}</p>}

@@ -127,6 +127,8 @@ export class BudsPose {
   autoRecentre: boolean
   /** From the calibration's left/right step: -1 when this pair reads turns the other way round. */
   yawSign = 1
+  /** Only a turn bigger than this, held SETTLE_MS, moves the front (360 mode: big turns only). */
+  followMinDeg = STILL_DEG
   constructor(liftAxis: Vec = DEFAULT_LIFT_AXIS, autoRecentre = true) {
     this.liftAxis = liftAxis
     this.autoRecentre = autoRecentre
@@ -167,7 +169,7 @@ export class BudsPose {
       if (Math.abs(a.yaw - this.stillYaw) > STILL_DEG) {
         this.stillYaw = a.yaw
         this.stillSince = t
-      } else if (t - this.stillSince >= SETTLE_MS && Math.abs(a.yaw) > STILL_DEG) {
+      } else if (t - this.stillSince >= SETTLE_MS && Math.abs(a.yaw) > this.followMinDeg) {
         const dt = this.prev ? Math.min(0.2, (t - this.prev.t) / 1000) : 0
         this.ref = slerp(this.ref, q, Math.min(1, FOLLOW_PER_S * dt))
         a = this.angles(q)

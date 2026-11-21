@@ -1,3 +1,5 @@
+import upmixUrl from './upmix.worklet.ts?worker&url'
+import { UPMIX_OUTPUTS } from './upmixCore'
 import type { Biquad } from '../eq/biquad'
 import { powerOf } from './earCorrection'
 import type { HrirSet, SpatialMode, SpatialStageApi } from './types'
@@ -8,6 +10,11 @@ const MODE_FADE_S = 0.04
 const YAW_FADE_S = 0.05
 /** The virtual speakers sit at ±this many degrees, like a usual stereo triangle. */
 export const SPEAKER_DEG = 30
+/** "360" mode (§104 D): where the upmix's sources sit, + = left: hard left … hard right, then ambience left/right
+ * behind the sides. Wider than the ±30° speakers, so turning toward a side brings what's panned there in front. */
+export const UP_AZ = [80, 40, 0, -40, -80, 115, -115] as const
+/** "360" level against Off (each source carries both channels' energy; centre sounds come out ~3 dB under). */
+const UP_LEVEL = 1.2
 /** bs2b's default level: 700 Hz cut, 4.5 dB feed (the "default" preset, between Jan Meier's and Chu Moy's). */
 const XF_CUT_HZ = 700
 const XF_FEED_DB = 4.5
@@ -283,6 +290,13 @@ export function speakerMatchGains(
 
 // ---------- the stage ----------
 
+interface UpBank {
+  conv: ConvolverNode[]
+  gain: GainNode
+  idx: number[] | null
+  wired: boolean
+}
+
 interface Bank {
   conv: [ConvolverNode, ConvolverNode]
   gain: GainNode
@@ -342,6 +356,10 @@ export class SpatialStage implements SpatialStageApi {
   private yawTimer: ReturnType<typeof setTimeout> | undefined
   private idleTimer: ReturnType<typeof setTimeout> | undefined
   private fadeEnd = 0
+  /** "360" mode: the pan-split worklet, its channel split and two banks of one convolver per source. */
+  private up: { node: AudioWorkletNode; split: ChannelSplitterNode; banks: [UpBank, UpBank]; active: number; out: GainNode } | null = null
+  private upLoading = false
+  private upOn = false
 
   constructor(ctx: BaseAudioContext) {
     this.ctx = ctx
@@ -443,6 +461,7 @@ export class SpatialStage implements SpatialStageApi {
     this.gains = speakerMatchGains(s, this.rooms, this.power)
     // forget what the banks hold, so the next yaw update crossfades to the new set's pair
     for (const b of this.banks) b.idx = null
+    for (const b of this.up?.banks ?? []) b.idx = null
     this.apply()
   }
 
@@ -480,7 +499,16 @@ export class SpatialStage implements SpatialStageApi {
     const m = this._mode
     const virtualOk = !!this.set && (m === 'speakers' || m === 'room')
     const xfOn = m === 'crossfeed' && this.xfAmountOn
-    const dryOn = !xfOn && !virtualOk
+    // "360" plays dry until its worklet has loaded
+    if (m === '360' && !this.up) this.loadUpmix()
+    const upOk = !!this.set && m === '360' && !!this.up
+    const dryOn = !xfOn && !virtualOk && !upOk
+    if (upOk && !this.upOn) {
+      this.input.connect(this.up!.node)
+      this.upOn = true
+      this.scheduleYaw()
+    }
+    if (this.up) this.ramp(this.up.out.gain, upOk ? this.gains.speakers * UP_LEVEL : 0)
     if (xfOn && !this.xfOn) this.input.connect(this.xfSplit)
     if (virtualOk && !this.vOn) this.input.connect(this.vIn)
     this.xfOn ||= xfOn
@@ -502,6 +530,11 @@ export class SpatialStage implements SpatialStageApi {
         this.vOn = false
       }
       if (this._mode !== 'room') this.wireRoom(false)
+      if (this.upOn && !(this.set && this._mode === '360')) {
+        this.input.disconnect(this.up!.node)
+        this.up!.banks.forEach((b) => this.wireUp(b, false))
+        this.upOn = false
+      }
     }, MODE_FADE_S * 1000 + 60)
   }
 
@@ -523,6 +556,7 @@ export class SpatialStage implements SpatialStageApi {
   }
 
   private applyYaw() {
+    if (this.upOn) return this.applyUpYaw()
     const s = this.set
     if (!s || !this.vOn) return
     const idx = speakerIndices(this.yaw, s.stepDeg, s.ring.length)
@@ -572,6 +606,79 @@ export class SpatialStage implements SpatialStageApi {
       this.buffers.set(i, buf)
     }
     return buf
+  }
+
+  /** Loads the pan-split worklet once, builds the "360" graph, then re-applies the mode. */
+  private loadUpmix() {
+    if (this.upLoading || this.up) return
+    this.upLoading = true
+    const ctx = this.ctx
+    void ctx.audioWorklet.addModule(upmixUrl).then(() => {
+      const node = new AudioWorkletNode(ctx, 'avsb-upmix', {
+        numberOfInputs: 1, numberOfOutputs: 1, outputChannelCount: [UPMIX_OUTPUTS],
+        channelCount: 2, channelCountMode: 'explicit', channelInterpretation: 'speakers',
+      })
+      const split = ctx.createChannelSplitter(UPMIX_OUTPUTS)
+      node.connect(split)
+      const out = ctx.createGain()
+      out.gain.value = 0
+      out.connect(this.output)
+      const bank = (on: number): UpBank => {
+        const b: UpBank = { conv: [], gain: ctx.createGain(), idx: null, wired: false }
+        b.gain.gain.value = on
+        for (let k = 0; k < UPMIX_OUTPUTS; k++) {
+          const cv = ctx.createConvolver()
+          cv.normalize = false
+          cv.channelCount = 1
+          cv.channelCountMode = 'explicit'
+          cv.connect(b.gain)
+          b.conv.push(cv)
+        }
+        b.gain.connect(out)
+        return b
+      }
+      this.up = { node, split, banks: [bank(1), bank(0)], active: 0, out }
+      this.apply()
+    }, () => {
+      // no worklet (an old WebView): 360 falls back to the two virtual speakers
+      this.upLoading = false
+      if (this._mode === '360') this.setMode('speakers')
+    })
+  }
+
+  private wireUp(b: UpBank, on: boolean) {
+    if (!this.up || b.wired === on) return
+    b.conv.forEach((cv, k) => (on ? this.up!.split.connect(cv, k) : this.up!.split.disconnect(cv, k)))
+    b.wired = on
+  }
+
+  /** "360": aims every source at its place around the head, turned against the head's yaw; crossfades banks. */
+  private applyUpYaw() {
+    const s = this.set
+    const up = this.up
+    if (!s || !up) return
+    const idx = UP_AZ.map((az) => ringIndex(az - this.yaw, s.stepDeg, s.ring.length))
+    const cur = up.banks[up.active]
+    if (cur.idx && cur.idx.every((v, k) => v === idx[k])) {
+      this.wireUp(cur, true)
+      return
+    }
+    const next = up.banks[1 - up.active]
+    next.conv.forEach((cv, k) => (cv.buffer = this.ringBuffer(idx[k])))
+    next.idx = idx
+    this.wireUp(next, true)
+    const t = this.ctx.currentTime
+    for (const [b, to] of [[cur, 0], [next, 1]] as const) {
+      b.gain.gain.cancelScheduledValues(t)
+      b.gain.gain.setValueAtTime(b.gain.gain.value, t)
+      b.gain.gain.linearRampToValueAtTime(to, t + YAW_FADE_S)
+    }
+    up.active = 1 - up.active
+    this.fadeEnd = performance.now() + YAW_FADE_S * 1000
+    clearTimeout(this.idleTimer)
+    this.idleTimer = setTimeout(() => {
+      if (this.up && this.up.banks[this.up.active] !== cur) this.wireUp(cur, false)
+    }, YAW_FADE_S * 1000 + 30)
   }
 
   private stereoBuffer(l: Float32Array, r: Float32Array): AudioBuffer {

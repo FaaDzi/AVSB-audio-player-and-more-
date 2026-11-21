@@ -5,8 +5,11 @@ describe('spatial settings', () => {
   afterEach(() => vi.unstubAllGlobals())
 
   it('defaults to off with the generic HRIR and no head tracking', () => {
-    expect(DEFAULT_SPATIAL).toEqual({ mode: 'off', hrirId: 'generic', headTracking: 'off', headCm: null, headCmBy: null, xfAmount: 100, xfAngle: 30 })
+    expect(DEFAULT_SPATIAL).toEqual({ mode: 'off', hrirId: 'generic', headTracking: 'off', headCm: null, headCmBy: null, xfAmount: 100, xfAngle: 30, frontFollows: true })
     expect(sanitizeSpatial(null)).toEqual(DEFAULT_SPATIAL)
+  })
+  it('keeps earbuds head tracking, 360 mode and front-follows across a restart (section 104)', () => {
+    expect(sanitizeSpatial({ mode: '360', headTracking: 'earbuds', frontFollows: false })).toMatchObject({ mode: '360', headTracking: 'earbuds', frontFollows: false })
   })
   it('drops unknown values from an old or edited save', () => {
     expect(sanitizeSpatial({ mode: 'surround', hrirId: '', headTracking: 'bluetooth' })).toEqual(DEFAULT_SPATIAL)

@@ -9,7 +9,7 @@
  */
 
 /** Off (default), crossfeed only, two virtual speakers at ±30°, or the speakers in a small room. */
-export type SpatialMode = 'off' | 'crossfeed' | 'speakers' | 'room'
+export type SpatialMode = 'off' | 'crossfeed' | 'speakers' | 'room' | '360'
 
 /**
  * One listener's head-related impulse responses on the horizontal plane (elevation 0), already
@@ -80,4 +80,7 @@ export interface SpatialSettings {
   xfAmount: number
   /** Crossfeed angle: where the imagined speakers stand (30–90°); sets the crossfed path's delay. */
   xfAngle: number
+  /** Head tracking: after facing a new way for a while, that becomes the front (turning a chair). In "360" only
+   * big turns do, so looking at an instrument stays put (§104 D). */
+  frontFollows: boolean
 }

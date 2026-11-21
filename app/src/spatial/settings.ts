@@ -4,9 +4,9 @@ import { hrirVersion, loadHrirSet } from './hrir'
 import type { HeadTracking, SpatialMode, SpatialSettings, SpatialStageApi } from './types'
 
 const KEY = 'spatial-v1'
-export const SPATIAL_MODES: SpatialMode[] = ['off', 'crossfeed', 'speakers', 'room']
-const TRACKING: HeadTracking[] = ['off', 'webcam', 'phone-camera']
-export const DEFAULT_SPATIAL: SpatialSettings = { mode: 'off', hrirId: 'generic', headTracking: 'off', headCm: null, headCmBy: null, xfAmount: 100, xfAngle: 30 }
+export const SPATIAL_MODES: SpatialMode[] = ['off', 'crossfeed', 'speakers', 'room', '360']
+const TRACKING: HeadTracking[] = ['off', 'webcam', 'phone-camera', 'earbuds']
+export const DEFAULT_SPATIAL: SpatialSettings = { mode: 'off', hrirId: 'generic', headTracking: 'off', headCm: null, headCmBy: null, xfAmount: 100, xfAngle: 30, frontFollows: true }
 export const XF_AMOUNT_RANGE = [0, 150] as const
 export const XF_ANGLE_RANGE = [30, 90] as const
 const inRange = (v: unknown, [lo, hi]: readonly [number, number], dflt: number) =>
@@ -23,6 +23,7 @@ export function sanitizeSpatial(v: unknown): SpatialSettings {
     headCmBy: typeof o.headCm === 'number' && Number.isFinite(o.headCm) && (o.headCmBy === 'you' || o.headCmBy === 'camera') ? o.headCmBy : null,
     xfAmount: inRange(o.xfAmount, XF_AMOUNT_RANGE, DEFAULT_SPATIAL.xfAmount),
     xfAngle: inRange(o.xfAngle, XF_ANGLE_RANGE, DEFAULT_SPATIAL.xfAngle),
+    frontFollows: o.frontFollows !== false,
   }
 }
 
