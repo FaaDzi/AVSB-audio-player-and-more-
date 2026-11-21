@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { BudsPose, headAngles, liftAxisFrom, normalize, qConj, qMul, rotate, WORLD_UP, type Quat } from './budsMath'
+import { BudsPose, headAngles, liftAxisFrom, NodCalibration, normalize, qConj, qMul, rotate, WORLD_UP, type Quat } from './budsMath'
+import nods from './fixtures/buds2-nods.json'
 
 const axisAngle = (axis: readonly number[], deg: number): Quat => {
   const [x, y, z] = normalize(axis)
@@ -61,5 +62,37 @@ describe('earbud head angles (§104 C)', () => {
     p.update(away, 20)
     p.recenter()
     expect(Math.abs(p.update(away, 40).yaw)).toBeLessThan(0.5)
+  })
+})
+
+// §104 C: the owner's own Galaxy Buds2, recorded on a Xiaomi 14: looking ahead, then nodding up and down
+
+describe('nod calibration on a real recording', () => {
+  const samples = (nods as { samples: number[][] }).samples
+  const q = (s: number[]): Quat => [s[0], s[1], s[2], s[3]]
+
+  it('finds the ear-to-ear axis from the first 3 s of nodding, and then nods read as pitch, not yaw', () => {
+    const ref = q(samples[0])
+    const cal = new NodCalibration(ref)
+    for (const s of samples) if (s[4] - samples[0][4] <= 3000) cal.add(q(s))
+    const axis = cal.result()
+    expect(axis).not.toBeNull()
+    let maxPitch = 0
+    let maxYaw = 0
+    for (const s of samples) {
+      const a = headAngles(q(s), ref, axis!)
+      maxPitch = Math.max(maxPitch, Math.abs(a.pitch))
+      maxYaw = Math.max(maxYaw, Math.abs(a.yaw))
+    }
+    expect(maxPitch).toBeGreaterThan(30)
+    // nodding isn't turning: the calibrated axis keeps yaw small next to the pitch
+    expect(maxYaw).toBeLessThan(maxPitch / 3)
+  })
+
+  it('no nod (holding still) saves nothing', () => {
+    const ref = q(samples[0])
+    const cal = new NodCalibration(ref)
+    cal.add(ref)
+    expect(cal.result()).toBeNull()
   })
 })

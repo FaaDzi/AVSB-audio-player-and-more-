@@ -35,6 +35,7 @@ import { AVERAGE_HEAD_CM, HEAD_CM_MAX, HEAD_CM_MIN } from '../../spatial/headSiz
 import { loadEarCorrection } from '../../spatial/earCorrection'
 import { HrtfPicker } from '../../spatial/hrtfPicker'
 import { calibrateEarbuds, followHeadTracking, recenterHeadTracking, useHeadTracking } from '../../headtrack/driver'
+import { playDing } from '../../audio/ding'
 import { isAndroid } from '../../platform'
 import type { HeadTracking, SpatialMode, SpatialSettings } from '../../spatial/types'
 import type { Biquad } from '../../eq/biquad'
@@ -574,7 +575,10 @@ export function SpatialCrossfeedSection() {
               {trackState.status === 'on' && spatial.headTracking === 'earbuds' && (
                 <button type="button" className="ms-btn text" onClick={() => {
                   setNodMsg('Look straight ahead, then nod down and up within 3 seconds…')
-                  void calibrateEarbuds().then((r) => setNodMsg(r === 'saved' ? 'Saved: these earbuds are calibrated.' : 'The nod was too small. Try a bigger nod.'))
+                  void calibrateEarbuds().then((r) => {
+                    if (r === 'saved') playDing()
+                    setNodMsg(r === 'saved' ? 'Saved: these earbuds are calibrated.' : 'The nod was too small. Try a bigger nod.')
+                  })
                 }}>
                   Look ahead, then nod
                 </button>

@@ -62,6 +62,33 @@ export function liftAxisFrom(ref: Quat, q: Quat): Vec | null {
   return Math.hypot(x, y, z) > 0.13 ? normalize([x, y, z]) : null
 }
 
+/**
+ * The "look ahead, then nod" step: started at the straight-ahead pose, it keeps the sample that turned furthest from it
+ * (the deepest nod) and gives that rotation's axis, i.e. the ear-to-ear axis as this pair of earbuds sees it.
+ */
+export class NodCalibration {
+  private readonly ref: Quat
+  private best: Quat | null = null
+  private bestW = 1
+  constructor(ref: Quat) {
+    this.ref = ref
+  }
+
+  add(q: Quat) {
+    // |w| of the rotation since the start: the smaller, the bigger the turn
+    const w = Math.abs(qMul(q, qConj(this.ref))[3])
+    if (w < this.bestW) {
+      this.bestW = w
+      this.best = q
+    }
+  }
+
+  /** The measured axis, or null when no sample turned ~15° or more. */
+  result(): Vec | null {
+    return this.best && liftAxisFrom(this.ref, this.best)
+  }
+}
+
 /** Spherical interpolation from a to b by t (0..1), the short way round. */
 export function slerp(a: Quat, b: Quat, t: number): Quat {
   let [bx, by, bz, bw] = b

@@ -3,7 +3,7 @@ import { registerPlugin, type PluginListenerHandle } from '@capacitor/core'
 import type { HeadPose, HeadTracker } from '../spatial/types'
 import { isAndroid } from '../platform'
 import { AudioRoute } from '../audio/speakerGuard'
-import { BudsPose, liftAxisFrom, normalize, type Quat } from './budsMath'
+import { BudsPose, NodCalibration, normalize, type Quat } from './budsMath'
 import { logLine } from '../shell/logs'
 
 interface BudsPlugin {
@@ -55,7 +55,7 @@ export function createBudsTracker(): BudsTracker {
   let worn = false
   let calibrated = false
   let lastT = 0
-  let measuring: { until: number; best: Quat | null; done: (r: 'saved' | 'too-small') => void } | null = null
+  let measuring: { until: number; nod: NodCalibration; done: (r: 'saved' | 'too-small') => void } | null = null
 
   const emitState = (s: string) => stateCbs.forEach((cb) => cb(s))
 
@@ -78,11 +78,9 @@ export function createBudsTracker(): BudsTracker {
         lastT = p.t
         const raw: Quat = [p.x, p.y, p.z, p.w]
         if (measuring) {
-          const ref = pose.reference ?? raw
-          const axis = liftAxisFrom(ref, raw)
-          if (axis && (!measuring.best || Math.abs(raw[3]) < Math.abs(measuring.best[3]))) measuring.best = raw
+          measuring.nod.add(raw)
           if (p.t >= measuring.until) {
-            const best = measuring.best && liftAxisFrom(ref, measuring.best)
+            const best = measuring.nod.result()
             const done = measuring.done
             measuring = null
             if (best && earbuds) {
@@ -121,7 +119,9 @@ export function createBudsTracker(): BudsTracker {
     calibrate() {
       // the user looks straight ahead now, then nods within 3 s (counted in the plugin's clock)
       pose.recenter()
-      return new Promise((done) => { measuring = { until: lastT + 3000, best: null, done } })
+      const ref = pose.current
+      if (!ref) return Promise.resolve('too-small' as const)
+      return new Promise((done) => { measuring = { until: lastT + 3000, nod: new NodCalibration(ref), done } })
     },
     onPose(cb) {
       poseCbs.add(cb)
