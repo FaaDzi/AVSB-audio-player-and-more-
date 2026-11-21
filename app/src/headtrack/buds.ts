@@ -26,10 +26,12 @@ export async function findEarbuds(): Promise<Earbuds[]> {
 }
 
 const liftKey = (address: string) => `buds-lift-${address}`
-const savedLift = (address: string) => {
+/** This pair's calibration: the ear-to-ear axis and which way turns read (an older save is just the axis). */
+const savedCal = (address: string) => {
   try {
-    const v = JSON.parse(localStorage.getItem(liftKey(address)) ?? 'null') as number[] | null
-    return v && v.length === 3 ? normalize(v) : null
+    const v = JSON.parse(localStorage.getItem(liftKey(address)) ?? 'null') as number[] | { axis: number[]; yawSign: number } | null
+    if (Array.isArray(v)) return v.length === 3 ? { axis: normalize(v), yawSign: 1 } : null
+    return v && v.axis?.length === 3 ? { axis: normalize(v.axis), yawSign: v.yawSign < 0 ? -1 : 1 } : null
   } catch {
     return null
   }
@@ -69,12 +71,15 @@ export function createBudsTracker(): BudsTracker {
     async start() {
       if (!plugin) throw new Error('Head tracking from earbuds works on the phone.')
       const found = await findEarbuds()
-      if (!found.length) throw new Error("No Galaxy Buds paired with this phone. Other earbuds don't share their head tracking.")
+      if (!found.length) throw new Error('No earbuds with head sensors found. Supported now: Galaxy Buds+ and later.')
       earbuds = found[0]
       logLine('INFO', 'Spatial', `Earbuds head tracking: connecting to ${earbuds.name}`)
-      const lift = savedLift(earbuds.address)
-      calibrated = Boolean(lift)
-      if (lift) pose.liftAxis = lift
+      const cal = savedCal(earbuds.address)
+      calibrated = Boolean(cal)
+      if (cal) {
+        pose.liftAxis = cal.axis
+        pose.yawSign = cal.yawSign
+      }
       handles.push(await plugin.addListener('pose', (p) => {
         worn = true
         const raw: Quat = [p.x, p.y, p.z, p.w]
@@ -86,10 +91,11 @@ export function createBudsTracker(): BudsTracker {
             measuring = null
             if (step === 'done' && m.cal.axis && earbuds) {
               pose.liftAxis = m.cal.axis
+              pose.yawSign = m.cal.yawSign
               calibrated = true
               // straight ahead is where the calibration started
               pose.reset()
-              try { localStorage.setItem(liftKey(earbuds.address), JSON.stringify(m.cal.axis)) } catch { /* not saved */ }
+              try { localStorage.setItem(liftKey(earbuds.address), JSON.stringify({ axis: m.cal.axis, yawSign: m.cal.yawSign })) } catch { /* not saved */ }
               m.done('saved')
             } else m.done('failed')
           }

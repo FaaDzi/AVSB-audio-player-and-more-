@@ -1,14 +1,15 @@
-// §104 C: a short two-note chime for "saved" (head-tracking calibration). Made in code, so it needs no file and
+// §104 C: calibration sounds: a short ding per step and a rising chime when it's all done. Made in code, so it needs no file and
 // plays even when the game sounds are off.
 let ctx: AudioContext | null = null
 
-export function playDing(volume = 0.25) {
+/** 'step': one short note (a calibration step passed); 'done': a rising three-note chime (all finished). */
+export function playDing(kind: 'step' | 'done' = 'done', volume = 0.25) {
   try {
     ctx ??= new AudioContext()
     void ctx.resume()
     const now = ctx.currentTime
-    // E6 then A6: a rising "ding-ding"
-    ;[[1318.5, 0], [1760, 0.12]].forEach(([hz, at]) => {
+    // a step: E6; finished: E6, A6, E7 rising
+    ;(kind === 'step' ? [[1318.5, 0]] : [[1318.5, 0], [1760, 0.12], [2637, 0.24]]).forEach(([hz, at]) => {
       const osc = ctx!.createOscillator()
       const gain = ctx!.createGain()
       osc.type = 'sine'

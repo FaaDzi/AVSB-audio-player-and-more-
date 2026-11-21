@@ -125,6 +125,8 @@ export class BudsPose {
   private speed = 0
   liftAxis: Vec
   autoRecentre: boolean
+  /** From the calibration's left/right step: -1 when this pair reads turns the other way round. */
+  yawSign = 1
   constructor(liftAxis: Vec = DEFAULT_LIFT_AXIS, autoRecentre = true) {
     this.liftAxis = liftAxis
     this.autoRecentre = autoRecentre
@@ -151,11 +153,16 @@ export class BudsPose {
     return this.ref
   }
 
+  private angles(q: Quat) {
+    const a = headAngles(q, this.ref!, this.liftAxis)
+    return { yaw: a.yaw * this.yawSign, pitch: a.pitch }
+  }
+
   update(raw: readonly number[], t: number): { yaw: number; pitch: number } {
     const q = normalizeQ(raw)
     this.last = q
     if (!this.ref) this.ref = q
-    let a = headAngles(q, this.ref, this.liftAxis)
+    let a = this.angles(q)
     if (this.autoRecentre) {
       if (Math.abs(a.yaw - this.stillYaw) > STILL_DEG) {
         this.stillYaw = a.yaw
@@ -163,7 +170,7 @@ export class BudsPose {
       } else if (t - this.stillSince >= SETTLE_MS && Math.abs(a.yaw) > STILL_DEG) {
         const dt = this.prev ? Math.min(0.2, (t - this.prev.t) / 1000) : 0
         this.ref = slerp(this.ref, q, Math.min(1, FOLLOW_PER_S * dt))
-        a = headAngles(q, this.ref, this.liftAxis)
+        a = this.angles(q)
         this.stillYaw = a.yaw
       }
     }
@@ -184,44 +191,76 @@ export function angleBetween(a: Quat, b: Quat): number {
   return (2 * Math.acos(Math.min(1, dot)) * 180) / Math.PI
 }
 
-export type LookStep = 'ahead' | 'up' | 'down' | 'done' | 'failed'
+export type LookStep = 'ahead' | 'up' | 'down' | 'nod' | 'left' | 'right' | 'done' | 'failed'
+/** The steps in order, for the progress dots. */
+export const LOOK_STEPS = ['ahead', 'up', 'down', 'nod', 'left', 'right'] as const
 /** Holding still: moving less than this… */
 export const HOLD_DEG = 3
 /** …for this long counts as "holding" a position. */
 export const HOLD_MS = 1200
-/** Up and down must each be at least this far from straight ahead. */
+/** Up, down, left and right must each be at least this far from straight ahead. */
 export const LOOK_MIN_DEG = 15
+/** The slow nod lasts this long and must swing at least LOOK_MIN_DEG from top to bottom. */
+export const NOD_MS = 3000
+/** Time to come back level after "look down" before the nod is measured. */
+export const NOD_SETTLE_MS = 600
 /** A step that isn't done in this long fails (the person may have stopped). */
 export const LOOK_STEP_MS = 15000
 
 /**
- * The owner's calibration (§104 C): look straight ahead, then up, then down, holding each a moment. Up→down is a wide,
- * clean turn about the ear-to-ear axis, and knowing which end was "up" gives that axis its sign, so looking up
- * always reads as + pitch however the earbud sits in the ear.
+ * The owner's calibration (§104 C): look straight ahead, up, down (each held a moment), a slow 3-second nod, then left
+ * and right (held). Up→down is a wide, clean turn about the ear-to-ear axis, and knowing which end was "up" gives it its
+ * sign, so looking up reads as + pitch however the earbud sits. The nod checks that axis works; left/right check that
+ * turning reads as yaw and give its sign (+ = left), so the room never turns the wrong way.
  */
 export class LookCalibration {
   step: LookStep = 'ahead'
-  /** 0..1: how long the current position has been held. */
+  /** 0..1: how long the current position has been held (the nod: how much of it is done). */
   hold = 0
   /** Degrees from straight ahead (0 until it is known). */
   angle = 0
   axis: Vec | null = null
+  /** +1 when turning left reads as + yaw with this axis, -1 when it's the other way round. */
+  yawSign = 1
   ahead: Quat | null = null
   private up: Quat | null = null
   private anchor: Quat | null = null
   private since = 0
   private stepStart = -1
+  private nodLow = 0
+  private nodHigh = 0
 
   add(q: Quat, t: number): LookStep {
     if (this.step === 'done' || this.step === 'failed') return this.step
     if (this.stepStart < 0) this.stepStart = t
     if (t - this.stepStart > LOOK_STEP_MS) return (this.step = 'failed')
     this.angle = this.ahead ? angleBetween(q, this.ahead) : 0
+    const a = this.axis && this.ahead ? headAngles(q, this.ahead, this.axis) : null
+    if (this.step === 'nod') {
+      // the first moment is the head coming back up from "look down": not part of the nod
+      const into = t - this.stepStart - NOD_SETTLE_MS
+      if (into < 0) {
+        this.nodLow = this.nodHigh = a!.pitch
+        return this.step
+      }
+      this.nodLow = Math.min(this.nodLow, a!.pitch)
+      this.nodHigh = Math.max(this.nodHigh, a!.pitch)
+      const swing = Math.min(1, (this.nodHigh - this.nodLow) / LOOK_MIN_DEG)
+      this.hold = Math.min(1, into / NOD_MS) * swing
+      if (this.hold >= 1) this.next(t, 'left')
+      return this.step
+    }
     if (!this.anchor || angleBetween(q, this.anchor) > HOLD_DEG) {
       this.anchor = q
       this.since = t
     }
-    const far = this.step === 'ahead' || (this.angle >= LOOK_MIN_DEG && (this.step !== 'down' || angleBetween(q, this.up!) >= LOOK_MIN_DEG))
+    const far =
+      this.step === 'ahead' ? true
+      : this.step === 'up' ? this.angle >= LOOK_MIN_DEG
+      : this.step === 'down' ? this.angle >= LOOK_MIN_DEG && angleBetween(q, this.up!) >= LOOK_MIN_DEG
+      // a turn, not a tilt: mostly yaw, and the second one to the other side
+      : Math.abs(a!.yaw) >= LOOK_MIN_DEG && Math.abs(a!.yaw) > Math.abs(a!.pitch) &&
+        (this.step === 'left' || Math.sign(a!.yaw) === -this.yawSign)
     this.hold = far ? Math.min(1, (t - this.since) / HOLD_MS) : 0
     if (this.hold < 1) return this.step
     if (this.step === 'ahead') {
@@ -230,12 +269,18 @@ export class LookCalibration {
     } else if (this.step === 'up') {
       this.up = q
       this.next(t, 'down')
-    } else {
+    } else if (this.step === 'down') {
       let axis = liftAxisFrom(this.up!, q)
       if (!axis) return (this.step = 'failed')
       // looking up must read as + pitch
       if (headAngles(this.up!, this.ahead!, axis).pitch < 0) axis = [-axis[0], -axis[1], -axis[2]]
       this.axis = axis
+      this.nodLow = this.nodHigh = 0
+      this.next(t, 'nod')
+    } else if (this.step === 'left') {
+      this.yawSign = a!.yaw > 0 ? 1 : -1
+      this.next(t, 'right')
+    } else {
       this.step = 'done'
     }
     return this.step

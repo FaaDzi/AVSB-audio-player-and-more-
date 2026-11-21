@@ -2,7 +2,7 @@
 // What you listen on, what to make it sound like (target or another device), plus
 // Crossfeed (CanOpener-style) and Virtual Speakers & HRTF (room/speaker stage, SOFA HRTF profiles,
 // Head Size ITD scaling, Ear Canal Resonance compensation, and Head Tracking).
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Icon } from '../ui'
 import { Slider } from '../PlayerBar'
 import { useDatabase } from '../database/DatabasePage'
@@ -164,6 +164,7 @@ export function SpatialCrossfeedSection() {
   const sofaInputRef = useRef<HTMLInputElement | null>(null)
   const trackState = useHeadTracking()
   const [calibrating, setCalibrating] = useState(false)
+  const closeCalibration = useCallback(() => setCalibrating(false), [])
   // §104 C: earbuds that were never calibrated get the calibration as soon as their tracking starts
   useEffect(() => {
     if (trackState.status === 'on' && spatial.headTracking === 'earbuds' && earbudsTracker()?.calibrated === false) setCalibrating(true)
@@ -532,7 +533,7 @@ export function SpatialCrossfeedSection() {
         <div className="ms-snd-row">
           <div className="ms-snd-switchline">
             <div>
-              <b>Head Tracking ({spatial.headTracking === 'earbuds' ? 'Galaxy Buds sensor' : isAndroid() ? 'Front camera sensor' : 'Webcam pose sensor'})</b>
+              <b>Head Tracking ({spatial.headTracking === 'earbuds' ? 'Head sensors' : isAndroid() ? 'Front camera sensor' : 'Webcam pose sensor'})</b>
               <p className="ms-tz-note tight">
                 Keeps the virtual speakers anchored in the room when you turn your head (±60° smooth convolver crossfade).
               </p>
@@ -581,7 +582,7 @@ export function SpatialCrossfeedSection() {
                   Calibrate earbuds
                 </button>
               )}
-              {calibrating && <EarbudsCalibration onClose={() => setCalibrating(false)} />}
+              {calibrating && <EarbudsCalibration onClose={closeCalibration} />}
             </div>
           )}
           {trackState.error && <p className="ms-tz-note danger">{trackState.error}</p>}

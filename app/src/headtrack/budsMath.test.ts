@@ -110,11 +110,38 @@ describe('look ahead → up → down calibration (§104 C)', () => {
     t = feed(cal, turned(axisAngle(earToEar, -12)), t, 400) // on the way up
     t = feed(cal, turned(axisAngle(earToEar, -25)), t, 1500)
     expect(cal.step).toBe('down')
-    feed(cal, turned(axisAngle(earToEar, 25)), t, 1500)
-    expect(cal.step).toBe('done')
+    t = feed(cal, turned(axisAngle(earToEar, 25)), t, 1500)
+    expect(cal.step).toBe('nod')
     const up = headAngles(turned(axisAngle(earToEar, -25)), tilt, cal.axis!)
     expect(up.pitch).toBeGreaterThan(20)
     expect(Math.abs(up.yaw)).toBeLessThan(1)
+    // a slow 3-second nod
+    for (let i = 0; i < 200; i++, t += 20) cal.add(turned(axisAngle(earToEar, 20 * Math.sin(i / 12))), t)
+    expect(cal.step).toBe('left')
+    t = feed(cal, turned(axisAngle(WORLD_UP, 35)), t, 1500)
+    expect(cal.step).toBe('right')
+    t = feed(cal, turned(axisAngle(WORLD_UP, -35)), t, 1500)
+    expect(cal.step).toBe('done')
+    // whichever way this sensor reads turns, left comes out as + yaw
+    expect(headAngles(turned(axisAngle(WORLD_UP, 35)), tilt, cal.axis!).yaw * cal.yawSign).toBeGreaterThan(30)
+  })
+
+  it("a nod that is too small, or a tilt instead of a turn, does not pass", () => {
+    const cal = new LookCalibration()
+    let t = feed(cal, tilt, 0, 1500)
+    t = feed(cal, turned(axisAngle(earToEar, -25)), t, 1500)
+    t = feed(cal, turned(axisAngle(earToEar, 25)), t, 1500)
+    for (let i = 0; i < 300; i++, t += 20) cal.add(turned(axisAngle(earToEar, 4 * Math.sin(i / 12))), t)
+    expect(cal.step).toBe('nod')
+    for (let i = 0; i < 200; i++, t += 20) cal.add(turned(axisAngle(earToEar, 20 * Math.sin(i / 12))), t)
+    expect(cal.step).toBe('left')
+    // looking up isn't turning left
+    t = feed(cal, turned(axisAngle(earToEar, -30)), t, 3000)
+    expect(cal.step).toBe('left')
+    t = feed(cal, turned(axisAngle(WORLD_UP, 35)), t, 1500)
+    // turning to the same side again isn't "right"
+    feed(cal, turned(axisAngle(WORLD_UP, 40)), t, 3000)
+    expect(cal.step).toBe('right')
   })
 
   it('looking up only a little, or not holding, doesn\'t count', () => {
