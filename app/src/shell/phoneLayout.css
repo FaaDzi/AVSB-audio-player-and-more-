@@ -753,3 +753,6 @@
   height: calc(var(--sat) + 18px);
   background: linear-gradient(to bottom, var(--page) 0, var(--page) var(--sat), color-mix(in srgb, var(--page) 55%, transparent) calc(var(--sat) + 7px), transparent 100%);
 }
+/* §104: the phone's mini player: add-to-playlist only where there is room (landscape) */
+.ms-pmini .ms-pl-add { display: none; }
+@media (orientation: landscape) { .ms-pmini .ms-pl-add { display: inline-flex; } }

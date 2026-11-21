@@ -7,6 +7,7 @@ import { useCoverStyle } from './cover'
 import { isLiked, toggleLike, useFavorites } from './favorites'
 import { useIsBuffering, useLivePosition } from './engine'
 import { WaveTrack } from './WaveTrack'
+import { PlaylistAddButton } from './pages/TrackMenu'
 
 /**
  * The phone layout: a phone held upright (narrow), or turned sideways (short), or a very narrow window. Turned
@@ -109,6 +110,7 @@ function PhoneMiniPlayer() {
           <span className="ms-player-artist">{current.artist || 'Unknown Artist'}</span>
         </span>
       </button>
+      <IconButton icon="skip_previous" label="Previous" onClick={() => step(-1)} />
       <button type="button" className={`ms-play${playing ? ' on' : ''}`} aria-label={playing ? 'Pause' : 'Play'} onClick={() => setPlaying(!playing)}>
         {loading ? <span className="ms-spinner" /> : <Icon name={playing ? 'pause' : 'play_arrow'} fill size={26} />}
       </button>
@@ -119,6 +121,8 @@ function PhoneMiniPlayer() {
         active={isLiked(current.id)}
         onClick={() => toggleLike(current, data, replaceData)}
       />
+      {/* §104: shown in landscape only (phoneLayout.css); portrait has no room for it */}
+      <PlaylistAddButton track={current} />
     </div>
   )
 }

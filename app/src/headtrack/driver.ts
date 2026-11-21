@@ -121,9 +121,9 @@ export function setHeadTrackingBeforeStart(fn: ((kind: Exclude<HeadTracking, 'of
   beforeStart = fn
 }
 
-/** Earbuds only: look straight ahead, then nod within 3 s (measures how the earbuds sit in the ear). */
-export function calibrateEarbuds(): Promise<'saved' | 'too-small' | 'not-earbuds'> {
-  return tracker && tracker.kind === 'earbuds' ? (tracker as BudsTracker).calibrate() : Promise.resolve('not-earbuds')
+/** The running earbuds tracker (for its calibration), or null when tracking isn't from earbuds. */
+export function earbudsTracker(): BudsTracker | null {
+  return tracker && tracker.kind === 'earbuds' ? (tracker as BudsTracker) : null
 }
 
 /** Make the current head direction straight ahead. */

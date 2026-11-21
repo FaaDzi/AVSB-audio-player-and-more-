@@ -34,8 +34,8 @@ import { importSofa } from '../../spatial/sofa'
 import { AVERAGE_HEAD_CM, HEAD_CM_MAX, HEAD_CM_MIN } from '../../spatial/headSize'
 import { loadEarCorrection } from '../../spatial/earCorrection'
 import { HrtfPicker } from '../../spatial/hrtfPicker'
-import { calibrateEarbuds, followHeadTracking, recenterHeadTracking, useHeadTracking } from '../../headtrack/driver'
-import { playDing } from '../../audio/ding'
+import { earbudsTracker, followHeadTracking, recenterHeadTracking, useHeadTracking } from '../../headtrack/driver'
+import { EarbudsCalibration } from './EarbudsCalibration'
 import { isAndroid } from '../../platform'
 import type { HeadTracking, SpatialMode, SpatialSettings } from '../../spatial/types'
 import type { Biquad } from '../../eq/biquad'
@@ -163,7 +163,11 @@ export function SpatialCrossfeedSection() {
   const baseEarFiltersRef = useRef<Biquad[] | null>(null)
   const sofaInputRef = useRef<HTMLInputElement | null>(null)
   const trackState = useHeadTracking()
-  const [nodMsg, setNodMsg] = useState<string | null>(null)
+  const [calibrating, setCalibrating] = useState(false)
+  // §104 C: earbuds that were never calibrated get the calibration as soon as their tracking starts
+  useEffect(() => {
+    if (trackState.status === 'on' && spatial.headTracking === 'earbuds' && earbudsTracker()?.calibrated === false) setCalibrating(true)
+  }, [trackState.status, spatial.headTracking])
   const camKind: HeadTracking = isAndroid() ? 'phone-camera' : 'webcam'
 
   useEffect(() => onSpatialChange(setSpatialState), [])
@@ -573,17 +577,11 @@ export function SpatialCrossfeedSection() {
                 </button>
               )}
               {trackState.status === 'on' && spatial.headTracking === 'earbuds' && (
-                <button type="button" className="ms-btn text" onClick={() => {
-                  setNodMsg('Look straight ahead, then nod down and up within 3 seconds…')
-                  void calibrateEarbuds().then((r) => {
-                    if (r === 'saved') playDing()
-                    setNodMsg(r === 'saved' ? 'Saved: these earbuds are calibrated.' : 'The nod was too small. Try a bigger nod.')
-                  })
-                }}>
-                  Look ahead, then nod
+                <button type="button" className="ms-btn text" onClick={() => setCalibrating(true)}>
+                  Calibrate earbuds
                 </button>
               )}
-              {nodMsg && <p className="ms-tz-note">{nodMsg}</p>}
+              {calibrating && <EarbudsCalibration onClose={() => setCalibrating(false)} />}
             </div>
           )}
           {trackState.error && <p className="ms-tz-note danger">{trackState.error}</p>}

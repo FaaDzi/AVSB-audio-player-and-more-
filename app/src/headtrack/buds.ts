@@ -3,7 +3,7 @@ import { registerPlugin, type PluginListenerHandle } from '@capacitor/core'
 import type { HeadPose, HeadTracker } from '../spatial/types'
 import { isAndroid } from '../platform'
 import { AudioRoute } from '../audio/speakerGuard'
-import { BudsPose, NodCalibration, normalize, type Quat } from './budsMath'
+import { BudsPose, LookCalibration, normalize, normalizeQ, type LookStep, type Quat } from './budsMath'
 import { logLine } from '../shell/logs'
 
 interface BudsPlugin {
@@ -41,8 +41,11 @@ export interface BudsTracker extends HeadTracker {
   readonly faceVisible: boolean
   /** This pair's tilt in the ear was measured (the look-ahead-then-nod step); false means the default is in use. */
   readonly calibrated: boolean
-  /** Look straight ahead, then nod within 3 s: measures and saves this pair's tilt. */
-  calibrate(): Promise<'saved' | 'too-small'>
+  /** Look ahead, up, then down (holding each): measures and saves how this pair sits in the ear. `progress` follows
+   * each step live (step, 0..1 held, degrees from straight ahead). */
+  calibrate(progress: (p: { step: LookStep; hold: number; angle: number }) => void): Promise<'saved' | 'failed'>
+  /** Stop a calibration that is running (Cancel). */
+  cancelCalibration(): void
   onState(cb: (state: string) => void): () => void
 }
 
@@ -54,8 +57,7 @@ export function createBudsTracker(): BudsTracker {
   let earbuds: Earbuds | null = null
   let worn = false
   let calibrated = false
-  let lastT = 0
-  let measuring: { until: number; nod: NodCalibration; done: (r: 'saved' | 'too-small') => void } | null = null
+  let measuring: { cal: LookCalibration; progress: (p: { step: LookStep; hold: number; angle: number }) => void; done: (r: 'saved' | 'failed') => void } | null = null
 
   const emitState = (s: string) => stateCbs.forEach((cb) => cb(s))
 
@@ -75,20 +77,21 @@ export function createBudsTracker(): BudsTracker {
       if (lift) pose.liftAxis = lift
       handles.push(await plugin.addListener('pose', (p) => {
         worn = true
-        lastT = p.t
         const raw: Quat = [p.x, p.y, p.z, p.w]
         if (measuring) {
-          measuring.nod.add(raw)
-          if (p.t >= measuring.until) {
-            const best = measuring.nod.result()
-            const done = measuring.done
+          const m = measuring
+          const step = m.cal.add(normalizeQ(raw), p.t)
+          m.progress({ step, hold: m.cal.hold, angle: m.cal.angle })
+          if (step === 'done' || step === 'failed') {
             measuring = null
-            if (best && earbuds) {
-              pose.liftAxis = best
+            if (step === 'done' && m.cal.axis && earbuds) {
+              pose.liftAxis = m.cal.axis
               calibrated = true
-              try { localStorage.setItem(liftKey(earbuds.address), JSON.stringify(best)) } catch { /* not saved */ }
-              done('saved')
-            } else done('too-small')
+              // straight ahead is where the calibration started
+              pose.reset()
+              try { localStorage.setItem(liftKey(earbuds.address), JSON.stringify(m.cal.axis)) } catch { /* not saved */ }
+              m.done('saved')
+            } else m.done('failed')
           }
         }
         const a = pose.update(raw, p.t)
@@ -116,12 +119,14 @@ export function createBudsTracker(): BudsTracker {
     recenter() {
       pose.recenter()
     },
-    calibrate() {
-      // the user looks straight ahead now, then nods within 3 s (counted in the plugin's clock)
-      pose.recenter()
-      const ref = pose.current
-      if (!ref) return Promise.resolve('too-small' as const)
-      return new Promise((done) => { measuring = { until: lastT + 3000, nod: new NodCalibration(ref), done } })
+    calibrate(progress) {
+      measuring?.done('failed')
+      return new Promise((done) => { measuring = { cal: new LookCalibration(), progress, done } })
+    },
+    cancelCalibration() {
+      const m = measuring
+      measuring = null
+      m?.done('failed')
     },
     onPose(cb) {
       poseCbs.add(cb)

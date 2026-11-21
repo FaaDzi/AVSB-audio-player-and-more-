@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { BudsPose, headAngles, liftAxisFrom, NodCalibration, normalize, qConj, qMul, rotate, WORLD_UP, type Quat } from './budsMath'
+import { BudsPose, headAngles, liftAxisFrom, LookCalibration, NodCalibration, normalize, qConj, qMul, rotate, WORLD_UP, type Quat } from './budsMath'
 import nods from './fixtures/buds2-nods.json'
 
 const axisAngle = (axis: readonly number[], deg: number): Quat => {
@@ -94,5 +94,43 @@ describe('nod calibration on a real recording', () => {
     const cal = new NodCalibration(ref)
     cal.add(ref)
     expect(cal.result()).toBeNull()
+  })
+})
+
+describe('look ahead → up → down calibration (§104 C)', () => {
+  const feed = (cal: LookCalibration, q: Quat, from: number, ms: number) => {
+    for (let t = from; t < from + ms; t += 20) cal.add(q, t)
+    return from + ms
+  }
+
+  it('measures the ear-to-ear axis with up as + pitch, whatever the tilt', () => {
+    const cal = new LookCalibration()
+    let t = feed(cal, tilt, 0, 1500)
+    expect(cal.step).toBe('up')
+    t = feed(cal, turned(axisAngle(earToEar, -12)), t, 400) // on the way up
+    t = feed(cal, turned(axisAngle(earToEar, -25)), t, 1500)
+    expect(cal.step).toBe('down')
+    feed(cal, turned(axisAngle(earToEar, 25)), t, 1500)
+    expect(cal.step).toBe('done')
+    const up = headAngles(turned(axisAngle(earToEar, -25)), tilt, cal.axis!)
+    expect(up.pitch).toBeGreaterThan(20)
+    expect(Math.abs(up.yaw)).toBeLessThan(1)
+  })
+
+  it('looking up only a little, or not holding, doesn\'t count', () => {
+    const cal = new LookCalibration()
+    let t = feed(cal, tilt, 0, 1500)
+    t = feed(cal, turned(axisAngle(earToEar, -8)), t, 3000)
+    expect(cal.step).toBe('up')
+    // wobbling between two positions never holds
+    for (let i = 0; i < 40; i++) t = feed(cal, turned(axisAngle(earToEar, i % 2 ? -20 : -30)), t, 100)
+    expect(cal.step).toBe('up')
+  })
+
+  it('gives up after 15 s on one step', () => {
+    const cal = new LookCalibration()
+    const t = feed(cal, tilt, 0, 1500)
+    feed(cal, tilt, t, 16000)
+    expect(cal.step).toBe('failed')
   })
 })

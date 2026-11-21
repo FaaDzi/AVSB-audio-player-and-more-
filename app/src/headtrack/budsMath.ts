@@ -177,3 +177,74 @@ export class BudsPose {
     return { yaw: a.yaw + lead, pitch: a.pitch }
   }
 }
+
+/** Angle in degrees between two orientations. */
+export function angleBetween(a: Quat, b: Quat): number {
+  const dot = Math.abs(a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3])
+  return (2 * Math.acos(Math.min(1, dot)) * 180) / Math.PI
+}
+
+export type LookStep = 'ahead' | 'up' | 'down' | 'done' | 'failed'
+/** Holding still: moving less than this… */
+export const HOLD_DEG = 3
+/** …for this long counts as "holding" a position. */
+export const HOLD_MS = 1200
+/** Up and down must each be at least this far from straight ahead. */
+export const LOOK_MIN_DEG = 15
+/** A step that isn't done in this long fails (the person may have stopped). */
+export const LOOK_STEP_MS = 15000
+
+/**
+ * The owner's calibration (§104 C): look straight ahead, then up, then down, holding each a moment. Up→down is a wide,
+ * clean turn about the ear-to-ear axis, and knowing which end was "up" gives that axis its sign, so looking up
+ * always reads as + pitch however the earbud sits in the ear.
+ */
+export class LookCalibration {
+  step: LookStep = 'ahead'
+  /** 0..1: how long the current position has been held. */
+  hold = 0
+  /** Degrees from straight ahead (0 until it is known). */
+  angle = 0
+  axis: Vec | null = null
+  ahead: Quat | null = null
+  private up: Quat | null = null
+  private anchor: Quat | null = null
+  private since = 0
+  private stepStart = -1
+
+  add(q: Quat, t: number): LookStep {
+    if (this.step === 'done' || this.step === 'failed') return this.step
+    if (this.stepStart < 0) this.stepStart = t
+    if (t - this.stepStart > LOOK_STEP_MS) return (this.step = 'failed')
+    this.angle = this.ahead ? angleBetween(q, this.ahead) : 0
+    if (!this.anchor || angleBetween(q, this.anchor) > HOLD_DEG) {
+      this.anchor = q
+      this.since = t
+    }
+    const far = this.step === 'ahead' || (this.angle >= LOOK_MIN_DEG && (this.step !== 'down' || angleBetween(q, this.up!) >= LOOK_MIN_DEG))
+    this.hold = far ? Math.min(1, (t - this.since) / HOLD_MS) : 0
+    if (this.hold < 1) return this.step
+    if (this.step === 'ahead') {
+      this.ahead = q
+      this.next(t, 'up')
+    } else if (this.step === 'up') {
+      this.up = q
+      this.next(t, 'down')
+    } else {
+      let axis = liftAxisFrom(this.up!, q)
+      if (!axis) return (this.step = 'failed')
+      // looking up must read as + pitch
+      if (headAngles(this.up!, this.ahead!, axis).pitch < 0) axis = [-axis[0], -axis[1], -axis[2]]
+      this.axis = axis
+      this.step = 'done'
+    }
+    return this.step
+  }
+
+  private next(t: number, step: LookStep) {
+    this.step = step
+    this.stepStart = t
+    this.anchor = null
+    this.hold = 0
+  }
+}
