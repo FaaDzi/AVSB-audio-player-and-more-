@@ -307,7 +307,7 @@ export function TournamentPage() {
     const key = localStorage.getItem(SONGS_KEY) ?? 'library'
     const list = data.playlists.find((p) => p.id === key)
     const pool = songsFor(list ? data.tracks.filter((t) => list.tracks.includes(t.id)) : data.tracks, save.prefs.genres)
-    const rounds = libraryRounds({ pool, heardBy: save.heardBy, entrants: pair })
+    const rounds = libraryRounds({ pool, heardBy: save.heardBy, entrants: pair, bestOf: next.bestOf })
     const first = rounds.prefetch()
     first.catch(() => {})
     prefetched.current = { m: next, rounds, first }
@@ -350,7 +350,7 @@ export function TournamentPage() {
     // the bracket already started decoding this match's first song, so the VS screen is ready at once
     const ready = prefetched.current?.m.id === m.id ? prefetched.current : null
     prefetched.current = null
-    const rounds = ready?.rounds ?? libraryRounds({ pool: songsPool(), heardBy: save.heardBy, entrants: ids(save, m) })
+    const rounds = ready?.rounds ?? libraryRounds({ pool: songsPool(), heardBy: save.heardBy, entrants: ids(save, m), bestOf: m.bestOf })
     setVs({ m, rounds, first: ready?.first ?? rounds.prefetch() })
   }
 
@@ -367,7 +367,7 @@ export function TournamentPage() {
   const quickPrefs = (): Preferences => ({ ...DEFAULT_PREFS, ...loadPrefs() }) as Preferences
   const startQuick = (q: QuickPick) => {
     setPlaying(false)
-    const rounds = libraryRounds({ pool: songsFor(data.tracks, quickPrefs().genres), heardBy: {}, entrants: q.ids })
+    const rounds = libraryRounds({ pool: songsFor(data.tracks, quickPrefs().genres), heardBy: {}, entrants: q.ids, bestOf: q.bestOf })
     setQuickVs({ q, rounds, first: rounds.prefetch() })
   }
 

@@ -50,7 +50,7 @@ export class ABPlayer {
     const merge = ctx.createChannelMerger(2)
     this.balance = [ctx.createGain(), ctx.createGain()]
     this.spatial = new SpatialStage(ctx)
-    followSpatialSettings(this.spatial)
+    followSpatialSettings(this.spatial, true)
     this.master.connect(this.spatial.input)
     this.spatial.output.connect(split)
     this.balance.forEach((g, ch) => {

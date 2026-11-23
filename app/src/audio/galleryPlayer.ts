@@ -315,7 +315,9 @@ export class GalleryPlayer {
     this.stageOut = ctx.createGain()
     this.input.connect(this.stageOut).connect(this.mix)
     this.spatial = new SpatialStage(ctx)
-    followSpatialSettings(this.spatial)
+    // a closed context's stage stops following, or it keeps recomputing HRIRs on every spatial change (audit)
+    const unfollow = followSpatialSettings(this.spatial)
+    ctx.addEventListener?.('statechange', () => { if (ctx.state === 'closed') unfollow() })
     this.direct = ctx.createGain()
     this.viaLimiter = ctx.createGain()
     this.viaLimiter.gain.value = 0

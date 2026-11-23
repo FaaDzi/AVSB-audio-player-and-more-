@@ -582,13 +582,12 @@ export function createLink(opts) {
         return cached
       }
 
-      let result = null
-      if (ext === '.wav' && st.size <= 220 * 1024 * 1024) {
+      // ffmpeg first: it runs off the event loop; the JS downscaler blocks the link (and the phone's hello) for
+      // seconds on a big file, so it's only the fallback when ffmpeg can't (audit 7)
+      let result = await downscaleWithFfmpegInMemory(file, ffmpegBin)
+      if (!result && ext === '.wav' && st.size <= 220 * 1024 * 1024) {
         const raw = await fs.promises.readFile(file)
         result = downscaleWavInMemory(raw)
-      }
-      if (!result) {
-        result = await downscaleWithFfmpegInMemory(file, ffmpegBin)
       }
       if (!result || !result.buffer || result.buffer.length >= st.size) return null
 

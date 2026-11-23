@@ -91,10 +91,12 @@ export function backSpaceFor(catalog: Catalog, iem: Iem, prefs: Preferences): Ba
  * Songs for a match's rounds, from the user's Library (`pool`): each round a different song, preferring ones neither
  * entrant has been heard on yet, cut to one of its liveliest 40 s sections, chosen at random. The next round's song decodes while the current one plays.
  */
-export function libraryRounds(opts: { pool: Track[]; heardBy: HeardBy; entrants: [string, string] }) {
+export function libraryRounds(opts: { pool: Track[]; heardBy: HeardBy; entrants: [string, string]; bestOf?: number }) {
   const ctx = matchPlayer().ctx
   const usable = opts.pool.filter(canPlay)
   const used: Track[] = []
+  /** Rounds that were actually played: a prefetched song the match never reached isn't heard (audit). */
+  const played = new Set<number>()
   const loading = new Map<number, Promise<RoundAudio>>()
   /** Per round: bytes in so far and the size when known, for "Loading the song… 40%". */
   const progress = new Map<number, { got: number; total: number }>()
@@ -160,6 +162,7 @@ export function libraryRounds(opts: { pool: Track[]; heardBy: HeardBy; entrants:
     /** Start decoding round 0 (the VS screen is the loading screen). */
     prefetch: () => roundAt(0),
     getRound: (round: number, attempt: number): Promise<RoundAudio> => {
+      played.add(round)
       if (attempt > 0) {
         // the song failed or was skipped: pick another for this round
         const bad = used[round]
@@ -170,7 +173,8 @@ export function libraryRounds(opts: { pool: Track[]; heardBy: HeardBy; entrants:
       }
       const p = roundAt(round)
       // Delay next round prefetch by 4s so current round establishes smooth, stutter-free playback first
-      void p.then(() => {
+      // nothing after the last round there can be
+      if (round + 1 < (opts.bestOf ?? Infinity)) void p.then(() => {
         window.setTimeout(() => {
           void roundAt(round + 1).catch(() => {})
         }, 4000)
@@ -181,7 +185,7 @@ export function libraryRounds(opts: { pool: Track[]; heardBy: HeardBy; entrants:
     progress: (round: number): { got: number; total: number } | null => progress.get(round) ?? null,
     /** Record which songs each entrant has now been heard on, so later matches pick others. */
     commit: (heardBy: HeardBy): HeardBy => {
-      const ids = used.filter(Boolean).map((t) => t.id)
+      const ids = used.filter((t, i) => t && played.has(i)).map((t) => t.id)
       const next = { ...heardBy }
       for (const e of opts.entrants) next[e] = [...new Set([...(next[e] ?? []), ...ids])]
       return next

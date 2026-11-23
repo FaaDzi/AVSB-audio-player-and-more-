@@ -5282,13 +5282,10 @@ function createLink(opts) {
         downscaledRamCache.set(track.id, cached);
         return cached;
       }
-      let result = null;
-      if (ext === ".wav" && st.size <= 220 * 1024 * 1024) {
+      let result = await downscaleWithFfmpegInMemory(file, ffmpegBin);
+      if (!result && ext === ".wav" && st.size <= 220 * 1024 * 1024) {
         const raw = await fs.promises.readFile(file);
         result = downscaleWavInMemory(raw);
-      }
-      if (!result) {
-        result = await downscaleWithFfmpegInMemory(file, ffmpegBin);
       }
       if (!result || !result.buffer || result.buffer.length >= st.size) return null;
       const entry = { mtimeMs: st.mtimeMs, size: st.size, buffer: result.buffer, type: result.type };

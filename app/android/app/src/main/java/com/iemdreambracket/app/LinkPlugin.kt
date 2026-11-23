@@ -304,6 +304,11 @@ class LinkPlugin : Plugin() {
                     try {
                         val buf = ByteArray(CHUNK)
                         while (true) {
+                            // on mobile data an abandoned song gives way to the one playing now (audit 4)
+                            if (openStreams.get() > 0 && onMobileData()) {
+                                writer.abort()
+                                break
+                            }
                             val n = src.read(buf, 0, buf.size)
                             if (n < 0) {
                                 writer.finish()

@@ -58,7 +58,7 @@ export function onSpatialChange(cb: (s: SpatialSettings) => void): () => void {
  * Keeps a player's stage on the saved settings: applies them now and on every change, loading the
  * HRIR set when it changes (the stage stays dry until a set has arrived). Returns the unsubscribe.
  */
-export function followSpatialSettings(stage: SpatialStageApi): () => void {
+export function followSpatialSettings(stage: SpatialStageApi, no360 = false): () => void {
   let hrirId = ''
   const apply = (s: SpatialSettings) => {
     // the version changes when a set is replaced under the same id (a new SOFA import)
@@ -76,7 +76,8 @@ export function followSpatialSettings(stage: SpatialStageApi): () => void {
         })
     }
     stage.setCrossfeed?.(s.xfAmount, s.xfAngle)
-    stage.setMode(s.mode)
+    // the tournament's own player stays at Speakers: a second 360 upmix next to the main one costs too much (audit)
+    stage.setMode(no360 && s.mode === '360' ? 'speakers' : s.mode)
   }
   // the virtual speakers' ear-gain correction: automatic, fetched once
   void loadEarCorrection().then((f) => f && stage.setEarCorrection?.(f))
