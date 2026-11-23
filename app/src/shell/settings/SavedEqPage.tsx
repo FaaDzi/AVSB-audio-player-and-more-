@@ -132,10 +132,13 @@ export function SavedEqPage() {
     return () => { live = false }
   }, [])
 
-  const applyPreset = (p: SavedPreset) => {
+  const loadPreset = (p: SavedPreset) => {
     setEq({ ...presetFields(p), on: true })
     showToast(`Loaded ${p.name}`)
   }
+  // §112 D: an EQ made with other gear asks first (the user can go on; saving it then makes it this gear's)
+  const [otherGear, setOtherGear] = useState<SavedPreset | null>(null)
+  const applyPreset = (p: SavedPreset) => (p.device && p.device !== activeGear ? setOtherGear(p) : loadPreset(p))
 
   // §91 F: each export is followed by how to install it (saveFile: a download on the PC, the share sheet on the phone)
   const [steps, setSteps] = useState<{ kind: 'apo' | 'json'; file: string } | null>(null)
@@ -319,6 +322,18 @@ export function SavedEqPage() {
       )}
 
       {/* Delete Confirmation Dialog */}
+      {otherGear && (
+        <Dialog title="Made with other gear" onClose={() => setOtherGear(null)} footer={<>
+          <button type="button" className="ms-btn text" onClick={() => setOtherGear(null)}>Cancel</button>
+          <button type="button" className="ms-btn tonal" onClick={() => { loadPreset(otherGear); setOtherGear(null) }}>Use anyway</button>
+        </>}>
+          <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: 14 }}>
+            <b>{otherGear.name}</b> was made with {deviceName(otherGear.device) ?? 'other gear'}. Switch to it to edit this EQ.
+            Saving it here makes it {deviceName(activeGear ?? undefined) ?? 'this gear'}'s; Save as new keeps the original.
+          </p>
+        </Dialog>
+      )}
+
       {deletingName && (
         <Dialog title="Delete Preset" onClose={() => setDeletingName(null)}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14, padding: '4px 0' }}>

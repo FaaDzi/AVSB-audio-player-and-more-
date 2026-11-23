@@ -72,8 +72,12 @@ const MediaPlayback = registerPlugin<{
     cover?: string
     coverBase64?: string
     keepCover?: boolean
+    shuffle?: boolean
+    repeat?: 'off' | 'all' | 'one'
   }): Promise<void>
   clearNowPlaying(): Promise<void>
+  /** §112 E: the mini player's X (pause and remove the notification). */
+  dismiss?(): Promise<void>
   addListener(event: 'focusLost', cb: () => void): Promise<{ remove: () => Promise<void> }>
   addListener(event: 'control', cb: (e: MediaControl) => void): Promise<{ remove: () => Promise<void> }>
 }>('MediaPlayback')
@@ -123,7 +127,7 @@ export const AUDIO_INTERRUPTED = 'app-audio-interrupted'
 
 /** A press on the notification, lock screen, earphone/Bluetooth buttons or media keys. */
 export interface MediaControl {
-  action: 'play' | 'pause' | 'next' | 'prev' | 'seek'
+  action: 'play' | 'pause' | 'next' | 'prev' | 'seek' | 'shuffle' | 'repeat'
   /** Seconds, for seek. */
   position?: number
   /** Seconds to fade in over (play only: Bluetooth buds came back after a drop). */
@@ -148,6 +152,9 @@ export interface NowPlaying {
   coverUrl: string | null
   /** Shown when the cover can't be loaded (Android): the song's genre cover. */
   fallbackCover?: string | null
+  /** §112 E: the notification's shuffle and repeat buttons show these. */
+  shuffle?: boolean
+  repeat?: 'off' | 'all' | 'one'
 }
 
 let lastTrackKey = ''
@@ -305,6 +312,8 @@ export function setNowPlaying(np: NowPlaying) {
     cover: sameCoverReady ? lastCoverData : undefined,
     coverBase64: sameCoverReady ? lastCoverData : undefined,
     keepCover: sameCoverReady,
+    shuffle: np.shuffle,
+    repeat: np.repeat,
   }).catch(() => {})
 
   // 2. If cover changed or wasn't decoded yet, resolve it asynchronously and push a follow-up update
@@ -342,10 +351,22 @@ export function setNowPlaying(np: NowPlaying) {
           cover: b64,
           coverBase64: b64,
           keepCover: false,
+          shuffle: cur.shuffle,
+          repeat: cur.repeat,
         }).catch(() => {})
       })
       .catch(() => {})
   }
+}
+
+/** §112 E: the mini player's X: the song is paused by the caller; its notification goes until the next play. */
+export function dismissNowPlaying() {
+  latestNp = null
+  lastTrackKey = ''
+  mediaOn = false
+  clearTimeout(noteTimer)
+  if (isAndroid()) void MediaPlayback.dismiss?.().catch(() => {})
+  else if (navigator.mediaSession) navigator.mediaSession.metadata = null
 }
 
 /** The gallery closed: take its song off the notification / lock screen. */

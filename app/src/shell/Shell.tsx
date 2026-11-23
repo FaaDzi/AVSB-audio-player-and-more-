@@ -36,7 +36,7 @@ import { SettingsPage } from './settings/SettingsPage'
 import { ShellContext, type Repeat, type Route, type SidePanel, type ToastItem } from './context'
 import { canPlay, coverUrl, overlayTracks, feedRegisteredNamingSink, setCuratedSongs, type CuratedSong, type LibraryData, type Track } from './library'
 import { localEdit, usePlaylistLink } from './playlistLink'
-import { moveToBackground, onMediaControls, setMediaActive, setNowPlaying as showOnLockScreen } from '../platform'
+import { dismissNowPlaying, moveToBackground, onMediaControls, setMediaActive, setNowPlaying as showOnLockScreen } from '../platform'
 
 function shuffled<T>(list: T[]): T[] {
   const copy = [...list]
@@ -206,6 +206,9 @@ export function Shell() {
   const setAutoplay = useCallback((a: boolean) => { setAutoplayState(a); setSetting('autoplay', a); clearQueuedNext() }, [])
   const setPosition = useCallback((s: number) => { showPosition(s); seekTo(s) }, [])
   const setPlaying = useCallback((p: boolean) => { setPlayingState(p); setPaused(!p) }, [])
+  const [closed, setClosed] = useState(false)
+  useEffect(() => { if (playing) setClosed(false) }, [playing])
+  const closePlayer = useCallback(() => { setPlaying(false); setClosed(true); dismissNowPlaying() }, [setPlaying])
 
   const currentRef = useRef(current)
   currentRef.current = current
@@ -316,8 +319,8 @@ export function Shell() {
   // Android (plan §70 C3): the notification, lock screen and headset buttons follow the player
   const pauseForSleep = useCallback(() => setPlaying(false), [setPlaying])
   useSleepTimerRunner(current, playing, pauseForSleep)
-  const controls = useRef({ setPlaying, step, setPosition })
-  controls.current = { setPlaying, step, setPosition }
+  const controls = useRef({ setPlaying, step, setPosition, setShuffle, setRepeat, shuffle, repeat })
+  controls.current = { setPlaying, step, setPosition, setShuffle, setRepeat, shuffle, repeat }
   useEffect(() => onMediaControls((c) => {
     const k = controls.current
     if (c.action === 'play') k.setPlaying(true)
@@ -325,15 +328,17 @@ export function Shell() {
     else if (c.action === 'next') k.step(1)
     else if (c.action === 'prev') k.step(-1)
     else if (c.action === 'seek' && c.position != null) k.setPosition(c.position)
+    else if (c.action === 'shuffle') k.setShuffle(!k.shuffle)
+    else if (c.action === 'repeat') k.setRepeat(k.repeat === 'off' ? 'all' : k.repeat === 'all' ? 'one' : 'off')
   }), [])
   // §90 C: a song without art shows its genre cover in the notification and on the lock screen, not the app icon
   const lockLyric = useLockScreenLyric(current, playing)
   const lockScreenArt = useMemo(() => (current ? placeholderCoverImage(current.genre, current.category, current.title) : null), [current])
   useEffect(() => {
-    if (!current) return
+    if (!current || (closed && !playing)) return
     setMediaActive(playing)
-    showOnLockScreen({ id: current.id, title: current.title, artist: lockLyric || current.artist || 'Unknown Artist', duration: current.sec, position: loading ? 0 : livePosition(), playing, loading, coverUrl: current.cover ? coverUrl(current.cover) : lockScreenArt, fallbackCover: lockScreenArt })
-  }, [current, playing, loading, lockScreenArt, lockLyric])
+    showOnLockScreen({ id: current.id, title: current.title, artist: lockLyric || current.artist || 'Unknown Artist', duration: current.sec, position: loading ? 0 : livePosition(), playing, loading, coverUrl: current.cover ? coverUrl(current.cover) : lockScreenArt, fallbackCover: lockScreenArt, shuffle, repeat })
+  }, [current, playing, loading, lockScreenArt, lockLyric, closed, shuffle, repeat])
 
   const whatsNext = useRef<() => Track | null>(() => null)
   // §88 D: "next" is picked once per song and order, so the song fetched ahead is the one that plays (shuffle used to
@@ -415,9 +420,9 @@ export function Shell() {
   const value = useMemo(() => ({
     data: data ?? { tracks: [], playlists: [] },
     current, playing, loading, volume, queue, repeat, shuffle, autoplay, panel, nowPlaying,
-    play, step, setPlaying, setPosition, setVolume, setQueue, setRepeat, setShuffle, setAutoplay, setPanel, setNowPlaying, setMini: handleSetMini,
+    play, step, setPlaying, setPosition, setVolume, setQueue, setRepeat, setShuffle, setAutoplay, setPanel, setNowPlaying, setMini: handleSetMini, closePlayer, closed,
     shuffleLibrary, showToast: setToast, push, go, openPlaylist, replaceData,
-  }), [data, current, playing, loading, volume, queue, repeat, shuffle, autoplay, panel, nowPlaying, play, step, shuffleLibrary, push, go, openPlaylist, setPlaying, setPosition, setVolume, setRepeat, setShuffle, setAutoplay, replaceData, handleSetMini])
+  }), [data, current, playing, loading, volume, queue, repeat, shuffle, autoplay, panel, nowPlaying, play, step, shuffleLibrary, push, go, openPlaylist, setPlaying, setPosition, setVolume, setRepeat, setShuffle, setAutoplay, replaceData, handleSetMini, closePlayer, closed])
 
   const route = stack[stack.length - 1]
   const back = () => setStack((s) => (s.length > 1 ? s.slice(0, -1) : s))

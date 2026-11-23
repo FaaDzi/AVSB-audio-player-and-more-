@@ -387,7 +387,12 @@ export class SpatialStage implements SpatialStageApi {
   private up: { node: AudioWorkletNode; split: ChannelSplitterNode; banks: [UpBank, UpBank]; active: number; out: GainNode } | null = null
   private upLoading = false
   private upOn = false
-  private readonly upModule: Promise<boolean>
+  private upModuleP: Promise<boolean> | null = null
+  /** §112 A: loaded only once 360 is wanted: with a worklet loaded, Chrome renders the whole graph on the worklet's
+   * thread, which dropped audio in every mode (the §109 load-at-start). */
+  private get upModule(): Promise<boolean> {
+    return (this.upModuleP ??= this.ctx.audioWorklet?.addModule(upmixUrl).then(() => true, () => false) ?? Promise.resolve(false))
+  }
 
   constructor(ctx: BaseAudioContext) {
     this.ctx = ctx
@@ -403,9 +408,6 @@ export class SpatialStage implements SpatialStageApi {
     this.align = ctx.createDelay(0.1)
     this.align.delayTime.value = FRAME / ctx.sampleRate
     this.input.connect(this.align).connect(this.dry).connect(this.output)
-    // §109: Chrome runs a worklet module's script on the audio thread, so loading it the first time 360 came on dropped
-    // a block of the song; it loads now, before anything plays (false = no worklet: 360 falls back to speakers)
-    this.upModule = ctx.audioWorklet?.addModule(upmixUrl).then(() => true, () => false) ?? Promise.resolve(false)
 
     this.xfSplit = ctx.createChannelSplitter(2)
     this.xf = ctx.createGain()
@@ -601,7 +603,8 @@ export class SpatialStage implements SpatialStageApi {
   }
 
   private applyYaw() {
-    if (this.upOn) return this.applyUpYaw()
+    // the mode, not upOn: upOn stays set through the fade out of 360, and Speakers' banks would never load (audit H1)
+    if (this.upOn && this._mode === '360') return this.applyUpYaw()
     const s = this.set
     if (!s || !this.vOn) return
     const idx = speakerIndices(this.stepYaw(), s.stepDeg, s.ring.length)

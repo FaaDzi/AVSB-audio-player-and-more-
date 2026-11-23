@@ -4,7 +4,7 @@ import { useSyncExternalStore } from 'react'
 import { getSetting, setSetting, subscribeSettings } from '../settings/store'
 import { getGear } from './gear'
 import { setSound } from './soundState'
-import { EQ_DEFAULT, getEq, presetFields, presetFrom, setEq, type SavedPreset } from '../eqState'
+import { EQ_DEFAULT, presetFields, presetFrom, setEq, type SavedPreset } from '../eqState'
 import { ROOM_SLOPES, roomTargetName } from './soundCurve'
 
 export interface GearProfileItem {
@@ -383,23 +383,11 @@ export function applyProfileItem(itemId: string | null, deviceId?: string | null
 }
 
 /** Synchronize sound state when switching active gear. */
-export function onGearChanged(newDeviceId: string | null, prevDeviceId?: string | null) {
-  // the EQ playing now belongs to the device being left; a device with none saved yet keeps it as its start
-  if (prevDeviceId !== undefined) {
-    const eq = getEq()
-    setSessionAutosave(prevDeviceId, presetFrom(eq, eq.preset, prevDeviceId))
-  }
+export function onGearChanged(newDeviceId: string | null, _prevDeviceId?: string | null) {
   const profile = getGearProfile(newDeviceId)
   applyProfileItem(profile.activeItemId, newDeviceId)
-
-  // Switch to device's active EQ preset or session autosave
-  const autosave = getSessionAutosave(newDeviceId)
-  if (autosave) {
-    setEq(presetFields(autosave))
-  } else if (newDeviceId?.startsWith('phone-speaker-')) {
-    // the phone's own speaker (§86 G) never inherits an earphone's EQ: it starts flat and keeps what you then make
-    setEq(presetFields(presetFrom(EQ_DEFAULT, EQ_DEFAULT.preset)))
-  } else if (profile.activeEqPreset) {
-    setEq({ preset: profile.activeEqPreset })
-  }
+  // §112 D (owner): every connect starts fresh and flat; a device's own EQs are opened from Saved EQ. Edits made on
+  // the device before never carry over, to it or to the next one.
+  clearSessionAutosave(newDeviceId)
+  setEq(presetFields(presetFrom(EQ_DEFAULT, EQ_DEFAULT.preset)))
 }

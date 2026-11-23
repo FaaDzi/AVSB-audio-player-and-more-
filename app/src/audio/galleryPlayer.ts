@@ -114,12 +114,16 @@ const DEFAULT_DYNAMICS: Dynamics = { headroom: true, limiter: true, limitAlways:
 export interface StreamSong {
   el: HTMLAudioElement
   sec: number
+  /** §112 B: the second of the song the element's 0 is (a Low Data stream restarted partway after a cut). */
+  base?: number
 }
 const isStream = (x: AudioBuffer | StreamSong): x is StreamSong => 'el' in x
 
 /** An audio element standing in for an AudioBufferSourceNode: started (at a context time) and stopped the same way. */
 class MediaVoice {
   onended: (() => void) | null = null
+  /** §112 audit: the stream failed after it started (a weak signal): the player reloads it instead of freezing. */
+  onerror: (() => void) | null = null
   /** Android paused the element (another app took audio focus), not this player. */
   onInterrupted: (() => void) | null = null
   private timer: ReturnType<typeof setTimeout> | undefined
@@ -128,8 +132,9 @@ class MediaVoice {
   constructor(el: HTMLAudioElement, ctx: BaseAudioContext, when: number, offset: number) {
     this.el = el
     this.ctx = ctx
-    if (Math.abs(el.currentTime - offset) > 0.05) el.currentTime = offset
+    if (Math.abs(el.currentTime - offset) > 0.05) el.currentTime = Math.max(0, offset)
     el.onended = () => this.onended?.()
+    el.onerror = () => this.onerror?.()
     // events arrive late: the pause from a seek's own stop lands after the play that followed it, so only a pause the
     // element is still in counts
     el.onpause = () => { if (el.paused && !el.ended) this.onInterrupted?.() }
@@ -143,6 +148,7 @@ class MediaVoice {
     clearTimeout(this.timer)
     const halt = () => {
       this.el.onended = null
+      this.el.onerror = null
       this.el.onpause = null
       this.el.pause()
     }
@@ -367,7 +373,7 @@ export class GalleryPlayer {
   get position() {
     if (!this.cur?.source) return this.offset
     // a stream can stall while it waits for bytes: the element's own clock is the truth, not the context's
-    if (this.cur.media) return Math.min(this.duration, this.cur.media.el.currentTime)
+    if (this.cur.media) return Math.min(this.duration, (this.cur.media.base ?? 0) + this.cur.media.el.currentTime)
     return Math.min(this.duration, this.offset + this.ctx.currentTime - this.startedAt)
   }
 
@@ -707,8 +713,9 @@ export class GalleryPlayer {
 
   private startSource(t: Track, when: number, offset: number): Voice {
     if (t.media) {
-      const voice = new MediaVoice(t.media.el, this.ctx, when, offset)
+      const voice = new MediaVoice(t.media.el, this.ctx, when, offset - (t.media.base ?? 0))
       voice.onended = () => this.ended(t, voice)
+      voice.onerror = () => this.cut(t, voice)
       voice.onInterrupted = () => { if (t === this.cur && t.source === voice) this.onInterrupted?.() }
       return voice
     }
@@ -836,8 +843,22 @@ export class GalleryPlayer {
     this.nearTimer = setTimeout(() => this.onNearEnd?.(), ms)
   }
 
+  /** §112 B: a stream stopped short of the song's end (cut, or failed): the engine reloads it from here. */
+  onCut: ((at: number) => void) | null = null
+
+  private cut(t: Track, src: Voice) {
+    if (t.source !== src || t !== this.cur || !t.media) return
+    const at = this.position
+    t.source.stop()
+    t.source = null
+    this.offset = at
+    this.onCut?.(at)
+  }
+
   private ended(t: Track, src: Voice) {
     if (t.source !== src) return
+    // an end well before the song's length is a cut (the link dropped), not the end of the song
+    if (t === this.cur && t.media && t.media.sec > 0 && t.media.sec - this.position > 3) return this.cut(t, src)
     t.source = null
     if (t !== this.cur) return
     if (t.partial) {

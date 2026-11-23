@@ -7,7 +7,7 @@ import { afterAll, describe, expect, it } from 'vitest'
 import iroh from '@number0/iroh'
 import { createPairing, EXPIRE_MS, MAX_PHONES, MAX_WRONG, PAIR_WINDOW_MS } from '../../electron/link/pairing.mjs'
 import { ALPN, BadRequest, parseRequest, splitHeader } from '../../electron/link/protocol.mjs'
-import { createLink, isPrivateIp, lanSignature } from '../../electron/link/link.mjs'
+import { createLink, isPrivateIp, lanSignature, startAt } from '../../electron/link/link.mjs'
 
 const fixed = (b: number) => (n: number) => Buffer.alloc(n, b)
 
@@ -320,5 +320,13 @@ describe('LAN server callers (review item 9)', () => {
   it('answers the home network only', () => {
     for (const ip of ['192.168.1.20', '10.0.0.5', '172.20.3.4', '::ffff:192.168.0.9', '127.0.0.1', '169.254.10.1']) expect(isPrivateIp(ip)).toBe(true)
     for (const ip of ['8.8.8.8', '172.32.0.1', '100.64.0.1', '::ffff:1.2.3.4', '']) expect(isPrivateIp(ip)).toBe(false)
+  })
+})
+
+describe('§112 B: where a resumed Low Data stream starts', () => {
+  it('takes a sane number of seconds from the phone, else 0', () => {
+    expect(startAt('42.5')).toBe(42.5)
+    expect(startAt(18)).toBe(18)
+    for (const bad of [undefined, null, '', 'abc', '-3', '1e9', 'Infinity', '0']) expect(startAt(bad)).toBe(0)
   })
 })

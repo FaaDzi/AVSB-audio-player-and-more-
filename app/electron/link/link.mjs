@@ -278,11 +278,19 @@ function downscaleWithFfmpegInMemory(file, ffmpegBin = 'ffmpeg') {
  * Spawns ffmpeg to transcode to 128 kbps Ogg/Opus and yields live chunks as they encode so playback
  * starts after the first audio frames (~150 ms) rather than buffering the entire song in RAM first.
  */
-function openLiveOpusEncoder(file, ffmpegBin, activeProcs) {
+/** A Low Data stream's start (s), from the phone: a sane number or 0. */
+export const startAt = (v) => {
+  const n = Number(v)
+  return Number.isFinite(n) && n > 0 && n < 24 * 3600 ? n : 0
+}
+
+function openLiveOpusEncoder(file, ffmpegBin, activeProcs, startSec = 0) {
   let proc
   try {
     proc = spawn(ffmpegBin, [
       '-v', 'error',
+      // §112 B: a stream cut by a weak signal comes back from where it stopped
+      ...(startSec > 0 ? ['-ss', startSec.toFixed(2)] : []),
       '-i', file,
       '-vn',
       '-map_metadata', '-1',
@@ -610,8 +618,8 @@ export function createLink(opts) {
     lowDataRamCache.set(trackId, { buffer: Buffer.concat(cacheChunks, cacheBytes), type: 'audio/ogg' })
   }
 
-  async function streamLowDataIroh(bi, trackId, file) {
-    const enc = openLiveOpusEncoder(file, ffmpegBin, activeProcs)
+  async function streamLowDataIroh(bi, trackId, file, startSec = 0) {
+    const enc = openLiveOpusEncoder(file, ffmpegBin, activeProcs, startSec)
     if (!enc) return false
     const first = await enc.waitFirst()
     if (!first) {
@@ -641,7 +649,8 @@ export function createLink(opts) {
         collect(chunk)
         await send(bi, chunk)
       }
-      if (keepCaching && enc.succeeded()) {
+      // a stream started partway isn't the song's file: only whole ones are kept
+      if (keepCaching && startSec === 0 && enc.succeeded()) {
         cacheLowData(trackId, cacheChunks, cacheBytes)
       }
     } catch (e) {
@@ -716,15 +725,15 @@ export function createLink(opts) {
     rs.pipe(res)
   }
 
-  async function streamLowDataHttp(req, res, trackId, file) {
-    const cached = lowDataRamCache.get(trackId)
+  async function streamLowDataHttp(req, res, trackId, file, startSec = 0) {
+    const cached = startSec > 0 ? null : lowDataRamCache.get(trackId)
     if (cached) {
       lowDataRamCache.delete(trackId)
       lowDataRamCache.set(trackId, cached)
       sendBufferHttp(req, res, cached.buffer, cached.type, { 'X-AVSB-Transcoded': '1' })
       return
     }
-    const enc = openLiveOpusEncoder(file, ffmpegBin, activeProcs)
+    const enc = openLiveOpusEncoder(file, ffmpegBin, activeProcs, startSec)
     if (!enc) {
       sendFileHttp(req, res, file, typeOf(file))
       return
@@ -859,7 +868,7 @@ export function createLink(opts) {
       const file = t && !t.offline ? library.allowed(t.path) : null
       if (!file || !fs.existsSync(file)) { res.writeHead(404); res.end('not found'); return }
       if (url.searchParams.get('lowdata') === '1') {
-        await streamLowDataHttp(req, res, t.id, file)
+        await streamLowDataHttp(req, res, t.id, file, startAt(url.searchParams.get('t')))
         return
       }
       if (url.searchParams.get('raw') !== '1' && path.extname(file).toLowerCase() === '.wav') {
@@ -1009,13 +1018,14 @@ export function createLink(opts) {
       if (!file || !fs.existsSync(file)) return send(bi, header({ ok: false, error: 'not found' }))
 
       if (req.lowData) {
-        const cached = lowDataRamCache.get(t.id)
+        const startSec = startAt(req.startSec)
+        const cached = startSec > 0 ? null : lowDataRamCache.get(t.id)
         if (cached) {
           lowDataRamCache.delete(t.id)
           lowDataRamCache.set(t.id, cached)
           return sendBuffer(bi, cached.buffer, req.from, cached.type)
         }
-        if ((req.from ?? 0) === 0 && await streamLowDataIroh(bi, t.id, file)) {
+        if ((req.from ?? 0) === 0 && await streamLowDataIroh(bi, t.id, file, startSec)) {
           return
         }
         // a live Opus stream can't start partway in, and raw file bytes would be a different format from the part
@@ -1023,16 +1033,17 @@ export function createLink(opts) {
         if ((req.from ?? 0) > 0) return send(bi, header({ ok: false, error: 'low data resumes from the start' }))
       }
 
-      if (!req.raw && (req.from ?? 0) === 0) {
+      // a seek (from > 0) needs the same bytes as the start: the downscaled ones, not the original file's (audit 2)
+      if (!req.raw) {
         const cached = downscaledRamCache.get(t.id)
         if (cached) {
           downscaledRamCache.delete(t.id)
           downscaledRamCache.set(t.id, cached)
-          return sendBuffer(bi, cached.buffer, 0, cached.type)
+          return sendBuffer(bi, cached.buffer, req.from ?? 0, cached.type)
         }
         if (path.extname(file).toLowerCase() === '.wav') {
           const downscaled = await getDownscaledOrNull(t, file)
-          if (downscaled) return sendBuffer(bi, downscaled.buffer, 0, downscaled.type)
+          if (downscaled) return sendBuffer(bi, downscaled.buffer, req.from ?? 0, downscaled.type)
         }
       }
       return sendFile(bi, file, req.from, typeOf(file))

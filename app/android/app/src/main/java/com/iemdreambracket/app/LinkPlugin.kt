@@ -405,9 +405,8 @@ class LinkPlugin : Plugin() {
         instance = this
         IrohAndroid.installAndroidContext(context.applicationContext)
         runCatching { context.getSystemService(ConnectivityManager::class.java)?.registerDefaultNetworkCallback(networkCallback) }
-        // Clean up any legacy flash-cached PC songs in cacheDir so 0 MB of cache storage is wasted
+        // §112 audit: no wipe of link/songs here: it is the live song cache (§88 C), and wiping it cost data on every start
         scope.launch {
-            runCatching { File(context.cacheDir, "link/songs").deleteRecursively() }
             loadSavedMetadata()
             // Defer heavy network library sync by 3s so cold start / immediate play has 100% bandwidth
             delay(3000L)
@@ -869,13 +868,14 @@ class LinkPlugin : Plugin() {
         lowData: Boolean,
         rangeHeader: String?,
         cacheKey: String,
+        startSec: Double = 0.0,
     ): SongStreamResult? {
         val base = activeLanBase ?: return null
         val token = activeLanToken ?: return null
         val q = if (lowData) 1 else 0
         var httpConn: HttpURLConnection? = null
         return try {
-            val url = URL("$base/song/${Uri.encode(id)}?lowdata=$q")
+            val url = URL("$base/song/${Uri.encode(id)}?lowdata=$q" + if (startSec > 0) "&t=$startSec" else "")
             httpConn = (url.openConnection() as HttpURLConnection).apply {
                 connectTimeout = 1500
                 readTimeout = 20000
@@ -900,9 +900,9 @@ class LinkPlugin : Plugin() {
             val contentRange = httpConn.getHeaderField("Content-Range")
             val acceptRanges = httpConn.getHeaderField("Accept-Ranges")
             val rawIn = httpConn.inputStream
-            val whole = rangeStart(rangeHeader).let { it == null || it == 0L }
+            val whole = startSec <= 0 && rangeStart(rangeHeader).let { it == null || it == 0L }
             val total = contentRange?.substringAfterLast('/')?.toLongOrNull() ?: len
-            val writer = if (whole) startCacheWrite(cacheKey, mime, total) else null
+            val writer = if (whole && (!lowData || mime == "audio/ogg")) startCacheWrite(cacheKey, mime, total) else null
             val conn = httpConn
             SongStreamResult(mime, code, len, contentRange, acceptRanges, cachingStream(rawIn, writer, lowData) { runCatching { conn.disconnect() } })
         } catch (e: Exception) {
@@ -924,19 +924,25 @@ class LinkPlugin : Plugin() {
      * Prefers direct LAN HTTP (`Range`/`206` & piped 128 kbps Opus) when on local Wi-Fi, seamlessly falling back to
      * `iroh` QUIC when remote/relayed, backed by bounded RAM LRU cache (`0 MB` flash storage used unless saved offline).
      */
-    fun openSongStream(id: String, lowData: Boolean = false, rangeHeader: String? = null): SongStreamResult? {
+    @JvmOverloads
+    fun openSongStream(id: String, lowData: Boolean = false, rangeHeader: String? = null, startSec: Double = 0.0): SongStreamResult? {
         if (!Regex("^[A-Za-z0-9_-]{1,64}$").matches(id) || !paired()) return null
         val cacheKey = if (lowData) "$id-low" else id
-        File(offlineDir(), id).takeIf { it.exists() }?.let { f -> fileResult(f, "application/octet-stream", rangeHeader)?.let { return it } }
-        cachedSongFile(cacheKey)?.let { f -> fileResult(f, cachedMime(cacheKey), rangeHeader)?.let { return it } }
-        openLanSongStream(id, lowData, rangeHeader, cacheKey)?.let { return it }
+        // §112 B: a Low Data song cut by a weak signal comes back from `startSec` (the PC encodes from there), so the
+        // song's own files (which start at 0) don't fit and the part isn't cached
+        val partway = lowData && startSec > 0
+        if (!partway) {
+            File(offlineDir(), id).takeIf { it.exists() }?.let { f -> fileResult(f, "application/octet-stream", rangeHeader)?.let { return it } }
+            cachedSongFile(cacheKey)?.let { f -> fileResult(f, cachedMime(cacheKey), rangeHeader)?.let { return it } }
+        }
+        openLanSongStream(id, lowData, rangeHeader, cacheKey, if (partway) startSec else 0.0)?.let { return it }
         // §84 A: a seek asks for "bytes=N-"; the PC resumes the file there (low data is transcoded live, so it restarts)
         val from = if (lowData) 0L else Regex("^bytes=(\\d+)-").find(rangeHeader ?: "")?.groupValues?.get(1)?.toLongOrNull() ?: 0L
         return runBlocking(Dispatchers.IO) {
             runCatching {
                 withConnection { c ->
                     val bi = c.openBi()
-                    bi.send().writeAll((JSONObject().put("op", "song").put("id", id).put("from", from).put("lowData", lowData).toString() + "\n").toByteArray())
+                    bi.send().writeAll((JSONObject().put("op", "song").put("id", id).put("from", from).put("lowData", lowData).put("startSec", if (partway) startSec else 0.0).toString() + "\n").toByteArray())
                     bi.send().finish()
                     val headerBuf = ByteArrayOutputStream(512)
                     var nl = -1
@@ -1049,7 +1055,7 @@ class LinkPlugin : Plugin() {
                             super.close()
                         }
                     }
-                    val writer = if (from == 0L) startCacheWrite(cacheKey, mime, expectedSize) else null
+                    val writer = if (from == 0L && !partway && (!lowData || mime == "audio/ogg")) startCacheWrite(cacheKey, mime, expectedSize) else null
                     val body = cachingStream(stream, writer, lowData) {}
                     when {
                         from > 0L && expectedSize > from -> SongStreamResult(mime, 206, expectedSize - from, "bytes $from-${expectedSize - 1}/$expectedSize", "bytes", body)
@@ -1655,6 +1661,8 @@ class LinkPlugin : Plugin() {
         val request = lines.firstOrNull()?.split(" ") ?: return
         val method = request[0]
         val path = request.getOrNull(1)?.substringBefore('?') ?: return
+        val startSec = Regex("[?&]t=([0-9.]{1,12})").find(request.getOrNull(1) ?: "")?.groupValues?.get(1)?.toDoubleOrNull()
+            ?.takeIf { it.isFinite() && it > 0 && it < 86400 } ?: 0.0
         val range = lines.drop(1).firstOrNull { it.startsWith("range:", ignoreCase = true) }?.substringAfter(':')?.trim()
         val out = java.io.BufferedOutputStream(s.getOutputStream(), CHUNK)
         fun head(status: String, headers: Map<String, String>) {
@@ -1664,7 +1672,7 @@ class LinkPlugin : Plugin() {
             out.write(text.toString().toByteArray())
         }
         val m = Regex("^/$audioSecret/(low|raw)/([A-Za-z0-9_-]{1,64})$").find(path)
-        val res = m?.let { openSongStream(it.groupValues[2], it.groupValues[1] == "low", range) }
+        val res = m?.let { openSongStream(it.groupValues[2], it.groupValues[1] == "low", range, startSec) }
         if (res == null) {
             head("404 Not Found", mapOf("Content-Length" to "0"))
             out.flush()

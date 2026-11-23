@@ -22,7 +22,7 @@ import {
   setSessionAutosave,
 } from './gearProfiles'
 import { setSetting } from '../settings/store'
-import type { SavedPreset } from '../eqState'
+import { presetFrom, type SavedPreset } from '../eqState'
 
 describe('Gear Profiles Per-Device Scoping', () => {
   beforeEach(() => {
@@ -158,19 +158,18 @@ describe('Gear Profiles Per-Device Scoping', () => {
 })
 
 describe('§80 D/E: speakers, soundbars and their own EQ', () => {
-  it('keeps each device its own EQ when switching (speakers vs soundbar)', async () => {
+  it('starts every device at a flat EQ, even one edited before (§112 D)', async () => {
     const { onGearChanged } = await import('./gearProfiles')
     const { getEq, setEq } = await import('../eqState')
-    clearSessionAutosave('spk-a')
-    clearSessionAutosave('spk-generic-soundbar')
-    setEq({ preset: 'Speakers EQ', gains: [1, 2, 3] })
+    setEq({ preset: 'Custom EQ 1 (Autosaved)', gains: [1, 2, 3] })
+    setSessionAutosave('spk-a', presetFrom(getEq(), 'Custom EQ 1 (Autosaved)', 'spk-a'))
     onGearChanged('spk-generic-soundbar', 'spk-a')
-    expect(getSessionAutosave('spk-a')?.name).toBe('Speakers EQ')
-    setEq({ preset: 'Soundbar EQ', gains: [-1, -2, -3] })
+    expect(getEq().preset).toBe('Flat')
+    expect(getEq().gains.every((g) => g === 0)).toBe(true)
+    setEq({ gains: [-1, -2, -3] })
     onGearChanged('spk-a', 'spk-generic-soundbar')
-    expect(getEq().preset).toBe('Speakers EQ')
-    expect(getEq().gains).toEqual([1, 2, 3])
-    expect(getSessionAutosave('spk-generic-soundbar')?.gains).toEqual([-1, -2, -3])
+    expect(getEq().gains.every((g) => g === 0)).toBe(true)
+    expect(getSessionAutosave('spk-a')).toBeNull()
   })
 
   it('lets speakers aim only at speakers, in-ears only at ear gear', async () => {

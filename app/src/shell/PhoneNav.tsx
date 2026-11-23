@@ -87,11 +87,11 @@ export function PhoneMini() {
 
 function PhoneMiniPlayer() {
   const position = useLivePosition()
-  const { current, playing, loading, setPlaying, setNowPlaying, step, data, replaceData } = useShell()
+  const { current, playing, loading, setPlaying, setNowPlaying, step, data, replaceData, closed, closePlayer } = useShell()
   const isBuffering = useIsBuffering()
   useFavorites()
   const coverStyle = useCoverStyle(current?.cover)
-  if (!current) return null
+  if (!current || closed) return null
   const done = current.sec ? Math.min(1, position / current.sec) : 0
   return (
     <div className="ms-pmini" style={coverStyle}>
@@ -123,6 +123,7 @@ function PhoneMiniPlayer() {
       />
       {/* §104: shown in landscape only (phoneLayout.css); portrait has no room for it */}
       <PlaylistAddButton track={current} />
+      <IconButton icon="close" label="Close player" onClick={closePlayer} />
     </div>
   )
 }

@@ -276,22 +276,53 @@ const measuredFile = (t: Track) => ({ file: { name: t.path, size: t.size } })
  * §88 B: a PC song plays from an audio element as it arrives. Seeking asks the phone for that byte range, which comes
  * from the song cache (§88 C) or from the PC.
  */
-function streamSong(t: Track): StreamSong {
+function streamSong(t: Track, from = 0): StreamSong {
   const el = new Audio()
   el.preload = 'auto'
   // the phone's server is another origin: without CORS the EQ chain would only get silence from it
   el.crossOrigin = 'anonymous'
   const low = lowDataFor(t)
-  el.src = pcAudioBase ? `${pcAudioBase}/${low ? 'low' : 'raw'}/${t.path.slice(3)}` : audioUrl(t)
+  // §112 B: Low Data can't seek (it's encoded live), so a start partway asks the PC to encode from that second
+  const base = low && pcAudioBase && from > 0 ? Math.floor(from) : 0
+  streamBase = base
+  el.src = pcAudioBase ? `${pcAudioBase}/${low ? 'low' : 'raw'}/${t.path.slice(3)}${base ? `?t=${base}` : ''}` : audioUrl(t)
   // §90 E: a stream that ends well before the song's length was cut short (the PC's encoder stopped): its cached copy
   // goes, so the next play fetches it whole
   el.addEventListener('ended', () => {
-    if (!(t.sec > 0) || !(el.duration > 0) || t.sec - el.duration <= 3) return
+    if (base || !(t.sec > 0) || !(el.duration > 0) || t.sec - el.duration <= 3) return
     logLine('WARN', 'Player', `"${t.title}" ended at ${el.duration.toFixed(0)} s of ${t.sec.toFixed(0)} s: dropped its saved copy`)
     void phoneLink?.dropCachedSong?.({ id: t.path.slice(3), lowData: low }).catch(() => {})
   })
-  return { el, sec: t.sec }
+  return { el, sec: t.sec, base }
 }
+/** §112 B: a PC stream cut short (weak signal) comes back from where it stopped, up to 3 times a song; the phone's own
+ * copy takes over when there is one; only then is it skipped. */
+let cuts = { id: '', n: 0 }
+async function resumeCut(at: number) {
+  const t = loaded
+  const mine = token
+  if (!t || !isPcTrack(t)) { events.onEnded?.(); return }
+  cuts = cuts.id === t.id ? { id: t.id, n: cuts.n + 1 } : { id: t.id, n: 1 }
+  const when = `${Math.floor(at / 60)}:${String(Math.floor(at % 60)).padStart(2, '0')}`
+  const local = findMatchingLocalTrack(t)
+  if (local) {
+    logLine('WARN', 'Network', `"${t.title}" was cut at ${when}: playing the copy on this phone from there`)
+    void playTrack(local, wantPlaying, at, true)
+    return
+  }
+  if (cuts.n > 3) {
+    logLine('WARN', 'Network', `"${t.title}" was cut at ${when} 3 times: skipped`)
+    events.onEnded?.()
+    return
+  }
+  logLine('WARN', 'Network', `"${t.title}" was cut at ${when}: coming back from there (try ${cuts.n} of 3)`)
+  setEngineBuffering(true)
+  await new Promise((r) => window.setTimeout(r, 1500 * cuts.n))
+  if (mine !== token) return
+  void playTrack(t, wantPlaying, at, true)
+}
+/** Where the playing Low Data stream starts in its song (s); 0 for a whole one. */
+let streamBase = 0
 /** The phone's own HTTP server for PC songs; the WebView's request hook couldn't serve an audio element's ranges. */
 let pcAudioBase = ''
 void phoneLink?.audioBase?.().then((r) => { pcAudioBase = r.base }).catch(() => {})
@@ -365,6 +396,7 @@ function getPlayer(): GalleryPlayer {
   })
   p.onStalled = (stalled) => setEngineBuffering(stalled)
   p.onInterrupted = () => window.dispatchEvent(new Event(STREAM_INTERRUPTED))
+  p.onCut = (at) => void resumeCut(at)
   p.onEnded = () => {
     setEngineBuffering(false)
     events.onEnded?.()
@@ -415,17 +447,22 @@ function getPlayer(): GalleryPlayer {
 function watchGlitches(c: AudioContext) {
   const stats = () => (c as AudioContext & { playbackStats?: { underrunEvents: number; underrunDuration: number } }).playbackStats
   if (!stats()) return
+  logLine('INFO', 'Player', `Audio buffer ${Math.round(c.baseLatency * 1000)} ms, output ${Math.round((c.outputLatency || 0) * 1000)} ms`)
   let last = stats()!.underrunEvents
   let lastS = stats()!.underrunDuration
+  // §112 A: checked every second, so a glitch can be matched to the moment of the song and what the app was doing
   const id = window.setInterval(() => {
     if (c.state === 'closed') return window.clearInterval(id)
     const s = stats()!
     const fresh = s.underrunEvents - last
     // underrunDuration is in seconds
-    if (fresh > 0) logLine('WARN', 'Player', `${fresh} audio glitches in the last minute (spatial ${loadSpatial().mode}, ${Math.round((s.underrunDuration - lastS) * 1000)} ms dropped)`)
+    if (fresh > 0) {
+      const at = player ? player.position : 0
+      logLine('WARN', 'Player', `${fresh} audio glitch${fresh > 1 ? 'es' : ''} at ${Math.floor(at / 60)}:${String(Math.floor(at % 60)).padStart(2, '0')} of "${loaded?.title ?? '?'}" (spatial ${loadSpatial().mode}, ${Math.round((s.underrunDuration - lastS) * 1000)} ms dropped)`)
+    }
     last = s.underrunEvents
     lastS = s.underrunDuration
-  }, 60_000)
+  }, 1000)
 }
 
 /** How much of a song to decode for a quick start. Well over the time the rest takes to arrive. */
@@ -630,14 +667,17 @@ export async function playTrack(t: Track, autostart = true, startAt = 0, exact =
   await setStreamFocus(isPcTrack(t))
   if (mine !== token) return
   if (isPcTrack(t)) {
-    const song = streamSong(t)
-    watchThroughput(t, song.el, lowDataFor(t))
+    const song = streamSong(t, startAt)
+    if (!song.base) watchThroughput(t, song.el, lowDataFor(t))
     p.setBuffer(song, streamLevel(t))
     loaded = t
     partialPlaying = false
     if (pendingSeek !== null) p.seek(pendingSeek)
     pendingSeek = null
     if (wantPlaying) p.play()
+    // the player holds this song now: a pause or seek while it connects goes to it (audit 1); loading stays shown
+    switching = false
+    p.switching = false
     const local = findMatchingLocalTrack(t)
     const ready = await new Promise<boolean | 'low'>((resolve) => {
       song.el.addEventListener('canplay', () => resolve(true), { once: true })
@@ -913,6 +953,8 @@ export function seekTo(seconds: number) {
     void DirectDac.seek({ seconds }).catch(() => {})
   } else if (switching) pendingSeek = seconds
   else if (partialPlaying && player && seconds >= player.duration - 1) seekAfterSwap = seconds
+  // a Low Data stream that starts partway has nothing before its start: it comes again from there
+  else if (streamBase > 0 && seconds < streamBase && loaded) void playTrack(loaded, wantPlaying, seconds, true)
   else {
     seekAfterSwap = null
     player?.seek(seconds)

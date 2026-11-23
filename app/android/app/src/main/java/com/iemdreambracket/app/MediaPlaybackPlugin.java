@@ -70,6 +70,8 @@ public class MediaPlaybackPlugin extends Plugin {
     private String artist;
     private Bitmap art;
     private boolean playing;
+    private boolean shuffle;
+    private String repeat = "off";
 
     /** Bluetooth drop → resume (see the class note). */
     static final long RESUME_WINDOW_MS = 30_000;
@@ -169,6 +171,8 @@ public class MediaPlaybackPlugin extends Plugin {
             @Override public void onSkipToNext() { control("next", null); }
             @Override public void onSkipToPrevious() { control("prev", null); }
             @Override public void onSeekTo(long pos) { control("seek", pos / 1000.0); }
+            // §112 E: the shuffle and repeat buttons beside previous/next
+            @Override public void onCustomAction(String action, android.os.Bundle extras) { control(action, null); }
         });
         IntentFilter f = new IntentFilter();
         f.addAction(ACTION_PREV);
@@ -332,6 +336,8 @@ public class MediaPlaybackPlugin extends Plugin {
         title = call.getString("title", "");
         artist = call.getString("artist", "");
         playing = Boolean.TRUE.equals(call.getBoolean("playing", false));
+        shuffle = Boolean.TRUE.equals(call.getBoolean("shuffle", false));
+        repeat = call.getString("repeat", "off");
         MediaPlaybackService.updateLocks(getContext(), playing);
         double duration = call.getDouble("duration", 0.0);
         double position = call.getDouble("position", 0.0);
@@ -361,7 +367,13 @@ public class MediaPlaybackPlugin extends Plugin {
             } catch (Throwable ignored) {}
         }
         try {
-            session.setPlaybackState(new PlaybackState.Builder()
+            PlaybackState.Builder state = new PlaybackState.Builder();
+            state.addCustomAction(new PlaybackState.CustomAction.Builder("shuffle", shuffle ? "Shuffle on" : "Shuffle off",
+                shuffle ? R.drawable.ic_np_shuffle_on : R.drawable.ic_np_shuffle_off).build());
+            state.addCustomAction(new PlaybackState.CustomAction.Builder("repeat",
+                "one".equals(repeat) ? "Repeat one" : "all".equals(repeat) ? "Repeat all" : "Repeat off",
+                "one".equals(repeat) ? R.drawable.ic_np_repeat_one : "all".equals(repeat) ? R.drawable.ic_np_repeat_all : R.drawable.ic_np_repeat_off).build());
+            session.setPlaybackState(state
                 .setActions(PlaybackState.ACTION_PLAY | PlaybackState.ACTION_PAUSE | PlaybackState.ACTION_PLAY_PAUSE
                     | PlaybackState.ACTION_SKIP_TO_NEXT | PlaybackState.ACTION_SKIP_TO_PREVIOUS
                     | PlaybackState.ACTION_SEEK_TO | PlaybackState.ACTION_STOP)
@@ -396,6 +408,18 @@ public class MediaPlaybackPlugin extends Plugin {
         NotificationManager nm = getContext().getSystemService(NotificationManager.class);
         if (MediaPlaybackService.running) nm.notify(NOTIFICATION_ID, buildNotification(getContext()));
         else nm.cancel(NOTIFICATION_ID);
+        call.resolve();
+    }
+
+    /** §112 E: the mini player's X: paused, and the notification goes until something plays again. */
+    @PluginMethod
+    public void dismiss(PluginCall call) {
+        playing = false;
+        title = null;
+        art = null;
+        release();
+        main.removeCallbacks(pausedTimeout);
+        pausedTimeout.run();
         call.resolve();
     }
 

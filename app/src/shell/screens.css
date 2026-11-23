@@ -532,10 +532,10 @@
 .ms-issue p { margin: 18px 0 0; font-size: 14px; color: var(--text); }
 .ms-log { display: flex; flex-direction: column; gap: 8px; }
 .ms-log-row { padding: 14px 20px; border-radius: var(--radius-card); background: var(--chrome); font-variant-numeric: tabular-nums; }
-.ms-log-row > div { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-dim); }
+.ms-log-row > div { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 13px; color: var(--text-dim); }
 .ms-log-row b { padding: 1px 7px; border-radius: 6px; background: var(--chip); font-size: 12px; font-weight: 700; color: var(--text-dim); }
 .ms-log-row i { font-style: normal; font-weight: 500; color: var(--accent); }
-.ms-log-row p { margin: 8px 0 0; font-size: 15px; color: var(--text-strong); }
+.ms-log-row p { margin: 8px 0 0; font-size: 15px; color: var(--text-strong); overflow-wrap: anywhere; }
 .ms-log-row.warn { background: #2a2414; }
 .ms-log-row.warn b { background: #4a3e12; color: #ffd479; }
 .ms-log-row.error { background: #2f1114; }

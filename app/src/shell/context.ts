@@ -46,6 +46,10 @@ export interface ShellState {
   setPanel: (p: SidePanel) => void
   setNowPlaying: (open: boolean) => void
   setMini: (mini: boolean) => void
+  /** §112 E: the mini player's X: pause, and hide the mini player and the notification until the next play. */
+  closePlayer: () => void
+  /** True after closePlayer, until something plays. */
+  closed: boolean
   shuffleLibrary: () => void
   showToast: (item: ToastItem) => void
   push: (r: Route) => void
