@@ -44,7 +44,7 @@ export function AbCards(props: {
               </span>
               <span className="ab-state">{on ? (props.playing ? 'Listening' : 'Paused') : 'Tap to listen'}</span>
             </button>
-            <button type="button" className="game-btn-primary ab-pick" disabled={disabled} onClick={() => onPick(i)}>
+            <button type="button" className="ms-btn primary ab-pick" disabled={disabled} onClick={() => onPick(i)}>
               {props.pickText(l)}
             </button>
           </div>

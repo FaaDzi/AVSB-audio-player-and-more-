@@ -27,3 +27,12 @@ describe('update check (plan §83)', () => {
     expect(pickUpdate([{ ...rel('v1.2.0'), assets: [] }], '1.1.0', false, true)?.url).toBe('https://x/v1.2.0')
   })
 })
+
+describe('checking again on coming back (§107 D)', () => {
+  it('asks again after a failed check at once, and after an answer only once an hour has passed', async () => {
+    const { dueAgain, RECHECK_MS } = await import('./updates')
+    expect(dueAgain(0, 1000)).toBe(true)
+    expect(dueAgain(1000, 1000 + RECHECK_MS - 1)).toBe(false)
+    expect(dueAgain(1000, 1000 + RECHECK_MS)).toBe(true)
+  })
+})

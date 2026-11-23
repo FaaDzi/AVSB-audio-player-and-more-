@@ -7,6 +7,8 @@ import { audioUrl, levelForTarget } from '../engine'
 import { albumLevel } from '../level'
 import { mixEffectFrom, mixSeconds } from '../mix'
 import type { LibraryData, Track } from '../library'
+import { loadHrirSet } from '../../spatial/hrir'
+import type { SpatialMode } from '../../spatial/types'
 
 const LEAD_IN_S = 8
 const db = (v: number) => (v > 0 ? 20 * Math.log10(v) : -Infinity)
@@ -47,6 +49,13 @@ function cutHalfway(b: AudioBuffer) {
 }
 
 const channels = (b: AudioBuffer) => Array.from({ length: b.numberOfChannels }, (_, i) => b.getChannelData(i))
+
+/** The stage needs an HRIR set for Speakers and 360; the saved setting may be Off, which loads none. */
+async function setSpatial(mode: SpatialMode) {
+  const p = getPlayer()
+  if (mode !== 'off') p.spatial.setHrir(await loadHrirSet('generic'))
+  p.spatial.setMode(mode)
+}
 
 function Listen() {
   const [tracks, setTracks] = useState<Track[]>([])
@@ -220,6 +229,10 @@ function Listen() {
       <p>Play anything above, then swap the sides or tilt the balance. The balance follows the ear when swapped.</p>
       <label><input type="checkbox" data-test="swap" onChange={(e) => getPlayer().setSwap(e.target.checked)} /> Swap left and right</label><br />
       <label>Right side: {balance > 0 ? '+' : ''}{balance} dB <input type="range" min={-12} max={12} step={0.5} value={balance} onChange={(e) => { setBalance(Number(e.target.value)); getPlayer().setBalance(Number(e.target.value)) }} /></label>
+
+      <h2>360 switch (§107 A)</h2>
+      <p>Play anything above, then flip between Off and 360 while it plays. Each switch should be a smooth blend: no repeat, no skip, no bit of an older song.</p>
+      <p>{(['off', 'speakers', '360'] as SpatialMode[]).map((m) => <button key={m} type="button" data-test={`spatial-${m}`} onClick={() => void setSpatial(m)} style={{ marginRight: 8, padding: '8px 16px' }}>{m === 'off' ? 'Off' : m === 'speakers' ? 'Speakers' : '360'}</button>)}</p>
 
       <p><button type="button" onClick={() => player?.pause()} style={{ padding: '8px 16px' }}>Stop</button></p>
       <h2>Meter</h2>

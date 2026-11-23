@@ -1,5 +1,5 @@
 import upmixUrl from './upmix.worklet.ts?worker&url'
-import { UPMIX_OUTPUTS } from './upmixCore'
+import { FRAME, UPMIX_OUTPUTS } from './upmixCore'
 import type { Biquad } from '../eq/biquad'
 import { powerOf } from './earCorrection'
 import type { HrirSet, SpatialMode, SpatialStageApi } from './types'
@@ -8,6 +8,8 @@ import type { HrirSet, SpatialMode, SpatialStageApi } from './types'
 const MODE_FADE_S = 0.04
 /** Head-yaw moves crossfade between two convolver banks over this long; also the fastest update rate. */
 const YAW_FADE_S = 0.05
+/** Extra turn past half a ring step before the banks move (§107 B: hysteresis against head wobble). */
+export const YAW_DEADBAND_DEG = 1
 /** Largest move per crossfade: a fast head turn walks through the ring instead of skipping 10–20° at once. */
 export const YAW_STEP_DEG = 10
 /** The virtual speakers sit at ±this many degrees, like a usual stereo triangle. */
@@ -136,6 +138,14 @@ export function crossfeedMatchGain(sampleRate: number, cutHz = XF_CUT_HZ, feedDb
 }
 
 // ---------- HRIR ring ----------
+
+/** An angle folded into -180…180. */
+const wrapDeg = (d: number) => ((((d + 180) % 360) + 360) % 360) - 180
+
+/** The ring step to aim at for a head yaw: stays on `aimed` until the head is half a step plus the deadband away. */
+export function aimYaw(aimed: number, deg: number, step: number): number {
+  return Math.abs(wrapDeg(deg - aimed)) <= step / 2 + YAW_DEADBAND_DEG ? aimed : Math.round(deg / step) * step
+}
 
 /** One crossfade's move from `shown` toward `target` (the short way round), at most YAW_STEP_DEG. */
 export function nextYaw(shown: number, target: number): number {
@@ -303,6 +313,8 @@ interface UpBank {
   gain: GainNode
   idx: number[] | null
   wired: boolean
+  /** Unplugs this bank once its fade-out is over (its own timer, so the next move doesn't cancel it). */
+  idle?: ReturnType<typeof setTimeout>
 }
 
 interface Bank {
@@ -311,10 +323,14 @@ interface Bank {
   idx: [number, number] | null
   /** Fed from the input split; only while it sounds, since an idle convolver still costs its full CPU. */
   wired: boolean
+  idle?: ReturnType<typeof setTimeout>
 }
 
 /**
  * The spatial stage both players insert before their L/R balance (see types.ts).
+ *
+ * §107 A: every path but 360 goes through `align` first, a delay as long as the 360 splitter's (FRAME), so
+ * switching to or from 360 doesn't jump in time.
  *
  * input ─┬─ dry ─────────────────────────────────────────────────────────────┬─ output
  *        ├─ split ─ bs2b: direct high-boost + delayed low-passed opposite ─ xf ─┤
@@ -335,6 +351,8 @@ export class SpatialStage implements SpatialStageApi {
   private ctx: BaseAudioContext
   private _mode: SpatialMode = 'off'
   private dry: GainNode
+  /** The 360 splitter's latency, in front of dry, crossfeed and the virtual speakers (§107 A). */
+  private align: DelayNode
   private xfSplit: ChannelSplitterNode
   private xf: GainNode
   private xfGain: number
@@ -364,12 +382,12 @@ export class SpatialStage implements SpatialStageApi {
   /** The yaw the banks are aimed at: walks toward `yaw` by at most YAW_STEP_DEG per crossfade (§104: no jumps). */
   private shownYaw = 0
   private yawTimer: ReturnType<typeof setTimeout> | undefined
-  private idleTimer: ReturnType<typeof setTimeout> | undefined
   private fadeEnd = 0
   /** "360" mode: the pan-split worklet, its channel split and two banks of one convolver per source. */
   private up: { node: AudioWorkletNode; split: ChannelSplitterNode; banks: [UpBank, UpBank]; active: number; out: GainNode } | null = null
   private upLoading = false
   private upOn = false
+  private readonly upModule: Promise<boolean>
 
   constructor(ctx: BaseAudioContext) {
     this.ctx = ctx
@@ -382,7 +400,12 @@ export class SpatialStage implements SpatialStageApi {
     this.input = stereo(ctx.createGain()) as GainNode
     this.output = stereo(ctx.createGain()) as GainNode
     this.dry = ctx.createGain()
-    this.input.connect(this.dry).connect(this.output)
+    this.align = ctx.createDelay(0.1)
+    this.align.delayTime.value = FRAME / ctx.sampleRate
+    this.input.connect(this.align).connect(this.dry).connect(this.output)
+    // §109: Chrome runs a worklet module's script on the audio thread, so loading it the first time 360 came on dropped
+    // a block of the song; it loads now, before anything plays (false = no worklet: 360 falls back to speakers)
+    this.upModule = ctx.audioWorklet?.addModule(upmixUrl).then(() => true, () => false) ?? Promise.resolve(false)
 
     this.xfSplit = ctx.createChannelSplitter(2)
     this.xf = ctx.createGain()
@@ -500,7 +523,11 @@ export class SpatialStage implements SpatialStageApi {
 
   setHeadYaw(deg: number) {
     if (!Number.isFinite(deg)) return
-    this.yaw = deg
+    // §107 B: aim at whole ring steps, and only move once the head is a step's half plus 1° away, so a little
+    // wobble around a step's edge doesn't keep a second bank of convolvers crossfading
+    const aim = aimYaw(this.yaw, deg, this.set?.stepDeg ?? 5)
+    if (aim === this.yaw) return
+    this.yaw = aim
     this.scheduleYaw()
   }
 
@@ -514,13 +541,14 @@ export class SpatialStage implements SpatialStageApi {
     const upOk = !!this.set && m === '360' && !!this.up
     const dryOn = !xfOn && !virtualOk && !upOk
     if (upOk && !this.upOn) {
+      this.up!.node.port.postMessage('reset')
       this.input.connect(this.up!.node)
       this.upOn = true
       this.scheduleYaw()
     }
     if (this.up) this.ramp(this.up.out.gain, upOk ? this.gains.speakers * UP_LEVEL : 0)
-    if (xfOn && !this.xfOn) this.input.connect(this.xfSplit)
-    if (virtualOk && !this.vOn) this.input.connect(this.vIn)
+    if (xfOn && !this.xfOn) this.align.connect(this.xfSplit)
+    if (virtualOk && !this.vOn) this.align.connect(this.vIn)
     this.xfOn ||= xfOn
     this.vOn ||= virtualOk
     if (virtualOk) this.scheduleYaw()
@@ -532,11 +560,11 @@ export class SpatialStage implements SpatialStageApi {
     clearTimeout(this.offTimer)
     this.offTimer = setTimeout(() => {
       if (this.xfOn && !(this._mode === 'crossfeed' && this.xfAmountOn)) {
-        this.input.disconnect(this.xfSplit)
+        this.align.disconnect(this.xfSplit)
         this.xfOn = false
       }
       if (this.vOn && !(this.set && (this._mode === 'speakers' || this._mode === 'room'))) {
-        this.input.disconnect(this.vIn)
+        this.align.disconnect(this.vIn)
         this.vOn = false
       }
       if (this._mode !== 'room') this.wireRoom(false)
@@ -591,8 +619,8 @@ export class SpatialStage implements SpatialStageApi {
     this.active = 1 - this.active
     this.fadeEnd = performance.now() + YAW_FADE_S * 1000
     // unplug the faded-out bank once it's silent (unless it's been brought back meanwhile)
-    clearTimeout(this.idleTimer)
-    this.idleTimer = setTimeout(() => {
+    clearTimeout(cur.idle)
+    cur.idle = setTimeout(() => {
       if (this.banks[this.active] !== cur) this.wire(cur, false)
     }, YAW_FADE_S * 1000 + 30)
   }
@@ -630,7 +658,13 @@ export class SpatialStage implements SpatialStageApi {
     if (this.upLoading || this.up) return
     this.upLoading = true
     const ctx = this.ctx
-    void ctx.audioWorklet.addModule(upmixUrl).then(() => {
+    void this.upModule.then((ok) => {
+      if (!ok) {
+        // no worklet (an old WebView): 360 falls back to the two virtual speakers
+        this.upLoading = false
+        if (this._mode === '360') this.setMode('speakers')
+        return
+      }
       const node = new AudioWorkletNode(ctx, 'avsb-upmix', {
         numberOfInputs: 1, numberOfOutputs: 1, outputChannelCount: [UPMIX_OUTPUTS],
         channelCount: 2, channelCountMode: 'explicit', channelInterpretation: 'speakers',
@@ -656,10 +690,6 @@ export class SpatialStage implements SpatialStageApi {
       }
       this.up = { node, split, banks: [bank(1), bank(0)], active: 0, out }
       this.apply()
-    }, () => {
-      // no worklet (an old WebView): 360 falls back to the two virtual speakers
-      this.upLoading = false
-      if (this._mode === '360') this.setMode('speakers')
     })
   }
 
@@ -693,8 +723,8 @@ export class SpatialStage implements SpatialStageApi {
     }
     up.active = 1 - up.active
     this.fadeEnd = performance.now() + YAW_FADE_S * 1000
-    clearTimeout(this.idleTimer)
-    this.idleTimer = setTimeout(() => {
+    clearTimeout(cur.idle)
+    cur.idle = setTimeout(() => {
       if (this.up && this.up.banks[this.up.active] !== cur) this.wireUp(cur, false)
     }, YAW_FADE_S * 1000 + 30)
   }

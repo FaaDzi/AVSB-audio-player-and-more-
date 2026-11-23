@@ -38,19 +38,26 @@ export function AppUpdateRow() {
       const t = (e as TouchEvent).touches
       start = page.scrollTop <= 0 && t.length === 1 ? t[0].clientY : null
     }
-    const up = (e: Event) => {
-      if (start === null) return
-      const pulled = (e as TouchEvent).changedTouches[0].clientY - start
-      start = null
-      if (pulled < 120 || busy) return
+    // §107 D: the check starts while the finger is still pulling (the card shows at once), and a swipe that
+    // began lower down counts from the moment the page reaches its top
+    const move = (e: Event) => {
+      const t = (e as TouchEvent).touches
+      if (t.length !== 1 || page.scrollTop > 0) return
+      if (start === null) start = t[0].clientY
+      if (t[0].clientY - start < 80 || busy) return
+      // one check per pull: nothing more until the finger lifts
+      start = Infinity
       busy = true
       setPop({ checking: true })
       void checkNow().then((u) => { busy = false; setPop({ checking: false, found: u }) })
     }
+    const up = () => { start = null }
     page.addEventListener('touchstart', down, { passive: true })
+    page.addEventListener('touchmove', move, { passive: true })
     page.addEventListener('touchend', up, { passive: true })
     return () => {
       page.removeEventListener('touchstart', down)
+      page.removeEventListener('touchmove', move)
       page.removeEventListener('touchend', up)
     }
   }, [])

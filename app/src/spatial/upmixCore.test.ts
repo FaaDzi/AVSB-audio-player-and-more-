@@ -71,3 +71,20 @@ describe('360 upmix: pan split (§104 D)', () => {
     expect(Math.abs(10 * Math.log10(sum / eIn))).toBeLessThan(1.5)
   })
 })
+
+describe('PanSplitter.reset (§107 A)', () => {
+  it('plays nothing of the old audio after a reset', () => {
+    const sp = new PanSplitter()
+    const outs = Array.from({ length: UPMIX_OUTPUTS }, () => new Float32Array(BLOCK))
+    const loud = new Float32Array(BLOCK).map((_, i) => Math.sin(i / 3))
+    for (let q = 0; q < 20; q++) sp.process(loud, loud, outs)
+    sp.reset()
+    const quiet = new Float32Array(BLOCK)
+    let peak = 0
+    for (let q = 0; q < (2 * FRAME) / BLOCK; q++) {
+      sp.process(quiet, quiet, outs)
+      for (const o of outs) for (const v of o) peak = Math.max(peak, Math.abs(v))
+    }
+    expect(peak).toBe(0)
+  })
+})

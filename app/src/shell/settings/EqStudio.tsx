@@ -2,7 +2,7 @@
 import '../eqStudio.css'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { loadSpatial, onSpatialChange } from '../../spatial/settings'
-import { Dialog, Icon, IconButton, Menu } from '../ui'
+import { Dialog, Icon, IconButton, Menu, PickSheet } from '../ui'
 import { Slider } from '../PlayerBar'
 import type { Database } from '../database/catalog'
 import { DevicePickerModal } from '../sound/AudioProfileSheet'
@@ -374,20 +374,20 @@ export function AutoEqCard(props: {
       {/* §96: the AutoEQ target is one menu, as in PEQdB; "Another device" opens the picker */}
       <label className="ms-eqlab-target">
         <span>Aim at</span>
-        <select
-          aria-label="AutoEQ target"
+        <PickSheet
+          label="AutoEQ target"
+          title="Aim at"
           value={lab.aim.kind === 'target' ? `t:${lab.aim.name}` : aimDevice ? 'device' : ''}
-          onChange={(e) => {
-            const v = e.target.value
+          shown={lab.aim.kind === 'off' ? 'Choose a target…' : undefined}
+          onPick={(v) => {
             if (v === 'pick') setPicking(true)
             else if (v.startsWith('t:')) props.onLab({ aim: { kind: 'target', name: v.slice(2) } })
           }}
-        >
-          {lab.aim.kind === 'off' && <option value="">Choose a target…</option>}
-          {targets.map((t) => <option key={t.name} value={`t:${t.name}`}>{t.name}</option>)}
-          {aimDevice && <option value="device">{aimDevice.name}</option>}
-          <option value="pick">Another device…</option>
-        </select>
+          groups={[
+            { title: 'Targets', options: targets.map((t) => ({ value: `t:${t.name}`, label: t.name, icon: 'track_changes' })) },
+            { title: 'Sound like a device', options: [...(aimDevice ? [{ value: 'device', label: aimDevice.name, icon: 'headphones' }] : []), { value: 'pick', label: 'Another device…', icon: 'search' }] },
+          ]}
+        />
       </label>
 
       {lab.aim.kind !== 'off' && (
@@ -576,7 +576,7 @@ export function FineTuneCard(props: {
 interface DfFile { freqs: number[]; sets: Record<string, number[]> }
 let dfLoading: Promise<DfFile | null> | null = null
 /** public/data/hrir/df.json (scripts/build_hrtf_df.py): each bundled HRTF's diffuse field against the generic one. */
-const loadDf = () =>
+export const loadDf = () =>
   (dfLoading ??= fetch(`${import.meta.env.BASE_URL}data/hrir/df.json`).then((r) => (r.ok ? (r.json() as Promise<DfFile>) : null)).catch(() => null))
 
 /**
@@ -597,15 +597,18 @@ export function useHrtfTilt(grid: ArrayLike<number> | null, strength: number): {
   const [hrirId, setHrirId] = useState(() => loadSpatial().hrirId)
   useEffect(() => { void loadDf().then(setDf) }, [])
   useEffect(() => onSpatialChange((s) => setHrirId(s.hrirId)), [])
-  return useMemo(() => {
-    const d = df?.sets[hrirId]
-    if (!df || !d || !grid || !strength) return null
-    const [lo, hi] = [df.freqs[0], df.freqs[df.freqs.length - 1]]
-    const raw = Float64Array.from(grid, (hz) => (hz < lo || hz > hi ? 0 : curveAt(df.freqs, d, hz) * strength * hrtfReach(hz)))
-    // §91 E5: a third of an octave smooth, like Standard's treble rule: a head's fine ripples don't belong in the EQ
-    const ppo = Math.round(1 / Math.log2(grid[1] / grid[0]))
-    return { name: hrirId.replace('hutubs-', 'pp'), curve: smoothLog(raw, ppo, 1 / 3) }
-  }, [df, hrirId, grid, strength])
+  return useMemo(() => hrtfTilt(df, hrirId, grid, strength), [df, hrirId, grid, strength])
+}
+
+/** useHrtfTilt's curve, for use outside React (§110: an applied AutoEQ following a new HRTF). */
+export function hrtfTilt(df: DfFile | null, hrirId: string, grid: ArrayLike<number> | null, strength: number): { name: string; curve: Float64Array } | null {
+  const d = df?.sets[hrirId]
+  if (!df || !d || !grid || !strength) return null
+  const [lo, hi] = [df.freqs[0], df.freqs[df.freqs.length - 1]]
+  const raw = Float64Array.from(grid, (hz) => (hz < lo || hz > hi ? 0 : curveAt(df.freqs, d, hz) * strength * hrtfReach(hz)))
+  // §91 E5: a third of an octave smooth, like Standard's treble rule: a head's fine ripples don't belong in the EQ
+  const ppo = Math.round(1 / Math.log2(grid[1] / grid[0]))
+  return { name: hrirId.replace('hutubs-', 'pp'), curve: smoothLog(raw, ppo, 1 / 3) }
 }
 
 // ---- an imported EQ: which device is it for? (plan §85 B)

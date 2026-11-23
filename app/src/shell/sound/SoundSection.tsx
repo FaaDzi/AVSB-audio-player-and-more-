@@ -3,7 +3,7 @@
 // Crossfeed (CanOpener-style) and Virtual Speakers & HRTF (room/speaker stage, SOFA HRTF profiles,
 // Head Size ITD scaling, Ear Canal Resonance compensation, and Head Tracking).
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Icon } from '../ui'
+import { Icon, PickSheet } from '../ui'
 import { Slider } from '../PlayerBar'
 import { useDatabase } from '../database/DatabasePage'
 import { listModels, type Database } from '../database/catalog'
@@ -13,7 +13,7 @@ import { loadFit } from '../../fit/fit'
 import { kindOfIem, type CatalogKind } from '../../data/catalog'
 import { DEFAULT_TARGET } from '../../gallery/gallery'
 import { useRefs } from '../tournament/engine'
-import { engineForTests, engineSampleRate } from '../engine'
+import { appPlayer, engineForTests, engineSampleRate, hrtfTestClip } from '../engine'
 import { kindDetail } from '../tournament/kinds'
 import { familyOf, linearLatencyMs, soundCurve, targetsFor, type SoundResult } from './soundCurve'
 import { setSound, useSound } from './soundState'
@@ -152,13 +152,23 @@ function SoundGraph({ grid, r }: { grid: ArrayLike<number>; r: SoundResult }) {
  * Virtual Speaker Stage & Room reflections, SOFA HRTF selector + custom .sofa upload,
  * Head Size (cm / ITD scale), Ear Canal Resonance compensation, and Camera Head Tracking.
  */
+/** §107 G: AutoEQ's "Pick HRTF" asks for the test to be open when the Spatial page shows. */
+let hrtfTestWanted = false
+export const openHrtfTestOnArrival = () => { hrtfTestWanted = true }
+
 export function SpatialCrossfeedSection() {
   const [spatial, setSpatialState] = useState<SpatialSettings>(() => loadSpatial())
   const [hrirList, setHrirList] = useState<HrirIndexEntry[]>([])
   const [importedName, setImportedName] = useState<string | null>(null)
   const [sofaBusy, setSofaBusy] = useState(false)
   const [sofaError, setSofaError] = useState<string | null>(null)
-  const [pickingHrtf, setPickingHrtf] = useState(false)
+  const [pickingHrtf, setPickingHrtf] = useState(() => {
+    const wanted = hrtfTestWanted
+    hrtfTestWanted = false
+    return wanted
+  })
+  const hrtfCard = useRef<HTMLDivElement>(null)
+  useEffect(() => { if (pickingHrtf) hrtfCard.current?.scrollIntoView({ block: 'start', behavior: 'smooth' }) }, []) // eslint-disable-line react-hooks/exhaustive-deps
   const [xfCutHz, setXfCutHz] = useState<number>(() => readStoredNumber(XF_CUT_KEY, 700))
   const [earResonancePct, setEarResonancePct] = useState<number>(() => {
     try {
@@ -442,25 +452,48 @@ export function SpatialCrossfeedSection() {
         </div>
 
         {/* SOFA HRTF Profile Selector */}
-        <div className="ms-snd-row">
-          <small>SOFA HRTF profile (built-in KEMAR / SADIE II / IRCAM / custom .sofa)</small>
+        <div className="ms-snd-row" ref={hrtfCard}>
+          {/* §107 G: the by-ear test, up front: which of two sounds comes from in front of you */}
+          <button type="button" className={`ms-hrtf-find${pickingHrtf ? ' open' : ''}`} aria-expanded={pickingHrtf} onClick={() => setPickingHrtf((v) => !v)}>
+            <Icon name="hearing" size={30} />
+            <span className="grow">
+              <b>Find your HRTF</b>
+              <small>Yours: {hrirList.find((e) => e.id === spatial.hrirId)?.name ?? (spatial.hrirId === IMPORTED_ID && importedName ? importedName : 'Generic')}</small>
+            </span>
+            <Icon name={pickingHrtf ? 'expand_less' : 'arrow_forward'} size={24} />
+          </button>
+          {pickingHrtf && (
+            <div className="ms-hrtf-test">
+              <HrtfPicker
+                player={appPlayer()}
+                library={[]}
+                manifest={{ categories: {} as never, songs: [] }}
+                loadClip={hrtfTestClip}
+                hrirId={spatial.hrirId}
+                onPick={(id) => {
+                  updateSpatial({ hrirId: id })
+                  setPickingHrtf(false)
+                }}
+              />
+            </div>
+          )}
+          <small>HRTF profile</small>
           <div className="ms-snd-hrtf">
-            <select
-              aria-label="HRTF Profile"
-              value={spatial.hrirId}
-              onChange={(e) => updateSpatial({ hrirId: e.target.value, mode: speakersOn ? spatial.mode : 'speakers' })}
+            <PickSheet
+              label="HRTF Profile"
+              title="HRTF profile"
               className="ms-snd-select"
-            >
-              <option value="kemar">MIT KEMAR (Diffuse-Field / Standard Pinna)</option>
-              {hrirList
-                .filter((e) => e.id !== 'kemar')
-                .map((entry) => (
-                  <option key={entry.id} value={entry.id}>
-                    {entry.name} ({entry.source})
-                  </option>
-                ))}
-              {importedName && <option value={IMPORTED_ID}>Custom SOFA: {importedName}</option>}
-            </select>
+              value={spatial.hrirId}
+              onPick={(v) => {
+                if (v === 'find') setPickingHrtf(true)
+                else updateSpatial({ hrirId: v, mode: speakersOn ? spatial.mode : 'speakers' })
+              }}
+              groups={[
+                { options: [{ value: 'find', label: 'Find your HRTF', note: 'A short blind test by ear', icon: 'hearing' }] },
+                { title: 'Measured heads', options: hrirList.map((e) => ({ value: e.id, label: e.name, note: e.source })) },
+                { title: 'Imported', options: importedName ? [{ value: IMPORTED_ID, label: importedName, note: 'Your .sofa file', icon: 'upload_file' }] : [] },
+              ]}
+            />
 
             <input
               ref={sofaInputRef}
@@ -486,31 +519,8 @@ export function SpatialCrossfeedSection() {
                 Remove {importedName}
               </button>
             )}
-            <button
-              type="button"
-              className="ms-btn text"
-              onClick={() => setPickingHrtf((v) => !v)}
-            >
-              {pickingHrtf ? 'Close ear matcher' : 'Pick HRTF by ear…'}
-            </button>
           </div>
           {sofaError && <p className="ms-tz-note danger">{sofaError}</p>}
-          {pickingHrtf && (() => {
-            const p = engineForTests().player
-            if (!p) return null
-            return (
-              <HrtfPicker
-                player={p}
-                library={[]}
-                manifest={{ categories: {} as never, songs: [] }}
-                hrirId={spatial.hrirId}
-                onPick={(id) => {
-                  updateSpatial({ hrirId: id })
-                  setPickingHrtf(false)
-                }}
-              />
-            )
-          })()}
         </div>
 
         {/* Head Size (cm / ITD scale) & Ear Canal Resonance compensation */}

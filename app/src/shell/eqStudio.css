@@ -182,11 +182,17 @@
 /* §106 G: the AutoEQ button at the left of the preset name (was a plain music icon) */
 .ms-eq-autobtn { flex: none; width: 40px; height: 40px; margin-left: -6px; display: grid; place-items: center; border-radius: 50%; background: color-mix(in srgb, var(--accent) 22%, transparent); color: var(--accent); touch-action: manipulation; }
 .ms-eq-autobtn:active { background: var(--accent); color: var(--on-accent); }
-.ms-eq-presetpick select, .ms-eqlab-target select {
+.ms-eq-presetpick .ms-pick, .ms-eqlab-target .ms-pick {
   min-width: 0; flex: 1; height: 38px; padding: 0 10px; border-radius: 10px; border: 1px solid var(--hairline);
   background: rgb(var(--ink) / 0.05); color: var(--text-strong); font: inherit; font-size: 14px;
 }
-.ms-eq-presetpick select { font-weight: 600; }
+.ms-eq-presetpick .ms-pick { font-weight: 600; }
+/* §107 F: the field that opens a PickSheet, laid out like the select it replaced */
+.ms-pick { display: flex; align-items: center; gap: 6px; text-align: left; cursor: pointer; }
+.ms-pick-list { display: flex; flex-direction: column; gap: 14px; max-height: 60vh; overflow-y: auto; }
+.ms-pick-text { display: flex; flex-direction: column; text-align: left; min-width: 0; }
+.ms-pick-text small { color: var(--text-dim); }
+.ms-pick-check { color: var(--accent); display: grid; }
 .ms-eqlab-target { display: flex; align-items: center; gap: 10px; margin-top: 10px; color: var(--text-dim); font-size: 13px; }
 
 /* filter cards, coloured by type */

@@ -580,3 +580,49 @@ export function TopBar({ title, back, actions }: { title?: string; back?: () => 
     </div>
   )
 }
+
+export interface PickOption { value: string; label: string; note?: string; icon?: string }
+
+/**
+ * §107 F: a choice that opens the app's own sheet (grouped rows, a check on the current one) in place of the
+ * system's plain <select> list. The field looks like the old select, so layouts stay as they were.
+ */
+export function PickSheet({ label, title, value, shown, groups, onPick, className }: {
+  label: string
+  title: string
+  value: string
+  /** What the field shows; defaults to the chosen option's label. */
+  shown?: string
+  groups: { title?: string; options: PickOption[] }[]
+  onPick: (value: string) => void
+  className?: string
+}) {
+  const [open, setOpen] = useState(false)
+  const current = groups.flatMap((g) => g.options).find((o) => o.value === value)
+  return (
+    <>
+      <button type="button" className={`ms-pick${className ? ` ${className}` : ''}`} aria-label={label} aria-haspopup="dialog" onClick={() => setOpen(true)}>
+        <span className="grow ms-ellipsis">{shown ?? current?.label ?? value}</span>
+        <Icon name="expand_more" size={20} />
+      </button>
+      {open && (
+        <Dialog title={title} onClose={() => setOpen(false)}>
+          <div className="ms-pick-list">
+            {groups.filter((g) => g.options.length > 0).map((g, i) => (
+              <div key={g.title ?? i} className="ms-profile-group">
+                {g.title && <span className="ms-profile-group-title">{g.title}</span>}
+                {g.options.map((o) => (
+                  <button type="button" key={o.value} className={`ms-profile-item${o.value === value ? ' active' : ''}`} onClick={() => { setOpen(false); onPick(o.value) }}>
+                    {o.icon && <Icon name={o.icon} size={20} />}
+                    <span className="grow ms-pick-text"><b>{o.label}</b>{o.note && <small>{o.note}</small>}</span>
+                    {o.value === value && <span className="ms-pick-check"><Icon name="check" size={20} /></span>}
+                  </button>
+                ))}
+              </div>
+            ))}
+          </div>
+        </Dialog>
+      )}
+    </>
+  )
+}

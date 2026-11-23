@@ -88,6 +88,8 @@ class LinkPlugin : Plugin() {
         private const val POLL_MS = 10_000L
         /** A hello is tiny: no answer in this long means the connection is dead (e.g. the network changed under it). */
         private const val HELLO_TIMEOUT_MS = 5_000L
+        /** §109: the same while song data is arriving: the hello queues behind it on a slow link. */
+        private const val BUSY_HELLO_TIMEOUT_MS = 30_000L
     }
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -267,6 +269,7 @@ class LinkPlugin : Plugin() {
      */
     private fun cachingStream(src: InputStream, writer: CacheWriter?, lowData: Boolean, release: () -> Unit): InputStream = object : InputStream() {
         private var done = false
+        init { openStreams.incrementAndGet() }
 
         override fun read(): Int {
             val one = ByteArray(1)
@@ -285,6 +288,7 @@ class LinkPlugin : Plugin() {
                 writer?.finish()
             } else if (n > 0) {
                 total += n
+                dataAt = SystemClock.elapsedRealtime()
                 writer?.write(b, off, n)
             }
             return n
@@ -293,6 +297,7 @@ class LinkPlugin : Plugin() {
         override fun close() {
             if (done) return
             done = true
+            openStreams.decrementAndGet()
             if (writer != null && writer.open && detached.get() < MAX_DETACHED && (lowData || !onMobileData())) {
                 detached.incrementAndGet()
                 scope.launch(Dispatchers.IO) {
@@ -627,6 +632,9 @@ class LinkPlugin : Plugin() {
                 if (paired()) onPcMasterDisconnect()
                 throw e
             }
+            // §109: one slow request (a song start queued behind others on a relay) isn't a dead connection while song
+            // data still arrives on it: closing it stopped every song stream with it
+            if (busy() && runCatching { c1.closeReason() }.getOrNull() == null) throw e
             // a dropped connection (network switch, PC asleep): dial again once. The old one is closed, not just
             // forgotten (the PC kept every forgotten one open until it timed out), and only if it is still the
             // shared one (another caller may already have dialled a fresh one).
@@ -765,11 +773,24 @@ class LinkPlugin : Plugin() {
 
     @Volatile private var lastHelloAt = 0L
 
+    /**
+     * §109: when song data last arrived. On a slow relay a song's ranges fill the link and a hello waits behind them;
+     * timing it out closed the connection and every song stream on it (a stop every ~25 s on mobile data). Data
+     * still arriving shows the connection is alive.
+     */
+    @Volatile private var dataAt = 0L
+    /** Song streams the player holds open (it stops reading while its buffer is full, so data can pause for a while). */
+    private val openStreams = java.util.concurrent.atomic.AtomicInteger(0)
+    private fun busy() = openStreams.get() > 0 || SystemClock.elapsedRealtime() - dataAt < 3_000L
+
     /** One hello. No answer in HELLO_TIMEOUT_MS means the connection is dead: it's dropped, so the next request dials again. */
     private suspend fun hello(): JSONObject {
         val head = try {
-            withConnection { c -> withTimeout(HELLO_TIMEOUT_MS) { ask(c, withAbout(JSONObject().put("op", "hello"))) }.first }
+            withConnection { c -> withTimeout(if (busy()) BUSY_HELLO_TIMEOUT_MS else HELLO_TIMEOUT_MS) { ask(c, withAbout(JSONObject().put("op", "hello"))) }.first }
         } catch (e: Exception) {
+            // §109: kept while a song still streams on it (see busy)
+            val live = conn
+            if (busy() && live != null && runCatching { live.closeReason() }.getOrNull() == null) throw e
             connLock.withLock {
                 runCatching { conn?.close(0L, "no answer".toByteArray()) }
                 conn = null

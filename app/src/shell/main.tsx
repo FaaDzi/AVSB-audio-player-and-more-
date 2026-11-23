@@ -17,6 +17,7 @@ import { startTheme } from './theme'
 import { startRainbowPulse } from './rainbowPulse'
 import { engineForTests, startEngineSettings } from './engine'
 import { startLogs } from './logs'
+import { followAutoEq } from './sound/autoEqFollow'
 
 window.addEventListener('error', (e) => {
   console.error('WINDOW ERROR:', e.message, e.error?.stack || e.error)
@@ -30,6 +31,7 @@ startTheme()
 startRainbowPulse()
 startEngineSettings()
 followPhoneSpeaker()
+followAutoEq()
 if (import.meta.env.DEV) (window as unknown as { shellEngine: unknown }).shellEngine = engineForTests
 
 createRoot(document.getElementById('root')!).render(

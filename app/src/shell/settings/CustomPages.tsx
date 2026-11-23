@@ -1,9 +1,9 @@
-import { SpatialCrossfeedSection } from '../sound/SoundSection'
+import { openHrtfTestOnArrival, SpatialCrossfeedSection } from '../sound/SoundSection'
 import { version } from '../../../package.json'
 import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { isAndroid } from '../../platform'
 import { createPortal } from 'react-dom'
-import { Chip, Dialog, Icon, IconButton, Menu, useLongPress } from '../ui'
+import { Chip, Dialog, Icon, IconButton, Menu, PickSheet, useLongPress } from '../ui'
 import { useShell } from '../context'
 import { Slider } from '../PlayerBar'
 import { BANDS, carryOver, DEFAULT_POLAR, DEFAULT_SHAPER, EQ_DEFAULT, eqFilters, getPresets, presetFields, presetFrom, readPreset, setEq, setPresets, useEq, withPreset, type EqState, type SavedPreset, type PolarParams, type ShaperParams } from '../eqState'
@@ -44,6 +44,7 @@ import { useRefs } from '../tournament/engine'
 import { currentSound, setPaused } from '../engine'
 import { setSound, useSound } from '../sound/soundState'
 import { loadFit } from '../../fit/fit'
+import { rememberAutoEq } from '../sound/autoEqFollow'
 import { airMode } from '../../audio/filter'
 import { resolveStyleScope, type ThemeStyleScope } from '../theme'
 
@@ -595,6 +596,7 @@ export function Equalizer() {
     setUndo([])
     // automatic headroom already makes room for the boosts
     onEqTweaked({ mode: 'advanced+', filters: r.filters, preamp: eq.headroom ? 0 : r.preamp, on: true })
+    rememberAutoEq(activeGear, r.filters, eq.headroom ? 0 : r.preamp)
     showToast(`${activeGearName} → ${targetName}: ${r.beforeDb.toFixed(1)} → ${r.afterDb.toFixed(1)} dB off target`)
   }
 
@@ -722,26 +724,22 @@ export function Equalizer() {
             <Icon name="auto_fix_high" size={20} />
           </button>
           <label className="ms-eq-presetpick">
-            <select
-              aria-label="Preset"
+            <PickSheet
+              label="Preset"
+              title="Preset"
               value={preset}
-              onChange={(e) => {
-                const name = e.target.value
+              shown={preset}
+              onPick={(name) => {
                 const mineToo = saved.find((p) => p.name === name)
                 if (mineToo) applySaved(mineToo)
                 else if (PRESETS[name]) applyPreset(name)
               }}
-            >
-              {!PRESETS[preset] && !saved.some((p) => p.name === preset) && <option value={preset}>{preset}</option>}
-              <optgroup label="Built in">
-                {Object.keys(PRESETS).map((name) => <option key={name} value={name}>{name}</option>)}
-              </optgroup>
-              {saved.length > 0 && (
-                <optgroup label="Saved">
-                  {saved.map((p) => <option key={p.name} value={p.name}>{p.name}</option>)}
-                </optgroup>
-              )}
-            </select>
+              groups={[
+                { title: `Saved for ${activeGearName}`, options: saved.filter((p) => p.device === activeGear).map((p) => ({ value: p.name, label: p.name, icon: 'equalizer' })) },
+                { title: 'Built in', options: Object.keys(PRESETS).map((name) => ({ value: name, label: name })) },
+                { title: 'Saved for other gear', options: saved.filter((p) => p.device !== activeGear).map((p) => ({ value: p.name, label: p.name, icon: 'equalizer' })) },
+              ]}
+            />
           </label>
           <IconButton icon="bookmark_add" label="Save as a preset" onClick={() => setNaming({ was: null, name: '' })} />
           <IconButton icon="restart_alt" label="Reset" onClick={() => setResetting(true)} />
@@ -776,7 +774,7 @@ export function Equalizer() {
             onLab={(patch) => setLab(activeGear, patch)}
             onApply={applyAuto}
             onPickGear={() => go({ page: 'settings', section: 'gear' })}
-            onPickHrtf={() => go({ page: 'settings', section: 'spatial' })}
+            onPickHrtf={() => { openHrtfTestOnArrival(); go({ page: 'settings', section: 'spatial' }) }}
             warmth={warmth}
             onWarmth={setWarmth}
           />

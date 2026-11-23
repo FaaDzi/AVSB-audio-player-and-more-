@@ -12,6 +12,8 @@ import { useSound } from './soundState'
 import { applyProfileItem, setProfileItemStrength, useGearProfile } from './gearProfiles'
 import { copyCurrentAimToEq } from './copyEq'
 import { AudioProfileSheet } from './AudioProfileSheet'
+import { useMyEq } from './myEq'
+import { Icon } from '../ui'
 
 export function GearCircleIndicator({ size = 32 }: { size?: number }) {
   const { showToast, go, setNowPlaying } = useShell()
@@ -29,6 +31,8 @@ export function GearCircleIndicator({ size = 32 }: { size?: number }) {
   }, [profile, sound.aim, sound.bypass])
 
   const strength = activeItem ? activeItem.strength : 100
+  // §107 E: one of your saved EQs for this gear is playing (the target is Raw then)
+  const myEq = useMyEq(gear.active).active
   const isRaw = !activeItem
 
   const handleCopyEq = async () => {
@@ -115,7 +119,7 @@ export function GearCircleIndicator({ size = 32 }: { size?: number }) {
   } else {
     menuItems.push(
       {
-        label: profile.items.length === 0 ? 'Raw audio with no changes' : 'Raw Audio Gear (Pure sound)',
+        label: myEq ? `Your EQ: ${myEq.name}` : profile.items.length === 0 ? 'Raw audio with no changes' : 'Raw Audio Gear (Pure sound)',
         heading: true,
       },
       {
@@ -132,7 +136,7 @@ export function GearCircleIndicator({ size = 32 }: { size?: number }) {
   }
 
   const tooltipText = isRaw
-    ? (profile.items.length === 0
+    ? myEq ? `Your EQ: ${myEq.name} · Tap to switch` : (profile.items.length === 0
       ? 'Raw audio with no changes · Tap to configure target preferences'
       : 'Raw audio gear (pure sound) · Tap to choose target or device to test')
     : `${activeItem.name} (${strength}%) · Tap to switch or right-click / hold to copy EQ`
@@ -141,9 +145,9 @@ export function GearCircleIndicator({ size = 32 }: { size?: number }) {
     <>
       <button
         type="button"
-        className={`ms-gear-circle-btn${isRaw ? ' raw' : ' active'}`}
+        className={`ms-gear-circle-btn${isRaw ? (myEq ? ' my-eq' : ' raw') : ' active'}`}
         style={{ width: size, height: size }}
-        aria-label={isRaw ? (profile.items.length === 0 ? 'Raw audio with no changes' : 'Raw audio gear (pure sound)') : `Hearing ${activeItem.name} (${strength}%)`}
+        aria-label={isRaw && myEq ? `Your EQ: ${myEq.name}` : isRaw ? (profile.items.length === 0 ? 'Raw audio with no changes' : 'Raw audio gear (pure sound)') : `Hearing ${activeItem.name} (${strength}%)`}
         title={tooltipText}
         onClick={() => setSheetOpen(true)}
         onContextMenu={(e) => {
@@ -154,7 +158,7 @@ export function GearCircleIndicator({ size = 32 }: { size?: number }) {
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
       >
-        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="ms-gear-circle-svg">
+        {isRaw && myEq ? <Icon name="equalizer" size={Math.round(size * 0.6)} /> : <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="ms-gear-circle-svg">
           {/* Base track */}
           <circle
             cx={size / 2}
@@ -181,7 +185,7 @@ export function GearCircleIndicator({ size = 32 }: { size?: number }) {
               className="ms-gear-circle-arc"
             />
           )}
-        </svg>
+        </svg>}
       </button>
 
       {sheetOpen && <AudioProfileSheet onClose={() => setSheetOpen(false)} />}

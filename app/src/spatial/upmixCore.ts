@@ -103,6 +103,12 @@ export class PanSplitter {
     }
   }
 
+  /** §107 A: forget the past (input, overlap-add tails, smoothed spectra), so a restart doesn't play old audio. */
+  reset() {
+    for (const a of [this.bufL, this.bufR, this.sLL, this.sRR, this.sLRr, this.sLRi, ...this.acc, ...this.ready]) a.fill(0)
+    this.fill = 0
+  }
+
   /** Processes one block in place of the stereo input; `outs` gets UPMIX_OUTPUTS channels of the same length. */
   process(inL: Float32Array, inR: Float32Array, outs: Float32Array[]) {
     const n = inL.length
@@ -186,7 +192,9 @@ export class PanSplitter {
       const acc = this.acc[k]
       // sqrt-Hann² = Hann, which sums to 2 at 75 % overlap
       for (let i = 0; i < FRAME; i++) acc[i] += re[i] * win[i] * 0.5
-      this.ready[k].set(acc.subarray(0, HOP))
+      // a copy loop, not subarray(): nothing allocated on the audio thread (§107 B)
+      const ready = this.ready[k]
+      for (let i = 0; i < HOP; i++) ready[i] = acc[i]
       acc.copyWithin(0, HOP)
       acc.fill(0, FRAME - HOP)
     }

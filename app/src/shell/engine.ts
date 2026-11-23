@@ -212,7 +212,7 @@ export function findHigherQualityPcTrack(t: Track): Track | undefined {
 /**
  * Resolves the optimal version of a track based on Data & Network settings:
  * 1. Offline Mode: Restricted strictly to local files or saved offline tracks.
- * 2. Low Data Mode: Strict Local-First Prioritization (0 MB cellular data used).
+ * 2. Low Data Mode, or Normal on mobile data: Local-First Prioritization (0 MB cellular data used).
  * 3. Normal Mode: Highest quality between PC and phone wins.
  */
 export function resolveBestTrack(t: Track): Track | null {
@@ -234,12 +234,14 @@ export function resolveBestTrack(t: Track): Track | null {
     return t
   }
 
-  if (isLowData) {
+  // §111: on mobile data a lossless stream from the PC rarely has sound within 4.5 s, so the phone's copy plays at once
+  // shortcut: a PC song already whole in the song cache also gives way to the phone's copy; check the cache if that matters
+  if (isLowData || onMobileData()) {
     // Local-First Prioritization: Always prefer phone's local track over PC stream to save data
     if (isPc) {
       const local = findMatchingLocalTrack(t)
       if (local) {
-        logLine('INFO', 'Player', `Low Data Mode: Playing local copy for "${t.title}" (0 MB data used).`)
+        logLine('INFO', 'Player', `${isLowData ? 'Low Data Mode' : 'Mobile data'}: Playing local copy for "${t.title}" (0 MB data used).`)
         return local
       }
     }
@@ -402,7 +404,28 @@ function getPlayer(): GalleryPlayer {
   applyEq()
   applyVolume()
   logLine('INFO', 'Player', `Audio started at ${ctx.sampleRate} Hz`)
+  watchGlitches(nextCtx)
   return p
+}
+
+/**
+ * §107 C: audio glitches (blocks the audio thread didn't finish in time), from Chrome's playbackStats (shipped
+ * under that name, not the draft's playoutStats) where the WebView has it: logged once a minute when new ones happened.
+ */
+function watchGlitches(c: AudioContext) {
+  const stats = () => (c as AudioContext & { playbackStats?: { underrunEvents: number; underrunDuration: number } }).playbackStats
+  if (!stats()) return
+  let last = stats()!.underrunEvents
+  let lastS = stats()!.underrunDuration
+  const id = window.setInterval(() => {
+    if (c.state === 'closed') return window.clearInterval(id)
+    const s = stats()!
+    const fresh = s.underrunEvents - last
+    // underrunDuration is in seconds
+    if (fresh > 0) logLine('WARN', 'Player', `${fresh} audio glitches in the last minute (spatial ${loadSpatial().mode}, ${Math.round((s.underrunDuration - lastS) * 1000)} ms dropped)`)
+    last = s.underrunEvents
+    lastS = s.underrunDuration
+  }, 60_000)
 }
 
 /** How much of a song to decode for a quick start. Well over the time the rest takes to arrive. */
@@ -543,9 +566,9 @@ function startLevel(t: Track, start: AudioBuffer) {
   return levelForTarget(albumOrOwn(t, own), Number(getSetting('normpreamp') ?? 0))
 }
 
-/** Loads and plays a song. A newer call cancels this one, however far it got. */
-export async function playTrack(t: Track, autostart = true, startAt = 0) {
-  const resolved = resolveBestTrack(t)
+/** Loads and plays a song. A newer call cancels this one, however far it got. `exact` plays `t` itself, not its best copy. */
+export async function playTrack(t: Track, autostart = true, startAt = 0, exact = false) {
+  const resolved = exact ? t : resolveBestTrack(t)
   if (!resolved) {
     logLine('WARN', 'Player', `Cannot play "${t.title}": Offline mode active and track is not downloaded.`)
     events.onLoading?.(false)
@@ -645,7 +668,8 @@ export async function playTrack(t: Track, autostart = true, startAt = 0) {
     if (local) {
       switching = false
       p.switching = false
-      void playTrack(local, wantPlaying, livePosition())
+      // §109: exact, or Normal Mode picks the PC copy again and this loops every 4.5 s with no sound
+      void playTrack(local, wantPlaying, livePosition(), true)
       return
     }
     p.fadeStop()
@@ -1039,4 +1063,30 @@ export function startEngineSettings() {
 }
 
 /** For checks in the browser during development. */
-export const engineForTests = () => ({ player, ctx, loaded, queued, switching })
+/** §107 G: the app's player for the HRTF test, made if nothing has played since the app started. */
+export const appPlayer = () => getPlayer()
+
+/** Length of the HRTF test's clip, from a third of the way into the song (past most intros). */
+const HRTF_CLIP_S = 40
+
+/**
+ * §107 G: a clip of one of your songs for the HRTF test, local files first, then the PC's; a different song for
+ * each `attempt` while there are enough. Null when the library is empty (the test plays pink noise then).
+ */
+export async function hrtfTestClip(attempt: number): Promise<{ buffer: AudioBuffer; title: string } | null> {
+  const local = library.filter((t) => !isPcTrack(t) && t.sec > HRTF_CLIP_S)
+  const pool = local.length ? local : library.filter((t) => t.sec > HRTF_CLIP_S)
+  if (!pool.length) return null
+  // a fresh random order per test (attempt 0), then walk it
+  if (attempt === 0 || clipOrder.length !== pool.length) clipOrder = pool.map((_, i) => i).sort(() => Math.random() - 0.5)
+  const t = pool[clipOrder[attempt % pool.length]]
+  const full = await load(t).full
+  const from = Math.floor(full.length / 3)
+  const length = Math.min(full.length - from, Math.round(HRTF_CLIP_S * full.sampleRate))
+  const clip = new AudioBuffer({ length, numberOfChannels: full.numberOfChannels, sampleRate: full.sampleRate })
+  for (let c = 0; c < full.numberOfChannels; c++) clip.copyToChannel(full.getChannelData(c).subarray(from, from + length), c)
+  return { buffer: clip, title: `${t.title}${t.artist ? ` · ${t.artist}` : ''}` }
+}
+let clipOrder: number[] = []
+
+export const engineForTests = () =>({ player, ctx, loaded, queued, switching })

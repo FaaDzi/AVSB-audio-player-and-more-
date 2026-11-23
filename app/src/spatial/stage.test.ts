@@ -152,3 +152,16 @@ describe('head yaw steps (§104: no jumps on fast turns)', () => {
     expect(y).toBe(100)
   })
 })
+
+describe('head yaw deadband (§107 B: wobble keeps one bank)', () => {
+  it('holds the aimed step until the head is half a step plus 1° away, then snaps to the nearest step', async () => {
+    const { aimYaw } = await import('./stage')
+    expect(aimYaw(0, 3, 5)).toBe(0)
+    expect(aimYaw(0, -3.4, 5)).toBe(0)
+    expect(aimYaw(0, 3.6, 5)).toBe(5)
+    expect(aimYaw(5, 2, 5)).toBe(5)
+    expect(aimYaw(0, 47, 5)).toBe(45)
+    expect(aimYaw(180, -178, 5)).toBe(180)
+    expect(aimYaw(5, 0, 5)).toBe(0)
+  })
+})

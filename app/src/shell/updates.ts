@@ -6,6 +6,7 @@ import { useSyncExternalStore } from 'react'
 import { version } from '../../package.json'
 import { isAndroid, openExternal } from '../platform'
 import { getSetting } from './settings/store'
+import { logLine } from './logs'
 
 const RELEASES = 'https://api.github.com/repos/FaaDzi/AVSB-audio-player-and-more-/releases?per_page=20'
 
@@ -51,18 +52,34 @@ export function pickUpdate(releases: Release[], current: string, preview: boolea
   return { version: best.tag_name.replace(/^v/i, ''), preview: best.prerelease, url: file?.browser_download_url ?? best.html_url }
 }
 
+/** When the last check got an answer from GitHub (0 = none yet, or the last one failed). */
+let answeredAt = 0
+
 /** Asks GitHub now. Null when there's nothing newer or GitHub can't be reached. */
 export async function checkNow(): Promise<Update | null> {
   try {
     const r = await fetch(RELEASES, { headers: { Accept: 'application/vnd.github+json' } })
-    if (!r.ok) return null
+    if (!r.ok) throw new Error(`HTTP ${r.status}`)
     const found = pickUpdate((await r.json()) as Release[], version, getSetting('channel') === 'Preview', isAndroid())
+    answeredAt = Date.now()
     setFound(found)
     return found
-  } catch {
+  } catch (e) {
+    // §107 D: a failed check used to vanish; the next foreground tries again at once
+    // logged once per run of failures, so a long offline stretch doesn't fill the log
+    if (answeredAt !== 0 || !failedOnce) logLine('WARN', 'Update', `Couldn't check for updates: ${String(e)}`)
+    failedOnce = true
+    answeredAt = 0
     return null
   }
 }
+let failedOnce = false
+
+/** How long a check's answer stands before coming back to the app asks again. */
+export const RECHECK_MS = 60 * 60 * 1000
+
+/** §107 D: should coming back to the app check again? Yes after a failed check, or an hour after the last answer. */
+export const dueAgain = (answered: number, now: number) => answered === 0 || now - answered >= RECHECK_MS
 
 // §97: the newest release the last check found, for the dot on Settings → App and its Download row
 let found: Update | null = null
@@ -77,8 +94,16 @@ export const useFoundUpdate = () => useSyncExternalStore((w) => { watchers.add(w
 /** §97: the automatic check, at every start (it used to rest a day, so a new release went unseen), with "Check for Updates" on. */
 export async function checkOnStart(): Promise<Update | null> {
   if (getSetting('updates') === false) return null
+  // §107 D: the app lives for days in the background, so a start is rare: coming back to it checks too
+  if (!watchingForeground) {
+    watchingForeground = true
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && getSetting('updates') !== false && dueAgain(answeredAt, Date.now())) void checkNow()
+    })
+  }
   return checkNow()
 }
+let watchingForeground = false
 
 export const openUpdate = (u: Update) => openExternal(u.url)
 

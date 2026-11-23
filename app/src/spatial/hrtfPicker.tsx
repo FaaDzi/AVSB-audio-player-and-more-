@@ -6,11 +6,10 @@ import { sfx } from '../audio/sfx'
 import { measureLoudness, songGainDb } from '../audio/smartVolume'
 import type { LibrarySong, SongManifest } from '../songs/library'
 import { createRoundSource } from '../songs/rounds'
-import { forgetHrirSet, loadHrirIndex, loadHrirSet, type HrirIndexEntry } from './hrir'
-import { deleteStoredHrir, IMPORTED_ID, loadStoredHrir, saveStoredHrir } from './hrirStore'
-import { champion, currentPair, pick, startKnockout, totalPicks, twoRounds, type Knockout } from './knockout'
-import { DEFAULT_SPATIAL, updateSpatial } from './settings'
-import { importSofa } from './sofa'
+import { loadHrirIndex, loadHrirSet, type HrirIndexEntry } from './hrir'
+import { IMPORTED_ID, loadStoredHrir } from './hrirStore'
+import { answerHrtf, hrtfPair, hrtfProgress, startHrtfTest, twoRounds, type HrtfTest } from './knockout'
+import { updateSpatial } from './settings'
 import { SpatialStage } from './stage'
 import type { HrirSet } from './types'
 import { speakerOut } from '../audio/speakerGuard'
@@ -102,6 +101,19 @@ interface Clip {
 }
 
 /** Mono pink noise: one phantom source straight ahead, the easiest thing to judge "in front" on. */
+/** Both channels as their average: the song as one source in the middle. */
+function monoClip(b: AudioBuffer): AudioBuffer {
+  const out = new AudioBuffer({ length: b.length, numberOfChannels: 2, sampleRate: b.sampleRate })
+  const mid = new Float32Array(b.length)
+  for (let c = 0; c < b.numberOfChannels; c++) {
+    const ch = b.getChannelData(c)
+    for (let i = 0; i < b.length; i++) mid[i] += ch[i] / b.numberOfChannels
+  }
+  out.copyToChannel(mid, 0)
+  out.copyToChannel(mid, 1)
+  return out
+}
+
 function noiseClip(ctx: AudioContext): AudioBuffer {
   const buf = pinkNoise(ctx, 10)
   buf.copyToChannel(buf.getChannelData(0), 1)
@@ -118,30 +130,32 @@ export interface HrtfPickerProps {
   hrirId: string
   /** Called after the picker has saved a new id with updateSpatial. */
   onPick: (id: string) => void
+  /** §107 G: a clip of one of your songs (a different one per attempt); null → pink noise. Used over `library`. */
+  loadClip?: (attempt: number) => Promise<{ buffer: AudioBuffer; title: string } | null>
 }
 
 /**
  * Pick your HRTF by ear (plan §32 phase 3): the same clip through the virtual speakers with two
  * HRTF sets, blind as A and B, in a knockout over the bundled candidates (plus your import); the
- * winner becomes yours. Also imports a measured SOFA file.
+ * winner becomes yours. An imported SOFA file (imported under the HRTF list) takes part too.
  */
 export function HrtfPicker(props: HrtfPickerProps) {
   const { player, hrirId } = props
   const [index, setIndex] = useState<HrirIndexEntry[] | null>(null)
   const [imported, setImported] = useState<HrirSet | null>(null)
-  const [ko, setKo] = useState<Knockout | null>(null)
-  /** Round 2 is the round-1 winner's group; `done` = picks made in round 1. */
-  const [round, setRound] = useState<{ n: 1 | 2; done: number }>({ n: 1, done: 0 })
+  /** §108: the test's rounds (knockout.ts `HrtfTest`); null before Start and after Keep current. */
+  const [test, setTest] = useState<HrtfTest | null>(null)
   const [flip, setFlip] = useState(false)
   const [active, setActive] = useState(0)
   const [playing, setPlaying] = useState(false)
-  useMusicHold(playing || ko !== null)
+  useMusicHold(playing || test !== null)
   const [clip, setClip] = useState<Clip | null>(null)
   const [attempt, setAttempt] = useState(0)
   const [ready, setReady] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [result, setResult] = useState<{ winner: string; previous: string } | null>(null)
-  const [importing, setImporting] = useState(false)
+  // §107: what the test plays; your songs when there are some to play
+  const [sound, setSound] = useState<'music' | 'noise'>('music')
   const audio = useRef<PickerAudio | null>(null)
 
   useEffect(() => {
@@ -169,23 +183,31 @@ export function HrtfPicker(props: HrtfPickerProps) {
   )
 
   // the clip: one song for the whole bracket ("Another song" swaps it)
-  const running = !!ko && !champion(ko)
+  const running = !!test && !test.winner
   useEffect(() => {
     if (!running) return
     let cancelled = false
     setClip(null)
     const done = (buffer: AudioBuffer, title: string) => {
       if (cancelled) return
+      // §108: music folded to mono, one source straight ahead like the pink noise: "in front" is easier to judge
+      if (buffer.numberOfChannels > 1) buffer = monoClip(buffer)
       const chans = Array.from({ length: buffer.numberOfChannels }, (_, i) => buffer.getChannelData(i))
       setClip({ buffer, title, levelDb: songGainDb(measureLoudness(chans, buffer.sampleRate)) })
     }
-    if (!props.library.length) done(noiseClip(player.ctx), 'Pink noise')
+    if (sound === 'noise') done(noiseClip(player.ctx), 'Pink noise')
+    else if (props.loadClip) {
+      props.loadClip(attempt).then(
+        (c) => (c ? done(c.buffer, c.title) : done(noiseClip(player.ctx), 'Pink noise')),
+        (e) => !cancelled && setError(String(e?.message ?? e)),
+      )
+    } else if (!props.library.length) done(noiseClip(player.ctx), 'Pink noise')
     else source.getRound(0, attempt).then((a) => done(a.buffer, a.title), (e) => !cancelled && setError(String(e?.message ?? e)))
     return () => {
       cancelled = true
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [running, attempt, source])
+  }, [running, attempt, source, sound])
 
   // keep playing the new clip if the old one was playing
   useEffect(() => {
@@ -193,7 +215,7 @@ export function HrtfPicker(props: HrtfPickerProps) {
   }, [clip])
 
   // load the pair's sets into the two stages: A is pair[flip ? 1 : 0]
-  const pair = ko ? currentPair(ko) : null
+  const pair = test ? hrtfPair(test) : null
   const pairKey = pair ? `${pair[0]}|${pair[1]}|${flip}` : ''
   useEffect(() => {
     if (!pair) return
@@ -233,8 +255,7 @@ export function HrtfPicker(props: HrtfPickerProps) {
     setFlip(Math.random() < 0.5)
     setError(null)
     setResult(null)
-    setRound({ n: 1, done: 0 })
-    setKo(startKnockout(plan.heads))
+    setTest(startHrtfTest(plan))
   }
 
   const toggle = () => {
@@ -252,19 +273,14 @@ export function HrtfPicker(props: HrtfPickerProps) {
     setActive(i)
   }
 
-  const answer = (i: number) => {
-    if (!ko || !pair) return
+  /** Card `i` was picked, or null for "Same". */
+  const answer = (i: number | null) => {
+    if (!test || !pair) return
     sfx.playPop()
     const a = flip ? 1 : 0
-    const next = pick(ko, pair[i === 0 ? a : 1 - a])
-    setKo(next)
-    let won = champion(next)
-    // round 1 picked a group: its other sets are round 2
-    if (won && round.n === 1 && plan.members(won).length > 1) {
-      setRound({ n: 2, done: next.picks })
-      setKo(startKnockout(plan.members(won)))
-      won = null
-    }
+    const next = answerHrtf(test, i === null ? null : pair[i === 0 ? a : 1 - a], plan)
+    setTest(next)
+    const won = next.winner
     if (won) {
       stopAudio()
       setResult({ winner: won, previous: hrirId })
@@ -277,48 +293,23 @@ export function HrtfPicker(props: HrtfPickerProps) {
 
   const keepCurrent = () => {
     stopAudio()
-    setKo(null)
+    setTest(null)
   }
 
-  const onFile = async (file: File | undefined) => {
-    if (!file) return
-    setImporting(true)
-    setError(null)
-    try {
-      const set = await importSofa(file)
-      await saveStoredHrir(set)
-      forgetHrirSet(IMPORTED_ID)
-      setImported(set)
-      setResult(null)
-      save(IMPORTED_ID)
-    } catch (e) {
-      setError(e instanceof Error ? e.message : String(e))
-    } finally {
-      setImporting(false)
-    }
-  }
-
-  const removeImport = async () => {
-    await deleteStoredHrir(IMPORTED_ID).catch(() => {})
-    forgetHrirSet(IMPORTED_ID)
-    setImported(null)
-    if (hrirId === IMPORTED_ID) save(DEFAULT_SPATIAL.hrirId)
-  }
-
-  const groupSize = Math.max(1, ...plan.heads.map((h) => plan.members(h).length))
-  const picks = totalPicks(plan.heads.length) + totalPicks(groupSize)
+  const progress = test ? hrtfProgress(test, plan) : null
+  const picks = useMemo(() => hrtfProgress(startHrtfTest(plan), plan).of, [plan])
 
   return (
     <div className="selftest">
-      {running && ko ? (
+      {running && progress ? (
         <div className="selftest-round">
-          <RoundDots round={(round.n === 2 ? round.done : 0) + ko.picks + 1} of={picks} />
+          <RoundDots round={progress.done + 1} of={progress.of} />
           <p className="selftest-step">
-            Tap a card to listen. Pick the one where the sound comes from <b>in front of you</b> and still sounds natural. If
+            {test?.final && <b>Final check. </b>}Tap a card to listen. Pick the one where the sound comes from <b>in front of you</b> and still sounds natural. If
             one is wider but thinner, pick the clearer one.
           </p>
           <div className="selftest-controls">
-            <button type="button" className="game-btn-sm primary" disabled={!clip || !ready} onClick={toggle}>
+            <button type="button" className="ms-btn primary" disabled={!clip || !ready} onClick={toggle}>
               {playing ? '■ Pause' : '▶ Play'}
             </button>
             {clip && <span className="muted small">{clip.title}</span>}
@@ -336,16 +327,16 @@ export function HrtfPicker(props: HrtfPickerProps) {
             pickText={(l) => `Pick ${l}`}
           />
           <div className="selftest-controls">
-            {props.library.length > 0 && (
-              <button type="button" className="game-btn-sm" onClick={() => setAttempt((a) => a + 1)}>
+            {sound === 'music' && (props.library.length > 0 || props.loadClip) && (
+              <button type="button" className="ms-btn tonal" onClick={() => setAttempt((a) => a + 1)}>
                 Another song
               </button>
             )}
             {/* §91 E5: when the two can't be told apart; the one already ahead in the knockout goes on */}
-            <button type="button" className="game-btn-sm" disabled={!ready} onClick={() => answer(flip ? 1 : 0)}>
+            <button type="button" className="ms-btn tonal" disabled={!ready} onClick={() => answer(null)}>
               Same
             </button>
-            <button type="button" className="game-btn-sm" onClick={keepCurrent}>
+            <button type="button" className="ms-btn tonal" onClick={keepCurrent}>
               Keep current{current ? `: ${current.name}` : ''}
             </button>
           </div>
@@ -357,11 +348,11 @@ export function HrtfPicker(props: HrtfPickerProps) {
               <strong>Yours: {nameOf(result.winner)}</strong>
               <p className="muted small">{entries.find((e) => e.id === result.winner)?.source}</p>
               <div className="selftest-controls">
-                <button type="button" className="game-btn-sm primary" onClick={start}>
+                <button type="button" className="ms-btn primary" onClick={start}>
                   Again
                 </button>
                 {result.previous !== result.winner && hrirId === result.winner && (
-                  <button type="button" className="game-btn-sm" onClick={() => save(result.previous)}>
+                  <button type="button" className="ms-btn tonal" onClick={() => save(result.previous)}>
                     Back to {nameOf(result.previous)}
                   </button>
                 )}
@@ -371,36 +362,15 @@ export function HrtfPicker(props: HrtfPickerProps) {
             <div className="selftest-result">
               <strong>Yours: {current?.name ?? nameOf(hrirId)}</strong>
               {current && <p className="muted small">{current.source}</p>}
-              <button type="button" className="game-btn-primary" disabled={entries.length < 2} onClick={start}>
+              <button type="button" className="ms-btn primary" disabled={entries.length < 2} onClick={start}>
                 Start: {picks} picks
               </button>
             </div>
           )}
-          <div className="selftest-controls">
-            <label className="game-btn-sm" style={{ cursor: importing ? 'progress' : 'pointer' }}>
-              <span>{importing ? 'Reading…' : imported ? 'Replace SOFA…' : 'Import SOFA…'}</span>
-              <input
-                type="file"
-                accept=".sofa,application/x-hdf5,application/octet-stream"
-                style={{ display: 'none' }}
-                disabled={importing}
-                onChange={(e) => {
-                  const f = e.target.files?.[0]
-                  e.target.value = ''
-                  void onFile(f)
-                }}
-              />
-            </label>
-            {imported && (
-              <button type="button" className="game-btn-sm" onClick={() => void removeImport()}>
-                Remove {imported.name}
-              </button>
-            )}
-            {hrirId !== DEFAULT_SPATIAL.hrirId && (
-              <button type="button" className="game-btn-sm" onClick={() => save(DEFAULT_SPATIAL.hrirId)}>
-                Reset to generic
-              </button>
-            )}
+          {/* §107: SOFA import lives under the HRTF list; here you choose what to listen to */}
+          <div className="ms-segment-small" role="radiogroup" aria-label="Test sound">
+            <button type="button" role="radio" aria-checked={sound === 'music'} className={sound === 'music' ? 'on' : ''} onClick={() => setSound('music')}>Music</button>
+            <button type="button" role="radio" aria-checked={sound === 'noise'} className={sound === 'noise' ? 'on' : ''} onClick={() => setSound('noise')}>Pink noise</button>
           </div>
         </>
       )}

@@ -28,14 +28,15 @@ export const matchPlayer = () => (player ??= new ABPlayer())
 
 let refs: RefData | null = null
 let refsLoading: Promise<RefData> | null = null
+/** The averaged measurements, loaded once (useRefs outside React). */
+export const loadRefsOnce = () => (refsLoading ??= loadRefs().then((d) => (refs = d), () => (refs = {})))
 /** Averaged measurements per model, for simulating the device you listen on. */
 export function useRefs(): RefData | null {
   const [r, setR] = useState(refs)
   useEffect(() => {
     if (r) return
-    refsLoading ??= loadRefs().then((d) => (refs = d), () => (refs = {}))
     let live = true
-    void refsLoading.then((d) => live && setR(d))
+    void loadRefsOnce().then((d) => live && setR(d))
     return () => {
       live = false
     }

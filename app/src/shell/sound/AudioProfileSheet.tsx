@@ -19,6 +19,8 @@ import {
 } from './gearProfiles'
 import { useGear } from './gear'
 import { copyCurrentAimToEq } from './copyEq'
+import { applyMyEq, useMyEq } from './myEq'
+import { getEq, getPresets, setEq, setPresets, withPreset, type SavedPreset } from '../eqState'
 import { gearName } from './phoneSpeaker'
 import { loadDatabase, listModels, type Database } from '../database/catalog'
 import { soundCurve, type SoundEnv } from './soundCurve'
@@ -52,6 +54,18 @@ export function AudioProfileSheet({ onClose }: { onClose: () => void }) {
   const [tempStrength, setTempStrength] = useState(100)
   const [contextItem, setContextItem] = useState<{ item: GearProfileItem; x: number; y: number } | null>(null)
   const longPressTimer = useRef<number | null>(null)
+  // §107 E: loads the EQs you saved for this gear (saving stays on the Equalizer page); long-press renames
+  const my = useMyEq(gear.active)
+  const [myMenu, setMyMenu] = useState<{ p: SavedPreset; x: number; y: number } | null>(null)
+  const [naming, setNaming] = useState<{ old: string; name: string } | null>(null)
+  const saveName = () => {
+    const name = naming?.name.trim()
+    if (!naming || !name) return
+    const old = naming.old
+    setPresets(withPreset(getPresets().filter((x) => x.name !== old), { ...getPresets().find((x) => x.name === old)!, name }))
+    if (getEq().preset === old) setEq({ preset: name })
+    setNaming(null)
+  }
 
   const activeDeviceName = useMemo(() => {
     if (!gear.active) return 'Default Device'
@@ -131,7 +145,7 @@ export function AudioProfileSheet({ onClose }: { onClose: () => void }) {
           <div className="ms-profile-group">
             <span className="ms-profile-group-title">Direct Sound</span>
             <div
-              className={`ms-profile-item raw${profile.activeItemId === null ? ' active' : ''}`}
+              className={`ms-profile-item raw${profile.activeItemId === null && !my.active ? ' active' : ''}`}
               role="button"
               tabIndex={0}
               onClick={() => applyProfileItem(null, gear.active)}
@@ -141,7 +155,7 @@ export function AudioProfileSheet({ onClose }: { onClose: () => void }) {
                 <b>Raw Audio Gear (Pure sound)</b>
                 <small>Bypass all targets and simulations (no filter, no EQ)</small>
               </div>
-              {profile.activeItemId === null && <span style={{ color: 'var(--accent)' }}><Icon name="check" size={20} /></span>}
+              {profile.activeItemId === null && !my.active && <span style={{ color: 'var(--accent)' }}><Icon name="check" size={20} /></span>}
             </div>
           </div>
 
@@ -187,6 +201,46 @@ export function AudioProfileSheet({ onClose }: { onClose: () => void }) {
                     >
                       {item.strength}%
                     </button>
+                    {isActive && <span style={{ color: 'var(--accent)' }}><Icon name="check" size={20} /></span>}
+                  </div>
+                )
+              })
+            )}
+          </div>
+
+          {/* §107 E: User made EQ, the presets you saved for this gear (other gear's stay with it) */}
+          <div className="ms-profile-group">
+            <div className="ms-profile-group-header">
+              <span className="ms-profile-group-title">User made EQ ({my.mine.length})</span>
+            </div>
+            {my.mine.length === 0 ? (
+              <small className="ms-profile-empty">EQs you save for this device on the Equalizer page show here.</small>
+            ) : (
+              my.mine.map((p) => {
+                const isActive = my.active?.name === p.name
+                return (
+                  <div
+                    key={p.name}
+                    className={`ms-profile-item${isActive ? ' active' : ''}`}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => { applyMyEq(p, gear.active); showToast(`${p.name} on ${activeDeviceName}`) }}
+                    onContextMenu={(e) => {
+                      e.preventDefault()
+                      setMyMenu({ p, x: e.clientX, y: e.clientY })
+                    }}
+                    onPointerDown={(e) => {
+                      if (e.pointerType !== 'touch') return
+                      const { clientX: x, clientY: y } = e
+                      longPressTimer.current = window.setTimeout(() => setMyMenu({ p, x, y }), 500)
+                    }}
+                    onPointerUp={handlePointerUp}
+                    onPointerCancel={handlePointerUp}
+                  >
+                    <span className="ms-gear-circle-dot eq"><Icon name="equalizer" size={14} /></span>
+                    <div className="grow ms-ellipsis">
+                      <b>{p.name}</b>
+                    </div>
                     {isActive && <span style={{ color: 'var(--accent)' }}><Icon name="check" size={20} /></span>}
                   </div>
                 )
@@ -327,6 +381,38 @@ export function AudioProfileSheet({ onClose }: { onClose: () => void }) {
             },
           ]}
         />
+      )}
+
+      {myMenu && (
+        <Menu
+          x={myMenu.x}
+          y={myMenu.y}
+          onClose={() => setMyMenu(null)}
+          items={[
+            { label: 'Rename', icon: 'edit', onSelect: () => setNaming({ old: myMenu.p.name, name: myMenu.p.name }) },
+            {
+              label: 'Delete',
+              icon: 'delete',
+              danger: true,
+              onSelect: () => {
+                setPresets(getPresets().filter((x) => x.name !== myMenu.p.name))
+                showToast(`Deleted ${myMenu.p.name}`)
+              },
+            },
+          ]}
+        />
+      )}
+
+      {naming && (
+        <Dialog title="Rename EQ" onClose={() => setNaming(null)}>
+          <form onSubmit={(e) => { e.preventDefault(); saveName() }} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <input className="ms-input filled" autoFocus aria-label="Name" value={naming.name} onChange={(e) => setNaming({ ...naming, name: e.target.value })} />
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
+              <button type="button" className="ms-btn tonal" onClick={() => setNaming(null)}>Cancel</button>
+              <button type="submit" className="ms-btn primary" disabled={!naming.name.trim()}>Save</button>
+            </div>
+          </form>
+        </Dialog>
       )}
 
       {/* Add Reference Target Dialog */}
