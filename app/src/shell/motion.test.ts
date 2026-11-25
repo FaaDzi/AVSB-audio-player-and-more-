@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { easeInOutCubic, easeOutCubic, lyricLag, lyricScrollAt, springAt } from './motion'
-import { SQUIGGLE, WAVE, bounceScale, calmAt, edgeFade, glideAt, humpAt, levelStep, waveY } from './WaveTrack'
+import { SQUIGGLE, WAVE, bounceScale, calmAt, edgeFade, glideAt, humpAt, levelStep, runAt, waveY } from './WaveTrack'
 
 describe('springAt', () => {
   it('starts at 0 and settles on 1', () => {
@@ -90,6 +90,14 @@ describe('seek glide and party bounce', () => {
   })
   it('rests at full height in quiet parts and stretches with loud bass', () => {
     expect(bounceScale(WAVE.floor)).toBe(1)
-    expect(bounceScale(1)).toBeCloseTo(2.1)
+    expect(bounceScale(1)).toBeCloseTo(1.8)
+  })
+  it('runs at the song speed and eases a late report in without stepping', () => {
+    const perMs = 1 / 200_000 // a 200 s song
+    const a = { base: 0.5, err: 0.001, t0: 0 }
+    expect(runAt(a, perMs, 0)).toBeCloseTo(0.5)
+    expect(runAt(a, perMs, WAVE.correctMs)).toBeCloseTo(0.5 + WAVE.correctMs * perMs + 0.001, 6)
+    // never past the end
+    expect(runAt({ base: 0.999, err: 0, t0: 0 }, perMs, 10_000)).toBe(1)
   })
 })

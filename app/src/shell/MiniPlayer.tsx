@@ -37,7 +37,7 @@ export function MiniPlayer() {
           {current && <IconButton icon={liked ? 'favorite' : 'favorite_border'} label={liked ? 'Remove from Favorites' : 'Add to Favorites'} active={liked} onClick={() => toggleLike(current, data, replaceData)} />}
         </div>
         <IconButton icon="lyrics" label="Lyrics" onClick={() => { exitMini(); setPanel('lyrics'); setNowPlaying(true) }} />
-        <Slider wavy={playing} value={current?.sec ? position / current.sec : 0} label="Seek" onChange={(v) => setPosition(v * (current?.sec ?? 0))} />
+        <Slider wavy={playing} seconds={current?.sec} value={current?.sec ? position / current.sec : 0} label="Seek" onChange={(v) => setPosition(v * (current?.sec ?? 0))} />
       </div>
     </div>
   )

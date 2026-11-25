@@ -198,7 +198,7 @@ export function NowPlaying() {
           {!phonePortrait && <div className="ms-np-title-actions">{saveButtons}</div>}
         </div>
         <MarqueeText as="p" text={[current.artist || 'Unknown Artist', current.album].filter(Boolean).join(' · ')} className="ms-np-artist" />
-        <div className="ms-np-seek"><Slider wavy={playing && !(phonePortrait && panel)} value={current.sec ? position / current.sec : 0} label="Seek" onChange={(v) => setPosition(v * current.sec)} /></div>
+        <div className="ms-np-seek"><Slider wavy={playing && !(phonePortrait && panel)} seconds={current.sec} value={current.sec ? position / current.sec : 0} label="Seek" onChange={(v) => setPosition(v * current.sec)} /></div>
         <div className="ms-np-times">
           <span>{duration(position)}</span>
           <span className={`ms-np-quality${!isLowData && isPremiumQuality(current) ? ' hi' : ''}`}><Icon name={directInfo ? 'usb' : 'graphic_eq'} size={16} />{quality.join(' · ')}</span>

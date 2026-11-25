@@ -95,7 +95,7 @@ function PhoneMiniPlayer() {
   const done = current.sec ? Math.min(1, position / current.sec) : 0
   return (
     <div className="ms-pmini" style={coverStyle}>
-      <WaveTrack share={done} moving={playing} compact />
+      <WaveTrack share={done} seconds={current.sec} moving={playing} compact />
       <button type="button" className="ms-pmini-open" aria-label="Open Now Playing" onClick={() => setNowPlaying(true)}>
         <div className={`ms-pmini-art-wrap ${playing ? 'playing' : 'paused'}`} style={{ position: 'relative', display: 'inline-flex', overflow: 'hidden', flex: 'none' }}>
           <Cover id={current.cover} className="ms-pmini-art" genre={current.genre} speciality={current.category} title={current.title} />

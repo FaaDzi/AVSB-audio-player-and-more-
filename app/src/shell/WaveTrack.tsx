@@ -35,6 +35,8 @@ export const WAVE = {
   rampMs: 400, tickMs: 16,
   /** The position arrives twice a second (engine.ts); in between, the bar's end and the handle glide over this long. */
   glideMs: 550,
+  /** With the song's length known, they run at the song's own speed; a report that differs is eased in over this. */
+  correctMs: 400,
 }
 
 /** Where the played part is drawn `now`: gliding from `from` to `to` since `t0`, so it doesn't step twice a second. */
@@ -42,10 +44,19 @@ export function glideAt(g: { from: number; to: number; t0: number }, now: number
   return g.from + (g.to - g.from) * Math.min(1, Math.max(0, (now - g.t0) / WAVE.glideMs))
 }
 
-/** Party theme: how far the handle bar jumps with the music (1 = resting height), from the rumble's level follower. */
+/**
+ * Where the played part is `now` while playing at `perMs` (share per ms): straight on from `base` at the song's speed,
+ * with the last report's difference (`err`) eased in, so the handle never steps or changes speed with each report.
+ */
+export function runAt(a: { base: number; err: number; t0: number }, perMs: number, now: number): number {
+  const dt = Math.max(0, now - a.t0)
+  return Math.min(1, Math.max(0, a.base + dt * perMs + a.err * Math.min(1, dt / WAVE.correctMs)))
+}
+
+/** Party theme: how far the handle bar stretches with the music (1 = resting height), from the rumble's level follower. */
 export function bounceScale(amount: number): number {
   const t = Math.min(1, Math.max(0, (amount - WAVE.floor) / (1 - WAVE.floor)))
-  return 1 + 1.1 * t * t
+  return 1 + 0.8 * t * t
 }
 
 /** "Squiggly": the earlier thin sine line (Mornye's expressive_seek_track.dart). */
@@ -126,7 +137,7 @@ const waveMode = (): WaveMode => {
 }
 
 /** The played part of a seek track. `compact`: the phone mini player's thin top line (no handle, smaller humps). */
-export function WaveTrack({ share, moving, compact = false }: { share: number; moving: boolean; compact?: boolean }) {
+export function WaveTrack({ share, moving, compact = false, seconds = 0 }: { share: number; moving: boolean; compact?: boolean; seconds?: number }) {
   const canvas = useRef<HTMLCanvasElement>(null)
   // §105 F: the drift and level followers live here, not in the effect: a stalling stream flips `moving` off and on,
   // and each restart snapped every hump back to its start (the wave shook while the connection was bad)
@@ -138,16 +149,23 @@ export function WaveTrack({ share, moving, compact = false }: { share: number; m
     bands: [{ mean: -50, amount: 1 }, { mean: -60, amount: 1 }, { mean: -75, amount: 1 }],
     amounts: [1, 1, 1],
     glide: { from: share, to: share, t0: 0 },
+    run: { base: share, err: 0, t0: 0 },
+    perMs: 0,
     moving,
+    // playing with a known length: at the song's speed; otherwise eased between reports
+    shownAt(now: number): number { return this.moving && this.perMs ? runAt(this.run, this.perMs, now) : glideAt(this.glide, now) },
   })
   {
     const s = state.current
-    if (share !== s.share) {
+    s.perMs = seconds > 0 ? 1 / (seconds * 1000) : 0
+    if (share !== s.share || moving !== s.moving) {
       const now = performance.now()
-      const shown = glideAt(s.glide, now)
-      // a seek, a new song or a drag jumps straight there; only the steady half-second steps glide
-      const jump = !moving || share < shown - 0.0005 || share - shown > 0.02
+      const shown = s.shownAt(now)
+      // a seek, a new song, a drag or a pause goes straight there; only the steady half-second reports are eased in
+      const far = s.perMs ? Math.abs(share - shown) > 2000 * s.perMs : share < shown - 0.0005 || share - shown > 0.02
+      const jump = !moving || !s.moving || far
       s.glide = { from: jump ? share : shown, to: share, t0: now }
+      s.run = jump ? { base: share, err: 0, t0: now } : { base: shown, err: share - shown, t0: now }
       s.share = share
     }
     s.moving = moving
@@ -191,13 +209,21 @@ export function WaveTrack({ share, moving, compact = false }: { share: number; m
     // Party theme (any seek-bar style): the handle bounces with the bass
     const partyOn = () => !!handle && root.dataset.style === 'gameshow' && root.dataset.reduceMotion !== 'on'
 
-    s.draw = () => {
-      const shown = glideAt(s.glide, performance.now())
+    // the handle moves on every frame (a 120 Hz screen too); the canvas below is drawn at most 60 times a second
+    const placeHandle = (now: number) => {
+      const shown = s.shownAt(now)
       if (handle) {
         handle.style.left = `${shown * 100}%`
         // Party theme: the handle is a one-bar visualiser, jumping with the bass next to the wave
-        handle.style.transform = partyOn() && s.moving ? `scaleY(${bounceScale(amounts[0])})` : ''
+        // it grows up and down from its middle, and eases off under the play / skip buttons like the wave does
+        const stretch = partyOn() && s.moving ? 1 + (bounceScale(amounts[0]) - 1) * calmAt(shown * w, calm.from, calm.to) : 1
+        handle.style.transform = stretch !== 1 ? `scaleY(${stretch})` : ''
       }
+      return shown
+    }
+
+    s.draw = () => {
+      const shown = placeHandle(performance.now())
       // a soft wave needs no more than 2 pixels per point: a phone's 3x screen would triple the work for nothing
       const ratio = Math.min(2, window.devicePixelRatio || 1)
       if (el.width !== Math.round(w * ratio) || el.height !== Math.round(h * ratio)) {
@@ -281,6 +307,7 @@ export function WaveTrack({ share, moving, compact = false }: { share: number; m
       }
       // at most 60 a second; the frame that finishes a ramp is drawn at once. (This used to also pass on every frame
       // once the ramp was done, so a playing wave redrew at the screen's full rate: 100-120 a second.)
+      placeHandle(now)
       const rampDone = s.ramp === target && drawnRamp !== s.ramp
       if (now - lastTick >= WAVE.tickMs || rampDone) {
         lastTick = now

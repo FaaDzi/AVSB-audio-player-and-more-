@@ -65,7 +65,7 @@ export function PlayerBar() {
         <div className="ms-seek">
           <span className="ms-time">{duration(position)}</span>
           {/* flat while Now Playing covers the bar: its wave would keep drawing unseen */}
-          <Slider wavy={playing && !nowPlaying} value={length ? position / length : 0} label="Seek" onChange={(v) => setPosition(v * length)} />
+          <Slider wavy={playing && !nowPlaying} seconds={length} value={length ? position / length : 0} label="Seek" onChange={(v) => setPosition(v * length)} />
           <span className="ms-time">{duration(length)}</span>
         </div>
       </div>
@@ -92,12 +92,14 @@ export function VolumeControl({ value, onChange }: { value: number; onChange: (v
 }
 
 /** Material 3 slider: active track, handle, a gap, then the inactive track ending in a stop dot. Wavy while playing. */
-export function Slider({ value, onChange, label, wavy, thick, min = 0, max = 1, step = 0.001 }: {
+export function Slider({ value, onChange, label, wavy, thick, seconds, min = 0, max = 1, step = 0.001 }: {
   value: number
   onChange: (v: number) => void
   label: string
   wavy?: boolean
   thick?: boolean
+  /** The seek track: the song's length, so the handle moves at the song's own speed between position updates. */
+  seconds?: number
   min?: number
   max?: number
   step?: number
@@ -113,7 +115,7 @@ export function Slider({ value, onChange, label, wavy, thick, min = 0, max = 1, 
   const centreStyle = centred ? { '--from': `${Math.min(zero, clamped * 100)}%`, '--span': `${Math.abs(clamped * 100 - zero)}%` } : {}
   return (
     <div className={`ms-slider${thick ? ' thick' : ''}${centred ? ' centred' : ''}`} style={{ '--pct': pct, ...centreStyle } as unknown as React.CSSProperties}>
-      {isSeek ? <WaveTrack share={clamped} moving={Boolean(wavy) && !dragging && clamped < 1} /> : <div className="ms-slider-active" />}
+      {isSeek ? <WaveTrack share={clamped} seconds={seconds} moving={Boolean(wavy) && !dragging && clamped < 1} /> : <div className="ms-slider-active" />}
       <div className="ms-slider-handle" />
       <div className="ms-slider-rest" />
       <input onPointerDown={() => setDragging(true)} onPointerUp={() => setDragging(false)} onPointerCancel={() => setDragging(false)} type="range" min={min} max={max} step={step} value={value} aria-label={label} onChange={(e) => onChange(Number(e.target.value))} />
