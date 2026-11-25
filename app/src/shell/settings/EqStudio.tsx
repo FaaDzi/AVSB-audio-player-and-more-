@@ -9,6 +9,7 @@ import { DevicePickerModal } from '../sound/AudioProfileSheet'
 import { familyOf, targetsFor, type Aim } from '../sound/soundCurve'
 import { autoEq, CANAL_PEAK_HZ, curveAt, midLevel, NO_PREFS, type AutoEqResult, type EqPrefs, type EqScene, type FitDepth } from '../eqStudio'
 import { getSetting, setSetting } from './store'
+import { isAndroid } from '../../platform'
 import type { Biquad } from '../../eq/biquad'
 import { PEQ_LIMITS, PEQ_MAX_FILTERS, tidyFilter } from '../../eq/peq'
 import { NumField } from '../../gallery/PeqEditor'
@@ -47,13 +48,13 @@ export const setLab = (deviceId: string | null, patch: Partial<EqLab>) =>
 
 // ---- the graph
 
-const DB_RANGE = 18
+const DB_SCALES = [12, 18, 30] as const
 const W = 1000
 const H = 300
 const xOf = (hz: number) => (Math.log10(hz / 20) / 3) * W
-const yOf = (db: number) => H / 2 - (Math.max(-DB_RANGE, Math.min(DB_RANGE, db)) * H) / 2 / DB_RANGE
+const yWithRange = (db: number, range: number) => H / 2 - (Math.max(-range, Math.min(range, db)) * H) / 2 / range
 const hzOf = (fx: number) => 20 * 1000 ** Math.max(0, Math.min(1, fx))
-const dbOf = (fy: number) => (0.5 - Math.max(0, Math.min(1, fy))) * 2 * DB_RANGE
+const dbWithRange = (fy: number, range: number) => (0.5 - Math.max(0, Math.min(1, fy))) * 2 * range
 export const hzLabel = (hz: number) => (hz >= 1000 ? `${+(hz / 1000).toFixed(hz >= 10000 ? 1 : 2)} kHz` : `${Math.round(hz)} Hz`)
 const signed = (db: number) => `${db > 0 ? '+' : db < 0 ? '−' : ''}${Math.abs(db).toFixed(1)} dB`
 
@@ -89,10 +90,11 @@ export function EqGraph(props: {
   handles: GraphHandle[]
   /** Handles slide along the frequency axis too (parametric filters), not just up and down (bands). */
   freeHz: boolean
+  selected?: number | null
+  onSelect?: (i: number | null) => void
   onHandle?: (i: number, to: Partial<GraphHandle>) => void
   onHandleQ?: (i: number, factor: number) => void
   onAdd?: (at: GraphHandle) => void
-  onDoubleTap?: () => void
   onRemove?: (i: number) => void
   /** The test tone's frequency while it plays; the graph then moves it instead of showing a readout. */
   toneHz: number | null
@@ -106,10 +108,19 @@ export function EqGraph(props: {
   const fingers = useRef(new Map<number, number>())
   const pinch = useRef<number | null>(null)
   const [hover, setHover] = useState<number | null>(null)
-  const [sel, setSel] = useState<number | null>(null)
+  const [innerSel, setInnerSel] = useState<number | null>(null)
+  const [dbRange, setDbRange] = useState<(typeof DB_SCALES)[number]>(18)
+  const sel = props.selected !== undefined ? props.selected : innerSel
+  const setSel = (i: number | null) => {
+    setInnerSel(i)
+    props.onSelect?.(i)
+  }
+
+  const yOf = (db: number) => yWithRange(db, dbRange)
+  const dbTicks = dbRange === 12 ? [12, 6, 0, -6, -12] : dbRange === 30 ? [24, 12, 0, -12, -24] : [12, 6, 0, -6, -12]
 
   const lines = useMemo(() => {
-    const pts = (c: ArrayLike<number>, off = 0) => Array.from(grid, (f, i) => `${xOf(f).toFixed(1)},${yOf(c[i] - off).toFixed(1)}`).join(' ')
+    const pts = (c: ArrayLike<number>, off = 0) => Array.from(grid, (f, i) => `${xOf(f).toFixed(1)},${yWithRange(c[i] - off, dbRange).toFixed(1)}`).join(' ')
     const total = Float64Array.from(eqDb, (v, i) => v + (props.extraDb?.[i] ?? 0))
     const eq = pts(eqDb)
     const area = `${xOf(grid[0])},${H / 2} ${eq} ${xOf(grid[grid.length - 1])},${H / 2}`
@@ -119,17 +130,17 @@ export function EqGraph(props: {
     // the target sits on the result's level, so a good match reads as the two lines lying on each other
     const targetLine = target ? pts(target, midLevel(grid, target) - midLevel(grid, afterDb)) : null
     return { eq, area, device: pts(device, level), target: targetLine, after: pts(afterDb), afterDb }
-  }, [grid, eqDb, props.extraDb, device, target])
+  }, [grid, eqDb, props.extraDb, device, target, dbRange])
 
   const earLines = useMemo(() => {
     if (!props.ears) return null
-    const pts = (c: ArrayLike<number>) => Array.from(grid, (f, i) => `${xOf(f).toFixed(1)},${yOf(eqDb[i] + c[i]).toFixed(1)}`).join(' ')
+    const pts = (c: ArrayLike<number>) => Array.from(grid, (f, i) => `${xOf(f).toFixed(1)},${yWithRange(eqDb[i] + c[i], dbRange).toFixed(1)}`).join(' ')
     return { left: pts(props.ears.left), right: pts(props.ears.right) }
-  }, [props.ears, grid, eqDb])
+  }, [props.ears, grid, eqDb, dbRange])
 
   const at = (e: { clientX: number; clientY: number }) => {
     const r = plot.current!.getBoundingClientRect()
-    return { hz: hzOf((e.clientX - r.left) / r.width), db: dbOf((e.clientY - r.top) / r.height) }
+    return { hz: hzOf((e.clientX - r.left) / r.width), db: dbWithRange((e.clientY - r.top) / r.height, dbRange) }
   }
   const pinched = (e: React.PointerEvent) => {
     if (!fingers.current.has(e.pointerId)) return false
@@ -159,11 +170,16 @@ export function EqGraph(props: {
   const maxBoost = Math.max(0, ...Array.from(eqDb))
   const readHz = props.toneHz ?? hover
   const readDb = readHz === null ? null : lines.afterDb ? curveAt(grid, lines.afterDb, readHz) : curveAt(grid, eqDb, readHz)
+  const denseBands = !props.freeHz && handles.length >= 15
+  const crowdedPeq = props.freeHz && handles.length >= 12
+  const selHandle = sel !== null ? handles[sel] : undefined
+  const selLeftPct = selHandle ? Math.max(12, Math.min(88, xOf(selHandle.hz) / 10)) : 50
+  const selTopPct = selHandle ? (yOf(selHandle.db) / H) * 100 : 50
 
   return (
     <div className={`ms-eqg${props.compact ? ' compact' : ''}${props.on ? ' on' : ''}${props.toneHz !== null ? ' tone' : ''}`}>
       <div className="ms-eqg-db" aria-hidden="true">
-        {[12, 6, 0, -6, -12].map((db) => <span key={db} style={{ top: `${(yOf(db) / H) * 100}%` }}>{db > 0 ? `+${db}` : db}</span>)}
+        {dbTicks.map((db) => <span key={db} style={{ top: `${(yOf(db) / H) * 100}%` }}>{db > 0 ? `+${db}` : db}</span>)}
       </div>
       <div
         ref={plot}
@@ -200,13 +216,12 @@ export function EqGraph(props: {
         }}
         onDoubleClick={(e) => {
           if ((e.target as Element).closest('button')) return
-          // §100: on a phone a double tap brings the card up instead of adding a filter
-          if (props.onDoubleTap) props.onDoubleTap()
-          else props.onAdd?.({ hz: Math.round(at(e).hz), db: Math.round(at(e).db * 2) / 2 })
+          // §100: on the phone a double tap doesn't add a filter (too easy to hit while scrolling)
+          if (!isAndroid()) props.onAdd?.({ hz: Math.round(at(e).hz), db: Math.round(at(e).db * 2) / 2 })
         }}
       >
         <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true">
-          {[12, 6, -6, -12].map((db) => <line key={db} className="grid" x1="0" x2={W} y1={yOf(db)} y2={yOf(db)} />)}
+          {dbTicks.filter((db) => db !== 0).map((db) => <line key={db} className="grid" x1="0" x2={W} y1={yOf(db)} y2={yOf(db)} />)}
           {[50, 100, 200, 500, 1000, 2000, 5000, 10000].map((hz) => <line key={hz} className="grid" x1={xOf(hz)} x2={xOf(hz)} y1="0" y2={H} />)}
           <line className="zero" x1="0" x2={W} y1={H / 2} y2={H / 2} />
           <polygon className="eq-area" points={lines.area} />
@@ -222,7 +237,7 @@ export function EqGraph(props: {
           <button
             type="button"
             key={i}
-            className={`ms-eqg-handle${sel === i ? ' on' : ''}`}
+            className={`ms-eqg-handle${sel === i ? ' on' : ''}${denseBands ? ' dense' : ''}${crowdedPeq ? ' crowded' : ''}`}
             style={{ left: `${xOf(h.hz) / 10}%`, top: `${(yOf(h.db) / H) * 100}%`, '--c': props.freeHz ? (h.kind ? KIND_COLOR[h.kind] : filterColor(i)) : undefined } as React.CSSProperties}
             aria-label={`${hzLabel(h.hz)}, ${signed(h.db)}`}
             onPointerDown={(e) => {
@@ -236,7 +251,11 @@ export function EqGraph(props: {
             onPointerUp={(e) => { e.stopPropagation(); end(e) }}
             onPointerCancel={(e) => end(e)}
             onWheel={(e) => props.onHandleQ?.(i, e.deltaY < 0 ? 1.12 : 1 / 1.12)}
-            onDoubleClick={(e) => { e.stopPropagation(); props.onRemove?.(i) }}
+            onDoubleClick={(e) => {
+              e.stopPropagation()
+              if (props.freeHz) props.onRemove?.(i)
+              else props.onHandle?.(i, { db: 0 })
+            }}
             onKeyDown={(e) => {
               const step = e.shiftKey ? 0.1 : 0.5
               if (e.key === 'ArrowUp') props.onHandle?.(i, { db: h.db + step })
@@ -251,18 +270,46 @@ export function EqGraph(props: {
             {props.freeHz ? i + 1 : ''}
           </button>
         ))}
-        {sel !== null && handles[sel] && props.freeHz && (
-          <span className="ms-eqg-dotread" style={{ left: `${xOf(handles[sel].hz) / 10}%`, top: `${(yOf(handles[sel].db) / H) * 100}%` }}>
-            <b>{hzLabel(handles[sel].hz)}</b> {signed(handles[sel].db)}{handles[sel].q !== undefined && ` · Q ${handles[sel].q!.toFixed(2)}`}
+        {selHandle && props.freeHz && (
+          <span className={`ms-eqg-dotread${selTopPct < 24 ? ' below' : ''}`} style={{ left: `${selLeftPct}%`, top: `${selTopPct}%` }}>
+            <b>{hzLabel(selHandle.hz)}</b> {signed(selHandle.db)}{selHandle.q !== undefined && ` · Q ${selHandle.q.toFixed(2)}`}
           </span>
         )}
-        {props.on && maxBoost > 0.05 && <span className="ms-eqg-headroom">Headroom −{maxBoost.toFixed(1)} dB</span>}
+        <div className="ms-eqg-badges">
+          {props.on && maxBoost > 0.05 && <span className="ms-eqg-headroom">Headroom −{maxBoost.toFixed(1)} dB</span>}
+          <button
+            type="button"
+            className="ms-eqg-scale"
+            title="Cycle vertical dB scale"
+            aria-label={`Graph scale ±${dbRange} dB`}
+            onClick={(e) => {
+              e.stopPropagation()
+              const idx = DB_SCALES.indexOf(dbRange)
+              setDbRange(DB_SCALES[(idx + 1) % DB_SCALES.length])
+            }}
+          >
+            ±{dbRange} dB
+          </button>
+        </div>
         {readHz !== null && readDb !== null && (
-          <span className="ms-eqg-read" style={{ left: `${xOf(readHz) / 10}%` }}>
+          <span className="ms-eqg-read" style={{ left: `${Math.max(10, Math.min(90, xOf(readHz) / 10))}%` }}>
             <b>{hzLabel(readHz)}</b> {signed(readDb)}
           </span>
         )}
-        {[100, 1000, 10000].map((hz) => <span key={hz} className="ms-eqg-hz" style={{ left: `${xOf(hz) / 10}%` }}>{hz >= 1000 ? `${hz / 1000}k` : hz}</span>)}
+        {[
+          [50, '50', true],
+          [100, '100', false],
+          [250, '250', true],
+          [500, '500', true],
+          [1000, '1k', false],
+          [2000, '2k', true],
+          [5000, '5k', true],
+          [10000, '10k', false],
+        ].map(([hz, lbl, extra]) => (
+          <span key={hz as number} className={`ms-eqg-hz${extra ? ' extra' : ''}`} style={{ left: `${xOf(hz as number) / 10}%` }}>
+            {lbl as string}
+          </span>
+        ))}
       </div>
       {!props.compact && (
         <div className="ms-eqg-legend">
@@ -536,20 +583,22 @@ export function FineTuneCard(props: {
       )}
 
       {step === 'peaks' && (<>
-      <div className="ms-eqtune-tone">
-        <button type="button" className="ms-eqtune-play" aria-label={props.playing ? 'Stop the tone' : 'Play the tone'} onClick={() => props.onPlay(!props.playing)}>
-          <Icon name={props.playing ? 'stop' : 'play_arrow'} size={36} />
-        </button>
-        <div className="grow">
+      <div className="ms-eqtune-tone-box">
+        <div className="ms-eqtune-tone-top">
+          <button type="button" className="ms-eqtune-play" aria-label={props.playing ? 'Stop the tone' : 'Play the tone'} onClick={() => props.onPlay(!props.playing)}>
+            <Icon name={props.playing ? 'stop' : 'play_arrow'} size={30} />
+          </button>
           <output className="ms-eqtune-hz">{hzLabel(props.hz)}</output>
-          <Slider thick label="Tone frequency" min={0} max={1} step={0.002} value={Math.max(0, Math.min(1, toneFrac(props.hz)))} onChange={(f) => { props.onSweep(false); props.onHz(Math.round(toneHzOf(f))) }} />
+          <div className="ms-eqtune-chips">
+            <button type="button" className={`ms-chip${props.sweeping ? ' on' : ''}`} onClick={() => props.onSweep(!props.sweeping)}>
+              <Icon name="waves" size={16} />Sweep
+            </button>
+            <button type="button" className={`ms-chip${props.fullRange ? ' on' : ''}`} aria-pressed={props.fullRange} onClick={() => props.onFullRange(!props.fullRange)}>
+              <Icon name="unfold_more" size={16} />Full range
+            </button>
+          </div>
         </div>
-        <button type="button" className={`ms-chip${props.sweeping ? ' on' : ''}`} onClick={() => props.onSweep(!props.sweeping)}>
-          <Icon name="waves" size={18} />Sweep
-        </button>
-        <button type="button" className={`ms-chip${props.fullRange ? ' on' : ''}`} aria-pressed={props.fullRange} onClick={() => props.onFullRange(!props.fullRange)}>
-          <Icon name="unfold_more" size={18} />Full range
-        </button>
+        <Slider thick label="Tone frequency" min={0} max={1} step={0.002} value={Math.max(0, Math.min(1, toneFrac(props.hz)))} onChange={(f) => { props.onSweep(false); props.onHz(Math.round(toneHzOf(f))) }} />
       </div>
 
       <div className="ms-eqtune-acts">
@@ -640,14 +689,22 @@ export function ImportDeviceDialog(props: { db: Database; presetName: string; ac
   )
 }
 
-// ---- §96: the filters as PEQdB's cards, coloured by type
+// ---- §96: the filters as PEQdB's cards, coloured by type, plus a smooth touch/mouse inspector for the selected band
+
+const freqFrac = (hz: number) => Math.log(Math.max(20, Math.min(20000, hz)) / 20) / Math.log(1000)
+const freqFromFrac = (f: number) => Math.round(20 * 1000 ** Math.max(0, Math.min(1, f)))
 
 export function FilterCards(props: {
   filters: Biquad[]
+  selected?: number | null
+  onSelect?: (i: number | null) => void
   onChange: (filters: Biquad[]) => void
 }) {
   const { filters, onChange } = props
   const [typeMenu, setTypeMenu] = useState<{ i: number; x: number; y: number } | null>(null)
+  const activeIdx = props.selected !== undefined && props.selected !== null && filters[props.selected] ? props.selected : filters.length ? 0 : null
+  // the card whose detailed sliders are open (its tune button), one at a time
+  const [openIdx, setOpenIdx] = useState<number | null>(null)
   const set = (i: number, patch: Partial<Biquad>) => onChange(filters.map((f, k) => (k === i ? tidyFilter({ ...f, ...patch }) : f)))
   const add = () => {
     if (filters.length >= PEQ_MAX_FILTERS) return
@@ -660,32 +717,70 @@ export function FilterCards(props: {
     }
     const next = filters.findIndex((f) => f.fc > best)
     const fresh = tidyFilter({ kind: 'peak', fc: best, gain: 0, q: 1.41 })
+    const insertedAt = next < 0 ? filters.length : next
     onChange(next < 0 ? [...filters, fresh] : [...filters.slice(0, next), fresh, ...filters.slice(next)])
+    props.onSelect?.(insertedAt)
+  }
+  const removeAt = (i: number) => {
+    const next = filters.filter((_, k) => k !== i)
+    onChange(next)
+    setOpenIdx((o) => (o === null || o < i ? o : o === i ? null : o - 1))
+    if (props.selected === i) props.onSelect?.(next.length ? Math.min(i, next.length - 1) : null)
   }
   return (
-    <section className="ms-eqcards">
+    <section className="ms-eqcards-wrap">
       <div className="ms-eqcards-tools">
-        <button type="button" className="ms-btn text" disabled={filters.length >= PEQ_MAX_FILTERS} onClick={add}><Icon name="add" size={20} />Add filter</button>
+        <button type="button" className="ms-btn tonal small ms-eqcards-add" disabled={filters.length >= PEQ_MAX_FILTERS} onClick={add}>
+          <Icon name="add" size={18} />Add filter
+        </button>
+        <span className="ms-eqcards-hint">Tap graph line to add · wheel or pinch for Q</span>
         <span className="ms-eqcards-count">{filters.length} / {PEQ_MAX_FILTERS}</span>
       </div>
-      {filters.map((f, i) => (
-        <div key={i} className="ms-eqcard" style={{ '--c': KIND_COLOR[f.kind] } as React.CSSProperties}>
-          <div className="ms-eqcard-head">
-            <b>{i + 1}</b>
-            <button type="button" className="ms-eqcard-kind" aria-haspopup="menu" aria-label={`Filter ${i + 1} type: ${KIND_NAME[f.kind]}`} onClick={(e) => { const r = e.currentTarget.getBoundingClientRect(); setTypeMenu({ i, x: r.left, y: r.bottom + 4 }) }}>
-              <span>{KIND_NAME[f.kind]}</span><Icon name="arrow_drop_down" size={18} />
-            </button>
-            <IconButton icon="close" label={`Remove filter ${i + 1}`} small onClick={() => onChange(filters.filter((_, k) => k !== i))} />
+
+      <div className="ms-eqcards">
+        {filters.map((f, i) => (
+          <div
+            key={i}
+            className={`ms-eqcard${activeIdx === i ? ' selected' : ''}${openIdx === i ? ' open' : ''}`}
+            style={{ '--c': KIND_COLOR[f.kind] } as React.CSSProperties}
+            onClick={() => props.onSelect?.(i)}
+          >
+            <div className="ms-eqcard-head">
+              <b>{i + 1}</b>
+              <button type="button" className="ms-eqcard-kind" aria-haspopup="menu" aria-label={`Filter ${i + 1} type: ${KIND_NAME[f.kind]}`} onClick={(e) => { e.stopPropagation(); props.onSelect?.(i); const r = e.currentTarget.getBoundingClientRect(); setTypeMenu({ i, x: r.left, y: r.bottom + 4 }) }}>
+                <span>{KIND_NAME[f.kind]}</span><Icon name="arrow_drop_down" size={18} />
+              </button>
+              <IconButton icon="tune" label={`${openIdx === i ? 'Hide' : 'Show'} filter ${i + 1} sliders`} small active={openIdx === i} onClick={() => { props.onSelect?.(i); setOpenIdx(openIdx === i ? null : i) }} />
+              <IconButton icon="close" label={`Remove filter ${i + 1}`} small onClick={() => removeAt(i)} />
+            </div>
+            <div className="ms-eqcard-fields">
+              <NumField label="Freq" value={f.fc} min={PEQ_LIMITS.fMin} max={PEQ_LIMITS.fMax} step={1} onChange={(v) => set(i, { fc: v })} />
+              {f.kind === 'lowpass' || f.kind === 'highpass'
+                ? <span className="peq-field off"><input disabled value="—" aria-label="No gain" /><span>Gain</span></span>
+                : <NumField label="Gain" value={f.gain} min={PEQ_LIMITS.gainMin} max={PEQ_LIMITS.gainMax} step={0.1} onChange={(v) => set(i, { gain: v })} />}
+              <NumField label="Q" value={f.q} min={PEQ_LIMITS.qMin} max={PEQ_LIMITS.qMax} step={0.05} onChange={(v) => set(i, { q: v })} />
+            </div>
+            {openIdx === i && (
+              <div className="ms-peq-sliders" onClick={(e) => e.stopPropagation()}>
+                <label className="ms-peq-srow">
+                  <span>Freq<b>{hzLabel(f.fc)}</b></span>
+                  <Slider thick label={`Filter ${i + 1} frequency`} min={0} max={1} step={0.001} value={freqFrac(f.fc)} onChange={(v) => set(i, { fc: freqFromFrac(v) })} />
+                </label>
+                {f.kind !== 'lowpass' && f.kind !== 'highpass' && (
+                  <label className="ms-peq-srow">
+                    <span>Gain<b>{signed(f.gain)}</b></span>
+                    <Slider thick label={`Filter ${i + 1} gain`} min={PEQ_LIMITS.gainMin} max={PEQ_LIMITS.gainMax} step={0.1} value={f.gain} onChange={(v) => set(i, { gain: +v.toFixed(1) })} />
+                  </label>
+                )}
+                <label className="ms-peq-srow">
+                  <span>Width (Q)<b>{f.q.toFixed(2)}</b></span>
+                  <Slider thick label={`Filter ${i + 1} Q`} min={PEQ_LIMITS.qMin} max={PEQ_LIMITS.qMax} step={0.05} value={f.q} onChange={(v) => set(i, { q: +v.toFixed(2) })} />
+                </label>
+              </div>
+            )}
           </div>
-          <div className="ms-eqcard-fields">
-            <NumField label="Freq" value={f.fc} min={PEQ_LIMITS.fMin} max={PEQ_LIMITS.fMax} step={1} onChange={(v) => set(i, { fc: v })} />
-            {f.kind === 'lowpass' || f.kind === 'highpass'
-              ? <span className="peq-field off"><input disabled value="—" aria-label="No gain" /><span>Gain</span></span>
-              : <NumField label="Gain" value={f.gain} min={PEQ_LIMITS.gainMin} max={PEQ_LIMITS.gainMax} step={0.1} onChange={(v) => set(i, { gain: v })} />}
-            <NumField label="Q" value={f.q} min={PEQ_LIMITS.qMin} max={PEQ_LIMITS.qMax} step={0.05} onChange={(v) => set(i, { q: v })} />
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
       {!filters.length && <p className="ms-eqcards-empty">No filters yet. Press AutoEQ, tap the EQ line on the graph, or add one with +.</p>}
       {typeMenu && filters[typeMenu.i] && (
         <Menu

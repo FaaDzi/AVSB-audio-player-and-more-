@@ -743,6 +743,24 @@
   .ms-np-side .ms-queue-row {
     height: 52px;
   }
+
+  /* Compact Settings pane header in landscape so Equalizer & Spatial aren't pushed off the 390px viewport */
+  .ms-window.phone .ms-settings-title {
+    height: 42px;
+    min-height: 42px;
+    padding: 0 max(12px, env(safe-area-inset-right)) 0 max(12px, env(safe-area-inset-left));
+  }
+  .ms-window.phone .ms-settings-title .ms-settings-title-small {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .ms-window.phone .ms-settings-body:has(.ms-eq) {
+    padding-top: 46px;
+  }
+  .ms-window.phone .ms-settings-body:has(.ms-eq) > .ms-settings-bigtitle {
+    display: none;
+  }
 }
 
 /* §89 E: the band under the clock and icons is the page's own colour and fades out below the bar, so nothing scrolling

@@ -211,7 +211,16 @@ export function startTheme() {
     setSetting('style', 'Game show')
   }
   applyTheme()
-  subscribeSettings(applyTheme)
+  // only when a setting the theme reads changes: EQ and volume drags write settings many times a second (§113 check)
+  const THEME_KEYS = ['theme', 'amoled', 'seed', 'dynamic', 'style', 'outlines', 'reducemotion', 'lyricsize', 'customfont', 'sysfont']
+  const themeKey = () => JSON.stringify(THEME_KEYS.map((k) => getSetting(k)))
+  let lastKey = themeKey()
+  subscribeSettings(() => {
+    const key = themeKey()
+    if (key === lastKey) return
+    lastKey = key
+    applyTheme()
+  })
   subscribeSettings(applyWindowMode)
   systemDark().addEventListener('change', applyTheme)
   void readSystemAccent()

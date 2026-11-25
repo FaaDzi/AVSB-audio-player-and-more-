@@ -1,14 +1,17 @@
+import type { Biquad } from '../eq/biquad'
 import { loadEarCorrection } from './earCorrection'
 import { clampHeadCm, scaleItd, AVERAGE_HEAD_CM } from './headSize'
 import { hrirVersion, loadHrirSet } from './hrir'
+import { XF_CUT_RANGE } from './stage'
 import type { HeadTracking, SpatialMode, SpatialSettings, SpatialStageApi } from './types'
 
 const KEY = 'spatial-v1'
 export const SPATIAL_MODES: SpatialMode[] = ['off', 'crossfeed', 'speakers', 'room', '360']
 const TRACKING: HeadTracking[] = ['off', 'webcam', 'phone-camera', 'earbuds', 'rough']
-export const DEFAULT_SPATIAL: SpatialSettings = { mode: 'off', hrirId: 'generic', headTracking: 'off', headCm: null, headCmBy: null, xfAmount: 100, xfAngle: 30, frontFollows: true, modeBeforeTracking: null }
+export const DEFAULT_SPATIAL: SpatialSettings = { mode: 'off', hrirId: 'generic', headTracking: 'off', headCm: null, headCmBy: null, xfAmount: 100, xfAngle: 30, xfCutHz: 700, earPct: 100, frontFollows: true, modeBeforeTracking: null }
 export const XF_AMOUNT_RANGE = [0, 150] as const
 export const XF_ANGLE_RANGE = [30, 90] as const
+export const EAR_PCT_RANGE = [0, 150] as const
 const inRange = (v: unknown, [lo, hi]: readonly [number, number], dflt: number) =>
   typeof v === 'number' && Number.isFinite(v) ? Math.min(hi, Math.max(lo, Math.round(v))) : dflt
 
@@ -23,6 +26,8 @@ export function sanitizeSpatial(v: unknown): SpatialSettings {
     headCmBy: typeof o.headCm === 'number' && Number.isFinite(o.headCm) && (o.headCmBy === 'you' || o.headCmBy === 'camera') ? o.headCmBy : null,
     xfAmount: inRange(o.xfAmount, XF_AMOUNT_RANGE, DEFAULT_SPATIAL.xfAmount),
     xfAngle: inRange(o.xfAngle, XF_ANGLE_RANGE, DEFAULT_SPATIAL.xfAngle),
+    xfCutHz: inRange(o.xfCutHz, XF_CUT_RANGE, DEFAULT_SPATIAL.xfCutHz),
+    earPct: inRange(o.earPct, EAR_PCT_RANGE, DEFAULT_SPATIAL.earPct),
     frontFollows: o.frontFollows !== false,
     modeBeforeTracking: SPATIAL_MODES.includes(o.modeBeforeTracking as SpatialMode) ? (o.modeBeforeTracking as SpatialMode) : null,
   }
@@ -75,12 +80,21 @@ export function followSpatialSettings(stage: SpatialStageApi, no360 = false): ()
           hrirId = ''
         })
     }
-    stage.setCrossfeed?.(s.xfAmount, s.xfAngle)
+    stage.setCrossfeed?.(s.xfAmount, s.xfAngle, s.xfCutHz)
+    if (earFilters && s.earPct !== earPct) {
+      earPct = s.earPct
+      stage.setEarCorrection?.(earFilters.map((f) => ({ ...f, gain: (f.gain * earPct) / 100 })))
+    }
     // the tournament's own player stays at Speakers: a second 360 upmix next to the main one costs too much (audit)
     stage.setMode(no360 && s.mode === '360' ? 'speakers' : s.mode)
   }
-  // the virtual speakers' ear-gain correction: automatic, fetched once
-  void loadEarCorrection().then((f) => f && stage.setEarCorrection?.(f))
+  // the virtual speakers' ear-gain correction: fetched once, scaled by earPct
+  let earFilters: Biquad[] | null = null
+  let earPct = -1
+  void loadEarCorrection().then((f) => {
+    earFilters = f
+    if (f) apply(loadSpatial())
+  })
   apply(loadSpatial())
   return onSpatialChange(apply)
 }

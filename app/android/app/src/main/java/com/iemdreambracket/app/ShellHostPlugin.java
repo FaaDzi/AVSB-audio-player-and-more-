@@ -54,6 +54,7 @@ import org.json.JSONObject;
  */
 @CapacitorPlugin(
     name = "ShellHost",
+    requestCodes = { 7203 },
     permissions = {
         @Permission(alias = "audio", strings = { Manifest.permission.READ_MEDIA_AUDIO }),
         @Permission(alias = "storage", strings = { Manifest.permission.READ_EXTERNAL_STORAGE }),
@@ -242,11 +243,37 @@ public class ShellHostPlugin extends Plugin {
     public void trashTrack(PluginCall call) {
         String id = call.getString("id", "");
         String path = call.getString("path", "");
-        JSObject res = performTrashTrack(id, path);
+        JSObject res = performTrashTrack(id, path, call);
+        if (res != null) call.resolve(res);
+    }
+
+    /** The trash request waiting for the system dialog (§113 check: answer only once the user has chosen). */
+    private PluginCall pendingTrash;
+    private String pendingTrashKey;
+
+    @Override
+    protected void handleOnActivityResult(int requestCode, int resultCode, android.content.Intent data) {
+        super.handleOnActivityResult(requestCode, resultCode, data);
+        if (requestCode != TRASH_REQUEST_CODE || pendingTrash == null) return;
+        PluginCall call = pendingTrash;
+        String key = pendingTrashKey;
+        pendingTrash = null;
+        pendingTrashKey = null;
+        JSObject res = new JSObject();
+        if (resultCode == android.app.Activity.RESULT_OK) {
+            removeTrackFromMemory(key);
+            new Thread(this::scanNow).start();
+            res.put("ok", true);
+            res.put("trashed", true);
+        } else {
+            res.put("ok", false);
+            res.put("cancelled", true);
+        }
         call.resolve(res);
     }
 
-    private JSObject performTrashTrack(String id, String path) {
+    /** call: the plugin call to answer after the system Trash dialog; null (the HTTP route) answers right away. */
+    private JSObject performTrashTrack(String id, String path, PluginCall call) {
         JSObject res = new JSObject();
         String target = (id != null && !id.isEmpty()) ? id : (path != null ? path : "");
         if (target.isEmpty()) {
@@ -291,6 +318,18 @@ public class ShellHostPlugin extends Plugin {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 List<Uri> list = Collections.singletonList(uri);
                 PendingIntent pi = MediaStore.createTrashRequest(getContext().getContentResolver(), list, true);
+                if (call != null && getActivity() != null) {
+                    if (pendingTrash != null) {
+                        JSObject busy = new JSObject();
+                        busy.put("ok", false);
+                        busy.put("error", "another delete is waiting");
+                        pendingTrash.resolve(busy);
+                    }
+                    pendingTrash = call;
+                    pendingTrashKey = matchedKey;
+                    getActivity().startIntentSenderForResult(pi.getIntentSender(), TRASH_REQUEST_CODE, null, 0, 0, 0, null);
+                    return null;
+                }
                 if (getActivity() != null) {
                     getActivity().startIntentSenderForResult(pi.getIntentSender(), TRASH_REQUEST_CODE, null, 0, 0, 0, null);
                 }
@@ -620,7 +659,7 @@ public class ShellHostPlugin extends Plugin {
             case "/shell-host/meta":
                 return meta(url.getQueryParameter("url"));
             case "/shell-host/trash-track": {
-                JSObject res = performTrashTrack(url.getQueryParameter("id"), url.getQueryParameter("path"));
+                JSObject res = performTrashTrack(url.getQueryParameter("id"), url.getQueryParameter("path"), null);
                 int code = res.optBoolean("ok", false) ? 200 : 404;
                 return text(code, "application/json", res.toString());
             }

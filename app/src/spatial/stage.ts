@@ -67,8 +67,8 @@ export function onePoleResponse(b0: number, b1: number, a1: number, hz: number, 
 
 /** bs2b's feed range (dB between the direct and crossfed path at low frequencies). */
 const XF_FEED_RANGE = [1, 15] as const
-/** The low-pass's own group delay at low frequencies (≈ 1/(2π·700 Hz)), counted into the ITD. */
-const XF_LOWPASS_DELAY_S = 1 / (2 * Math.PI * XF_CUT_HZ)
+/** Crossfeed cutoff range (Hz) the setting may pick. */
+export const XF_CUT_RANGE = [400, 1400] as const
 
 /**
  * CanOpener-style controls (plan §52.5) as bs2b settings. Amount scales the crossfed level
@@ -76,12 +76,13 @@ const XF_LOWPASS_DELAY_S = 1 / (2 * Math.PI * XF_CUT_HZ)
  * Angle is where the imagined speakers stand: the far ear hears them later (Woodworth's ITD for an
  * 8.75 cm head), so the crossfed path is delayed to match. Null = crossfeed off.
  */
-export function crossfeedParams(amountPct: number, angleDeg: number): { feedDb: number; delayS: number } | null {
+export function crossfeedParams(amountPct: number, angleDeg: number, cutHz = XF_CUT_HZ): { feedDb: number; delayS: number } | null {
   if (!(amountPct > 0)) return null
   const feedDb = Math.min(XF_FEED_RANGE[1], Math.max(XF_FEED_RANGE[0], XF_FEED_DB - 24 * Math.log10(amountPct / 100)))
   const th = (Math.min(90, Math.max(0, angleDeg)) * Math.PI) / 180
   const itd = (0.0875 / 343) * (th + Math.sin(th))
-  return { feedDb, delayS: Math.max(0, itd - XF_LOWPASS_DELAY_S) }
+  // the low-pass's own group delay at low frequencies (1/(2π·cut)) already counts toward the ITD
+  return { feedDb, delayS: Math.max(0, itd - 1 / (2 * Math.PI * cutHz)) }
 }
 
 // ---------- level matching ----------
@@ -376,6 +377,7 @@ export class SpatialStage implements SpatialStageApi {
   private xfKey = 'default'
   /** False when the crossfeed amount is 0 %: crossfeed mode then plays the dry signal. */
   private xfAmountOn = true
+  private xfCutHz = XF_CUT_HZ
   private vOn = false
   private offTimer: ReturnType<typeof setTimeout> | undefined
   private yaw = 0
@@ -451,7 +453,7 @@ export class SpatialStage implements SpatialStageApi {
   private buildCrossfeed(feedDb: number, delayS: number): number {
     const ctx = this.ctx
     const fs = ctx.sampleRate
-    const c = bs2bCoefficients(fs, XF_CUT_HZ, feedDb)
+    const c = bs2bCoefficients(fs, this.xfCutHz, feedDb)
     this.xfSplit.disconnect()
     for (const n of this.xfNodes) n.disconnect()
     const merge = ctx.createChannelMerger(2)
@@ -467,13 +469,14 @@ export class SpatialStage implements SpatialStageApi {
       this.xfNodes.push(hi, lo, delay)
     }
     merge.connect(this.xf)
-    return c.gain * crossfeedMatchGain(fs, XF_CUT_HZ, feedDb)
+    return c.gain * crossfeedMatchGain(fs, this.xfCutHz, feedDb)
   }
 
   /** Crossfeed amount (%) and speaker angle (°), CanOpener style; 0 % plays dry in crossfeed mode. */
-  setCrossfeed(amountPct: number, angleDeg: number) {
-    const p = crossfeedParams(amountPct, angleDeg)
-    const key = p ? `${p.feedDb.toFixed(2)}/${p.delayS.toFixed(6)}` : 'off'
+  setCrossfeed(amountPct: number, angleDeg: number, cutHz = XF_CUT_HZ) {
+    const p = crossfeedParams(amountPct, angleDeg, cutHz)
+    const key = p ? `${p.feedDb.toFixed(2)}/${p.delayS.toFixed(6)}/${cutHz}` : 'off'
+    this.xfCutHz = cutHz
     if (key === this.xfKey) return
     this.xfKey = key
     this.xfAmountOn = !!p

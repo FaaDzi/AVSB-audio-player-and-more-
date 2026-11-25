@@ -186,7 +186,7 @@
 .ms-meta dt { font-size: 13px; color: var(--text-dim); }
 .ms-meta dd { margin: 0; color: var(--text-strong); overflow-wrap: anywhere; }
 .ms-meta-from { display: inline-flex; align-items: center; gap: 4px; margin-left: 10px; font-size: 12px; color: var(--text-dim); vertical-align: middle; }
-.ms-meta-possible { margin-top: 12px; padding: 14px 16px; border-radius: 16px; background: var(--surface-high, rgba(255, 255, 255, 0.06)); }
+.ms-meta-possible { margin-top: 12px; padding: 14px 16px; border-radius: 16px; background: var(--surface-high, rgb(var(--ink) / 0.06)); }
 .ms-meta-possible > p { display: flex; gap: 8px; margin: 0 0 4px; color: var(--text); font-size: 13px; }
 .ms-meta-possible-cover { width: 96px; height: 96px; border-radius: 8px; object-fit: cover; }
 .ms-meta-possible-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
@@ -286,7 +286,7 @@
 .ms-spinner {
   width: 22px;
   height: 22px;
-  border: 2.5px solid rgba(255, 255, 255, 0.28);
+  border: 2.5px solid color-mix(in srgb, currentColor 28%, transparent);
   border-top-color: var(--accent, #ffd166);
   border-radius: 50%;
   animation: ms-spin 700ms linear infinite;
@@ -441,7 +441,7 @@
 .ms-slider-note { font-size: 13px; color: var(--text-dim); }
 .ms-lyric-preview { margin: 2px 0; line-height: 1.3; color: var(--text-strong); }
 .ms-set-tile-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.ms-set-tile-grid button { height: 48px; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0 12px; border-radius: 12px; background: #222; font-size: 15px; color: var(--text); transition: background var(--motion-fast); }
+.ms-set-tile-grid button { height: 48px; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0 12px; border-radius: 12px; background: var(--control); font-size: 15px; color: var(--text); transition: background var(--motion-fast); }
 .ms-set-tile-grid button:hover { background: var(--chip); }
 .ms-set-tile-grid button.on { background: var(--accent-container); color: var(--on-accent-container); font-weight: 600; }
 .ms-set-tile-grid.tall button { height: 74px; flex-direction: column; gap: 6px; border-radius: 14px; }
@@ -509,10 +509,10 @@
 .ms-eq-bands { padding: 16px; background: var(--chrome); overflow: visible; }
 /* the bars share the width at any window size, and the gap between them grows and shrinks with it */
 .ms-eq-row { --eq-height: clamp(150px, 30vh, 240px); container-type: inline-size; display: flex; justify-content: space-between; column-gap: clamp(3px, 1%, 14px); margin-top: 16px; }
-.ms-store-top { margin-top: 12px; padding: 16px; border-radius: var(--radius-card); background: #07182c; color: var(--on-accent-container); }
+.ms-store-top { margin-top: 12px; padding: 16px; border-radius: var(--radius-card); background: var(--accent-container); color: var(--on-accent-container); }
 .ms-store-top h3 { font-size: 17px; line-height: 22px; font-weight: 700; }
 .ms-store-top b { display: block; margin-top: 8px; font-size: 17px; line-height: 22px; font-weight: 400; }
-.ms-store-top p { margin: 2px 0 12px; font-size: 14px; color: #b9cbe2; }
+.ms-store-top p { margin: 2px 0 12px; font-size: 14px; color: inherit; opacity: 0.8; }
 .ms-store-top .ms-btn { height: 48px; border-radius: 24px; }
 .ms-store-top .ms-btn.tonal { background: var(--nav-selected); color: var(--text-strong); }
 .ms-store-top .ms-btn.outline { border: 1px solid var(--outline); color: var(--text); }
@@ -527,7 +527,7 @@
 .ms-log-filter { padding: 12px; border-radius: var(--radius-card); background: var(--chrome); }
 .ms-log-level { display: flex; align-items: center; gap: 13px; padding: 4px 0 12px 8px; margin-bottom: 12px; border-bottom: 1px solid var(--chip); font-size: 17px; color: var(--text-strong); }
 .ms-log-dropdown { flex: none; height: 40px; display: flex; align-items: center; gap: 6px; padding: 0 14px 0 12px; border-radius: 20px; background: var(--nav-selected); font-size: 14px; font-weight: 600; color: var(--text-strong); }
-.ms-issue { margin: 0 4px 12px; padding: 16px; border-radius: 12px; background: #2e1f3e; }
+.ms-issue { margin: 0 4px 12px; padding: 16px; border-radius: 12px; background: color-mix(in srgb, var(--danger) 14%, var(--chrome)); }
 .ms-issue b { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 600; color: var(--text-strong); }
 .ms-issue p { margin: 18px 0 0; font-size: 14px; color: var(--text); }
 .ms-log { display: flex; flex-direction: column; gap: 8px; }
@@ -536,10 +536,10 @@
 .ms-log-row b { padding: 1px 7px; border-radius: 6px; background: var(--chip); font-size: 12px; font-weight: 700; color: var(--text-dim); }
 .ms-log-row i { font-style: normal; font-weight: 500; color: var(--accent); }
 .ms-log-row p { margin: 8px 0 0; font-size: 15px; color: var(--text-strong); overflow-wrap: anywhere; }
-.ms-log-row.warn { background: #2a2414; }
-.ms-log-row.warn b { background: #4a3e12; color: #ffd479; }
-.ms-log-row.error { background: #2f1114; }
-.ms-log-row.error b { background: #5c1a1b; color: var(--danger); }
+.ms-log-row.warn { background: color-mix(in srgb, #e0a800 14%, var(--chrome)); }
+.ms-log-row.warn b { background: color-mix(in srgb, #e0a800 30%, var(--chrome)); color: var(--text-strong); }
+.ms-log-row.error { background: color-mix(in srgb, var(--danger) 14%, var(--chrome)); }
+.ms-log-row.error b { background: color-mix(in srgb, var(--danger) 28%, var(--chrome)); color: var(--danger); }
 .ms-priority-text { margin: 0 0 4px; padding: 0 0 4px; font-size: 16px; color: var(--text-dim); }
 .ms-priority { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
 .ms-priority li { display: flex; align-items: center; gap: 12px; min-height: 72px; padding: 8px 12px 8px 16px; border-radius: var(--radius-card); background: var(--chrome); font-size: 17px; color: var(--text-strong); cursor: grab; }
@@ -552,62 +552,371 @@
 .ms-priority.off li > .ms-icon { color: var(--text-dim); }
 .ms-priority-grip { width: 32px; height: 40px; display: flex; align-items: center; justify-content: center; color: var(--text); cursor: grab; }
 kbd { flex: none; font: 400 15px var(--font-ui); color: var(--text-dim); white-space: pre; }
-.ms-eq-band { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: clamp(9px, 1.6cqw, 13px); color: var(--text); white-space: nowrap; }
-/* 31 labels can't all fit, so every other one rests. The bars keep their own names for screen readers. */
-.ms-eq-row.dense .ms-eq-band:nth-child(even) > span:not(.ms-vslider) { visibility: hidden; }
-.ms-vslider { position: relative; display: block; width: min(28px, 100%); height: var(--eq-height); border-radius: clamp(3px, 0.8cqw, 8px); overflow: hidden;  background: var(--nav-selected); --pct: 50%; }
-.ms-vslider::after { content: ''; position: absolute; left: 0; right: 0; bottom: var(--pct); height: 4px; margin-bottom: -2px; border-radius: 2px; background: var(--accent); pointer-events: none; }
-.ms-vslider input { position: absolute; left: 50%; top: 50%; width: var(--eq-height); height: 28px; margin: 0; transform: translate(-50%, -50%) rotate(-90deg); opacity: 0; cursor: pointer; }
+/* Graphic EQ Faders (5 / 10 / 15 / 31 bands) — Bipolar 0 dB fill + scrollable touch mode */
+.ms-eq-row-scroll {
+  width: 100%;
+  overflow-x: hidden;
+}
+.ms-eq-row-scroll-wrap { position: relative; }
+/* more bands off to a side: that edge fades and shows a small arrow (set from the scroll position) */
+.ms-eq-row-scroll-wrap .ms-eq-scroll-hint {
+  position: absolute; top: 50%; z-index: 1; width: 28px; height: 28px; margin-top: -14px;
+  display: grid; place-items: center; border-radius: 50%;
+  background: var(--chip); color: var(--text-strong); box-shadow: 0 2px 8px rgb(0 0 0 / 0.3);
+  pointer-events: none; opacity: 0; transition: opacity 160ms;
+}
+.ms-eq-scroll-hint.left { left: 0; }
+.ms-eq-scroll-hint.right { right: 0; }
+.ms-eq-row-scroll-wrap.more-left .ms-eq-scroll-hint.left, .ms-eq-row-scroll-wrap.more-right .ms-eq-scroll-hint.right { opacity: 0.9; }
+.ms-eq-row-scroll-wrap.more-right .ms-eq-row-scroll { mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent); }
+.ms-eq-row-scroll-wrap.more-left .ms-eq-row-scroll { mask-image: linear-gradient(to left, #000 calc(100% - 36px), transparent); }
+.ms-eq-row-scroll-wrap.more-left.more-right .ms-eq-row-scroll { mask-image: linear-gradient(to right, transparent, #000 36px, #000 calc(100% - 36px), transparent); }
+.ms-eq-row-scroll.scrollable {
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+}
+.ms-eq-row {
+  --eq-height: clamp(172px, 31vh, 248px);
+  container-type: inline-size;
+  display: flex;
+  justify-content: space-between;
+  column-gap: clamp(4px, 1.1%, 14px);
+  margin-top: 8px;
+}
+.ms-eq-row.spacious {
+  min-width: max-content;
+  column-gap: 8px;
+}
+.ms-eq-band {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: clamp(9.5px, 1.5cqw, 12.5px);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+  white-space: nowrap;
+  user-select: none;
+}
+.ms-eq-row.spacious .ms-eq-band {
+  flex: 0 0 38px;
+  font-size: 11px;
+}
+@media (pointer: coarse) {
+  .ms-eq-row.spacious .ms-eq-band {
+    flex: 0 0 42px;
+  }
+}
+.ms-eq-band-db { margin-bottom: 4px; }
+.ms-eq-band.active .ms-eq-band-db {
+  color: var(--accent);
+  font-weight: 700;
+}
+.ms-eq-band-hz {
+  font-weight: 500;
+  color: var(--text-dim);
+}
+/* 31 labels in Fit-all mode: hide even labels so text never overlaps */
+.ms-eq-row.dense .ms-eq-band:nth-child(even) > span:not(.ms-vslider) {
+  visibility: hidden;
+}
+.ms-vslider {
+  position: relative;
+  display: block;
+  width: min(26px, 100%);
+  height: var(--eq-height);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--player);
+  border: 1px solid rgb(var(--ink) / 0.08);
+  --pct: 50%;
+  --fill-b: 50%;
+  --fill-h: 0%;
+}
+.ms-eq-row.spacious .ms-vslider {
+  width: 24px;
+}
+/* 0 dB center reference hairline + bipolar boost/cut fill */
+.ms-vslider::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--fill-b, 50%);
+  height: var(--fill-h, 0%);
+  background: color-mix(in srgb, var(--accent) 42%, transparent);
+  border-top: 1px solid rgb(var(--ink) / 0.2);
+  pointer-events: none;
+}
+.ms-vslider::after {
+  content: '';
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  bottom: var(--pct);
+  height: 6px;
+  margin-bottom: -3px;
+  border-radius: 3px;
+  background: var(--accent);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.35);
+  pointer-events: none;
+}
+.ms-vslider input {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--eq-height);
+  height: 36px;
+  margin: 0;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  opacity: 0;
+  cursor: ns-resize;
+  touch-action: none;
+}
 
-/* 3-Tier EQ: Basic 3-Zone Shaper & Polar Radar */
-.ms-eq-shaper { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 14px; }
-/* narrow phone: the three pads stay in one row, so Basic fits on one screen (§81 E) */
-@media (max-width: 560px) { .ms-eq-shaper { gap: 8px; } .ms-eq-pad { border-radius: 14px; } .ms-eq-pad-label { font-size: 9px; } .ms-eq-pad-label.y { left: 0; } }
-.ms-eq-pad-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-.ms-eq-pad-title { font-size: 14px; font-weight: 600; color: var(--text-dim); }
-.ms-eq-pad-coord-badge { font-family: monospace; font-size: 11px; font-weight: 600; padding: 2px 10px; border-radius: 12px; background: #000000; color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6); }
-.ms-eq-pad { position: relative; width: 100%; aspect-ratio: 1; border-radius: 20px; border: 1px solid rgb(255 255 255 / 0.12); overflow: hidden; touch-action: none; cursor: crosshair; user-select: none; box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.1); transition: border-color 150ms, box-shadow 150ms; }
-.ms-eq-pad.focused { border-color: rgba(255, 255, 255, 0.35); box-shadow: 0 0 16px rgba(255, 255, 255, 0.12); }
-.ms-eq-pad.bass { background: radial-gradient(circle at 50% 50%, rgb(255 65 84 / 0.26) 0%, #150a0e 85%); }
-.ms-eq-pad.mid { background: radial-gradient(circle at 50% 50%, rgb(46 213 115 / 0.32) 0%, #091a10 85%); }
-.ms-eq-pad.treble { background: radial-gradient(circle at 50% 50%, rgb(59 130 246 / 0.26) 0%, #0a111a 85%); }
-.ms-eq-pad-grid { position: absolute; inset: 0; pointer-events: none; }
-.ms-eq-pad-grid::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgb(255 255 255 / 0.08); }
-.ms-eq-pad-grid::after { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: rgb(255 255 255 / 0.08); }
-.ms-eq-pad-label { position: absolute; font-size: 11px; font-weight: 600; color: rgb(255 255 255 / 0.55); pointer-events: none; }
-.ms-eq-pad-label.y { left: 8px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
-.ms-eq-pad-label.x { bottom: 8px; left: 50%; transform: translateX(-50%); }
-.ms-eq-puck { position: absolute; width: 20px; height: 20px; border-radius: 50%; background: #ffffff; box-shadow: 0 0 12px rgba(255, 255, 255, 0.9), 0 2px 8px rgba(0, 0, 0, 0.8); transform: translate(-50%, -50%); pointer-events: none; transition: scale 120ms; }
-.ms-eq-pad:active .ms-eq-puck { scale: 1.25; }
-.ms-eq-coord { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); font-family: monospace; font-size: 11px; padding: 2px 8px; border-radius: 8px; background: rgb(0 0 0 / 0.75); color: #fff; border: 1px solid rgb(255 255 255 / 0.15); pointer-events: none; white-space: nowrap; }
+/* 3-Tier EQ: Basic 3-Zone Shaper & Polar Radar (Theme-adaptive for Dark, Light, AMOLED & Party) */
+.ms-eq-shaper {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 6px;
+}
+@media (max-width: 560px) {
+  .ms-eq-shaper { gap: 8px; }
+  .ms-eq-pad { border-radius: 14px; }
+  .ms-eq-pad-label { font-size: 9px; }
+  .ms-eq-pad-label.y { left: 2px; }
+}
+.ms-eq-pad-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.ms-eq-pad-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 7px 4px;
+}
+.ms-eq-pad-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.ms-eq-pad-coord-badge {
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--player);
+  color: var(--text-dim);
+  border: 1px solid color-mix(in srgb, var(--hairline) 80%, transparent);
+  white-space: nowrap;
+}
+.ms-eq-pad-coord-badge.active {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--player));
+}
+.ms-eq-pad {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--hairline) 90%, transparent);
+  overflow: hidden;
+  touch-action: none;
+  cursor: crosshair;
+  user-select: none;
+  transition: border-color 150ms, box-shadow 150ms;
+}
+.ms-eq-pad.focused {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 24%, transparent);
+}
+.ms-eq-pad.bass {
+  background: radial-gradient(circle at 50% 50%, color-mix(in srgb, #f43f5e 28%, var(--player)) 0%, var(--player) 88%);
+}
+.ms-eq-pad.mid {
+  background: radial-gradient(circle at 50% 50%, color-mix(in srgb, #10b981 28%, var(--player)) 0%, var(--player) 88%);
+}
+.ms-eq-pad.treble {
+  background: radial-gradient(circle at 50% 50%, color-mix(in srgb, #3b82f6 28%, var(--player)) 0%, var(--player) 88%);
+}
+.ms-eq-pad-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.ms-eq-pad-grid::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: rgb(var(--ink) / 0.14);
+}
+.ms-eq-pad-grid::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: rgb(var(--ink) / 0.14);
+}
+.ms-eq-pad-label {
+  position: absolute;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-dim);
+  opacity: 0.78;
+  pointer-events: none;
+}
+.ms-eq-pad-label.y {
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+}
+.ms-eq-pad-label.x {
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.ms-eq-puck {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--text-strong);
+  border: 3px solid var(--chrome);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.35);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: scale 120ms;
+}
+.ms-eq-pad:active .ms-eq-puck {
+  scale: 1.22;
+}
 
-/* Polar Blind Taste Radar */
-.ms-eq-polar-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; margin: 16px 0; }
-.ms-eq-polar-coord-badge { font-family: monospace; font-size: 11px; font-weight: 600; padding: 3px 12px; border-radius: 12px; background: #000000; color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6); }
-.ms-eq-polar-stage { position: relative; width: min(300px, 75vw); aspect-ratio: 1; border-radius: 50%; border: 1px solid rgb(255 255 255 / 0.18); overflow: hidden; touch-action: none; cursor: crosshair; user-select: none;
+/* Polar Blind Taste Radar (Theme-adaptive for Dark & Light) */
+.ms-eq-polar-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 4px;
+}
+.ms-eq-polar-coord-badge {
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  padding: 4px 12px;
+  border-radius: 12px;
+  background: var(--player);
+  color: var(--text-strong);
+  border: 1px solid color-mix(in srgb, var(--hairline) 85%, transparent);
+}
+.ms-eq-polar-coord-badge.blind {
+  background: var(--accent-container);
+  color: var(--on-accent-container);
+  border-color: transparent;
+}
+.ms-eq-polar-stage {
+  position: relative;
+  width: min(270px, 72vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--hairline) 95%, transparent);
+  overflow: hidden;
+  touch-action: none;
+  cursor: crosshair;
+  user-select: none;
   background:
     radial-gradient(circle at 50% 50%,
-      #0b131e 0%,
-      #0b131e 34%,
-      rgba(46, 213, 115, 0.32) 35%,
-      rgba(46, 213, 115, 0.32) 61%,
-      rgba(255, 65, 84, 0.32) 62%,
-      rgba(255, 65, 84, 0.32) 100%
+      var(--player) 0%,
+      var(--player) 33%,
+      color-mix(in srgb, #10b981 24%, var(--player)) 34%,
+      color-mix(in srgb, #10b981 24%, var(--player)) 64%,
+      color-mix(in srgb, #f43f5e 24%, var(--player)) 65%,
+      color-mix(in srgb, #f43f5e 24%, var(--player)) 100%
     );
-  box-shadow: inset 0 0 32px rgba(0,0,0,0.8), 0 10px 30px rgba(0,0,0,0.5);
+  box-shadow: inset 0 2px 18px rgb(0 0 0 / 0.14);
 }
-.ms-eq-polar-cross { position: absolute; inset: 0; pointer-events: none; }
-.ms-eq-polar-cross::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgb(255 255 255 / 0.15); }
-.ms-eq-polar-cross::after { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: rgb(255 255 255 / 0.15); }
-.ms-eq-polar-axis { position: absolute; font-size: 11px; font-weight: 600; color: rgb(255 255 255 / 0.5); pointer-events: none; }
+.ms-eq-polar-cross {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.ms-eq-polar-cross::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: rgb(var(--ink) / 0.16);
+}
+.ms-eq-polar-cross::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: rgb(var(--ink) / 0.16);
+}
+.ms-eq-polar-axis {
+  position: absolute;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--chrome) 82%, transparent);
+  color: var(--text-strong);
+  pointer-events: none;
+}
 .ms-eq-polar-axis.n { top: 8px; left: 50%; transform: translateX(-50%); }
 .ms-eq-polar-axis.s { bottom: 8px; left: 50%; transform: translateX(-50%); }
 .ms-eq-polar-axis.w { left: 8px; top: 50%; transform: translateY(-50%); }
 .ms-eq-polar-axis.e { right: 8px; top: 50%; transform: translateY(-50%); }
-.ms-eq-polar-puck { position: absolute; width: 22px; height: 22px; border-radius: 50%; background: #ffffff; box-shadow: 0 0 14px rgb(255 255 255 / 0.9), 0 2px 10px rgba(0, 0, 0, 0.85); transform: translate(-50%, -50%); pointer-events: none; }
-.ms-eq-polar-bottom-bar { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 440px; margin-top: 6px; gap: 12px; }
-.ms-eq-polar-toggle { display: flex; align-items: center; cursor: pointer; }
-.ms-eq-polar-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; flex: 1; }
+.ms-eq-polar-puck {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--chrome);
+  box-shadow: 0 2px 10px rgb(0 0 0 / 0.35);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.ms-eq-polar-bottom-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 4px;
+}
+.ms-eq-polar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.ms-eq-polar-actions .ms-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
 
 /* a slider inside a stacked row keeps its own height, and the EQ on/off row stays a row */
 .ms-set-row.column .ms-slider { flex: none; }
@@ -737,12 +1046,12 @@ kbd { flex: none; font: 400 15px var(--font-ui); color: var(--text-dim); white-s
   gap: 10px;
   padding: 10px 22px;
   border-radius: 9999px;
-  background: var(--surface-container-high, #2d3036);
-  color: var(--on-surface, #e2e2e8);
+  background: var(--dialog);
+  color: var(--text-strong);
   font-size: 14px;
   font-weight: 500;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgb(var(--ink) / 0.12);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   pointer-events: none;
@@ -775,7 +1084,7 @@ kbd { flex: none; font: 400 15px var(--font-ui); color: var(--text-dim); white-s
   border-radius: var(--radius-card);
   background: var(--chrome);
   margin-bottom: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgb(var(--ink) / 0.05);
 }
 
 .ms-review-row {
@@ -804,9 +1113,9 @@ kbd { flex: none; font: 400 15px var(--font-ui); color: var(--text-dim); white-s
 }
 
 .ms-review-badge.original {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgb(var(--ink) / 0.08);
   color: var(--text-dim);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgb(var(--ink) / 0.08);
 }
 
 .ms-review-meta {
@@ -831,7 +1140,7 @@ kbd { flex: none; font: 400 15px var(--font-ui); color: var(--text-dim); white-s
 
 .ms-review-divider {
   height: 1px;
-  background: var(--hairline, rgba(255, 255, 255, 0.06));
+  background: var(--hairline, rgb(var(--ink) / 0.06));
   margin: 2px 0;
 }
 
@@ -855,12 +1164,12 @@ kbd { flex: none; font: 400 15px var(--font-ui); color: var(--text-dim); white-s
 }
 
 .ms-btn.tonal {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgb(var(--ink) / 0.08);
   color: var(--text-strong);
 }
 
 .ms-btn.tonal:hover {
-  background: rgba(255, 255, 255, 0.14);
+  background: rgb(var(--ink) / 0.14);
 }
 /* ear tip page (§79 D) */
 .ms-tip-graph { display: block; width: 100%; max-width: 720px; border-radius: 12px; background: #fff; }

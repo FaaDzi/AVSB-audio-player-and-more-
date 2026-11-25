@@ -60,6 +60,7 @@ export function useTrackMenu(playlistId?: string) {
     setBusyDelete(true)
     try {
       const res = await trashTrackOnHost(t)
+      if (!res.ok) { setDeleting(null); return }
       // Remove from active library state, queue, and playlists while keeping stats.ts intact (§72.B3)
       replaceData({
         ...data,

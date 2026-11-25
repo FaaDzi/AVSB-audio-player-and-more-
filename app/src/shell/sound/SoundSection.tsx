@@ -13,7 +13,7 @@ import { loadFit } from '../../fit/fit'
 import { kindOfIem, type CatalogKind } from '../../data/catalog'
 import { DEFAULT_TARGET } from '../../gallery/gallery'
 import { useRefs } from '../tournament/engine'
-import { appPlayer, engineForTests, engineSampleRate, hrtfTestClip } from '../engine'
+import { appPlayer, engineSampleRate, hrtfTestClip } from '../engine'
 import { kindDetail } from '../tournament/kinds'
 import { familyOf, linearLatencyMs, soundCurve, targetsFor, type SoundResult } from './soundCurve'
 import { setSound, useSound } from './soundState'
@@ -32,14 +32,12 @@ import { forgetHrirSet, loadHrirIndex, type HrirIndexEntry } from '../../spatial
 import { deleteStoredHrir, IMPORTED_ID, loadStoredHrir, saveStoredHrir } from '../../spatial/hrirStore'
 import { importSofa } from '../../spatial/sofa'
 import { AVERAGE_HEAD_CM, HEAD_CM_MAX, HEAD_CM_MIN } from '../../spatial/headSize'
-import { loadEarCorrection } from '../../spatial/earCorrection'
 import { HrtfPicker } from '../../spatial/hrtfPicker'
-import { earbudsTracker, followHeadTracking, recenterHeadTracking, useHeadTracking } from '../../headtrack/driver'
+import { earbudsTracker, recenterHeadTracking, useHeadTracking } from '../../headtrack/driver'
 import { findEarbuds, NO_HEAD_SENSORS } from '../../headtrack/buds'
 import { EarbudsCalibration } from './EarbudsCalibration'
 import { isAndroid } from '../../platform'
 import type { HeadTracking, SpatialMode, SpatialSettings } from '../../spatial/types'
-import type { Biquad } from '../../eq/biquad'
 
 const KINDS = new Set(['iems', 'tws', 'headphones'] as const)
 // what you listen on can also be speakers or a soundbar (§78 B); they sound like each other only (§80 E)
@@ -74,24 +72,11 @@ const XF_PRESETS: readonly { label: string; amount: number; angle: number; cutHz
   { label: 'Old stereo', amount: 140, angle: 60, cutHz: 900 },
 ]
 
-const STAGE_PRESETS: readonly { id: string; label: string; mode: SpatialMode; angleDeg: number; distanceM: number; note: string }[] = [
-  { id: 'nearfield', label: 'Nearfield Studio (±30°, 1.2 m)', mode: 'speakers', angleDeg: 30, distanceM: 1.2, note: 'Dry studio monitors in an equilateral triangle' },
-  { id: 'living', label: 'Living Room (±30°, 2.4 m)', mode: 'room', angleDeg: 30, distanceM: 2.4, note: 'Warm early reflections and natural 0.3 s room tail' },
-  { id: 'wide', label: 'Wide Reference Stage (±45°, 3.0 m)', mode: 'room', angleDeg: 45, distanceM: 3.0, note: 'Wider speaker separation with deeper front stage' },
+const STAGE_PRESETS: readonly { id: string; label: string; mode: SpatialMode; note: string }[] = [
+  { id: 'nearfield', label: 'Nearfield Studio', mode: 'speakers', note: 'Dry studio monitors in an equilateral triangle' },
+  { id: 'living', label: 'Living Room', mode: 'room', note: 'Warm early reflections and natural 0.3 s room tail' },
 ]
 
-const EAR_RESONANCE_KEY = 'spatial-ear-resonance-pct-v1'
-const XF_CUT_KEY = 'spatial-xf-cut-hz-v1'
-const STAGE_PRESET_KEY = 'spatial-stage-preset-v1'
-
-function readStoredNumber(key: string, fallback: number): number {
-  try {
-    const raw = Number(localStorage.getItem(key))
-    return Number.isFinite(raw) && raw > 0 ? raw : fallback
-  } catch {
-    return fallback
-  }
-}
 
 function DevicePicker({ db, label, onPick, kinds = KINDS }: { db: Database; label: string; onPick: (id: string) => void; kinds?: ReadonlySet<CatalogKind> }) {
   const [query, setQuery] = useState('')
@@ -169,23 +154,6 @@ export function SpatialCrossfeedSection() {
   })
   const hrtfCard = useRef<HTMLDivElement>(null)
   useEffect(() => { if (pickingHrtf) hrtfCard.current?.scrollIntoView({ block: 'start', behavior: 'smooth' }) }, []) // eslint-disable-line react-hooks/exhaustive-deps
-  const [xfCutHz, setXfCutHz] = useState<number>(() => readStoredNumber(XF_CUT_KEY, 700))
-  const [earResonancePct, setEarResonancePct] = useState<number>(() => {
-    try {
-      const raw = localStorage.getItem(EAR_RESONANCE_KEY)
-      return raw !== null ? Number(raw) : 100
-    } catch {
-      return 100
-    }
-  })
-  const [stagePreset, setStagePreset] = useState<string>(() => {
-    try {
-      return localStorage.getItem(STAGE_PRESET_KEY) ?? 'nearfield'
-    } catch {
-      return 'nearfield'
-    }
-  })
-  const baseEarFiltersRef = useRef<Biquad[] | null>(null)
   const sofaInputRef = useRef<HTMLInputElement | null>(null)
   const trackState = useHeadTracking()
   const [calibrating, setCalibrating] = useState(false)
@@ -228,34 +196,13 @@ export function SpatialCrossfeedSection() {
     }
   }, [])
 
-  // Wire head tracking yaw into the live shell player's SpatialStage
-  useEffect(() => {
-    return followHeadTracking(() => {
-      const st = engineForTests().player?.spatial
-      return st ? [st] : []
-    })
-  }, [])
-
-  // Wire Ear Canal Resonance compensation scaling into the live SpatialStage
-  useEffect(() => {
-    let alive = true
-    void loadEarCorrection().then((filters) => {
-      if (!alive || !filters) return
-      baseEarFiltersRef.current = filters
-      const scale = earResonancePct / 100
-      const scaled = filters.map((f) => ({ ...f, gain: f.gain * scale }))
-      engineForTests().player?.spatial?.setEarCorrection(scaled)
-    })
-    return () => {
-      alive = false
-    }
-  }, [earResonancePct])
-
   const crossfeedOn = spatial.mode === 'crossfeed'
   const speakersOn = spatial.mode === 'speakers' || spatial.mode === 'room' || spatial.mode === '360'
   const xfAmount = spatial.xfAmount ?? DEFAULT_SPATIAL.xfAmount
   const xfAngle = spatial.xfAngle ?? DEFAULT_SPATIAL.xfAngle
-  const xfParams = crossfeedParams(xfAmount, xfAngle)
+  const xfCutHz = spatial.xfCutHz ?? DEFAULT_SPATIAL.xfCutHz
+  const earResonancePct = spatial.earPct ?? DEFAULT_SPATIAL.earPct
+  const xfParams = crossfeedParams(xfAmount, xfAngle, xfCutHz)
   const delayUs = xfParams ? Math.round((xfParams.delayS + 1 / (2 * Math.PI * xfCutHz)) * 1e6) : 0
   const headCm = spatial.headCm ?? AVERAGE_HEAD_CM
   const itdPct = Math.round((headCm / AVERAGE_HEAD_CM) * 100)
@@ -337,16 +284,14 @@ export function SpatialCrossfeedSection() {
 
         <div className="ms-tz-seg" role="group" aria-label="Crossfeed presets">
           {XF_PRESETS.map((p) => {
-            const active = crossfeedOn && xfAmount === p.amount && xfAngle === p.angle
+            const active = crossfeedOn && xfAmount === p.amount && xfAngle === p.angle && xfCutHz === p.cutHz
             return (
               <button
                 type="button"
                 key={p.label}
                 className={active ? 'on' : ''}
                 onClick={() => {
-                  setXfCutHz(p.cutHz)
-                  try { localStorage.setItem(XF_CUT_KEY, String(p.cutHz)) } catch { /* ignore */ }
-                  updateSpatial({ mode: 'crossfeed', xfAmount: p.amount, xfAngle: p.angle })
+                  updateSpatial({ mode: 'crossfeed', xfAmount: p.amount, xfAngle: p.angle, xfCutHz: p.cutHz })
                 }}
               >
                 {p.label}
@@ -396,10 +341,7 @@ export function SpatialCrossfeedSection() {
             value={xfCutHz}
             label="Crossfeed cutoff frequency"
             onChange={(v) => {
-              const hz = v
-              setXfCutHz(hz)
-              try { localStorage.setItem(XF_CUT_KEY, String(hz)) } catch { /* ignore */ }
-              if (!crossfeedOn) updateSpatial({ mode: 'crossfeed' })
+              updateSpatial(crossfeedOn ? { xfCutHz: v } : { xfCutHz: v, mode: 'crossfeed' })
             }}
           />
         </div>
@@ -429,7 +371,7 @@ export function SpatialCrossfeedSection() {
           <small>Room / speaker angle &amp; distance preset</small>
           <div className="ms-snd-targets" role="radiogroup" aria-label="Speaker stage presets">
             {STAGE_PRESETS.map((p) => {
-              const active = speakersOn && stagePreset === p.id && spatial.mode === p.mode
+              const active = speakersOn && spatial.mode === p.mode
               return (
                 <button
                   type="button"
@@ -438,9 +380,7 @@ export function SpatialCrossfeedSection() {
                   aria-checked={active}
                   className={`ms-snd-target${active ? ' on' : ''}`}
                   onClick={() => {
-                    setStagePreset(p.id)
-                    try { localStorage.setItem(STAGE_PRESET_KEY, p.id) } catch { /* ignore */ }
-                    updateSpatial({ mode: p.mode, xfAngle: p.angleDeg })
+                    updateSpatial({ mode: p.mode })
                   }}
                 >
                   <b>{p.label}</b>
@@ -560,8 +500,7 @@ export function SpatialCrossfeedSection() {
               value={earResonancePct}
               label="Ear canal resonance compensation"
               onChange={(v) => {
-                setEarResonancePct(v)
-                try { localStorage.setItem(EAR_RESONANCE_KEY, String(v)) } catch { /* ignore */ }
+                updateSpatial({ earPct: v })
               }}
             />
             <p className="ms-tz-note">Removes double pinna/ear-canal gain (~3 kHz shout) when convolving Harman-tuned earphones with HRIRs.</p>

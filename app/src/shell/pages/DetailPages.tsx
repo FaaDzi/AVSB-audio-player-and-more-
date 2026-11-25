@@ -320,7 +320,7 @@ export function PlaylistPage({ id, back }: { id: string; back: () => void }) {
 }
 
 export function AlbumPage({ albumKey, back }: { albumKey: string; back: () => void }) {
-  const { play, push, showToast } = useShell()
+  const { play, push, showToast, queue, setQueue } = useShell()
   const libraryTracks = useLibrary()
   const album = useMemo(() => {
     const { albums, singles } = groupAlbums(mergeTwins(libraryTracks))
@@ -346,7 +346,7 @@ export function AlbumPage({ albumKey, back }: { albumKey: string; back: () => vo
             <div className="ms-album-actions">
               <button type="button" className="ms-btn accent" onClick={() => play(album.tracks[0], album.tracks)}><Icon name="play_arrow" fill size={20} /> Play</button>
               <IconButton icon="shuffle" label="Shuffle" filled onClick={() => { const s = shuffled(album.tracks); play(s[0], s) }} />
-              <IconButton icon="playlist_add" label="Add to queue" filled onClick={() => showToast(`Added ${trackCount(album.tracks.length)} to the queue`)} />
+              <IconButton icon="playlist_add" label="Add to queue" filled onClick={() => { setQueue([...queue, ...album.tracks.filter((t) => !queue.some((q) => q.id === t.id))]); showToast(`Added ${trackCount(album.tracks.length)} to the queue`) }} />
             </div>
           </div>
         </header>

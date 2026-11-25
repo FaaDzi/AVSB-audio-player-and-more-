@@ -94,8 +94,22 @@ export interface GraphTarget {
  * tournament, EQ and scoring code work on them unchanged. Reviews, photos and prices are keyed by
  * id in the same files (headphone ids start with "hp-").
  */
+// the IEM and headphone catalogs load together and share these files: fetch and parse each once (§113 check).
+// Merging adds entries by id only, so sharing the parsed objects between the two is safe.
+const shared = new Map<string, Promise<any>>() // eslint-disable-line @typescript-eslint/no-explicit-any
+const sharedJson = (f: string) => {
+  let p = shared.get(f)
+  if (!p) {
+    p = fetch(`${import.meta.env.BASE_URL}data/${f}`).then((r) => (r.ok ? r.json() : {})).catch(() => ({}))
+    shared.set(f, p)
+    // both catalogs ask in the same tick (loadDatabase), so drop it once it's in: nothing keeps a second copy alive
+    void p.finally(() => shared.delete(f))
+  }
+  return p
+}
+
 export async function loadCatalog(kind: 'iems' | 'headphones' = 'iems'): Promise<Catalog> {
-  const json = (f: string) => fetch(`${import.meta.env.BASE_URL}data/${f}`).then((r) => (r.ok ? r.json() : {})).catch(() => ({}))
+  const json = sharedJson
   const hp = kind === 'headphones'
   const [data, reviews, pointFile, shopImages, archiveImages, searchImages, shopPrices, squig, targetFile, aliasFile, ...brandImages] = await Promise.all([
     loadIemData(`${import.meta.env.BASE_URL}data/${hp ? 'headphones' : 'iems'}.json`),

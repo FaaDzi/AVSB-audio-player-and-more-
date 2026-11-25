@@ -1,12 +1,13 @@
 import { openHrtfTestOnArrival, SpatialCrossfeedSection } from '../sound/SoundSection'
 import { version } from '../../../package.json'
-import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react'
-import { isAndroid } from '../../platform'
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { saveFile } from '../../platform'
 import { createPortal } from 'react-dom'
 import { Chip, Dialog, Icon, IconButton, Menu, PickSheet, useLongPress } from '../ui'
 import { useShell } from '../context'
 import { Slider } from '../PlayerBar'
-import { BANDS, carryOver, DEFAULT_POLAR, DEFAULT_SHAPER, EQ_DEFAULT, eqFilters, getPresets, presetFields, presetFrom, readPreset, setEq, setPresets, useEq, withPreset, type EqState, type SavedPreset, type PolarParams, type ShaperParams } from '../eqState'
+import { BANDS, carryOver, DEFAULT_POLAR, DEFAULT_SHAPER, EQ_DEFAULT, eqFilters, fitBandCount, getPresets, presetFields, presetFrom, readPreset, setEq, setPresets, useEq, withPreset, type EqState, type SavedPreset, type PolarParams, type ShaperParams } from '../eqState'
+import { generateEqualizerApoConfig } from './SavedEqPage'
 import { getGear } from '../sound/gear'
 import {
   addProfileItem,
@@ -94,14 +95,14 @@ function EqShaperPads({
     const gain = +((1 - ny * 2) * 12).toFixed(1)
 
     if (pad === 'bass') {
-      const freq = Math.round(40 * (200 / 40) ** nx)
-      onChange({ bassGain: gain, bassFreq: freq })
+      const freqVal = Math.round(40 * (200 / 40) ** nx)
+      onChange({ bassGain: gain, bassFreq: freqVal })
     } else if (pad === 'mid') {
-      const freq = Math.round(300 * (3500 / 300) ** nx)
-      onChange({ midGain: gain, midFreq: freq })
+      const freqVal = Math.round(300 * (3500 / 300) ** nx)
+      onChange({ midGain: gain, midFreq: freqVal })
     } else {
-      const freq = Math.round(5000 * (14000 / 5000) ** nx)
-      onChange({ trebleGain: gain, trebleFreq: freq })
+      const freqVal = Math.round(5000 * (14000 / 5000) ** nx)
+      onChange({ trebleGain: gain, trebleFreq: freqVal })
     }
   }
 
@@ -114,82 +115,52 @@ function EqShaperPads({
   const trebleX = Math.max(0, Math.min(1, Math.log(params.trebleFreq / 5000) / Math.log(14000 / 5000))) * 100
   const trebleY = Math.max(0, Math.min(1, (12 - params.trebleGain) / 24)) * 100
 
-  const formatCoord = (gain: number, xPct: number) => {
-    const normX = ((xPct / 50) - 1).toFixed(2)
-    const normY = (gain / 12).toFixed(2)
-    return `(${Number(normX) > 0 ? '+' : ''}${normX}, ${Number(normY) > 0 ? '+' : ''}${normY})`
-  }
+  const fmtHz = (hz: number) => (hz >= 1000 ? `${(hz / 1000).toFixed(hz >= 10000 ? 1 : 2)}k` : `${Math.round(hz)}`)
+  const fmtDb = (g: number) => `${g > 0 ? '+' : g < 0 ? '−' : ''}${Math.abs(g).toFixed(1)} dB`
 
-  const activeCoordStr =
-    activePad === 'bass'
-      ? formatCoord(params.bassGain, bassX)
-      : activePad === 'mid'
-        ? formatCoord(params.midGain, midX)
-        : formatCoord(params.trebleGain, trebleX)
+  const pads: {
+    id: 'bass' | 'mid' | 'treble'
+    title: string
+    hz: number
+    gain: number
+    x: number
+    y: number
+    reset: Partial<ShaperParams>
+  }[] = [
+    { id: 'bass', title: 'Bass', hz: params.bassFreq, gain: params.bassGain, x: bassX, y: bassY, reset: { bassGain: 0, bassFreq: 80 } },
+    { id: 'mid', title: 'Mid', hz: params.midFreq, gain: params.midGain, x: midX, y: midY, reset: { midGain: 0, midFreq: 1000 } },
+    { id: 'treble', title: 'Treble', hz: params.trebleFreq, gain: params.trebleGain, x: trebleX, y: trebleY, reset: { trebleGain: 0, trebleFreq: 10000 } },
+  ]
 
   return (
     <div className="ms-eq-shaper">
-      <div className="ms-eq-pad-wrap">
-        <span className="ms-eq-pad-title">Bass</span>
-        <div
-          className={`ms-eq-pad bass${activePad === 'bass' ? ' focused' : ''}`}
-          onPointerDown={(e) => {
-            e.currentTarget.setPointerCapture?.(e.pointerId)
-            setActivePad('bass')
-            handlePointer('bass', e)
-          }}
-          onPointerMove={(e) => {
-            // only while held: a plain hover used to drag the dot along (the dot "followed the cursor")
-            if (activePad === 'bass' && (e.buttons & 1)) handlePointer('bass', e)
-          }}
-          onDoubleClick={() => onChange({ bassGain: 0, bassFreq: 80 })}
-        >
-          <div className="ms-eq-pad-grid" />
-          <div className="ms-eq-puck" style={{ left: `${bassX}%`, top: `${bassY}%` }} />
+      {pads.map((p) => (
+        <div className="ms-eq-pad-wrap" key={p.id}>
+          <div className="ms-eq-pad-head">
+            <span className="ms-eq-pad-title">{p.title}</span>
+            <span className={`ms-eq-pad-coord-badge${p.gain !== 0 ? ' active' : ''}`}>
+              {fmtHz(p.hz)} Hz · {fmtDb(p.gain)}
+            </span>
+          </div>
+          <div
+            className={`ms-eq-pad ${p.id}${activePad === p.id ? ' focused' : ''}`}
+            onPointerDown={(e) => {
+              e.currentTarget.setPointerCapture?.(e.pointerId)
+              setActivePad(p.id)
+              handlePointer(p.id, e)
+            }}
+            onPointerMove={(e) => {
+              if (activePad === p.id && (e.buttons & 1)) handlePointer(p.id, e)
+            }}
+            onDoubleClick={() => onChange(p.reset)}
+          >
+            <div className="ms-eq-pad-grid" />
+            <span className="ms-eq-pad-label y">Gain</span>
+            <span className="ms-eq-pad-label x">Freq</span>
+            <div className="ms-eq-puck" style={{ left: `${p.x}%`, top: `${p.y}%` }} />
+          </div>
         </div>
-      </div>
-
-      <div className="ms-eq-pad-wrap">
-        <span className="ms-eq-pad-coord-badge">{activeCoordStr}</span>
-        <div
-          className={`ms-eq-pad mid${activePad === 'mid' ? ' focused' : ''}`}
-          onPointerDown={(e) => {
-            e.currentTarget.setPointerCapture?.(e.pointerId)
-            setActivePad('mid')
-            handlePointer('mid', e)
-          }}
-          onPointerMove={(e) => {
-            // only while held: a plain hover used to drag the dot along (the dot "followed the cursor")
-            if (activePad === 'mid' && (e.buttons & 1)) handlePointer('mid', e)
-          }}
-          onDoubleClick={() => onChange({ midGain: 0, midFreq: 1000 })}
-        >
-          <div className="ms-eq-pad-grid" />
-          <span className="ms-eq-pad-label y">Gain</span>
-          <span className="ms-eq-pad-label x">Freq</span>
-          <div className="ms-eq-puck" style={{ left: `${midX}%`, top: `${midY}%` }} />
-        </div>
-      </div>
-
-      <div className="ms-eq-pad-wrap">
-        <span className="ms-eq-pad-title">Treble</span>
-        <div
-          className={`ms-eq-pad treble${activePad === 'treble' ? ' focused' : ''}`}
-          onPointerDown={(e) => {
-            e.currentTarget.setPointerCapture?.(e.pointerId)
-            setActivePad('treble')
-            handlePointer('treble', e)
-          }}
-          onPointerMove={(e) => {
-            // only while held: a plain hover used to drag the dot along (the dot "followed the cursor")
-            if (activePad === 'treble' && (e.buttons & 1)) handlePointer('treble', e)
-          }}
-          onDoubleClick={() => onChange({ trebleGain: 0, trebleFreq: 10000 })}
-        >
-          <div className="ms-eq-pad-grid" />
-          <div className="ms-eq-puck" style={{ left: `${trebleX}%`, top: `${trebleY}%` }} />
-        </div>
-      </div>
+      ))}
     </div>
   )
 }
@@ -222,15 +193,16 @@ function EqPolarRadar({
   const puckX = (params.x * 0.5 + 0.5) * 100
   const puckY = (-params.y * 0.5 + 0.5) * 100
 
-  const coordStr = `(${params.x > 0 ? '+' : ''}${params.x.toFixed(2)}, ${params.y > 0 ? '+' : ''}${params.y.toFixed(2)})`
+  const coordStr = params.blind
+    ? 'Blind Mode — listen & drag by ear'
+    : `X ${params.x > 0 ? '+' : ''}${params.x.toFixed(2)} · Y ${params.y > 0 ? '+' : ''}${params.y.toFixed(2)}`
 
   return (
     <div className="ms-eq-polar-wrap">
-      {/* Top coordinate badge directly above polar stage, matching Image 2 */}
-      <span className="ms-eq-polar-coord-badge">{coordStr}</span>
+      <span className={`ms-eq-polar-coord-badge${params.blind ? ' blind' : ''}`}>{coordStr}</span>
 
       <div
-        className="ms-eq-polar-stage"
+        className={`ms-eq-polar-stage${params.blind ? ' blind' : ''}`}
         onPointerDown={(e) => {
           e.currentTarget.setPointerCapture?.(e.pointerId)
           dragging.current = true
@@ -256,21 +228,14 @@ function EqPolarRadar({
       </div>
 
       <div className="ms-eq-polar-bottom-bar">
-        <label className="ms-eq-polar-toggle" title="Toggle Blind Mode">
-          <input
-            type="checkbox"
-            role="switch"
-            className="ms-switch"
-            checked={params.blind}
-            onChange={(e) => onChange({ blind: e.target.checked })}
-          />
-        </label>
         <div className="ms-eq-polar-actions">
           <button
             type="button"
+            aria-pressed={params.blind}
             className={`ms-btn small${params.blind ? ' primary' : ' tonal'}`}
             onClick={() => onChange({ blind: !params.blind })}
           >
+            <Icon name={params.blind ? 'visibility_off' : 'visibility'} size={16} />
             Blind Mode
           </button>
           <button
@@ -282,6 +247,7 @@ function EqPolarRadar({
               onChange({ x: +(Math.cos(angle) * radius).toFixed(2), y: +(Math.sin(angle) * radius).toFixed(2) })
             }}
           >
+            <Icon name="casino" size={16} />
             Randomize
           </button>
           <button
@@ -381,12 +347,20 @@ export function Equalizer() {
     setNaming(null)
   }
   const exportPreset = () => {
-    const url = URL.createObjectURL(new Blob([JSON.stringify(presetFrom(eq, eq.preset, activeGear), null, 2)], { type: 'application/json' }))
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `${eq.preset}.eq.json`
-    link.click()
-    URL.revokeObjectURL(url)
+    const p = presetFrom(eq, eq.preset, activeGear)
+    const file = `${p.name.replace(/[^\w.-]/g, '_')}.eq.json`
+    void saveFile(file, new Blob([JSON.stringify(p, null, 2)], { type: 'application/json' })).then(
+      () => showToast(`Exported ${file}`),
+      (e: unknown) => showToast(`Couldn't export: ${String(e)}`),
+    )
+  }
+  const exportPresetApo = () => {
+    const p = presetFrom(eq, eq.preset, activeGear)
+    const file = `${p.name.replace(/[^\w.-]/g, '_')}_APO.txt`
+    void saveFile(file, new Blob([generateEqualizerApoConfig(p)], { type: 'text/plain;charset=utf-8' })).then(
+      () => showToast(`Exported ${file}`),
+      (e: unknown) => showToast(`Couldn't export: ${String(e)}`),
+    )
   }
   const importPreset = (file: File) => {
     file.text().then((text) => {
@@ -461,10 +435,28 @@ export function Equalizer() {
     else onEqTweaked({ filters: peq.map((f, k) => (k === i ? tidyFilter({ ...f, fc: to.hz ?? f.fc, gain: to.db ?? f.gain }) : f)) })
   }
 
-  // The graph stays in view (plan §86 A). It keeps its full size until half of it has scrolled under the top, then
-  // gives up height pixel for pixel with the scroll until it reaches its small size. Nothing flips between two
-  // states, so there is nothing to bounce; the room it gives up is handed to a spacer under it, so the page below
-  // never moves because of it.
+  const [selFilter, setSelFilter] = useState<number | null>(0)
+  const [graphFolded, setGraphFolded] = useState(false)
+  const [fitAllBands, setFitAllBands] = useState(false)
+  // scrollable bands: which edges have more faders past them (the fade + arrow hint)
+  const bandsScroll = useRef<HTMLDivElement>(null)
+  const [bandsMore, setBandsMore] = useState({ left: false, right: false })
+  const checkBandsMore = useCallback(() => {
+    const el = bandsScroll.current
+    const left = !!el && el.scrollLeft > 4
+    const right = !!el && el.scrollLeft + el.clientWidth < el.scrollWidth - 4
+    setBandsMore((m) => (m.left === left && m.right === right ? m : { left, right }))
+  }, [])
+  useEffect(() => {
+    checkBandsMore()
+    const el = bandsScroll.current
+    if (!el) return
+    const sizes = new ResizeObserver(checkBandsMore)
+    sizes.observe(el)
+    return () => sizes.disconnect()
+  }, [mode, count, fitAllBands, checkBandsMore])
+
+  // The graph stays cleanly readable on phone: opaque card, optional 1-tap fold when scrolling deep into racks.
   const [compact, setCompact] = useState(false)
   // §106 G: the preset bar's AutoEQ button: bring the AutoEQ card into view, and run it on a tap (not on a hold)
   const autoCard = useRef<HTMLDivElement>(null)
@@ -474,14 +466,7 @@ export function Equalizer() {
     autoCard.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
     if (run) setAutoRun((n) => n + 1)
   }
-  // §100: on a phone the card rests nearly see-through; a double tap on the graph lifts it until a tap lands off it
-  const [lifted, setLifted] = useState(false)
-  useEffect(() => {
-    if (!lifted) return
-    const off = (e: PointerEvent) => { if (!hero.current?.contains(e.target as Node)) setLifted(false) }
-    document.addEventListener('pointerdown', off, true)
-    return () => document.removeEventListener('pointerdown', off, true)
-  }, [lifted])
+  const [pinned, setPinned] = useState(false)
   const sentinel = useRef<HTMLDivElement>(null)
   const hero = useRef<HTMLDivElement>(null)
   const spacer = useRef<HTMLDivElement>(null)
@@ -489,47 +474,38 @@ export function Equalizer() {
   const fit = useRef((_switch = true) => {})
   useEffect(() => {
     let frame = 0
-    // `switchLayout` false: only the spacer is set (right after the layout changed). Letting that pass change the
-    // layout too made the two layouts flip back and forth inside one render on a short page (React error #185).
     const check = (switchLayout = true) => {
       frame = 0
-      const [mark, pinned, pad] = [sentinel.current, hero.current, spacer.current]
-      const plot = pinned?.querySelector<HTMLElement>('.ms-eqg-plot')
-      if (!mark || !pinned || !pad || !plot) return
-      // §96: on a wide screen the graph keeps its size beside the controls; only the phone shrinks it as you scroll
-      if (!pinned.closest('.ms-window.phone')) {
-        pinned.style.removeProperty('--eqg-shrink')
-        pinned.style.removeProperty('--eqg-fade')
+      const [mark, pinnedEl, pad] = [sentinel.current, hero.current, spacer.current]
+      const plot = pinnedEl?.querySelector<HTMLElement>('.ms-eqg-plot')
+      if (!mark || !pinnedEl || !pad) return
+      const isPhonePortrait = Boolean(pinnedEl.closest('.ms-window.phone')) && window.innerHeight > 540
+      if (!isPhonePortrait || graphFolded || !plot) {
+        pinnedEl.style.removeProperty('--eqg-shrink')
+        pinnedEl.style.removeProperty('--eqg-fade')
         pad.style.height = '0px'
+        setPinned(false)
         if (switchLayout) setCompact(false)
         return
       }
-      // the mark scrolls away, the pinned graph doesn't: the distance between them is how far the page has moved
-      const past = pinned.getBoundingClientRect().top - mark.getBoundingClientRect().top
-      // its full size, taken at rest (and once anyway, so a gap above the mark can't leave it at 0: nothing would fold)
-      if ((past <= 0 || !rest.current.graph) && !pinned.classList.contains('compact')) rest.current = { hero: pinned.offsetHeight, graph: plot.offsetHeight }
+      const past = pinnedEl.getBoundingClientRect().top - mark.getBoundingClientRect().top
+      if ((past <= 0 || !rest.current.graph) && !pinnedEl.classList.contains('compact')) {
+        rest.current = { hero: pinnedEl.offsetHeight, graph: plot.offsetHeight }
+      }
       const { graph } = rest.current
-      // §106 E: an accordion: it folds from the first pixel the page moves, pixel for pixel with the scroll (a slow
-      // scroll folds it slowly), down to half its height; the fade below follows the same value
-      const most = Math.max(0, graph - Math.max(64, graph * 0.5))
+      const most = Math.max(0, graph - Math.max(108, graph * 0.58))
       const shrink = Math.max(0, Math.min(most, past))
-      pinned.style.setProperty('--eqg-shrink', `${shrink}px`)
-      // the title and legend fade as it shrinks, and step down to the small layout once it is as small as it gets
-      pinned.style.setProperty('--eqg-fade', String(most ? 1 - shrink / most : 1))
-      // a margin before it grows again: on a page barely taller than the screen the small layout's own change in
-      // height moved the scroll back over the line, and the two layouts flipped until React gave up (error #185)
-      // §106 E: no small layout on the phone any more: it hid the legend and subtitle at one scroll position, so the card
-      // changed height there and the fold jumped back (the old "jumping" bug). The title scales with --eqg-fade instead.
+      pinnedEl.style.setProperty('--eqg-shrink', `${shrink}px`)
+      pinnedEl.style.setProperty('--eqg-fade', String(most ? Math.max(0, 1 - shrink / most) : 1))
+      setPinned(past > 8)
       if (switchLayout) setCompact(false)
-      pad.style.height = `${Math.max(0, rest.current.hero - pinned.offsetHeight)}px`
+      pad.style.height = `${Math.max(0, rest.current.hero - pinnedEl.offsetHeight)}px`
     }
     fit.current = check
     const onScroll = () => { frame ||= requestAnimationFrame(() => check()) }
-    // whichever box scrolls (the settings pane on PC, the page on the phone): scroll events don't bubble, capture does
     document.addEventListener('scroll', onScroll, { capture: true, passive: true })
     return () => { document.removeEventListener('scroll', onScroll, { capture: true }); cancelAnimationFrame(frame) }
-  }, [subView])
-  // the small layout changes the height once more: the spacer is set again before anything is painted
+  }, [subView, graphFolded])
   useLayoutEffect(() => fit.current(false), [compact])
 
   // the test tone, heard through the EQ: a sine only meets the EQ at its own frequency
@@ -601,11 +577,14 @@ export function Equalizer() {
   }
 
   const pick = (view: typeof subView) => (swapPage ? swapPage(VIEW_PAGE[view]) : setSubView(view))
-  // §86 D: the chips only switch the two pages that shape the sound; tools and tests are pages of their own
+  // §86 D: the chips switch the two pages that shape the sound, plus a direct shortcut to Saved EQs
   const navBar = (
-    <div className="ms-chips" style={{ marginBottom: 14 }} role="tablist" aria-label="Audio & Diagnostics views">
+    <div className="ms-eq-subnav" role="tablist" aria-label="Audio & Diagnostics views">
       <Chip label="Equalizer" selected={subView === 'eq'} onClick={() => pick('eq')} />
       <Chip label="Spatial & Crossfeed" selected={subView === 'spatial'} onClick={() => pick('spatial')} />
+      <button type="button" className="ms-chip ms-eq-savedlink" onClick={() => go({ page: 'settings', section: 'saved-eq' })}>
+        <Icon name="bookmarks" size={16} />Saved EQs
+      </button>
     </div>
   )
 
@@ -640,289 +619,415 @@ export function Equalizer() {
   }
 
   const basicSubMode = eq.subMode ?? 'shaper'
+  const shaperDirty = Boolean(
+    eq.shaper &&
+    (eq.shaper.bassGain !== 0 || eq.shaper.midGain !== 0 || eq.shaper.trebleGain !== 0 ||
+      eq.shaper.bassFreq !== 80 || eq.shaper.midFreq !== 1000 || eq.shaper.trebleFreq !== 10000)
+  )
+  const bandsDirty = gains.some((g) => (g ?? 0) !== 0)
+
+  const presetToolbar = (
+    <div className="ms-eq-presetbar">
+      <button
+        type="button"
+        className="ms-eq-autobtn"
+        aria-label="AutoEQ"
+        title="Tap to run AutoEQ · hold for options"
+        {...holdAuto(() => showAuto(false))}
+        onClick={() => showAuto(true)}
+      >
+        <Icon name="auto_fix_high" size={20} />
+      </button>
+      <label className="ms-eq-presetpick">
+        <PickSheet
+          label="Preset"
+          title="Preset"
+          value={preset}
+          shown={preset}
+          onPick={(name) => {
+            const mineToo = saved.find((p) => p.name === name)
+            if (mineToo) applySaved(mineToo)
+            else if (PRESETS[name]) applyPreset(name)
+          }}
+          groups={[
+            { title: `Saved for ${activeGearName}`, options: saved.filter((p) => p.device === activeGear).map((p) => ({ value: p.name, label: p.name, icon: 'equalizer' })) },
+            { title: 'Built in', options: Object.keys(PRESETS).map((name) => ({ value: name, label: name })) },
+            { title: 'Saved for other gear', options: saved.filter((p) => p.device !== activeGear).map((p) => ({ value: p.name, label: p.name, icon: 'equalizer' })) },
+          ]}
+        />
+      </label>
+      <IconButton icon="bookmark_add" label="Save as a preset" onClick={() => setNaming({ was: null, name: '' })} />
+      <IconButton icon="restart_alt" label="Reset" onClick={() => setResetting(true)} />
+      <IconButton icon="more_vert" label="More preset options" onClick={(e) => setPresetMenu({ x: e.clientX, y: e.clientY })} />
+    </div>
+  )
 
   return (
     <div className="ms-eq">
-      {navBar}
-      {/* §96: PEQdB's layout. Wide screens: the controls in a left column, the graph and target pills filling the rest;
-          a phone stacks them: graph, pills, then the controls */}
+      <div className="ms-eq-toprow">
+        {navBar}
+        {presetToolbar}
+      </div>
+
       <div className="ms-eq-studio">
-      <div className="ms-eq-main">
-      <div ref={sentinel} className="ms-eq-sentinel" />
-      <div ref={hero} className={`ms-eq-hero${on ? ' on' : ''}${compact ? ' compact' : ''}${lifted ? ' lifted' : ' resting'}`}>
-        <div className="ms-eq-head">
-          <div className="grow">
-            <h3>{preset}</h3>
-            <p>
-              <em className="ms-set-badge">{mode === 'basic' ? (basicSubMode === 'shaper' ? '3-Zone' : 'Radar') : mode === 'advanced' ? `${count} bands` : `${peq.length} ${peq.length === 1 ? 'filter' : 'filters'}`}</em>
-              {' '}· Preamp {tone.preamp.toFixed(1)} dB
-            </p>
-          </div>
-          {(on || held) && (
-            <button
-              type="button"
-              className={`ms-eq-ab${held ? ' held' : ''}`}
-              aria-label="Hold to hear it without the EQ"
-              title="Hold to hear it without the EQ"
-              onPointerDown={(e) => { e.currentTarget.setPointerCapture(e.pointerId); setHeld(true); setEq({ on: false }) }}
-              onPointerUp={() => { if (held) { setHeld(false); setEq({ on: true }) } }}
-              onPointerCancel={() => { if (held) { setHeld(false); setEq({ on: true }) } }}
-            >
-              <Icon name="compare" size={22} />
-            </button>
-          )}
-          <input type="checkbox" role="switch" aria-label="Equalizer" className="ms-switch" checked={on} onChange={(e) => setEq({ on: e.target.checked })} />
-        </div>
-        <EqGraph
-          on={on}
-          compact={compact}
-          grid={grid}
-          eqDb={eqDb}
-          extraDb={extraDb}
-          device={speakerDb ?? scene?.device ?? null}
-          deviceLabel={speakerDb ? phoneSpeakerLabel(activeGear!, Math.min(screen.width, screen.height) >= 600) : undefined}
-          target={scene?.target ?? null}
-          ears={ears}
-          handles={handles}
-          freeHz={mode === 'advanced+'}
-          onHandle={moveHandle}
-          onHandleQ={mode === 'advanced+' ? (i, k) => onEqTweaked({ filters: peq.map((f, n) => (n === i ? tidyFilter({ ...f, q: f.q * k }) : f)) }) : undefined}
-          onAdd={mode === 'advanced+' && peq.length < PEQ_MAX_FILTERS ? (at) => onEqTweaked({ filters: [...peq, tidyFilter({ kind: 'peak', fc: at.hz, gain: at.db, q: 1.4 })] }) : undefined}
-          onRemove={mode === 'advanced+' ? (i) => onEqTweaked({ filters: peq.filter((_, n) => n !== i) }) : undefined}
-          onDoubleTap={isAndroid() ? () => setLifted(true) : undefined}
-          toneHz={toneUi.playing ? toneUi.hz : null}
-          onTone={(hz) => setToneUi((s) => ({ ...s, hz: Math.round(hz), sweeping: false }))}
-        />
-      </div>
-      <div ref={spacer} className="ms-eq-spacer" />
-      {availableTargets.length > 0 && <TargetPills
-        targets={availableTargets}
-        items={profile.items}
-        activeId={profile.activeItemId ?? null}
-        onToggle={(t) => {
-          const was = profile.items.some((i) => i.id === t.id)
-          toggleProfileTarget(t, activeGear)
-          showToast(was ? `Removed ${t.name} from your quick palette` : `Added ${t.name} to your quick palette`)
-        }}
-        onRemoveDevice={(id) => removeProfileItem(id, activeGear)}
-        onAddDevice={() => setAddingDevice(true)}
-      />}
-      </div>
-
-      <aside className="ms-eq-rail">
-        {/* §96 C: one menu instead of a dozen preset chips */}
-        <div className="ms-eq-presetbar">
-          {/* §106 G: AutoEQ where you can see it: a tap runs it for what you listen on, a hold opens its options */}
-          <button
-            type="button"
-            className="ms-eq-autobtn"
-            aria-label="AutoEQ"
-            title="AutoEQ (hold for its options)"
-            {...holdAuto(() => showAuto(false))}
-            onClick={() => showAuto(true)}
-          >
-            <Icon name="auto_fix_high" size={20} />
-          </button>
-          <label className="ms-eq-presetpick">
-            <PickSheet
-              label="Preset"
-              title="Preset"
-              value={preset}
-              shown={preset}
-              onPick={(name) => {
-                const mineToo = saved.find((p) => p.name === name)
-                if (mineToo) applySaved(mineToo)
-                else if (PRESETS[name]) applyPreset(name)
-              }}
-              groups={[
-                { title: `Saved for ${activeGearName}`, options: saved.filter((p) => p.device === activeGear).map((p) => ({ value: p.name, label: p.name, icon: 'equalizer' })) },
-                { title: 'Built in', options: Object.keys(PRESETS).map((name) => ({ value: name, label: name })) },
-                { title: 'Saved for other gear', options: saved.filter((p) => p.device !== activeGear).map((p) => ({ value: p.name, label: p.name, icon: 'equalizer' })) },
-              ]}
-            />
-          </label>
-          <IconButton icon="bookmark_add" label="Save as a preset" onClick={() => setNaming({ was: null, name: '' })} />
-          <IconButton icon="restart_alt" label="Reset" onClick={() => setResetting(true)} />
-          <IconButton icon="more_vert" label="More preset options" onClick={(e) => setPresetMenu({ x: e.clientX, y: e.clientY })} />
-        </div>
-
-        <div className="ms-segment-small big ms-eq-mode" role="radiogroup" aria-label="Equalizer mode">
-          {(['basic', 'advanced', 'advanced+'] as const).map((m) => (
-            <button
-              type="button"
-              key={m}
-              role="radio"
-              aria-checked={m === mode}
-              className={m === mode ? 'on' : ''}
-              onClick={() => setMode(m)}
-            >
-              {m === 'basic' ? 'Basic' : m === 'advanced' ? 'Advanced' : 'Advanced +'}
-            </button>
-          ))}
-        </div>
-
-        {db && (
-          <div ref={autoCard} className="ms-eq-autocard">
-          <AutoEqCard
-            run={autoRun}
-            db={db}
-            deviceId={activeGear}
-            deviceName={activeGearName}
-            lab={lab}
-            scene={scene}
-            hrtfName={hrtf?.name ?? null}
-            onLab={(patch) => setLab(activeGear, patch)}
-            onApply={applyAuto}
-            onPickGear={() => go({ page: 'settings', section: 'gear' })}
-            onPickHrtf={() => { openHrtfTestOnArrival(); go({ page: 'settings', section: 'spatial' }) }}
-            warmth={warmth}
-            onWarmth={setWarmth}
-          />
-          </div>
-        )}
-
-        {mode === 'advanced+' && <FilterCards filters={peq} onChange={(filters) => onEqTweaked({ filters })} />}
-
-        {/* §96: Fine-tune by ear sits under the filters it adds to */}
-        <FineTuneCard
-          hz={toneUi.hz}
-          playing={toneUi.playing}
-          sweeping={toneUi.sweeping}
-          fullRange={toneUi.full}
-          onFullRange={(full) => setToneUi((s) => ({ ...s, full }))}
-          canUndo={undo.length > 0}
-          onHz={(hz) => setToneUi((s) => ({ ...s, hz }))}
-          onPlay={playTone}
-          onSweep={(sweeping) => { if (sweeping && !toneUi.playing) setPaused(true); setToneUi((s) => ({ ...s, sweeping, playing: s.playing || sweeping })) }}
-          onNudge={nudge}
-          onLean={lean}
-          onUndo={() => { onEqTweaked({ mode: 'advanced+', filters: undo[undo.length - 1] }); setUndo(undo.slice(0, -1)) }}
-          treble={shelfGain('highshelf')}
-          bass={shelfGain('lowshelf')}
-          onShelf={setShelf}
-        />
-      </aside>
-      </div>
-
-      {mode === 'basic' && (
-        <section className="ms-set-section">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-            <h3 style={{ padding: 0 }}>Sound Shaper</h3>
-            <div className="ms-segment-small" role="radiogroup" aria-label="Basic tuning mode">
+        <div className="ms-eq-main">
+          <div ref={sentinel} className="ms-eq-sentinel" />
+          <div ref={hero} className={`ms-eq-hero${on ? ' on' : ''}${compact ? ' compact' : ''}${pinned ? ' pinned' : ''}${graphFolded ? ' folded' : ''}`}>
+            <div className="ms-eq-head">
+              <div className="grow min-w-0">
+                <h3>{preset}</h3>
+                <p>
+                  <em className="ms-set-badge">{mode === 'basic' ? (basicSubMode === 'shaper' ? '3-Zone' : 'Radar') : mode === 'advanced' ? `${count} bands` : `${peq.length} ${peq.length === 1 ? 'filter' : 'filters'}`}</em>
+                  {' '}· Preamp {(tone.preamp - (dyn.headroom ? peak : 0)).toFixed(1)} dB
+                </p>
+              </div>
               <button
                 type="button"
-                className={basicSubMode === 'shaper' ? 'on' : ''}
-                onClick={() => setEq({ subMode: 'shaper' })}
+                className="ms-eq-foldbtn"
+                aria-label={graphFolded ? 'Expand frequency graph' : 'Collapse frequency graph'}
+                title={graphFolded ? 'Expand graph' : 'Minimize graph'}
+                onClick={() => setGraphFolded((f) => !f)}
               >
-                3-Zone Shaper
+                <Icon name={graphFolded ? 'unfold_more' : 'unfold_less'} size={20} />
               </button>
-              <button
-                type="button"
-                className={basicSubMode === 'polar' ? 'on' : ''}
-                onClick={() => setEq({ subMode: 'polar' })}
-              >
-                Blind Taste Radar
-              </button>
-            </div>
-          </div>
-
-          {basicSubMode === 'shaper' ? (
-            <EqShaperPads
-              params={eq.shaper ?? DEFAULT_SHAPER}
-              onChange={(shaperPatch) =>
-                onEqTweaked({
-                  shaper: { ...(eq.shaper ?? DEFAULT_SHAPER), ...shaperPatch },
-                })
-              }
-            />
-          ) : (
-            <EqPolarRadar
-              params={eq.polar ?? DEFAULT_POLAR}
-              onChange={(polarPatch) =>
-                onEqTweaked({
-                  polar: { ...(eq.polar ?? DEFAULT_POLAR), ...polarPatch },
-                })
-              }
-              onFinalize={() => {
-                showToast('Taste curve finalized & applied as active EQ profile!')
-                onEqTweaked({ preset: 'Finalized Taste' })
-              }}
-            />
-          )}
-        </section>
-      )}
-
-      {mode === 'advanced' && (
-        <section className="ms-set-section">
-          <h3>Bands</h3>
-          <div className="ms-eq-bands ms-set-group">
-            <div className="ms-segment-small big" role="radiogroup" aria-label="Number of bands">
-              {[5, 10, 15, 31].map((n) => (
+              {(on || held) && (
                 <button
                   type="button"
-                  key={n}
-                  role="radio"
-                  aria-checked={n === count}
-                  className={n === count ? 'on' : ''}
-                  onClick={() => setEq({ count: n, gains: BANDS[n].map(() => 0), preset: 'Flat' })}
+                  className={`ms-eq-ab${held ? ' held' : ''}`}
+                  aria-label="Hold to hear it without the EQ"
+                  title="Hold to hear it without the EQ"
+                  onPointerDown={(e) => { e.currentTarget.setPointerCapture(e.pointerId); setHeld(true); setEq({ on: false }) }}
+                  onPointerUp={() => { if (held) { setHeld(false); setEq({ on: true }) } }}
+                  onPointerCancel={() => { if (held) { setHeld(false); setEq({ on: true }) } }}
                 >
-                  {n}
+                  <Icon name="compare" size={19} />
+                  <span>A/B</span>
+                </button>
+              )}
+              <input type="checkbox" role="switch" aria-label="Equalizer" className="ms-switch" checked={on} onChange={(e) => setEq({ on: e.target.checked })} />
+            </div>
+            {!graphFolded && (
+              <EqGraph
+                on={on}
+                compact={compact}
+                grid={grid}
+                eqDb={eqDb}
+                extraDb={extraDb}
+                device={speakerDb ?? scene?.device ?? null}
+                deviceLabel={speakerDb ? phoneSpeakerLabel(activeGear!, Math.min(screen.width, screen.height) >= 600) : undefined}
+                target={scene?.target ?? null}
+                ears={ears}
+                handles={handles}
+                freeHz={mode === 'advanced+'}
+                selected={selFilter}
+                onSelect={setSelFilter}
+                onHandle={moveHandle}
+                onHandleQ={mode === 'advanced+' ? (i, k) => onEqTweaked({ filters: peq.map((f, n) => (n === i ? tidyFilter({ ...f, q: f.q * k }) : f)) }) : undefined}
+                onAdd={mode === 'advanced+' && peq.length < PEQ_MAX_FILTERS ? (at) => {
+                  const idx = peq.length
+                  onEqTweaked({ filters: [...peq, tidyFilter({ kind: 'peak', fc: at.hz, gain: at.db, q: 1.4 })] })
+                  setSelFilter(idx)
+                } : undefined}
+                onRemove={mode === 'advanced+' ? (i) => onEqTweaked({ filters: peq.filter((_, n) => n !== i) }) : undefined}
+                toneHz={toneUi.playing ? toneUi.hz : null}
+                onTone={(hz) => setToneUi((s) => ({ ...s, hz: Math.round(hz), sweeping: false }))}
+              />
+            )}
+          </div>
+          <div ref={spacer} className="ms-eq-spacer" />
+
+          {availableTargets.length > 0 && (
+            <div className="ms-eq-palette-bar">
+              <span className="ms-eq-palette-label">Quick palette</span>
+              <TargetPills
+                targets={availableTargets}
+                items={profile.items}
+                activeId={profile.activeItemId ?? null}
+                onToggle={(t) => {
+                  const was = profile.items.some((i) => i.id === t.id)
+                  toggleProfileTarget(t, activeGear)
+                  showToast(was ? `Removed ${t.name} from your quick palette` : `Added ${t.name} to your quick palette`)
+                }}
+                onRemoveDevice={(id) => removeProfileItem(id, activeGear)}
+                onAddDevice={() => setAddingDevice(true)}
+              />
+            </div>
+          )}
+
+          {/* Active Mode Selector + Mode Workspace sits directly beneath the graph on both PC and Android! */}
+          <div className="ms-eq-workbench">
+            <div className="ms-segment-small big ms-eq-mode" role="radiogroup" aria-label="Equalizer mode">
+              {(['basic', 'advanced', 'advanced+'] as const).map((m) => (
+                <button
+                  type="button"
+                  key={m}
+                  role="radio"
+                  aria-checked={m === mode}
+                  className={m === mode ? 'on' : ''}
+                  onClick={() => setMode(m)}
+                >
+                  {m === 'basic' ? 'Basic' : m === 'advanced' ? 'Advanced' : 'Advanced +'}
                 </button>
               ))}
             </div>
-            <div className={`ms-eq-row${count >= 31 ? ' dense' : ''}`}>
-              {bands.map((hz, i) => (
-                <label className="ms-eq-band" key={hz}>
-                  <span>{(gains[i] ?? 0).toFixed(1)}</span>
-                  <span className="ms-vslider" style={{ '--pct': `${(((gains[i] ?? 0) + 12) / 24) * 100}%` } as React.CSSProperties}>
-                    <input
-                      type="range"
-                      min={-12}
-                      max={12}
-                      step={0.5}
-                      value={gains[i] ?? 0}
-                      aria-label={`${freq(hz)} Hz`}
-                      onChange={(e) => {
-                        const next = [...gains]
-                        next[i] = Number(e.target.value)
-                        onEqTweaked({ gains: next })
-                      }}
-                    />
-                  </span>
-                  <span>{freq(hz)}</span>
-                </label>
-              ))}
-            </div>
+
+            {mode === 'basic' && (
+              <section className="ms-eq-mode-card">
+                <div className="ms-eq-mode-head">
+                  <h3>Sound Shaper</h3>
+                  <div className="ms-eq-mode-head-right">
+                    {basicSubMode === 'shaper' && shaperDirty && (
+                      <button type="button" className="ms-btn text small" onClick={() => onEqTweaked({ shaper: DEFAULT_SHAPER })}>
+                        Reset
+                      </button>
+                    )}
+                    <div className="ms-segment-small" role="radiogroup" aria-label="Basic tuning mode">
+                      <button
+                        type="button"
+                        className={basicSubMode === 'shaper' ? 'on' : ''}
+                        onClick={() => setEq({ subMode: 'shaper' })}
+                      >
+                        3-Zone Shaper
+                      </button>
+                      <button
+                        type="button"
+                        className={basicSubMode === 'polar' ? 'on' : ''}
+                        onClick={() => setEq({ subMode: 'polar' })}
+                      >
+                        Blind Taste Radar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {basicSubMode === 'shaper' ? (
+                  <EqShaperPads
+                    params={eq.shaper ?? DEFAULT_SHAPER}
+                    onChange={(shaperPatch) =>
+                      onEqTweaked({
+                        shaper: { ...(eq.shaper ?? DEFAULT_SHAPER), ...shaperPatch },
+                      })
+                    }
+                  />
+                ) : (
+                  <EqPolarRadar
+                    params={eq.polar ?? DEFAULT_POLAR}
+                    onChange={(polarPatch) =>
+                      onEqTweaked({
+                        polar: { ...(eq.polar ?? DEFAULT_POLAR), ...polarPatch },
+                      })
+                    }
+                    onFinalize={() => {
+                      showToast('Taste curve finalized & applied as active EQ profile!')
+                      onEqTweaked({ preset: 'Finalized Taste' })
+                    }}
+                  />
+                )}
+              </section>
+            )}
+
+            {mode === 'advanced' && (
+              <section className="ms-eq-mode-card">
+                <div className="ms-eq-mode-head">
+                  <h3>Graphic Bands</h3>
+                  <div className="ms-eq-mode-head-right">
+                    {count >= 15 && (
+                      <button
+                        type="button"
+                        className={`ms-chip${fitAllBands ? ' on' : ''}`}
+                        onClick={() => setFitAllBands((v) => !v)}
+                        title={fitAllBands ? 'Switch to scrollable finger-sized faders' : 'Fit all bands on screen at once'}
+                      >
+                        <Icon name={fitAllBands ? 'fit_screen' : 'view_column'} size={15} />
+                        {fitAllBands ? 'Fit all' : 'Scrollable'}
+                      </button>
+                    )}
+                    {bandsDirty && (
+                      <button
+                        type="button"
+                        className="ms-btn text small"
+                        onClick={() => onEqTweaked({ gains: BANDS[count].map(() => 0) })}
+                      >
+                        Zero
+                      </button>
+                    )}
+                    <div className="ms-segment-small" role="radiogroup" aria-label="Number of bands">
+                      {[5, 10, 15, 31].map((n) => (
+                        <button
+                          type="button"
+                          key={n}
+                          role="radio"
+                          aria-checked={n === count}
+                          className={n === count ? 'on' : ''}
+                          onClick={() => {
+                            if (n === count) return
+                            const nextGains = fitBandCount(eq, n)
+                            setEq({ count: n, gains: nextGains })
+                          }}
+                        >
+                          {n}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className={`ms-eq-row-scroll-wrap${bandsMore.left ? ' more-left' : ''}${bandsMore.right ? ' more-right' : ''}`}>
+                <span className="ms-eq-scroll-hint left" aria-hidden="true"><Icon name="chevron_left" size={20} /></span>
+                <span className="ms-eq-scroll-hint right" aria-hidden="true"><Icon name="chevron_right" size={20} /></span>
+                <div ref={bandsScroll} onScroll={checkBandsMore} className={`ms-eq-row-scroll${count >= 15 && !fitAllBands ? ' scrollable' : ''}`}>
+                  <div className={`ms-eq-row${count >= 31 && fitAllBands ? ' dense' : ''}${count >= 15 && !fitAllBands ? ' spacious' : ''}`}>
+                    {bands.map((hz, i) => {
+                      const g = gains[i] ?? 0
+                      const pct = ((g + 12) / 24) * 100
+                      const fillBottom = Math.min(50, pct)
+                      const fillHeight = Math.abs(pct - 50)
+                      return (
+                        <label
+                          className={`ms-eq-band${g !== 0 ? ' active' : ''}`}
+                          key={hz}
+                          onDoubleClick={() => {
+                            const next = [...gains]
+                            next[i] = 0
+                            onEqTweaked({ gains: next })
+                          }}
+                        >
+                          <span className="ms-eq-band-db">{g > 0 ? `+${g.toFixed(1)}` : g.toFixed(1)}</span>
+                          <span
+                            className="ms-vslider"
+                            style={{
+                              '--pct': `${pct}%`,
+                              '--fill-b': `${fillBottom}%`,
+                              '--fill-h': `${fillHeight}%`,
+                            } as React.CSSProperties}
+                          >
+                            <input
+                              type="range"
+                              min={-12}
+                              max={12}
+                              step={0.5}
+                              value={g}
+                              aria-label={`${freq(hz)} Hz`}
+                              onChange={(e) => {
+                                const next = [...gains]
+                                next[i] = Number(e.target.value)
+                                onEqTweaked({ gains: next })
+                              }}
+                            />
+                          </span>
+                          <span className="ms-eq-band-hz">{freq(hz)}</span>
+                        </label>
+                      )
+                    })}
+                  </div>
+                </div>
+                </div>
+              </section>
+            )}
+
+            {mode === 'advanced+' && (
+              <section className="ms-eq-mode-card">
+                <FilterCards
+                  filters={peq}
+                  selected={selFilter}
+                  onSelect={setSelFilter}
+                  onChange={(filters) => onEqTweaked({ filters })}
+                />
+              </section>
+            )}
           </div>
-        </section>
-      )}
-
-      <section className="ms-set-section">
-        <h3>Tone &amp; stereo</h3>
-        <div className="ms-set-group">
-          <ToneRow icon="volume_up" label="Preamp" sub={`Input gain after headroom: ${(tone.preamp - (dyn.headroom ? peak : 0)).toFixed(1)} dB`} value={tone.preamp} unit=" dB" min={-24} max={12} onChange={(preamp) => setTone({ ...tone, preamp })} />
-          <ToneRow icon="speaker" label="Bass" value={tone.bass} unit=" dB" min={-12} max={12} onChange={(bass) => setTone({ ...tone, bass })} />
-          <ToneRow icon="music_note" label="Treble" value={tone.treble} unit=" dB" min={-12} max={12} onChange={(treble) => setTone({ ...tone, treble })} />
-          <ToneRow icon="surround_sound" label="Balance" value={tone.balance} unit="%" min={-100} max={100} digits={0} onChange={(balance) => setTone({ ...tone, balance })} />
         </div>
-      </section>
 
-      <section className="ms-set-section">
-        <h3>Dynamics</h3>
-        <div className="ms-set-group">
-          <DynRow icon="download" label="Automatic headroom" sub="Reduce input gain to make room for boosted frequencies." on={dyn.headroom} onChange={(headroom) => setDyn({ ...dyn, headroom })} />
-          <DynRow icon="shield" label="Peak limiter" sub="Keep peaks below -0.5 dBFS to reduce clipping." on={dyn.limiter} onChange={(limiter) => setDyn({ ...dyn, limiter })} />
-          <DynRow icon="compress" label="Compressor" sub="Reduce the difference between quiet and loud passages." on={dyn.compressor} onChange={(compressor) => setDyn({ ...dyn, compressor })} />
-          {dyn.compressor && (
-            <>
-              <ToneRow icon="vertical_align_center" label="Threshold" value={eq.threshold} unit=" dB" min={-60} max={0} digits={0} onChange={(threshold) => setEq({ threshold })} />
-              <ToneRow icon="compress" label="Ratio" value={eq.ratio} unit=":1" min={1} max={20} onChange={(ratio) => setEq({ ratio })} />
-              <ToneRow icon="timer" label="Attack" value={eq.attack} unit=" ms" min={1} max={100} digits={0} onChange={(attack) => setEq({ attack })} />
-              <ToneRow icon="history" label="Release" value={eq.release} unit=" ms" min={20} max={1000} digits={0} onChange={(release) => setEq({ release })} />
-            </>
+        <aside className="ms-eq-rail">
+          {db && (
+            <div ref={autoCard} className="ms-eq-autocard">
+              <AutoEqCard
+                run={autoRun}
+                db={db}
+                deviceId={activeGear}
+                deviceName={activeGearName}
+                lab={lab}
+                scene={scene}
+                hrtfName={hrtf?.name ?? null}
+                onLab={(patch) => setLab(activeGear, patch)}
+                onApply={applyAuto}
+                onPickGear={() => go({ page: 'settings', section: 'gear' })}
+                onPickHrtf={() => { openHrtfTestOnArrival(); go({ page: 'settings', section: 'spatial' }) }}
+                warmth={warmth}
+                onWarmth={setWarmth}
+              />
+            </div>
           )}
-        </div>
-      </section>
+
+          <FineTuneCard
+            hz={toneUi.hz}
+            playing={toneUi.playing}
+            sweeping={toneUi.sweeping}
+            fullRange={toneUi.full}
+            onFullRange={(full) => setToneUi((s) => ({ ...s, full }))}
+            canUndo={undo.length > 0}
+            onHz={(hz) => setToneUi((s) => ({ ...s, hz }))}
+            onPlay={playTone}
+            onSweep={(sweeping) => { if (sweeping && !toneUi.playing) setPaused(true); setToneUi((s) => ({ ...s, sweeping, playing: s.playing || sweeping })) }}
+            onNudge={nudge}
+            onLean={lean}
+            onUndo={() => { onEqTweaked({ mode: 'advanced+', filters: undo[undo.length - 1] }); setUndo(undo.slice(0, -1)) }}
+            treble={shelfGain('highshelf')}
+            bass={shelfGain('lowshelf')}
+            onShelf={setShelf}
+          />
+
+          <section className="ms-eqlab ms-eq-rackcard">
+            <header className="ms-eq-rackhead">
+              <Icon name="tune" size={20} />
+              <h3>Tone &amp; stereo</h3>
+              {(tone.preamp !== 0 || tone.bass !== 0 || tone.treble !== 0 || tone.balance !== 0) && (
+                <button
+                  type="button"
+                  className="ms-btn text small"
+                  onClick={() => setTone({ preamp: 0, bass: 0, treble: 0, balance: 0 })}
+                >
+                  Reset
+                </button>
+              )}
+            </header>
+            <div className="ms-set-group compact">
+              <ToneRow icon="volume_up" label="Preamp" sub={`Input gain after headroom: ${(tone.preamp - (dyn.headroom ? peak : 0)).toFixed(1)} dB`} value={tone.preamp} unit=" dB" min={-24} max={12} onChange={(preamp) => setTone({ ...tone, preamp })} />
+              <ToneRow icon="speaker" label="Bass" value={tone.bass} unit=" dB" min={-12} max={12} onChange={(bass) => setTone({ ...tone, bass })} />
+              <ToneRow icon="music_note" label="Treble" value={tone.treble} unit=" dB" min={-12} max={12} onChange={(treble) => setTone({ ...tone, treble })} />
+              <ToneRow icon="surround_sound" label="Balance" value={tone.balance} unit="%" min={-100} max={100} digits={0} onChange={(balance) => setTone({ ...tone, balance })} />
+            </div>
+          </section>
+
+          <section className="ms-eqlab ms-eq-rackcard">
+            <header className="ms-eq-rackhead">
+              <Icon name="graphic_eq" size={20} />
+              <h3>Dynamics</h3>
+            </header>
+            <div className="ms-set-group compact">
+              <DynRow icon="download" label="Automatic headroom" sub="Reduce input gain to make room for boosted frequencies." on={dyn.headroom} onChange={(headroom) => setDyn({ ...dyn, headroom })} />
+              <DynRow icon="shield" label="Peak limiter" sub="Keep peaks below -0.5 dBFS to reduce clipping." on={dyn.limiter} onChange={(limiter) => setDyn({ ...dyn, limiter })} />
+              <DynRow icon="compress" label="Compressor" sub="Reduce the difference between quiet and loud passages." on={dyn.compressor} onChange={(compressor) => setDyn({ ...dyn, compressor })} />
+              {/* §113 check: these lost their UI with the old Sound section */}
+              <DynRow icon="timeline" label="Linear phase" sub="No phase shift; adds some delay (fine for music, not for video)." on={sound.phase === 'linear'} onChange={(on) => setSound({ phase: on ? 'linear' : 'minimum' })} />
+              {sound.aim.kind !== 'off' && (
+                <>
+                  <DynRow icon="tune" label="Best fit" sub="Correct only what an EQ can match well, instead of everything." on={sound.fit === 'best'} onChange={(on) => setSound({ fit: on ? 'best' : 'full' })} />
+                  <DynRow icon="headphones" label="Open-back space" sub="Add an open-back's sense of space when the aim is one." on={sound.space} onChange={(space) => setSound({ space })} />
+                </>
+              )}
+              {dyn.compressor && (
+                <>
+                  <ToneRow icon="vertical_align_center" label="Threshold" value={eq.threshold} unit=" dB" min={-60} max={0} digits={0} onChange={(threshold) => setEq({ threshold })} />
+                  <ToneRow icon="compress" label="Ratio" value={eq.ratio} unit=":1" min={1} max={20} onChange={(ratio) => setEq({ ratio })} />
+                  <ToneRow icon="timer" label="Attack" value={eq.attack} unit=" ms" min={1} max={100} digits={0} onChange={(attack) => setEq({ attack })} />
+                  <ToneRow icon="history" label="Release" value={eq.release} unit=" ms" min={20} max={1000} digits={0} onChange={(release) => setEq({ release })} />
+                </>
+              )}
+            </div>
+          </section>
+        </aside>
+      </div>
 
       <input
         ref={importer}
@@ -937,9 +1042,9 @@ export function Equalizer() {
         }}
       />
       {presetMenu && <Menu x={presetMenu.x} y={presetMenu.y} onClose={() => setPresetMenu(null)} items={[
-        { label: 'Import preset', icon: 'file_open', onSelect: () => importer.current?.click() },
-        { label: 'Export preset', icon: 'ios_share', onSelect: exportPreset },
-        // §97: clearing the filters belongs with the EQ set, not beside the cards
+        { label: 'Import preset (.json / .txt)', icon: 'file_open', onSelect: () => importer.current?.click() },
+        { label: 'Export preset (.eq.json)', icon: 'ios_share', onSelect: exportPreset },
+        { label: 'Export Equalizer APO (.txt)', icon: 'description', onSelect: exportPresetApo },
         ...(mode === 'advanced+' && peq.length ? [{ label: 'Clear all filters', icon: 'delete_sweep', danger: true, onSelect: () => onEqTweaked({ filters: [] }) }] : []),
         ...(mine ? [
           { label: 'Rename preset', icon: 'edit', onSelect: () => setNaming({ was: mine.name, name: mine.name }) },
@@ -1033,12 +1138,13 @@ export function Equalizer() {
 }
 
 function ToneRow({ icon, label, sub, value, unit, min, max, digits = 1, onChange }: { icon: string; label: string; sub?: string; value: number; unit: string; min: number; max: number; digits?: number; onChange: (v: number) => void }) {
+  const zero = min <= 0 && max >= 0 ? 0 : null
   return (
-    <div className="ms-set-row column tone">
+    <div className="ms-set-row column tone" onDoubleClick={() => zero !== null && onChange(zero)}>
       <div className="ms-set-line">
         <Icon name={icon} />
         <span className="grow ms-set-text">{label}{sub && <small>{sub}</small>}</span>
-        <span className="ms-value">{value.toFixed(digits)}{unit}</span>
+        <span className="ms-value">{value > 0 && zero === 0 ? '+' : ''}{value.toFixed(digits)}{unit}</span>
       </div>
       <Slider thick label={label} min={min} max={max} step={digits ? 0.5 : 1} value={value} onChange={onChange} />
     </div>

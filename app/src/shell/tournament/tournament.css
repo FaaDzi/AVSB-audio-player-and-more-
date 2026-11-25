@@ -418,12 +418,17 @@ button.ms-tourney-row:hover { background: var(--control-hover); }
   z-index: -1;
   pointer-events: none;
   background:
-    conic-gradient(from 160deg at 20% -10%, transparent 0deg, rgb(255 236 180 / 0.22) 8deg, transparent 18deg),
-    conic-gradient(from 200deg at 80% -10%, transparent 0deg, rgb(180 220 255 / 0.2) 8deg, transparent 18deg);
-  animation: gs-sweep 9s ease-in-out infinite alternate;
+    conic-gradient(from var(--gs-beam-a) at 20% -10%, transparent 0deg, rgb(255 236 180 / 0.24) 8deg, transparent 18deg),
+    conic-gradient(from var(--gs-beam-b) at 80% -10%, transparent 0deg, rgb(180 220 255 / 0.22) 8deg, transparent 18deg);
+  /* each beam swings on its own, out of step with the other, like two operators working the lights */
+  animation: gs-beam-a 5.2s ease-in-out infinite alternate, gs-beam-b 6.8s ease-in-out infinite alternate, gs-beam-pulse 3.1s ease-in-out infinite alternate;
   mix-blend-mode: screen;
 }
-@keyframes gs-sweep { from { transform: rotate(-4deg); } to { transform: rotate(4deg); } }
+@property --gs-beam-a { syntax: '<angle>'; inherits: false; initial-value: 160deg; }
+@property --gs-beam-b { syntax: '<angle>'; inherits: false; initial-value: 200deg; }
+@keyframes gs-beam-a { from { --gs-beam-a: 128deg; } to { --gs-beam-a: 196deg; } }
+@keyframes gs-beam-b { from { --gs-beam-b: 232deg; } to { --gs-beam-b: 164deg; } }
+@keyframes gs-beam-pulse { from { opacity: 0.75; } to { opacity: 1; } }
 :root[data-style='gameshow'] .ms-layer:has(.ms-tourney, .ms-tz-bracket, .ms-tz-matchpage, .ms-tz-results, .ms-tz-setup, .ms-tz-questions) :is(.ms-h1, .ms-h2, .ms-topbar-title) {
   color: var(--top-contrast-text, #ffffff);
   text-shadow: var(--top-text-shadow, 0 3px 0 var(--gs-ink));

@@ -5,8 +5,12 @@ describe('spatial settings', () => {
   afterEach(() => vi.unstubAllGlobals())
 
   it('defaults to off with the generic HRIR and no head tracking', () => {
-    expect(DEFAULT_SPATIAL).toEqual({ mode: 'off', hrirId: 'generic', headTracking: 'off', headCm: null, headCmBy: null, xfAmount: 100, xfAngle: 30, frontFollows: true, modeBeforeTracking: null })
+    expect(DEFAULT_SPATIAL).toEqual({ mode: 'off', hrirId: 'generic', headTracking: 'off', headCm: null, headCmBy: null, xfAmount: 100, xfAngle: 30, xfCutHz: 700, earPct: 100, frontFollows: true, modeBeforeTracking: null })
     expect(sanitizeSpatial(null)).toEqual(DEFAULT_SPATIAL)
+  })
+  it('keeps the crossfeed cutoff and ear correction % in range (§113 check)', () => {
+    expect(sanitizeSpatial({ xfCutHz: 900, earPct: 60 })).toMatchObject({ xfCutHz: 900, earPct: 60 })
+    expect(sanitizeSpatial({ xfCutHz: 5000, earPct: -3 })).toMatchObject({ xfCutHz: 1400, earPct: 0 })
   })
   it('keeps earbuds head tracking, 360 mode and front-follows across a restart (section 104)', () => {
     expect(sanitizeSpatial({ mode: '360', headTracking: 'earbuds', frontFollows: false })).toMatchObject({ mode: '360', headTracking: 'earbuds', frontFollows: false })

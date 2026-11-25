@@ -4789,6 +4789,7 @@ var STREAMS_PER_PHONE = 64;
 var HIRES_SIZE_BYTES = 25 * 1024 * 1024;
 var MAX_DOWNSCALE_RAM_TRACKS = 2;
 var MAX_LOWDATA_CACHE_BYTES = 20 * 1024 * 1024;
+var LOW_BPS = 16e3;
 var BENCH_SLAB = Buffer.alloc(64 * 1024, 90);
 var alpnBytes = Array.from(Buffer.from(ALPN));
 var ID_RE = /^[A-Za-z0-9_-]{1,64}$/;
@@ -5314,11 +5315,21 @@ function createLink(opts) {
   async function streamLowDataIroh(bi, trackId, file, startSec = 0) {
     const enc = openLiveOpusEncoder(file, ffmpegBin, activeProcs, startSec);
     if (!enc) return false;
+    const t0 = Date.now();
     const first = await enc.waitFirst();
     if (!first) {
       enc.kill();
       return false;
     }
+    log(`low data ${trackId}: first ${first.length} B encoded after ${Date.now() - t0} ms`);
+    let sent = 0;
+    const sendTimed = async (c) => {
+      const ahead = sent - (6 * LOW_BPS + 1.5 * LOW_BPS * (Date.now() - t0) / 1e3);
+      if (ahead > 0) await new Promise((r) => setTimeout(r, ahead / (1.5 * LOW_BPS) * 1e3));
+      await send(bi, c);
+      if (sent < 262144 && sent + c.length >= 262144) log(`low data ${trackId}: 256 KB sent after ${Date.now() - t0} ms`);
+      sent += c.length;
+    };
     await send(bi, header({ ok: true, type: "audio/ogg", from: 0, streaming: true, lowData: true, transcoded: true }));
     const cacheChunks = [];
     let cacheBytes = 0;
@@ -5335,17 +5346,19 @@ function createLink(opts) {
     };
     try {
       collect(first);
-      await send(bi, first);
+      await sendTimed(first);
       for (; ; ) {
         const chunk = await enc.nextChunk();
         if (!chunk) break;
         collect(chunk);
-        await send(bi, chunk);
+        await sendTimed(chunk);
       }
+      log(`low data ${trackId}: ${sent} B sent in ${Date.now() - t0} ms`);
       if (keepCaching && startSec === 0 && enc.succeeded()) {
         cacheLowData(trackId, cacheChunks, cacheBytes);
       }
     } catch (e) {
+      log(`low data ${trackId}: stopped after ${sent} B, ${Date.now() - t0} ms (${e?.message ?? e})`);
       enc.kill();
       throw e;
     }
@@ -5743,6 +5756,7 @@ function createLink(opts) {
       if (req.lowData) {
         const startSec = startAt(req.startSec);
         const cached = startSec > 0 ? null : lowDataRamCache.get(t.id);
+        log(`low data ${t.id}: asked (from ${req.from ?? 0}, ${cached ? "cached" : "encode"})`);
         if (cached) {
           lowDataRamCache.delete(t.id);
           lowDataRamCache.set(t.id, cached);
@@ -5865,10 +5879,10 @@ function createLink(opts) {
       if (opts.relay === false) b.applyN0DisableRelay();
       else {
         b.applyN0();
-        if (pinnedRelay === void 0) pinnedRelay = await closestRelay();
+        if (pinnedRelay === void 0) pinnedRelay = await closestRelays();
         if (pinnedRelay) {
-          b.relayMode(iroh.RelayMode.customFromUrls([pinnedRelay]));
-          log(`relay pinned to the closest: ${pinnedRelay}`);
+          b.relayMode(iroh.RelayMode.customFromUrls(pinnedRelay));
+          log(`relays pinned to the closest: ${pinnedRelay.join(", ")}`);
         }
       }
       b.secretKey(secretKey());
@@ -6002,14 +6016,14 @@ function createLink(opts) {
   };
 }
 var N0_RELAYS = ["aps1", "euc1", "usw1", "use1"].map((r) => `https://${r}-1.relay.n0.iroh.link./`);
-async function closestRelay() {
+async function closestRelays() {
   const timed = (url) => {
     const t0 = Date.now();
     return fetch(`${url.replace("./", "/")}ping`, { signal: AbortSignal.timeout(5e3) }).then((r) => r.ok ? Date.now() - t0 : Infinity, () => Infinity);
   };
   const ms = await Promise.all(N0_RELAYS.map(timed));
-  const best = ms.indexOf(Math.min(...ms));
-  return Number.isFinite(ms[best]) ? N0_RELAYS[best] : null;
+  const order = N0_RELAYS.map((url, i) => [url, ms[i]]).filter(([, m]) => Number.isFinite(m)).sort((a, b) => a[1] - b[1]);
+  return order.length ? order.slice(0, 2).map(([url]) => url) : null;
 }
 
 // electron/link/index.mjs

@@ -31,7 +31,11 @@ export function getSetting(id: string): SettingValue | undefined {
 
 export function setSetting(id: string, value: SettingValue) {
   values = { ...values, [id]: value }
-  localStorage.setItem(KEY, JSON.stringify(values))
+  try {
+    localStorage.setItem(KEY, JSON.stringify(values))
+  } catch {
+    // storage full: the change still applies for this session
+  }
   listeners.forEach((l) => l())
 }
 

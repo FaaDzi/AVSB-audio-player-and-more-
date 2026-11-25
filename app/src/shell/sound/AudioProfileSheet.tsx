@@ -532,8 +532,8 @@ function StrengthCurvePreview({
         width: '100%',
         height: 120,
         borderRadius: 14,
-        background: 'rgba(0, 0, 0, 0.55)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
+        background: 'var(--field)',
+        border: '1px solid var(--outline)',
         overflow: 'hidden',
         padding: '4px 6px',
       }}
@@ -554,12 +554,12 @@ function StrengthCurvePreview({
           </linearGradient>
         </defs>
         {/* Grid lines */}
-        <line x1="0" x2={width} y1={height / 2} y2={height / 2} stroke="rgba(255, 255, 255, 0.18)" strokeDasharray="4 4" />
-        <line x1="0" x2={width} y1={10} y2={10} stroke="rgba(255, 255, 255, 0.08)" />
-        <line x1="0" x2={width} y1={height - 10} y2={height - 10} stroke="rgba(255, 255, 255, 0.08)" />
-        <line x1={width * 0.233} x2={width * 0.233} y1="0" y2={height} stroke="rgba(255, 255, 255, 0.08)" />
-        <line x1={width * 0.566} x2={width * 0.566} y1="0" y2={height} stroke="rgba(255, 255, 255, 0.08)" />
-        <line x1={width * 0.9} x2={width * 0.9} y1="0" y2={height} stroke="rgba(255, 255, 255, 0.08)" />
+        <line x1="0" x2={width} y1={height / 2} y2={height / 2} style={{ stroke: 'rgb(var(--ink) / 0.18)' }} strokeDasharray="4 4" />
+        <line x1="0" x2={width} y1={10} y2={10} style={{ stroke: 'rgb(var(--ink) / 0.08)' }} />
+        <line x1="0" x2={width} y1={height - 10} y2={height - 10} style={{ stroke: 'rgb(var(--ink) / 0.08)' }} />
+        <line x1={width * 0.233} x2={width * 0.233} y1="0" y2={height} style={{ stroke: 'rgb(var(--ink) / 0.08)' }} />
+        <line x1={width * 0.566} x2={width * 0.566} y1="0" y2={height} style={{ stroke: 'rgb(var(--ink) / 0.08)' }} />
+        <line x1={width * 0.9} x2={width * 0.9} y1="0" y2={height} style={{ stroke: 'rgb(var(--ink) / 0.08)' }} />
 
         {/* Morphing Area and Polyline */}
         <polygon points={polygonStr} fill={`url(#${gradId})`} />

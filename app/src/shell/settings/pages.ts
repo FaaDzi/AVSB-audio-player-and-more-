@@ -100,27 +100,6 @@ export const PAGE_GROUPS: Page[][] = [
               'Auto (Open backs on IEMs & Closed)',
               'surround_sound'
             ),
-            {
-              kind: 'slider',
-              id: 'tourney_crossfeed_level',
-              label: 'Crossfeed level',
-              min: -20,
-              max: -8,
-              step: 1,
-              value: -14,
-              format: (v) => `${v} dB (350 Hz corner, 0.3 ms delay)`,
-              note: '-14 dB is the standard Bauer / CanOpener reference with natural head shadow (<1 dB frequency ripple).',
-              when: { id: 'tourney_crossfeed', is: ['Auto (Open backs on IEMs & Closed)', 'Always On (All matches)'] },
-            },
-            toggle(
-              'tourney_stage_reflections',
-              'Virtual stage reflections',
-              'Adds subtle 7 ms and 13 ms room reflections (-20 dB / -23 dB) so the stage floats slightly outside the head.',
-              'speaker',
-              true,
-              undefined,
-              { when: { id: 'tourney_crossfeed', is: ['Auto (Open backs on IEMs & Closed)', 'Always On (All matches)'] } }
-            ),
           ],
         },
         {

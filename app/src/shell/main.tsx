@@ -18,6 +18,7 @@ import { startRainbowPulse } from './rainbowPulse'
 import { engineForTests, startEngineSettings } from './engine'
 import { startLogs } from './logs'
 import { followAutoEq } from './sound/autoEqFollow'
+import { followHeadTracking } from '../headtrack/driver'
 
 window.addEventListener('error', (e) => {
   console.error('WINDOW ERROR:', e.message, e.error?.stack || e.error)
@@ -32,6 +33,11 @@ startRainbowPulse()
 startEngineSettings()
 followPhoneSpeaker()
 followAutoEq()
+// head tracking runs for the whole app, not only while the Spatial page is open (§113 check)
+followHeadTracking(() => {
+  const st = engineForTests().player?.spatial
+  return st ? [st] : []
+})
 if (import.meta.env.DEV) (window as unknown as { shellEngine: unknown }).shellEngine = engineForTests
 
 createRoot(document.getElementById('root')!).render(

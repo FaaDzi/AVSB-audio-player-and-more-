@@ -33,6 +33,19 @@ export const WAVE = {
   /** Humps fade in over this much at the start and before the handle. */
   fade: 28,
   rampMs: 400, tickMs: 16,
+  /** The position arrives twice a second (engine.ts); in between, the bar's end and the handle glide over this long. */
+  glideMs: 550,
+}
+
+/** Where the played part is drawn `now`: gliding from `from` to `to` since `t0`, so it doesn't step twice a second. */
+export function glideAt(g: { from: number; to: number; t0: number }, now: number): number {
+  return g.from + (g.to - g.from) * Math.min(1, Math.max(0, (now - g.t0) / WAVE.glideMs))
+}
+
+/** Party theme: how far the handle bar jumps with the music (1 = resting height), from the rumble's level follower. */
+export function bounceScale(amount: number): number {
+  const t = Math.min(1, Math.max(0, (amount - WAVE.floor) / (1 - WAVE.floor)))
+  return 1 + 1.1 * t * t
 }
 
 /** "Squiggly": the earlier thin sine line (Mornye's expressive_seek_track.dart). */
@@ -124,8 +137,21 @@ export function WaveTrack({ share, moving, compact = false }: { share: number; m
     // one level follower per band (the means differ a lot: rumble sits far above treble in dB)
     bands: [{ mean: -50, amount: 1 }, { mean: -60, amount: 1 }, { mean: -75, amount: 1 }],
     amounts: [1, 1, 1],
+    glide: { from: share, to: share, t0: 0 },
+    moving,
   })
-  state.current.share = share
+  {
+    const s = state.current
+    if (share !== s.share) {
+      const now = performance.now()
+      const shown = glideAt(s.glide, now)
+      // a seek, a new song or a drag jumps straight there; only the steady half-second steps glide
+      const jump = !moving || share < shown - 0.0005 || share - shown > 0.02
+      s.glide = { from: jump ? share : shown, to: share, t0: now }
+      s.share = share
+    }
+    s.moving = moving
+  }
 
   useEffect(() => {
     const el = canvas.current
@@ -160,8 +186,18 @@ export function WaveTrack({ share, moving, compact = false }: { share: number; m
       calm.to = b ? b.right - box.left : 0
     }
     measureCalm()
+    const handle = compact ? null : el.parentElement?.querySelector<HTMLElement>('.ms-slider-handle') ?? null
+    const root = document.documentElement
+    // Party theme (any seek-bar style): the handle bounces with the bass
+    const partyOn = () => !!handle && root.dataset.style === 'gameshow' && root.dataset.reduceMotion !== 'on'
 
     s.draw = () => {
+      const shown = glideAt(s.glide, performance.now())
+      if (handle) {
+        handle.style.left = `${shown * 100}%`
+        // Party theme: the handle is a one-bar visualiser, jumping with the bass next to the wave
+        handle.style.transform = partyOn() && s.moving ? `scaleY(${bounceScale(amounts[0])})` : ''
+      }
       // a soft wave needs no more than 2 pixels per point: a phone's 3x screen would triple the work for nothing
       const ratio = Math.min(2, window.devicePixelRatio || 1)
       if (el.width !== Math.round(w * ratio) || el.height !== Math.round(h * ratio)) {
@@ -173,7 +209,7 @@ export function WaveTrack({ share, moving, compact = false }: { share: number; m
       // the bar sits where the flat track was (10 px up from the bottom of the full-size slider); stops short of the handle
       const y = compact ? h - bar / 2 : h - 10
       const start = compact ? 0 : bar / 2
-      const end = compact ? w * s.share : w * s.share - 6 - bar / 2
+      const end = compact ? w * shown : w * shown - 6 - bar / 2
       if (end <= start) return
       ctx.strokeStyle = ctx.fillStyle = s.color
       ctx.lineWidth = bar
@@ -227,7 +263,7 @@ export function WaveTrack({ share, moving, compact = false }: { share: number; m
       const dt = last ? now - last : 0
       last = now
       s.ramp = target ? Math.min(1, s.ramp + dt / WAVE.rampMs) : Math.max(0, s.ramp - dt / WAVE.rampMs)
-      if (mode === 'Waves' && dt) {
+      if ((mode === 'Waves' || partyOn()) && dt) {
         // kept small: a huge shift loses the float precision that keeps the motion smooth
         WAVE.layers.forEach((layer, k) => { shifts[k] = (shifts[k] + (dt / 1000) * layer.drift) % Math.max(48, w * layer.length) })
         // the cover colour eases in after a song change: follow it, as the handle does (a style read, no layout)
@@ -251,10 +287,12 @@ export function WaveTrack({ share, moving, compact = false }: { share: number; m
         drawnRamp = s.ramp
         s.draw()
       }
-      if (target === 1 || s.ramp > 0) frame = requestAnimationFrame(tick)
+      // while playing it keeps going even with a flat wave: the bar's end and the handle glide
+      if (moving || s.ramp > 0) frame = requestAnimationFrame(tick)
+      else frame = 0
     }
     const kick = () => {
-      if (!frame && onScreen && !document.hidden && (target === 1 || s.ramp > 0)) frame = requestAnimationFrame(tick)
+      if (!frame && onScreen && !document.hidden && (moving || s.ramp > 0)) frame = requestAnimationFrame(tick)
     }
     frame = requestAnimationFrame(tick)
     const sizes = new ResizeObserver(() => {
@@ -272,6 +310,7 @@ export function WaveTrack({ share, moving, compact = false }: { share: number; m
     document.addEventListener('visibilitychange', kick)
     return () => {
       cancelAnimationFrame(frame)
+      if (handle) handle.style.transform = ''
       sizes.disconnect()
       seen.disconnect()
       document.removeEventListener('visibilitychange', kick)
@@ -283,7 +322,7 @@ export function WaveTrack({ share, moving, compact = false }: { share: number; m
   const lastColor = useRef(0)
   useEffect(() => {
     const s = state.current
-    if (s.ramp > 0) return
+    if (s.ramp > 0 || s.moving) return
     if (canvas.current && performance.now() - lastColor.current > 1000) {
       lastColor.current = performance.now()
       s.color = getComputedStyle(canvas.current).color

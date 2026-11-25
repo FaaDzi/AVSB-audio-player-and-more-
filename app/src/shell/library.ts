@@ -327,7 +327,9 @@ export async function trashTrackOnHost(track: Track): Promise<{ ok: boolean; whe
   const isAndroid = w?.Capacitor?.getPlatform?.() === 'android'
   try {
     if (isAndroid && w?.Capacitor?.Plugins?.ShellHost?.trashTrack) {
-      await w.Capacitor.Plugins.ShellHost.trashTrack({ id: track.id, path: track.path, cacheOnly: pcRemote })
+      const res = await w.Capacitor.Plugins.ShellHost.trashTrack({ id: track.id, path: track.path, cacheOnly: pcRemote })
+      // Cancel in Android's Trash dialog (or a failure): the song stays (§113 check)
+      if (res?.ok === false) return { ok: false, where: pcRemote ? 'cache' : 'trash' }
     } else {
       await fetch('/shell-host/trash-track', {
         method: 'POST',

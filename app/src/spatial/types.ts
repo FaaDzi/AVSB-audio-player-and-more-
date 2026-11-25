@@ -60,7 +60,7 @@ export interface SpatialStageApi {
   /** Head yaw in degrees (from a HeadTracker); the virtual speakers turn the opposite way so they stay put. */
   setHeadYaw(deg: number): void
   /** Crossfeed amount (%) and speaker angle (°); see SpatialSettings. */
-  setCrossfeed?(amountPct: number, angleDeg: number): void
+  setCrossfeed?(amountPct: number, angleDeg: number, cutHz?: number): void
 }
 
 /** Camera face tracking: the webcam on PC, the front camera (phone propped up facing you) on Android. */
@@ -80,6 +80,10 @@ export interface SpatialSettings {
   xfAmount: number
   /** Crossfeed angle: where the imagined speakers stand (30–90°); sets the crossfed path's delay. */
   xfAngle: number
+  /** Crossfeed low-pass cutoff (Hz, 400–1400; bs2b's default 700). */
+  xfCutHz: number
+  /** How much of the virtual speakers' ear-gain correction applies (%, 0–150; 100 = as measured). */
+  earPct: number
   /** Head tracking: after facing a new way for a while, that becomes the front (turning a chair). In "360" only
    * big turns do, so looking at an instrument stays put (§104 D). */
   frontFollows: boolean

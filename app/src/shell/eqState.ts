@@ -324,17 +324,11 @@ export function carryOver(s: EqState, next: EqState['mode']): Partial<EqState> |
   const there = chainDb(curve(next), CARRY_HZ)
   if (target.every((db, i) => Math.abs(db - there[i]) < 0.5)) return null
 
-  if (next === 'advanced+') return { filters }
+  if (next === 'advanced+') {
+    return { filters: filters.length <= PEQ_MAX_FILTERS ? filters : fitParametric(CARRY_HZ, target, PARAMETRIC_20).filters.map(tidyFilter) }
+  }
   if (next === 'advanced') {
-    const hz = BANDS[s.count] ?? BANDS[10]
-    const q = BAND_Q[s.count] ?? BAND_Q[10]
-    const want = chainDb(filters, hz)
-    let gains = Array.from(want, clampGain)
-    for (let pass = 0; pass < 8; pass++) {
-      const got = chainDb(hz.map((fc, i) => ({ kind: 'peak' as const, fc, gain: gains[i], q })), hz)
-      gains = gains.map((g, i) => clampGain(g + want[i] - got[i]))
-    }
-    return { gains }
+    return { gains: fitBandCount(s, s.count) }
   }
   const sh = s.shaper ?? DEFAULT_SHAPER
   const withGains = (g: number[]): ShaperParams => ({ ...sh, bassGain: g[0], midGain: g[1], trebleGain: g[2] })
@@ -350,4 +344,19 @@ export function carryOver(s: EqState, next: EqState['mode']): Partial<EqState> |
     gains = gains.map((g, i) => clampGain(g + step[i]))
   }
   return { subMode: 'shaper', shaper: withGains(gains) }
+}
+
+/** Fits the active EQ curve onto a new graphic-EQ band count (5 / 10 / 15 / 31) without wiping user edits to flat. */
+export function fitBandCount(s: EqState, nextCount: number): number[] {
+  const hz = BANDS[nextCount] ?? BANDS[10]
+  const filters = eqFilters({ ...s, bass: 0, treble: 0 }).filter((f) => f.gain !== 0)
+  if (!filters.length) return hz.map(() => 0)
+  const q = BAND_Q[nextCount] ?? BAND_Q[10]
+  const want = chainDb(filters, hz)
+  let gains = Array.from(want, clampGain)
+  for (let pass = 0; pass < 8; pass++) {
+    const got = chainDb(hz.map((fc, i) => ({ kind: 'peak' as const, fc, gain: gains[i], q })), hz)
+    gains = gains.map((g, i) => clampGain(g + want[i] - got[i]))
+  }
+  return gains
 }

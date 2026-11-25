@@ -5,7 +5,7 @@ import { getSetting } from '../settings/store'
 import { savedOnlineLyrics, searchOnline } from '../onlineLyrics'
 import { Barcode, barcodeModules } from './Barcode'
 import { useShell } from '../context'
-import { coverUrl, duration, folderPath, genreBadge, qualityLabel, useLibrary, type Track } from '../library'
+import { coverUrl, duration, folderPath, genreBadge, qualityLabel, trashTrackOnHost, useLibrary, type Track } from '../library'
 import { useTrackMenu } from './TrackMenu'
 import * as meta from '../metadata'
 import {
@@ -23,7 +23,6 @@ import {
 import { audioUrl, getLoadedBuffer } from '../engine'
 import { fft } from '../../audio/fft'
 import { measureLoudness } from '../../audio/smartVolume'
-import { host } from '../host'
 import { isAndroid } from '../../platform'
 
 const size = (bytes: number) => `${(bytes / 1048576).toFixed(1)} MB`
@@ -194,6 +193,11 @@ async function decodeAndAnalyzeTrack(track: Track): Promise<DecodedAudioAnalysis
     const stored = localStorage.getItem('analysis_' + track.id)
     if (stored) {
       const parsed = JSON.parse(stored) as DecodedAudioAnalysis
+      // older saves kept the spectrogram (as unreadable objects): drop it to free the space
+      if (parsed.spectrogramCols?.length) {
+        parsed.spectrogramCols = []
+        localStorage.setItem('analysis_' + track.id, JSON.stringify(parsed))
+      }
       cacheAnalysis(track.id, parsed)
       return parsed
     }
@@ -512,7 +516,8 @@ async function decodeAndAnalyzeTrack(track: Track): Promise<DecodedAudioAnalysis
   }
   cacheAnalysis(track.id, out)
   try {
-    localStorage.setItem('analysis_' + track.id, JSON.stringify(out))
+    // the spectrogram stays in memory only: as JSON it is ~1 MB a song and filled localStorage (audit 2026-11-25)
+    localStorage.setItem('analysis_' + track.id, JSON.stringify({ ...out, spectrogramCols: [] }))
   } catch {}
   return out
 }
@@ -524,7 +529,7 @@ function SpectrogramCanvas({ analysis }: { analysis: DecodedAudioAnalysis }) {
     const canvas = canvasRef.current
     if (!canvas) return
     const cols = analysis.spectrogramCols
-    if (!cols.length) return
+    if (!cols?.length || !cols[0]?.length) return
     const w = cols.length
     const h = cols[0].length
     canvas.width = w
@@ -874,18 +879,7 @@ export function SongPage({ id, back }: { id: string; back: () => void }) {
   const handleDeleteFromDevice = async () => {
     setDeleting(true)
     try {
-      const h = host() as unknown as { trashSong?: (path: string) => Promise<boolean>; deleteSong?: (path: string) => Promise<boolean> } | null
-      if (h?.trashSong) {
-        await h.trashSong(track.path)
-      } else if (h?.deleteSong) {
-        await h.deleteSong(track.path)
-      } else {
-        await fetch('/shell-host/library/delete', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: track.id, path: track.path }),
-        }).catch(() => {})
-      }
+      if (!(await trashTrackOnHost(track)).ok) { setConfirmDelete(false); return }
       replaceData({
         ...data,
         tracks: data.tracks.filter((t) => t.id !== track.id),
@@ -1105,7 +1099,7 @@ export function SongPage({ id, back }: { id: string; back: () => void }) {
                     ) : null}
                   </div>
                 )}
-                {decoded ? (
+                {decoded?.spectrogramCols?.length ? (
                   <SpectrogramCanvas analysis={decoded} />
                 ) : (
                   <div className="ms-spectrogram" role="img" aria-label="Spectrogram placeholder">

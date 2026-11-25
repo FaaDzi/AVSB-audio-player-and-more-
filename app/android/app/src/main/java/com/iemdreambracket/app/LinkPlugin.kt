@@ -269,6 +269,7 @@ class LinkPlugin : Plugin() {
      */
     private fun cachingStream(src: InputStream, writer: CacheWriter?, lowData: Boolean, release: () -> Unit): InputStream = object : InputStream() {
         private var done = false
+        private val openedAt = SystemClock.elapsedRealtime()
         init { openStreams.incrementAndGet() }
 
         override fun read(): Int {
@@ -287,6 +288,7 @@ class LinkPlugin : Plugin() {
             if (n < 0) {
                 writer?.finish()
             } else if (n > 0) {
+                if (total < 256 * 1024 && total + n >= 256 * 1024) Log.i(TAG, "stream: 256 KB after ${SystemClock.elapsedRealtime() - openedAt} ms")
                 total += n
                 dataAt = SystemClock.elapsedRealtime()
                 writer?.write(b, off, n)
@@ -298,6 +300,7 @@ class LinkPlugin : Plugin() {
             if (done) return
             done = true
             openStreams.decrementAndGet()
+            Log.i(TAG, "stream closed after $total bytes, ${SystemClock.elapsedRealtime() - openedAt} ms")
             if (writer != null && writer.open && detached.get() < MAX_DETACHED && (lowData || !onMobileData())) {
                 detached.incrementAndGet()
                 scope.launch(Dispatchers.IO) {
@@ -785,6 +788,8 @@ class LinkPlugin : Plugin() {
     @Volatile private var dataAt = 0L
     /** Song streams the player holds open (it stops reading while its buffer is full, so data can pause for a while). */
     private val openStreams = java.util.concurrent.atomic.AtomicInteger(0)
+    /** Song streams arriving over iroh: (song id, stop). */
+    private val liveSongs = java.util.concurrent.CopyOnWriteArrayList<Pair<String, () -> Unit>>()
     private fun busy() = openStreams.get() > 0 || SystemClock.elapsedRealtime() - dataAt < 3_000L
 
     /** One hello. No answer in HELLO_TIMEOUT_MS means the connection is dead: it's dropped, so the next request dials again. */
@@ -919,8 +924,9 @@ class LinkPlugin : Plugin() {
         }
     }
 
+    /** For fetch-ahead: leaves the playing song's stream alone. */
     fun songStream(id: String, lowData: Boolean = false): Pair<String, InputStream>? {
-        val res = openSongStream(id, lowData, null) ?: return null
+        val res = openSongStream(id, lowData, null, stopOthers = false) ?: return null
         return res.mime to res.stream
     }
 
@@ -930,7 +936,7 @@ class LinkPlugin : Plugin() {
      * `iroh` QUIC when remote/relayed, backed by bounded RAM LRU cache (`0 MB` flash storage used unless saved offline).
      */
     @JvmOverloads
-    fun openSongStream(id: String, lowData: Boolean = false, rangeHeader: String? = null, startSec: Double = 0.0): SongStreamResult? {
+    fun openSongStream(id: String, lowData: Boolean = false, rangeHeader: String? = null, startSec: Double = 0.0, stopOthers: Boolean = true): SongStreamResult? {
         if (!Regex("^[A-Za-z0-9_-]{1,64}$").matches(id) || !paired()) return null
         val cacheKey = if (lowData) "$id-low" else id
         // §112 B: a Low Data song cut by a weak signal comes back from `startSec` (the PC encodes from there), so the
@@ -943,9 +949,17 @@ class LinkPlugin : Plugin() {
         openLanSongStream(id, lowData, rangeHeader, cacheKey, if (partway) startSec else 0.0)?.let { return it }
         // §84 A: a seek asks for "bytes=N-"; the PC resumes the file there (low data is transcoded live, so it restarts)
         val from = if (lowData) 0L else Regex("^bytes=(\\d+)-").find(rangeHeader ?: "")?.groupValues?.get(1)?.toLongOrNull() ?: 0L
+        val askedAt = SystemClock.elapsedRealtime()
+        Log.i(TAG, "songStream $id: asked (low=$lowData range=$rangeHeader open=${openStreams.get()} detached=${detached.get()})")
+        // measured 2026-11-25 on a relay (~300 kbit/s): the last song's data queued ahead of this one's answer for
+        // 11-14 s. On a slow link other songs stop first; the same song's other requests (ranges) are left alone.
+        if (stopOthers && (onMobileData() || buildStatusJson().optString("transport") == "iroh-relayed")) {
+            liveSongs.filter { it.first != id }.forEach { s -> liveSongs.remove(s); s.second() }
+        }
         return runBlocking(Dispatchers.IO) {
             runCatching {
                 withConnection { c ->
+                    Log.i(TAG, "songStream $id: connection after ${SystemClock.elapsedRealtime() - askedAt} ms")
                     val bi = c.openBi()
                     bi.send().writeAll((JSONObject().put("op", "song").put("id", id).put("from", from).put("lowData", lowData).put("startSec", if (partway) startSec else 0.0).toString() + "\n").toByteArray())
                     bi.send().finish()
@@ -966,6 +980,7 @@ class LinkPlugin : Plugin() {
                         if (headerBuf.size() > 64 * 1024) error("header too large")
                     }
                     val head = JSONObject(String(fullHeaderBytes, 0, nl, Charsets.UTF_8))
+                    Log.i(TAG, "songStream $id: answer after ${SystemClock.elapsedRealtime() - askedAt} ms (${buildStatusJson().optString("transport")})")
                     if (head.optBoolean("unpaired", false) || isUnpairedReason(head.optString("error", ""))) {
                         onPcMasterDisconnect()
                         error("removed")
@@ -1005,6 +1020,9 @@ class LinkPlugin : Plugin() {
                             withContext(NonCancellable) { runCatching { recv.stop(0UL) } }
                         }
                     }
+                    val live: Pair<String, () -> Unit> = id to { producerJob.cancel() }
+                    liveSongs.add(live)
+                    producerJob.invokeOnCompletion { liveSongs.remove(live) }
 
                     val stream = object : InputStream() {
                         private var cur: ByteArray = initialBytes
@@ -1699,6 +1717,8 @@ class LinkPlugin : Plugin() {
                 val n = body.read(buf)
                 if (n < 0) break
                 out.write(buf, 0, n)
+                // without it the player got nothing until 256 KB (16 s of Low Data) piled up: 6+ s on a relay
+                out.flush()
             }
             out.flush()
         }
