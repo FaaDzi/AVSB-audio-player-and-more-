@@ -56,7 +56,7 @@ export function runAt(a: { base: number; err: number; t0: number }, perMs: numbe
 /** Party theme: how far the handle bar stretches with the music (1 = resting height), from the rumble's level follower. */
 export function bounceScale(amount: number): number {
   const t = Math.min(1, Math.max(0, (amount - WAVE.floor) / (1 - WAVE.floor)))
-  return 1 + 0.8 * t * t
+  return 1 + 0.55 * t * t
 }
 
 /** "Squiggly": the earlier thin sine line (Mornye's expressive_seek_track.dart). */
@@ -208,16 +208,27 @@ export function WaveTrack({ share, moving, compact = false, seconds = 0 }: { sha
     const root = document.documentElement
     // Party theme (any seek-bar style): the handle bounces with the bass
     const partyOn = () => !!handle && root.dataset.style === 'gameshow' && root.dataset.reduceMotion !== 'on'
+    // the handle's own size from the stylesheet, read once (the bounce sets height and top inline)
+    const handleBox = { height: handle?.offsetHeight ?? 0, top: handle?.offsetTop ?? 0 }
 
     // the handle moves on every frame (a 120 Hz screen too); the canvas below is drawn at most 60 times a second
     const placeHandle = (now: number) => {
       const shown = s.shownAt(now)
       if (handle) {
         handle.style.left = `${shown * 100}%`
-        // Party theme: the handle is a one-bar visualiser, jumping with the bass next to the wave
-        // it grows up and down from its middle, and eases off under the play / skip buttons like the wave does
-        const stretch = partyOn() && s.moving ? 1 + (bounceScale(amounts[0]) - 1) * calmAt(shown * w, calm.from, calm.to) : 1
-        handle.style.transform = stretch !== 1 ? `scaleY(${stretch})` : ''
+        // Party theme: the handle is a one-bar visualiser, jumping with the bass next to the wave. It grows up and down
+        // from its middle, at its real height (a scaleY blurred its rounded ends), and not at all under the play / skip
+        // buttons, easing out on the way there, so it never runs into them
+        const away = (calmAt(shown * w, calm.from, calm.to) - WAVE.calm) / (1 - WAVE.calm)
+        const stretch = partyOn() && s.moving ? 1 + (bounceScale(amounts[0]) - 1) * away : 1
+        if (stretch > 1.005) {
+          const grow = handleBox.height * (stretch - 1)
+          handle.style.height = `${handleBox.height + grow}px`
+          handle.style.top = `${handleBox.top - grow / 2}px`
+        } else if (handle.style.height) {
+          handle.style.height = ''
+          handle.style.top = ''
+        }
       }
       return shown
     }
@@ -337,7 +348,7 @@ export function WaveTrack({ share, moving, compact = false, seconds = 0 }: { sha
     document.addEventListener('visibilitychange', kick)
     return () => {
       cancelAnimationFrame(frame)
-      if (handle) handle.style.transform = ''
+      if (handle) { handle.style.height = ''; handle.style.top = '' }
       sizes.disconnect()
       seen.disconnect()
       document.removeEventListener('visibilitychange', kick)

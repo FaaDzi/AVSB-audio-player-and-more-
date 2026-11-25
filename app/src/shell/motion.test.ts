@@ -90,7 +90,7 @@ describe('seek glide and party bounce', () => {
   })
   it('rests at full height in quiet parts and stretches with loud bass', () => {
     expect(bounceScale(WAVE.floor)).toBe(1)
-    expect(bounceScale(1)).toBeCloseTo(1.8)
+    expect(bounceScale(1)).toBeCloseTo(1.55)
   })
   it('runs at the song speed and eases a late report in without stepping', () => {
     const perMs = 1 / 200_000 // a 200 s song
