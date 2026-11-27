@@ -40,6 +40,14 @@
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
 
+        <!-- §119: AVSB's EQ in other apps (Wavelet-style DynamicsProcessing on their audio sessions) -->
+        <service
+            android:name=".SystemEqService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE" android:value="Applies the user's equalizer to other apps' audio sessions while they play" />
+        </service>
+
         <!-- keeps Import song art / Sync lyrics going with the screen off, with a progress notification (BulkWorkPlugin) -->
         <service
             android:name=".BulkWorkService"
@@ -67,6 +75,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />    <!-- talk to DSP cables over USB; not required, so phones without USB host still install -->

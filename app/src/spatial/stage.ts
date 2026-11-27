@@ -718,8 +718,27 @@ export class SpatialStage implements SpatialStageApi {
       return
     }
     const next = up.banks[1 - up.active]
-    next.conv.forEach((cv, k) => (cv.buffer = this.ringBuffer(idx[k])))
-    next.idx = idx
+    // §120: loading all 7 impulse responses at once is one big spike (each ConvolverNode sets up its FFT on the spot):
+    // the music stumbled when 360 came on. They go in one per task; the bank fades in once all are there, and a yaw
+    // that arrives meanwhile is picked up after.
+    if (this.upLoadingBank) return
+    this.upLoadingBank = true
+    let k = 0
+    const load = () => {
+      if (!this.up || this.up !== up) { this.upLoadingBank = false; return }
+      next.conv[k].buffer = this.ringBuffer(idx[k])
+      if (++k < next.conv.length) { setTimeout(load, 0); return }
+      this.upLoadingBank = false
+      next.idx = idx
+      this.swapUpBank(up, cur, next)
+      if (this.yaw !== this.shownYaw) this.scheduleYaw()
+    }
+    load()
+  }
+
+  private upLoadingBank = false
+
+  private swapUpBank(up: NonNullable<typeof this.up>, cur: UpBank, next: UpBank) {
     this.wireUp(next, true)
     const t = this.ctx.currentTime
     for (const [b, to] of [[cur, 0], [next, 1]] as const) {

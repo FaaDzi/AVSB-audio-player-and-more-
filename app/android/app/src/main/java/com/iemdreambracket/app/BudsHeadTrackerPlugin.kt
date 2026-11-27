@@ -51,9 +51,43 @@ class BudsHeadTrackerPlugin : Plugin() {
         val bonded = try { adapter()?.bondedDevices ?: emptySet() } catch (e: SecurityException) { emptySet<BluetoothDevice>() }
         for (d in bonded) {
             val uuids = d.uuids?.map { it.uuid } ?: emptyList()
-            if (service in uuids) list.put(JSObject().put("name", d.name ?: "Earbuds").put("address", d.address).put("connected", isConnected(d)))
+            // §115 A: Sony headphones (MDR v1/v2) are listed too; head tracking keeps to Samsung's
+            val brand = when {
+                service in uuids -> "samsung"
+                SonyMdr.V2 in uuids -> "sony-v2"
+                SonyMdr.V1 in uuids -> "sony"
+                // a generic serial channel proves nothing on its own: the name has to say Revo too
+                TanchjimRevo.SPP in uuids && (d.name ?: "").contains("TANCHJIM-REVO", ignoreCase = true) -> "tanchjim-revo"
+                else -> null
+            } ?: continue
+            list.put(JSObject().put("name", d.name ?: "Earbuds").put("address", d.address).put("connected", isConnected(d)).put("brand", brand))
         }
         call.resolve(JSObject().put("devices", list))
+    }
+
+    /**
+     * §115 A: what every connected Bluetooth device offers (its SDP service UUIDs), logged under "BudsProbe" and
+     * returned, so the right protocol can be picked for buds we don't speak yet (KZ, Tanchjim: GAIA, BES, Bluetrum…).
+     */
+    @SuppressLint("MissingPermission")
+    @PluginMethod
+    fun probe(call: PluginCall) {
+        if (needsPermission()) return requestPermissionForAlias("bluetooth", call, "probeAfterPermission")
+        val list = JSArray()
+        val bonded = try { adapter()?.bondedDevices ?: emptySet() } catch (e: SecurityException) { emptySet<BluetoothDevice>() }
+        for (d in bonded) {
+            if (!isConnected(d)) continue
+            val uuids = d.uuids?.map { it.uuid.toString() } ?: emptyList()
+            android.util.Log.i("BudsProbe", "${d.name} ${d.address} type=${d.type} class=${d.bluetoothClass?.deviceClass} uuids=$uuids")
+            list.put(JSObject().put("name", d.name ?: "").put("address", d.address).put("uuids", JSArray(uuids)))
+        }
+        call.resolve(JSObject().put("devices", list))
+    }
+
+    @PermissionCallback
+    private fun probeAfterPermission(call: PluginCall) {
+        if (needsPermission()) call.reject("Allow Nearby devices so the app can look at your earbuds.")
+        else probe(call)
     }
 
     /** §105 B: connected now, not only paired. BluetoothDevice.isConnected is hidden API: false when it can't be read. */
@@ -77,8 +111,7 @@ class BudsHeadTrackerPlugin : Plugin() {
             try {
                 val device = adapter()?.getRemoteDevice(address) ?: throw IOException("Bluetooth is off")
                 try { adapter()?.cancelDiscovery() } catch (_: SecurityException) {}
-                val s = device.createRfcommSocketToServiceRecord(service)
-                s.connect()
+                val s = connectSpp(device)
                 socket = s
                 running = true
                 val out = s.outputStream
@@ -166,7 +199,8 @@ class BudsHeadTrackerPlugin : Plugin() {
     }
 
     private fun handle(id: Int, payload: ByteArray) {
-        if (id == SPATIAL_AUDIO_CONTROL && payload.isNotEmpty()) {
+        if (id == NOISE_CONTROLS_UPDATE && payload.isNotEmpty()) notifyListeners("noise", JSObject().put("mode", payload[0].toInt()))
+        else if (id == SPATIAL_AUDIO_CONTROL && payload.isNotEmpty()) {
             when (payload[0].toInt()) {
                 CTRL_ATTACH_OK -> state("attached", "")
                 CTRL_DETACH_OK -> state("detached", "")
@@ -188,6 +222,7 @@ class BudsHeadTrackerPlugin : Plugin() {
 
     private fun state(state: String, detail: String) = notifyListeners("state", JSObject().put("state", state).put("detail", detail))
 
+    /** Header bit 0x1000 is only on Galaxy Wearable's acknowledgements of status messages, never on settings (its own log). */
     private fun send(out: OutputStream, id: Int, payload: ByteArray) {
         val body = byteArrayOf(id.toByte()) + payload
         val size = body.size + 2
@@ -197,6 +232,206 @@ class BudsHeadTrackerPlugin : Plugin() {
                 byteArrayOf((crc and 0xFF).toByte(), (crc shr 8).toByte(), EOM))
             out.flush()
         }
+    }
+
+    /**
+     * Galaxy Wearable holds the buds' one control channel; our first try fails but drops its hold for ~5 s
+     * (logcat, 2026-11-27), so a quick retry gets the channel. Wearable takes it back on its own afterwards.
+     */
+    @SuppressLint("MissingPermission")
+    private fun connectSpp(device: android.bluetooth.BluetoothDevice, uuid: UUID = service): BluetoothSocket {
+        var last: IOException? = null
+        repeat(3) { attempt ->
+            val s = device.createRfcommSocketToServiceRecord(uuid)
+            try {
+                s.connect()
+                return s
+            } catch (e: IOException) {
+                last = e
+                try { s.close() } catch (_: IOException) {}
+                if (attempt < 2) Thread.sleep(250)
+            }
+        }
+        throw last ?: IOException("Could not reach the earbuds")
+    }
+
+    /** Hidden BluetoothDevice.getBatteryLevel (the phone's own figure, from the headset's HFP report); null when unknown. */
+    private fun systemBattery(d: BluetoothDevice): Int? =
+        try { (d.javaClass.getMethod("getBatteryLevel").invoke(d) as? Int)?.takeIf { it in 0..100 } } catch (_: Exception) { null }
+
+    /** §117: connected pairs with the driver that speaks to each (or none): [{name, address, driver, tested, fastPair, battery}]. */
+    @SuppressLint("MissingPermission")
+    @PluginMethod
+    fun wirelessFind(call: PluginCall) {
+        if (needsPermission()) return requestPermissionForAlias("bluetooth", call, "wirelessFindAfterPermission")
+        val list = JSArray()
+        val bonded = try { adapter()?.bondedDevices ?: emptySet() } catch (e: SecurityException) { emptySet<BluetoothDevice>() }
+        for (d in bonded) {
+            if (!isConnected(d)) continue
+            val uuids = d.uuids?.map { it.uuid } ?: emptyList()
+            val driver = Wireless.driverFor(d.name ?: "", uuids)
+            list.put(JSObject().put("name", d.name ?: "Bluetooth").put("address", d.address)
+                .put("driver", driver?.id ?: "none").put("tested", driver == null || driver.id in Wireless.TESTED)
+                .put("fastPair", FastPairBattery.UUID_STREAM in uuids).put("battery", systemBattery(d)))
+        }
+        call.resolve(JSObject().put("devices", list))
+    }
+
+    @PermissionCallback
+    private fun wirelessFindAfterPermission(call: PluginCall) {
+        if (needsPermission()) call.reject("Allow Nearby devices so the app can reach your earbuds.")
+        else wirelessFind(call)
+    }
+
+    /**
+     * §118: a connection stays open ~6 s after use, so a run of changes (a dragged slider, a preset) doesn't fight
+     * Galaxy Wearable / Sound Connect for the channel every time (that took ~1 s each). Closed after, so their apps get
+     * it back. What arrived while it sat idle is thrown away before the next use (old answers can't confirm new asks).
+     */
+    private val held = HashMap<String, Pair<BluetoothSocket, Long>>()
+    @Volatile private var closer: Thread? = null
+
+    @SuppressLint("MissingPermission")
+    private fun take(device: BluetoothDevice, uuid: UUID): BluetoothSocket {
+        val reused = synchronized(held) { held.remove("${device.address}|$uuid")?.first }
+        if (reused != null && reused.isConnected) {
+            try { while (reused.inputStream.available() > 0) reused.inputStream.skip(reused.inputStream.available().toLong()) } catch (_: IOException) {}
+            return reused
+        }
+        try { reused?.close() } catch (_: IOException) {}
+        return connectSpp(device, uuid)
+    }
+
+    private fun giveBack(device: BluetoothDevice, uuid: UUID, s: BluetoothSocket) {
+        synchronized(held) { held.put("${device.address}|$uuid", s to SystemClock.elapsedRealtime())?.first?.takeIf { it !== s }?.let { try { it.close() } catch (_: IOException) {} } }
+        if (closer?.isAlive == true) return
+        closer = Thread {
+            while (true) {
+                Thread.sleep(1000)
+                val done = synchronized(held) {
+                    val now = SystemClock.elapsedRealtime()
+                    held.entries.removeAll { (_, v) -> (now - v.second > 6000).also { old -> if (old) try { v.first.close() } catch (_: IOException) {} } }
+                    held.isEmpty()
+                }
+                if (done) break
+            }
+        }.apply { name = "wireless-close"; isDaemon = true; start() }
+    }
+
+    private fun driverOf(address: String): Pair<BluetoothDevice, WirelessDriver?> {
+        val d = adapter()?.getRemoteDevice(address) ?: throw IOException("Bluetooth is off")
+        @SuppressLint("MissingPermission") val name = d.name ?: ""
+        @SuppressLint("MissingPermission") val uuids = d.uuids?.map { it.uuid } ?: emptyList()
+        return d to Wireless.driverFor(name, uuids)
+    }
+
+    /** §117: one pair's state through its driver (one short connection), plus Fast Pair battery when it offers that. */
+    @SuppressLint("MissingPermission")
+    @PluginMethod
+    fun wirelessRead(call: PluginCall) {
+        if (needsPermission()) return call.reject("Allow Nearby devices so the app can reach your earbuds.")
+        val address = call.getString("address") ?: return call.reject("No earbuds given")
+        Thread {
+            val log = StringBuilder()
+            try {
+                val (device, driver) = driverOf(address)
+                try { adapter()?.cancelDiscovery() } catch (_: SecurityException) {}
+                var out = JSObject()
+                if (driver != null) {
+                    // §120: a read opens its own connection: Galaxy Buds send their full status only when one opens
+                    synchronized(held) { held.remove("${device.address}|${driver.uuid}")?.first?.let { try { it.close() } catch (_: IOException) {} } }
+                    val s = take(device, driver.uuid)
+                    try { out = driver.read(s, log); giveBack(device, driver.uuid, s) } catch (e: Exception) { try { s.close() } catch (_: IOException) {}; throw e }
+                }
+                if (!out.has("battery") && FastPairBattery.UUID_STREAM in (device.uuids?.map { it.uuid } ?: emptyList())) {
+                    try {
+                        val s = connectSpp(device, FastPairBattery.UUID_STREAM)
+                        try { FastPairBattery.read(s, log)?.let { out.put("battery", it) } } finally { try { s.close() } catch (_: IOException) {} }
+                    } catch (_: Exception) { /* battery is a bonus */ }
+                }
+                if (!out.has("battery")) systemBattery(device)?.let { out.put("battery", JSObject().put("single", it)) }
+                android.util.Log.i("BudsControl", "read ${driver?.id ?: "none"}:$log")
+                call.resolve(out)
+            } catch (e: Exception) {
+                android.util.Log.i("BudsControl", "read failed: ${e.message};$log")
+                call.reject(e.message ?: "Could not reach the earbuds")
+            }
+        }.apply { name = "wireless-read"; isDaemon = true }.start()
+    }
+
+    /** §117: one setting (`key` noise | ambient | game | connection, `value`, optional `level`, `voice`); resolves with what the pair confirmed. */
+    @SuppressLint("MissingPermission")
+    @PluginMethod
+    fun wirelessSet(call: PluginCall) {
+        if (needsPermission()) return call.reject("Allow Nearby devices so the app can reach your earbuds.")
+        val address = call.getString("address") ?: return call.reject("No earbuds given")
+        val key = call.getString("key") ?: return call.reject("No setting given")
+        val value = call.getInt("value") ?: return call.reject("No value")
+        val level = call.getInt("level")
+        val voice = call.getBoolean("voice")
+        Thread {
+            val log = StringBuilder()
+            try {
+                val (device, driver) = driverOf(address)
+                if (driver == null) throw IOException("These earbuds aren't ones we can control yet")
+                try { adapter()?.cancelDiscovery() } catch (_: SecurityException) {}
+                val s = take(device, driver.uuid)
+                val out = try {
+                    driver.set(s, key, value, level, voice, log).also { giveBack(device, driver.uuid, s) }
+                } catch (e: Exception) {
+                    // a refusal leaves the line usable; a broken line is dropped
+                    if (s.isConnected && e !is java.io.IOException) giveBack(device, driver.uuid, s) else try { s.close() } catch (_: IOException) {}
+                    throw e
+                }
+                android.util.Log.i("BudsControl", "set ${driver.id} $key=$value level=$level voice=$voice:$log")
+                call.resolve(out)
+            } catch (e: Exception) {
+                android.util.Log.i("BudsControl", "set failed: ${e.message};$log")
+                call.reject(e.message ?: "Could not reach the earbuds")
+            }
+        }.apply { name = "wireless-set"; isDaemon = true }.start()
+    }
+
+    /**
+     * §115 A: read-only questions to an unknown pair, to learn whether it speaks a protocol we know. For each service
+     * UUID given, connects and sends each frame (hex), logging everything that comes back under "BudsProbe". Only
+     * questions go out (version, serial, firmware); nothing that changes a setting.
+     */
+    @SuppressLint("MissingPermission")
+    @PluginMethod
+    fun ask(call: PluginCall) {
+        if (needsPermission()) return call.reject("Allow Nearby devices so the app can reach your earbuds.")
+        val address = call.getString("address") ?: return call.reject("No earbuds given")
+        val uuids = call.getArray("uuids")?.toList<String>() ?: return call.reject("No services given")
+        val frames = call.getArray("frames")?.toList<String>() ?: return call.reject("No questions given")
+        Thread {
+            val device = adapter()?.getRemoteDevice(address)
+            val answers = JSArray()
+            for (u in uuids) {
+                val heard = StringBuilder()
+                try {
+                    val s = connectSpp(device ?: throw IOException("Bluetooth is off"), UUID.fromString(u))
+                    try {
+                        for (f in frames) {
+                            val bytes = f.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
+                            s.outputStream.write(bytes); s.outputStream.flush()
+                            val got = java.io.ByteArrayOutputStream()
+                            val until = SystemClock.elapsedRealtime() + 700
+                            while (SystemClock.elapsedRealtime() < until) {
+                                val input = s.inputStream
+                                if (input.available() > 0) { val buf = ByteArray(input.available()); got.write(buf, 0, input.read(buf)) } else Thread.sleep(15)
+                            }
+                            heard.append(" | ").append(f).append(" -> ").append(got.toByteArray().joinToString("") { "%02x".format(it) }.ifEmpty { "(nothing)" })
+                        }
+                    } finally { try { s.close() } catch (_: IOException) {} }
+                } catch (e: Exception) {
+                    heard.append(" | couldn't connect: ").append(e.message)
+                }
+                android.util.Log.i("BudsProbe", "${device?.name} $u$heard")
+                answers.put(JSObject().put("uuid", u).put("heard", heard.toString()))
+            }
+            call.resolve(JSObject().put("answers", answers))
+        }.apply { name = "buds-ask"; isDaemon = true }.start()
     }
 
     override fun handleOnDestroy() {
@@ -219,6 +454,7 @@ class BudsHeadTrackerPlugin : Plugin() {
         private const val DATA_WEAR_ON = 33
         private const val DATA_WEAR_OFF = 34
         private const val DATA_STUCK = 36
+        private const val NOISE_CONTROLS_UPDATE = 119
 
         /** CRC-16/XMODEM: poly 0x1021, init 0. */
         fun crc16(data: ByteArray): Int {

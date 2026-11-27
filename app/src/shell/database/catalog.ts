@@ -124,13 +124,17 @@ export function listModels(models: Model[], { query, kinds, reviewedOnly, sort, 
   const match = new Map<string, number>()
   if (words.length) {
     for (const m of models) {
-      const best = Math.min(...m.members.map((r) => searchScore(r.name, words) ?? Infinity))
+      // filtered out anyway: not scored (§114 B)
+      if (customOnly ? !m.custom : !kinds.has(m.kind) || (reviewedOnly && !m.reviewCount)) continue
+      let best = Infinity
+      for (const r of m.members) best = Math.min(best, searchScore(r.name, words) ?? Infinity)
       if (best < Infinity) match.set(m.id, best)
     }
   }
   const list = models.filter((m) => (customOnly ? Boolean(m.custom) : kinds.has(m.kind) && (!reviewedOnly || m.reviewCount > 0)) && (!words.length || match.has(m.id)))
   const byName = (a: Model, b: Model) => (a.sortName < b.sortName ? -1 : a.sortName > b.sortName ? 1 : 0)
-  if (words.length) return list.sort((a, b) => (match.get(a.id) as number) - (match.get(b.id) as number) || byName(a, b))
+  // §114 C: a search keeps the chosen sort; "Name" means best match first
+  if (words.length && sort === 'name') return list.sort((a, b) => (match.get(a.id) as number) - (match.get(b.id) as number) || byName(a, b))
   return list.sort((a, b) => {
     if (sort === 'score') return (b.score ?? -1) - (a.score ?? -1) || byName(a, b)
     if (sort === 'name') return byName(a, b)

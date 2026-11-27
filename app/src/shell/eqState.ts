@@ -79,6 +79,8 @@ export interface EqState {
   ratio: number
   attack: number
   release: number
+  /** §114 F: the saved preset named `preset` has been changed and not saved yet. */
+  edited?: boolean
 }
 
 export const EQ_DEFAULT: EqState = {
@@ -205,7 +207,7 @@ export const presetFrom = (eq: EqState, name: string, device?: string | null): S
 
 /** A preset as the EQ fields it sets (everything it saved; the rest of the EQ stays as it is). */
 export const presetFields = (p: SavedPreset): Partial<EqState> =>
-  ({ preset: p.name, mode: p.mode, count: p.count, gains: p.gains, filters: p.filters, preamp: p.preamp, bass: p.bass, treble: p.treble, ...(p.mode === 'basic' && p.shaper ? { subMode: p.subMode ?? 'shaper', shaper: p.shaper, polar: p.polar ?? DEFAULT_POLAR } : {}) })
+  ({ preset: p.name, edited: false, mode: p.mode, count: p.count, gains: p.gains, filters: p.filters, preamp: p.preamp, bass: p.bass, treble: p.treble, ...(p.mode === 'basic' && p.shaper ? { subMode: p.subMode ?? 'shaper', shaper: p.shaper, polar: p.polar ?? DEFAULT_POLAR } : {}) })
 
 /** The filters a preset plays, whatever mode it was made in. */
 export const presetFilters = (p: SavedPreset): Biquad[] => eqFilters({ ...EQ_DEFAULT, ...presetFields(p), on: true })

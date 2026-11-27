@@ -31,6 +31,8 @@ import {
 import { chainDb } from '../../eq/biquad'
 import { useSyncExternalStore } from 'react'
 import { saveFile } from '../../platform'
+import { canSendToPc, canSendToPhones, sendEqToPc, sendEqToPhones } from '../eqLink'
+import { host, type LinkStatus } from '../host'
 
 export function generateEqualizerApoConfig(preset: SavedPreset): string {
   const lines: string[] = [
@@ -139,8 +141,14 @@ export function SavedEqPage() {
   // §112 D: an EQ made with other gear asks first (the user can go on; saving it then makes it this gear's)
   const [otherGear, setOtherGear] = useState<SavedPreset | null>(null)
   const applyPreset = (p: SavedPreset) => (p.device && p.device !== activeGear ? setOtherGear(p) : loadPreset(p))
+  // §118: tapping the EQ in use again turns it off (Raw), with Undo
+  const unselect = (p: SavedPreset) => {
+    setEq({ on: false })
+    showToast({ message: `${p.name} off`, action: { label: 'Undo', onClick: () => setEq({ ...presetFields(p), on: true }) } })
+  }
 
   // §91 F: each export is followed by how to install it (saveFile: a download on the PC, the share sheet on the phone)
+  const [sending, setSending] = useState<SavedPreset | null>(null)
   const [steps, setSteps] = useState<{ kind: 'apo' | 'json'; file: string } | null>(null)
   const exportApo = (p: SavedPreset) => {
     const file = `${p.name.replace(/[^\w.-]/g, '_')}_APO.txt`
@@ -237,7 +245,7 @@ export function SavedEqPage() {
       ) : (
         <div className="ms-saved-eq-list">
           {presets.map((p) => {
-            const isActive = eq.preset === p.name
+            const isActive = eq.on && eq.preset === p.name
             return (
               <div key={p.name} className={`ms-saved-eq-card${isActive ? ' on' : ''}`}>
                 <div className="ms-saved-eq-card-left">
@@ -248,7 +256,7 @@ export function SavedEqPage() {
                   <MiniEqCurve preset={p} />
                 </div>
                 <div className="ms-saved-eq-actions">
-                  <button type="button" className={`ms-btn small${isActive ? ' primary' : ' tonal'}`} onClick={() => applyPreset(p)}>
+                  <button type="button" className={`ms-btn small${isActive ? ' primary' : ' tonal'}`} onClick={() => (isActive ? unselect(p) : applyPreset(p))}>
                     <Icon name={isActive ? 'check' : 'play_arrow'} size={18} /> {isActive ? 'In use' : 'Use'}
                   </button>
                   <IconButton icon="edit" label="Rename" onClick={() => { setRenameFrom(p.name); setNamingTarget(p); setNewName(p.name) }} />
@@ -265,8 +273,12 @@ export function SavedEqPage() {
         <Menu x={menu.x} y={menu.y} onClose={() => setMenu(null)} items={[
           { label: 'Equalizer APO text (.txt)', icon: 'description', onSelect: () => exportApo(menu.preset) },
           { label: 'AVSB preset (.json)', icon: 'data_object', onSelect: () => exportJson(menu.preset) },
+          // §114 G: straight to your other devices over the link
+          ...(canSendToPhones() ? [{ label: 'Send to phones and tablets…', icon: 'devices', onSelect: () => setSending(menu.preset) }] : []),
+          ...(canSendToPc() ? [{ label: 'Send to PC', icon: 'computer', onSelect: () => { const p = menu.preset; void sendEqToPc(p).then(() => showToast(`${p.name} sent to your PC`), (e: unknown) => showToast(`Couldn't send: ${e instanceof Error ? e.message : String(e)}`)) } }] : []),
         ]} />
       )}
+      {sending && <SendToPhones preset={sending} onClose={() => setSending(null)} onSent={(n) => showToast(`${sending.name} sent to ${n === 1 ? '1 device' : `${n} devices`}`)} />}
 
       {steps && (
         <Dialog title={steps.kind === 'apo' ? 'Install in Equalizer APO' : 'Open in AVSB'} onClose={() => setSteps(null)} footer={<button type="button" className="ms-btn text" onClick={() => setSteps(null)}>Done</button>}>
@@ -352,5 +364,53 @@ export function SavedEqPage() {
         </Dialog>
       )}
     </div>
+  )
+}
+
+/** §114 G: pick the paired phones and tablets that get this EQ; one that's away gets it when it next connects. */
+function SendToPhones({ preset, onClose, onSent }: { preset: SavedPreset; onClose: () => void; onSent: (count: number) => void }) {
+  const [phones, setPhones] = useState<LinkStatus['phones'] | null>(null)
+  const [picked, setPicked] = useState<Set<string>>(new Set())
+  useEffect(() => {
+    void host()?.link?.status().then((s) => {
+      setPhones(s.phones)
+      setPicked(new Set(s.phones.filter((p) => p.connected).map((p) => p.id)))
+    }, () => setPhones([]))
+  }, [])
+  const all = phones !== null && phones.length > 0 && picked.size === phones.length
+  const toggle = (id: string) => setPicked((was) => { const next = new Set(was); if (next.has(id)) next.delete(id); else next.add(id); return next })
+  return (
+    <Dialog
+      title={`Send ${preset.name}`}
+      onClose={onClose}
+      footer={(
+        <>
+          <button type="button" className="ms-btn text" onClick={onClose}>Cancel</button>
+          <button type="button" className="ms-btn text" disabled={!picked.size} onClick={() => { sendEqToPhones(preset, [...picked]); onSent(picked.size); onClose() }}>Send</button>
+        </>
+      )}
+    >
+      {phones === null ? null : phones.length === 0 ? (
+        <div className="ms-empty small"><Icon name="devices" /><p>No phone or tablet is paired yet.</p></div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <button type="button" className={`ms-profile-item${all ? ' active' : ''}`} onClick={() => setPicked(all ? new Set() : new Set(phones.map((p) => p.id)))}>
+            <Icon name="select_all" size={22} />
+            <div className="grow" style={{ textAlign: 'left' }}><b>All</b></div>
+            {all && <Icon name="check" size={20} />}
+          </button>
+          {phones.map((p) => (
+            <button type="button" key={p.id} className={`ms-profile-item${picked.has(p.id) ? ' active' : ''}`} onClick={() => toggle(p.id)}>
+              <Icon name={p.connected ? 'smartphone' : 'mobile_off'} size={22} />
+              <div className="grow" style={{ textAlign: 'left' }}>
+                <b>{p.customName || p.name}</b>
+                <small style={{ display: 'block', color: 'var(--text-dim)' }}>{p.connected ? 'Connected' : 'Gets it when it connects'}</small>
+              </div>
+              {picked.has(p.id) && <Icon name="check" size={20} />}
+            </button>
+          ))}
+        </div>
+      )}
+    </Dialog>
   )
 }

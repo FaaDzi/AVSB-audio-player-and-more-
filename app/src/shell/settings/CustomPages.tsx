@@ -279,7 +279,7 @@ export function Equalizer() {
   const swapPage = useContext(SwapPage)
   const paneTitle = slot?.closest('.ms-settings-pane')?.querySelector('.ms-settings-bigtitle')?.textContent?.trim() ?? ''
   const routedTab =
-    paneTitle === 'Spatial & Crossfeed'
+    paneTitle === 'Crossfeed' || paneTitle === 'Spatial & Crossfeed'
       ? 'spatial'
       : paneTitle === 'Audio Tools & Diagnostics'
         ? 'tools'
@@ -330,6 +330,12 @@ export function Equalizer() {
   const dyn = { headroom: eq.headroom, limiter: eq.limiter, compressor: eq.compressor }
 
   const onEqTweaked = (patch: Partial<EqState>) => {
+    // §114 F: a change to one of your saved (or imported) EQs keeps its name, so the flag can save over it
+    if (mine) {
+      setEq({ ...patch, edited: true })
+      setSessionAutosave(activeGear, presetFrom({ ...eq, ...patch }, mine.name, activeGear))
+      return
+    }
     const next = { ...eq, ...patch, preset: 'Custom EQ 1 (Autosaved)' }
     setEq({ ...patch, preset: 'Custom EQ 1 (Autosaved)' })
     setSessionAutosave(activeGear, presetFrom(next, 'Custom EQ 1 (Autosaved)', activeGear))
@@ -341,9 +347,9 @@ export function Equalizer() {
     if (PRESETS[name]) { showToast('A built-in preset already has that name'); return }
     const others = naming.was ? saved.filter((p) => p.name !== naming.was) : saved
     setPresets(withPreset(others, presetFrom(eq, name, activeGear)))
-    setEq({ preset: name })
+    setEq({ preset: name, edited: false })
     clearSessionAutosave(activeGear)
-    showToast('Preset saved to App')
+    showToast(mine && name === mine.name ? `Saved ${name}` : 'Preset saved to App')
     setNaming(null)
   }
   const exportPreset = () => {
@@ -581,7 +587,7 @@ export function Equalizer() {
   const navBar = (
     <div className="ms-eq-subnav" role="tablist" aria-label="Audio & Diagnostics views">
       <Chip label="Equalizer" selected={subView === 'eq'} onClick={() => pick('eq')} />
-      <Chip label="Spatial & Crossfeed" selected={subView === 'spatial'} onClick={() => pick('spatial')} />
+      <Chip label="Spatial" selected={subView === 'spatial'} onClick={() => pick('spatial')} />
       <button type="button" className="ms-chip ms-eq-savedlink" onClick={() => go({ page: 'settings', section: 'saved-eq' })}>
         <Icon name="bookmarks" size={16} />Saved EQs
       </button>
@@ -592,7 +598,7 @@ export function Equalizer() {
     return (
       <div className="ms-eq">
         {navBar}
-        <SpatialCrossfeedSection />
+        <SpatialCrossfeedSection part="spatial" onOther={() => go({ page: 'settings', section: 'spatial-360' })} />
       </div>
     )
   }
@@ -656,7 +662,8 @@ export function Equalizer() {
           ]}
         />
       </label>
-      <IconButton icon="bookmark_add" label="Save as a preset" onClick={() => setNaming({ was: null, name: '' })} />
+      {/* §114 F: on your own EQ the name is filled in: keep it to save over it, change it to save a copy */}
+      <IconButton icon="bookmark_add" label={mine ? `Save ${mine.name}` : 'Save as a preset'} onClick={() => setNaming({ was: null, name: mine?.name ?? '' })} />
       <IconButton icon="restart_alt" label="Reset" onClick={() => setResetting(true)} />
       <IconButton icon="more_vert" label="More preset options" onClick={(e) => setPresetMenu({ x: e.clientX, y: e.clientY })} />
     </div>
@@ -675,7 +682,7 @@ export function Equalizer() {
           <div ref={hero} className={`ms-eq-hero${on ? ' on' : ''}${compact ? ' compact' : ''}${pinned ? ' pinned' : ''}${graphFolded ? ' folded' : ''}`}>
             <div className="ms-eq-head">
               <div className="grow min-w-0">
-                <h3>{preset}</h3>
+                <h3>{preset}{mine && eq.edited ? ' •' : ''}</h3>
                 <p>
                   <em className="ms-set-badge">{mode === 'basic' ? (basicSubMode === 'shaper' ? '3-Zone' : 'Radar') : mode === 'advanced' ? `${count} bands` : `${peq.length} ${peq.length === 1 ? 'filter' : 'filters'}`}</em>
                   {' '}· Preamp {(tone.preamp - (dyn.headroom ? peak : 0)).toFixed(1)} dB
@@ -1061,12 +1068,12 @@ export function Equalizer() {
       )}
       {naming && (
         <Dialog
-          title={naming.was ? 'Rename preset' : 'Save preset'}
+          title={naming.was ? 'Rename preset' : mine ? `Save ${mine.name}` : 'Save preset'}
           onClose={() => setNaming(null)}
           footer={(
             <>
               <button type="button" className="ms-btn text" onClick={() => setNaming(null)}>Cancel</button>
-              <button type="button" className="ms-btn text" onClick={finishNaming}>Save</button>
+              <button type="button" className="ms-btn text" onClick={finishNaming}>{!naming.was && mine && naming.name.trim() !== mine.name ? 'Save as new' : 'Save'}</button>
             </>
           )}
         >
@@ -1608,7 +1615,7 @@ export function ThemePage() {
 }
 
 export function SpatialCrossfeedPage() {
-  return <SpatialCrossfeedSection />
+  return <SpatialCrossfeedSection part="spatial" />
 }
 
 // ---------- §73.A3 Secondary Audio Diagnostics & Guides ----------

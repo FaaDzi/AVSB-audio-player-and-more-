@@ -1,4 +1,5 @@
 import { MyGear } from '../sound/MyGear'
+import { Spatial360Page, WirelessControl } from '../sound/WirelessControl'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Dialog, Icon, IconButton } from '../ui'
 import { useShell } from '../context'
@@ -148,6 +149,8 @@ export function SettingsPage({ initial }: { initial?: string }) {
           <HeaderSlot.Provider value={slot}>
           <SwapPage.Provider value={swap}>
             {open.custom === 'gear' ? <MyGear />
+              : open.custom === 'buds' ? <WirelessControl />
+              : open.custom === 'spatial-360' ? <Spatial360Page />
               : open.custom === 'equalizer' ? <Equalizer />
               : open.custom === 'stats' ? <StatsPage />
               : open.custom === 'storage' ? <Storage />

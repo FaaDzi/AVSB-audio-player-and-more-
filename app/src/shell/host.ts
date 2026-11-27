@@ -34,6 +34,10 @@ export interface MusicHost {
     pushPlaylists?: (json: string) => void
     /** A phone sent its playlists (SyncState in PC ids). */
     onPlaylists?: (listener: (sent: unknown) => void) => () => void
+    /** §114 G: EQs waiting for each phone ({ phoneId: SavedPreset[] }, JSON). */
+    pushEqOutbox?: (json: string) => void
+    /** A phone sent an EQ, or took the ones waiting for it. */
+    onEq?: (listener: (msg: { type: 'eq-put'; phoneId: string; from: string; preset: unknown } | { type: 'eq-taken'; phoneId: string }) => void) => () => void
     /** A phone sent a song into the first library folder's "From phone". */
     onUploaded?: (listener: () => void) => () => void
   }

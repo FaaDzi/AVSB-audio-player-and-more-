@@ -683,7 +683,7 @@ export function ImportDeviceDialog(props: { db: Database; presetName: string; ac
             <Icon name="check" />
           </button>
         )}
-        <DevicePickerModal db={props.db} onPick={(id) => props.onDone(id)} />
+        <DevicePickerModal db={props.db} allKinds onPick={(id) => props.onDone(id)} />
       </div>
     </Dialog>
   )

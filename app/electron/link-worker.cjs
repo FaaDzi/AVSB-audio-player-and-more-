@@ -54,6 +54,8 @@ function coverFile(id) {
 
 // §80 A: the page's playlists as JSON, numbered so a phone can skip an unchanged copy
 let playlists = { json: '{"lists":[],"deleted":{}}', version: 0 }
+// §114 G: the page's EQ outbox ({ phoneId: presets[] }), numbered so phones know to look
+let eqOutbox = { byPhone: {}, version: 0 }
 
 let linkLib = null
 let link = null
@@ -92,6 +94,10 @@ port.on('message', async (event) => {
     return
   }
 
+  if (msg.type === 'eq-outbox') {
+    if (msg.byPhone && typeof msg.byPhone === 'object') eqOutbox = { byPhone: msg.byPhone, version: eqOutbox.version + 1 }
+    return
+  }
   if (msg.type === 'playlists-snapshot') {
     if (typeof msg.json === 'string' && msg.json !== playlists.json) playlists = { json: msg.json, version: playlists.version + 1 }
     return
@@ -129,6 +135,13 @@ port.on('message', async (event) => {
         playlists: {
           state: () => playlists,
           put: (sent) => port.postMessage({ type: 'playlists-put', sent }),
+        },
+        eqs: {
+          version: () => eqOutbox.version,
+          inbox: (phoneId) => (Array.isArray(eqOutbox.byPhone[phoneId]) ? eqOutbox.byPhone[phoneId] : []),
+          // dropped here at once so a quick second look can't fetch them twice; the page then pushes its new outbox
+          taken: (phoneId) => { if (eqOutbox.byPhone[phoneId]?.length) { delete eqOutbox.byPhone[phoneId]; port.postMessage({ type: 'eq-taken', phoneId }) } },
+          put: (phoneId, from, preset) => port.postMessage({ type: 'eq-put', phoneId, from, preset }),
         },
         uploads: {
           // songs sent from a phone go into the first library folder, in "From phone"

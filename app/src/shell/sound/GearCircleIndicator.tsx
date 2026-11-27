@@ -13,6 +13,7 @@ import { applyProfileItem, setProfileItemStrength, useGearProfile } from './gear
 import { copyCurrentAimToEq } from './copyEq'
 import { AudioProfileSheet } from './AudioProfileSheet'
 import { useMyEq } from './myEq'
+import { setEq } from '../eqState'
 import { Icon } from '../ui'
 
 export function GearCircleIndicator({ size = 32 }: { size?: number }) {
@@ -32,7 +33,8 @@ export function GearCircleIndicator({ size = 32 }: { size?: number }) {
 
   const strength = activeItem ? activeItem.strength : 100
   // §107 E: one of your saved EQs for this gear is playing (the target is Raw then)
-  const myEq = useMyEq(gear.active).active
+  const my = useMyEq(gear.active)
+  const myEq = my.active
   const isRaw = !activeItem
 
   const handleCopyEq = async () => {
@@ -122,6 +124,10 @@ export function GearCircleIndicator({ size = 32 }: { size?: number }) {
         label: myEq ? `Your EQ: ${myEq.name}` : profile.items.length === 0 ? 'Raw audio with no changes' : 'Raw Audio Gear (Pure sound)',
         heading: true,
       },
+      // §114 E: compare your (imported) EQ with the gear as it is, without leaving the player
+      ...(my.loaded ? [myEq
+        ? { label: 'Switch to Raw (EQ off)', icon: 'hearing_disabled', onSelect: () => { setEq({ on: false }); showToast('Raw: EQ off') } }
+        : { label: `Back to ${my.loaded.name}`, icon: 'equalizer', onSelect: () => { setEq({ on: true }); showToast(`${my.loaded!.name} on`) } }] : []),
       {
         label: 'Choose Target or Device to Test…',
         icon: 'palette',

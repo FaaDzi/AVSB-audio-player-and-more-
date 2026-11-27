@@ -12,6 +12,8 @@ import { kindDetail } from '../tournament/kinds'
 import { addOwned, hearDevice, removeOwned, setActive, setAnc, toggleStar, useGear } from './gear'
 import { useSound } from './soundState'
 import { SourceSection } from './SourceSection'
+import { isAndroid } from '../../platform'
+import { getSetting, setSetting, useSettings } from '../settings/store'
 
 const KINDS = new Set(['iems', 'tws', 'headphones', 'speakers', 'soundbar'] as const)
 
@@ -50,6 +52,7 @@ function AddSearch({ db, label, onPick, onClose }: { db: Database; label: string
 export function MyGear() {
   const { db } = useDatabase()
   const gear = useGear()
+  useSettings()
   const sound = useSound()
   const { showToast, go } = useShell()
   const [adding, setAdding] = useState<'owned' | 'starred' | null>(null)
@@ -77,6 +80,14 @@ export function MyGear() {
           </div>
         ) : (
           <p className="ms-tz-note">Nothing set yet. Add the IEM, TWS or headphone you use, so simulations and targets start from its real sound.</p>
+        )}
+        {/* §119: on the PC the device follows Windows' output, remembered per output (sound/outputGear.ts) */}
+        {!isAndroid() && (
+          <label className="ms-set-row toggle clickable">
+            <Icon name="switch_access_shortcut" />
+            <span className="grow ms-set-text"><span>Follow the output</span><small>When Windows switches output, the device you last used on it comes back</small></span>
+            <input type="checkbox" role="switch" className="ms-switch" checked={getSetting('followoutput') !== false} onChange={(e) => setSetting('followoutput', e.target.checked)} />
+          </label>
         )}
       </section>
 

@@ -42,6 +42,18 @@ describe('your saved EQs in the Database (plan §85)', () => {
     expect(withCustomEqs(db, [])).toBe(db)
   })
 
+  it('a search keeps the chosen sort and the kind chips (§114 C)', () => {
+    const a = { ...model({ ...iem, id: 'moondrop-aria', name: 'Moondrop Aria' }, 'iems'), usd: 80, score: 9 }
+    const b = { ...model({ ...iem, id: 'moondrop-arias', name: 'Moondrop Arias Pro' }, 'iems'), usd: 20, score: 6 }
+    const h = { ...model({ ...hp, id: 'hp-moondrop-para', name: 'Moondrop Para' }, 'headphones'), usd: 5 }
+    const models = [b, a, h]
+    expect(listModels(models, { ...all, query: 'moondrop', sort: 'price-asc' }).map((m) => m.id)).toEqual(['hp-moondrop-para', 'moondrop-arias', 'moondrop-aria'])
+    expect(listModels(models, { ...all, query: 'moondrop', sort: 'score' }).map((m) => m.id)[0]).toBe('moondrop-aria')
+    expect(listModels(models, { ...all, kinds: new Set(['iems'] as const), query: 'moondrop', sort: 'price-asc' }).map((m) => m.id)).toEqual(['moondrop-arias', 'moondrop-aria'])
+    // Name: best match first, as before
+    expect(listModels(models, { ...all, query: 'aria' }).map((m) => m.id)[0]).toBe('moondrop-aria')
+  })
+
   it('a Basic preset carries its sound (it used to save none)', () => {
     const basic = { ...EQ_DEFAULT, mode: 'basic' as const, subMode: 'shaper' as const, shaper: { ...EQ_DEFAULT.shaper!, bassGain: 6 } }
     const mine = withCustomEqs(db, [presetFrom(basic, 'Bassy', iem.id)]).models.find((m) => m.custom)!

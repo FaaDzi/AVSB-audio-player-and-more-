@@ -1000,10 +1000,9 @@ export class GalleryPlayer {
 
   /** Set each song's gain from the loudness match now, then cap it once the stage's peak is measured. */
   private levelTracks(tracks: Track[]) {
-    for (const t of tracks) {
-      t.stagePeak = null
-      this.applyGain(t, 0.01)
-    }
+    // §118: the previous stage's peak stays as the cap until the new one is measured (a worker, ~100 ms on a phone).
+    // Dropping it played the new EQ uncapped for that moment, a level jump up and back down on every EQ change.
+    for (const t of tracks) this.applyGain(t, 0.01)
     const stage = this.levelStage
     if (!stage) return
     const token = this.swapToken

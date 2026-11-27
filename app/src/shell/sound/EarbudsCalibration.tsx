@@ -7,6 +7,7 @@ import { Icon } from '../ui'
 import { earbudsTracker } from '../../headtrack/driver'
 import { LOOK_STEPS, type LookStep } from '../../headtrack/budsMath'
 import { playDing } from '../../audio/ding'
+import { logLine } from '../logs'
 
 const SAY: Record<LookStep, { icon: string; title: string; hint: string }> = {
   ahead: { icon: 'center_focus_strong', title: 'Look straight ahead', hint: 'At your screen, as you normally sit. Hold still.' },
@@ -36,9 +37,13 @@ export function EarbudsCalibration({ onClose }: { onClose: () => void }) {
     setStep('ahead')
     setHold(0)
     let last = 0
+    let stepAt = performance.now()
     void t.calibrate((p) => {
       // a step just passed: ding (the last one gets the chime below instead)
       if (p.step !== stepRef.current) {
+        // §120: each step to Logs, so a stuck one can be told apart from a slow one
+        logLine('INFO', 'BudsCal', `${stepRef.current} passed after ${Math.round((performance.now() - stepAt) / 100) / 10} s → ${p.step}`)
+        stepAt = performance.now()
         if (p.step !== 'done' && p.step !== 'failed') playDing('step')
         stepRef.current = p.step
         setStep(p.step)
@@ -52,6 +57,7 @@ export function EarbudsCalibration({ onClose }: { onClose: () => void }) {
         setHold(p.hold)
       }
     }).then((r) => {
+      if (r !== 'saved') logLine('WARN', 'BudsCal', `stopped at "${stepRef.current}" after ${Math.round((performance.now() - stepAt) / 1000)} s (${r})`)
       stepRef.current = r === 'saved' ? 'done' : 'failed'
       setStep(stepRef.current)
       if (r === 'saved') {
@@ -76,9 +82,19 @@ export function EarbudsCalibration({ onClose }: { onClose: () => void }) {
   return createPortal(
     <div className="ms-cal" role="dialog" aria-label={`Calibrating ${name}`} onClick={step === 'done' ? onClose : undefined}>
       <p className="ms-cal-who">Calibrating {name}</p>
-      <div className={`ms-cal-frame ${step}`}>
-        <i /><i /><i /><i />
-        <Icon name={say.icon} size={64} />
+      {/* §120: a head that shows the move (the earbuds' motion sensor does this, not the camera) */}
+      <div className={`ms-cal-head ${step}`} aria-hidden="true">
+        <svg viewBox="0 0 120 120">
+          <g className="head">
+            <circle cx="60" cy="60" r="30" />
+            <path d="M48 74 Q60 82 72 74" />
+            <circle cx="50" cy="56" r="2.5" className="eye" />
+            <circle cx="70" cy="56" r="2.5" className="eye" />
+            <rect x="24" y="52" width="8" height="16" rx="4" className="bud" />
+            <rect x="88" y="52" width="8" height="16" rx="4" className="bud" />
+          </g>
+        </svg>
+        <Icon name={say.icon} size={28} />
       </div>
       <h2>{say.title}</h2>
       <p>{say.hint}</p>

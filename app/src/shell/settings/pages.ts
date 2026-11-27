@@ -63,7 +63,7 @@ export interface Page {
   icon: string
   /** The page this one opens from, for the back button and the selected row in the list. */
   parent?: string
-  custom?: 'gear' | 'equalizer' | 'stats' | 'storage' | 'logs' | 'shortcuts' | 'about' | 'phone' | 'lyrics-priority' | 'metadata-priority' | 'duplicates' | 'saved-eq'
+  custom?: 'gear' | 'buds' | 'spatial-360' | 'equalizer' | 'stats' | 'storage' | 'logs' | 'shortcuts' | 'about' | 'phone' | 'lyrics-priority' | 'metadata-priority' | 'duplicates' | 'saved-eq'
   sections?: Section[]
 }
 
@@ -80,6 +80,9 @@ export const PAGE_GROUPS: Page[][] = [
   [
     // §69: what you listen on, the gear you own and want to hear, your DAC and DSP
     { id: 'gear', title: 'My gear', icon: 'headphones', custom: 'gear' },
+    // §115 A/F: the connected earbuds' own settings, plus 360 and virtual speakers (on the PC too)
+    // §120: Connected control: the earbuds' own settings, plus 360 audio (which works on wired gear too)
+    { id: 'buds', title: 'Connected control', icon: 'earbuds', custom: 'buds' },
     {
       id: 'tournament',
       title: 'Tournament',
@@ -190,7 +193,7 @@ export const PAGE_GROUPS: Page[][] = [
           ],
         },
         { title: 'Color', rows: [toggle('outlines', 'Outlines', 'Show thin edges around the see-through panels. Turning this off keeps the blur.', 'rounded_corner', true, undefined, { when: { id: 'style', is: 'Game show' } }), toggle('dynamic', 'Dynamic Color', 'Use colors from your wallpaper', 'wallpaper', true), { kind: 'swatches', label: 'Color', when: { id: 'dynamic', is: false } }] },
-        { title: 'Theme', when: { id: 'style', is: 'Material' }, rows: [seg('theme', 'Theme', [{ label: 'System', icon: 'brightness_auto' }, { label: 'Light', icon: 'light_mode' }, { label: 'Dark', icon: 'dark_mode' }], 'System', { hideLabel: true }), toggle('amoled', 'AMOLED Dark', 'Pure black background', 'brightness_2', false, undefined, { when: { id: '__dark', is: true } })] },
+        { title: 'Theme', when: { id: 'style', is: 'Material' }, rows: [seg('theme', 'Theme', [{ label: 'System', icon: 'brightness_auto' }, { label: 'Light', icon: 'light_mode' }, { label: 'Dark', icon: 'dark_mode' }], 'System', { hideLabel: true }), toggle('amoled', 'AMOLED Dark', 'Pure black background', 'brightness_2', false, undefined, { disabledWhen: { id: '__dark', is: false } })] },
         { rows: [toggle('sysfont', 'Use system font', 'Use your device\'s default typeface for app text.', 'font_download'), toggle('hero', 'Hero animations', 'Fly covers between screens, e.g. when opening the player', 'animation', true), toggle('reducemotion', 'Reduce motion', 'Skip the tournament bursts, slams and drifting colours. Windows\' own animation setting doesn\'t turn these off.', 'motion_photos_off', false), { kind: 'font', label: 'Custom font', sub: 'Import a TTF or OTF file (up to 10 MB). Overrides the theme and system font.', icon: 'format_size' }, toggle('blur', 'Always use blur effects', 'Enable the navigation bar blur even on devices where it is off by default. May cost performance.', 'blur_on')] },
         { title: 'Language', rows: [choice('language', 'App Language', ['System default', 'English'], 'English', 'language')] },
         { title: 'Layout', rows: [seg('historyview', 'History View', [{ label: 'List', icon: 'view_list' }, { label: 'Grid', icon: 'grid_view' }], 'List')] },
@@ -203,7 +206,11 @@ export const PAGE_GROUPS: Page[][] = [
         { title: 'Sound', rows: [
           nav('Equalizer', 'AutoEQ to a target, fine-tune by ear, bands and filters', 'equalizer', 'equalizer'),
           nav('Saved Equalizers', 'Save, import, export and manage your EQs', 'tune', 'saved-eq'),
-          nav('Spatial & Crossfeed', 'CanOpener crossfeed, virtual speaker room stage, SOFA HRTF profiles and head tracking', 'surround_sound', 'spatial'),
+          nav('Spatial & Crossfeed', 'Crossfeed, virtual speakers and your HRTF. 360 audio is in Connected control.', 'surround_sound', 'spatial'),
+          // §119: the EQ in other apps (Android: Wavelet-style; PC: Equalizer APO, kept live)
+          ONPHONE
+            ? toggle('systemeq', 'EQ in other apps', 'Your EQ and AutoEQ play in other music and video apps too. 360 and crossfeed stay in AVSB.', 'apps', false)
+            : toggle('systemeq', 'EQ in Equalizer APO', 'Keeps Equalizer APO playing your EQ and AutoEQ for every app. Windows asks for admin once.', 'apps', false),
         ] },
         { title: 'Tools and tests', rows: [
           nav('Audio Tools & Diagnostics', 'Fit & seal, left/right & phase, and channel balance', 'biotech', 'audio-tools'),
@@ -365,6 +372,8 @@ const SUB_PAGES: Page[] = [
   { id: 'equalizer', title: 'Equalizer', icon: 'equalizer', parent: 'playback', custom: 'equalizer' },
   { id: 'saved-eq', title: 'Saved Equalizers', icon: 'tune', parent: 'playback', custom: 'saved-eq' },
   { id: 'spatial', title: 'Spatial & Crossfeed', icon: 'surround_sound', parent: 'playback', custom: 'equalizer' },
+  // §119: 360 audio's own screen, opened from Wireless control
+  { id: 'spatial-360', title: '360 audio', icon: '360', parent: 'buds', custom: 'spatial-360' },
   { id: 'audio-tools', title: 'Audio Tools & Diagnostics', icon: 'biotech', parent: 'playback', custom: 'equalizer' },
   { id: 'hearing-test', title: 'Hearing Check', icon: 'hearing', parent: 'playback', custom: 'equalizer' },
   { id: 'blind-abx', title: 'Ear-Training & Blind ABX', icon: 'quiz', parent: 'playback', custom: 'equalizer' },

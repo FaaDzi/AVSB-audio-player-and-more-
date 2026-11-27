@@ -406,6 +406,7 @@ function openLiveOpusEncoder(file, ffmpegBin, activeProcs, startSec = 0) {
  *   pcName: () => string,
  *   playlists?: { state: () => { json: string, version: number }, put: (sent: { lists: any[], deleted: object }) => void },
  *   uploads?: { dir: () => string | null, done: (file: string) => void },
+ *   eqs?: { version: () => number, inbox: (phoneId: string) => any[], taken: (phoneId: string) => void, put: (phoneId: string, from: string, preset: any) => void },
  *   askAllow: (phone: { id: string, name: string }) => Promise<boolean>,
  *   onChange?: () => void,
  *   log?: (line: string) => void,
@@ -417,6 +418,8 @@ export function createLink(opts) {
   const { iroh, dataDir, protect, unprotect, library, pcName, askAllow, onChange = () => {}, log = () => {} } = opts
   // §80 A: the PC's playlists (JSON kept by the page) and where songs sent from a phone go
   const playlists = opts.playlists ?? { state: () => ({ json: '{"lists":[],"deleted":{}}', version: 0 }), put: () => {} }
+  // §114 G: EQs the PC sends to one phone (an outbox per phone, kept by the page) and EQs a phone sends to the PC
+  const eqs = opts.eqs ?? { version: () => 0, inbox: () => [], taken: () => {}, put: () => {} }
   const uploads = opts.uploads ?? { dir: () => null, done: () => {} }
   const ffmpegBin = resolveFfmpeg(opts.ffmpegPath)
   const dir = path.join(dataDir, 'link')
@@ -953,6 +956,7 @@ export function createLink(opts) {
         library: version,
         // §81 A: the phone asks every few seconds and fetches the playlists when this number moved
         playlists: playlists.state().version,
+        eqs: eqs.version(),
         // the PC's clock, for the time in the phone's signed LAN requests
         now: Date.now(),
         protocol: 2,
@@ -993,6 +997,25 @@ export function createLink(opts) {
       try { sent = JSON.parse(Buffer.concat(parts).toString('utf8')) } catch { return send(bi, header({ ok: false, error: 'not JSON' })) }
       if (!sent || !Array.isArray(sent.lists) || typeof sent.deleted !== 'object') return send(bi, header({ ok: false, error: 'bad playlists' }))
       playlists.put(sent)
+      return send(bi, header({ ok: true }))
+    }
+    if (req.op === 'eq-inbox') {
+      const body = Buffer.from(JSON.stringify(eqs.inbox(phoneId)), 'utf8')
+      await send(bi, header({ ok: true, type: 'application/json', bytes: body.length }))
+      await send(bi, body)
+      // sent in full: they're the phone's now
+      eqs.taken(phoneId)
+      return
+    }
+    if (req.op === 'eq-put') {
+      if (!(req.bytes > 0 && req.bytes <= 256 * 1024)) return send(bi, header({ ok: false, error: 'bad size' }))
+      const parts = []
+      if (!(await readBody(bi.recv, req, req.bytes, (b) => { parts.push(b) }))) return send(bi, header({ ok: false, error: 'cut off' }))
+      let preset
+      try { preset = JSON.parse(Buffer.concat(parts).toString('utf8')) } catch { return send(bi, header({ ok: false, error: 'not JSON' })) }
+      if (!preset || typeof preset.name !== 'string' || !preset.name.trim() || typeof preset.mode !== 'string') return send(bi, header({ ok: false, error: 'bad EQ' }))
+      const known = pairing.phones().find((p) => p.id === phoneId)
+      eqs.put(phoneId, known?.customName || known?.name || 'Phone', preset)
       return send(bi, header({ ok: true }))
     }
     if (req.op === 'upload') {

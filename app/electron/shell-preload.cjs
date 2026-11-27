@@ -4,6 +4,8 @@ const { contextBridge, ipcRenderer } = require('electron')
 contextBridge.exposeInMainWorld('musicHost', {
   /** Windows' folder picker, for Local Library. Answers the folder, or null. */
   chooseFolder: () => ipcRenderer.invoke('choose-folder'),
+  /** §119: AVSB's EQ in Equalizer APO (text = the AVSB.txt include; null empties it). Answers { ok, error? }. */
+  apoWrite: (text) => ipcRenderer.invoke('apo-write', text == null ? null : String(text)),
   /** Opens a song from the library in the default Windows app. */
   openSong: (songPath) => ipcRenderer.invoke('open-song', String(songPath)),
   /** Switches between standard window and compact floating mini player widget. */
@@ -28,6 +30,14 @@ contextBridge.exposeInMainWorld('musicHost', {
       const handler = (_e, sent) => listener(sent)
       ipcRenderer.on('link-playlists', handler)
       return () => ipcRenderer.removeListener('link-playlists', handler)
+    },
+    /** §114 G: EQs waiting for each phone ({ phoneId: presets[] }, JSON). */
+    pushEqOutbox: (json) => ipcRenderer.send('link-push-eq-outbox', String(json)),
+    /** A phone sent an EQ ({ type: 'eq-put', phoneId, from, preset }) or took its waiting ones ({ type: 'eq-taken', phoneId }). */
+    onEq: (listener) => {
+      const handler = (_e, msg) => listener(msg)
+      ipcRenderer.on('link-eq', handler)
+      return () => ipcRenderer.removeListener('link-eq', handler)
     },
     /** A phone sent a song into the library folder. */
     onUploaded: (listener) => {

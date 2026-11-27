@@ -15,8 +15,25 @@ export interface ShopPrice {
  */
 export type CatalogKind = 'iems' | 'tws' | 'headphones' | 'speakers' | 'soundbar'
 
+/**
+ * §114 D (reports/classification_audit_2026-11-27.md): rows the source put in the wrong file, or whose name misleads
+ * the wireless check. An id here also covers its variants ("akg-n9" → "akg-n9-n9-wired-anc").
+ */
+const KIND_OVERRIDES: [string, CatalogKind][] = [
+  ...['akg-n9', 'audio-technica-ath-w1000z', 'bang-olufsen-beoplay-h95', 'fostex-modhouse-t50rp', 'fostex-modhouse-t60rp', 'fostex-t20', 'hifiman-mini-shangri-la', 'hifiman-shangri-la-jr', 'philips-fidelio-x3', 'sendy-peacock', 'sennheiser-hd25', 'thieaudio-ghost']
+    .map((id) => [id, 'headphones'] as [string, CatalogKind]),
+  ...['hp-bose-quietcomfort-20', 'hp-polk-audio-ultrafit-2000', 'hp-philips-actionfit-shq5200', 'hp-nocs-ns700', 'hp-nocs-ns300',
+    'apple-airpods-wired-3-5-mm', 'airline-buds-air-india', 'airline-freebuds-ana-airline', 'earbuds-dk-buds-150', 'kinera-verdandi-tws-wired', 'kiwi-ears-orchestra-kiwi-ears-orchestra-e-type-tws', 'musikable-modder-sleeper-buds-600ohms']
+    .map((id) => [id, 'iems'] as [string, CatalogKind]),
+  // iemworld's "Momentum 3" rows carry eartip variants: the True Wireless 3, not the over-ear
+  ...['hp-beats-powerbeats-2-wireless', 'sennheiser-momentum-3'].map((id) => [id, 'tws'] as [string, CatalogKind]),
+]
+const overrideOf = (id: string) => KIND_OVERRIDES.find(([p]) => id === p || id.startsWith(`${p}-`))?.[1]
+
 /** A device's kind: headphone ids start with "hp-", wireless in-ears are named like it. */
 export function kindOfIem(iem: { id: string; name: string }): CatalogKind {
+  const fixed = overrideOf(iem.id)
+  if (fixed) return fixed
   // speakers and soundbars (§78 B, scripts/build_speakers.py): "what you listen on" only, never a bracket entrant
   if (iem.id.startsWith('spk-')) return /soundbar/i.test(iem.name) ? 'soundbar' : 'speakers'
   // §106 F: a phone's or tablet's own loudspeakers

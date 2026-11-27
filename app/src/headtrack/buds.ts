@@ -5,24 +5,63 @@ import { isAndroid } from '../platform'
 import { AudioRoute } from '../audio/speakerGuard'
 import { BudsPose, LookCalibration, normalize, normalizeQ, type LookStep, type Quat } from './budsMath'
 import { logLine } from '../shell/logs'
+import type { Driver, WirelessState } from '../wireless/capabilities'
 
 interface BudsPlugin {
-  find(): Promise<{ devices: { name: string; address: string; connected?: boolean }[] }>
+  find(): Promise<{ devices: { name: string; address: string; connected?: boolean; brand?: BudsBrand }[] }>
   start(o: { address: string }): Promise<void>
   stop(): Promise<void>
+  wirelessFind(): Promise<{ devices: WirelessPair[] }>
+  wirelessRead(o: { address: string }): Promise<WirelessState & { noiseAt12?: number; rawStatus?: string }>
+  wirelessSet(o: { address: string; key: WirelessKey; value: number; level?: number; voice?: boolean }): Promise<WirelessState>
+  ask(o: { address: string; uuids: string[]; frames: string[] }): Promise<{ answers: { uuid: string; heard: string }[] }>
+  probe(): Promise<{ devices: { name: string; address: string; uuids: string[] }[] }>
+  addListener(e: 'noise', f: (n: { mode: number }) => void): Promise<PluginListenerHandle>
   addListener(e: 'pose', f: (p: { x: number; y: number; z: number; w: number; t: number }) => void): Promise<PluginListenerHandle>
   addListener(e: 'state', f: (s: { state: string; detail: string }) => void): Promise<PluginListenerHandle>
 }
 const plugin = isAndroid() ? registerPlugin<BudsPlugin>('BudsHeadTracker') : null
 
-export interface Earbuds { name: string; address: string }
+export type BudsBrand = 'samsung' | 'sony' | 'sony-v2' | 'tanchjim-revo'
+export interface Earbuds { name: string; address: string; brand?: BudsBrand }
+
+/** §117: a connected pair and the driver that speaks to it ('none': we don't know its protocol). */
+export interface WirelessPair { name: string; address: string; driver: Driver; tested: boolean; fastPair: boolean; battery: number | null }
+export type WirelessKey = 'noise' | 'ambient' | 'game' | 'connection' | 'quality'
+export const findWireless = () => (plugin ? plugin.wirelessFind().then((r) => r.devices) : Promise.resolve([]))
+/** One pair's state. Galaxy Buds Pro / Buds2 and later keep the noise mode at status byte 12 (GalaxyBudsClient's decoder; captured on the Buds2). */
+export const readWireless = (address: string, name: string): Promise<WirelessState> =>
+  plugin
+    ? plugin.wirelessRead({ address }).then(({ noiseAt12, rawStatus, ...st }) => {
+        void rawStatus
+        if (noiseAt12 !== undefined && !/live|buds ?\+|buds plus/i.test(name) && noiseAt12 <= 2) st.noise = { mode: noiseAt12 as 0 | 1 | 2 }
+        return st
+      })
+    : Promise.reject(new Error('Android only'))
+/** One setting; resolves with what the pair itself confirmed, rejects when it didn't. */
+export const setWireless = (address: string, key: WirelessKey, value: number, extra: { level?: number; voice?: boolean } = {}) =>
+  plugin ? plugin.wirelessSet({ address, key, value, ...extra }) : Promise.reject(new Error('Android only'))
+/**
+ * Read-only Qualcomm GAIA questions (protocol/API version, firmware, serial) in the v1 framing (vendor 000A, CSR) and
+ * the v3 one (vendor 001D, Qualcomm ADK, as on the QCC3040). Nothing here changes a setting.
+ */
+// v3 core: 0 API version, 1/2 supported features (+ next), 3 serial, 4 variant name, 5 app version. Never 6 (reset).
+export const GAIA_QUESTIONS = ['ff010000000a0300', 'ff030000001d0000', 'ff030000001d0001', 'ff030000001d0002', 'ff030000001d0003', 'ff030000001d0004', 'ff030000001d0005']
+/** Asks an unknown pair read-only questions on each service; the answers also go to the log ("BudsProbe"). */
+export const askBuds = (address: string, uuids: string[], frames: string[]) =>
+  plugin ? plugin.ask({ address, uuids, frames }).then((r) => r.answers) : Promise.resolve([])
+export const probeBuds = () => (plugin ? plugin.probe().then((r) => r.devices) : Promise.resolve([]))
 
 /** Earbuds tracking found no connected pair with head sensors: the Spatial card offers the camera or a rough estimation. */
 export const NO_HEAD_SENSORS = "This device doesn't have head sensors."
 
 /** Earbuds with head sensors that are connected now, the ones playing first (§105 B: a pair that is only paired,
  * while other earbuds play, isn't tried). Empty off Android. */
-export async function findEarbuds(): Promise<Earbuds[]> {
+/** Samsung buds with the motion sensor (head tracking). */
+export const findEarbuds = async (): Promise<Earbuds[]> => (await findControllable()).filter((d) => (d.brand ?? 'samsung') === 'samsung')
+
+/** §115 A: every connected pair whose controls we speak (Galaxy Buds, Sony), the one playing first. */
+export async function findControllable(): Promise<Earbuds[]> {
   if (!plugin) return []
   const { devices } = await plugin.find()
   const playing = await AudioRoute.output().then((o) => (o.type === 'bluetooth' ? o.name ?? '' : ''), () => '')

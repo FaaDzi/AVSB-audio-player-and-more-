@@ -196,8 +196,9 @@ export function angleBetween(a: Quat, b: Quat): number {
 export type LookStep = 'ahead' | 'up' | 'down' | 'nod' | 'left' | 'right' | 'done' | 'failed'
 /** The steps in order, for the progress dots. */
 export const LOOK_STEPS = ['ahead', 'up', 'down', 'nod', 'left', 'right'] as const
-/** Holding still: moving less than this… */
-export const HOLD_DEG = 3
+/** Holding still: moving less than this… (§120: 3° was below the sensor's own jitter on some phones, so a held step
+ * kept restarting and "look up" never finished) */
+export const HOLD_DEG = 6
 /** …for this long counts as "holding" a position. */
 export const HOLD_MS = 1200
 /** Up, down, left and right must each be at least this far from straight ahead. */

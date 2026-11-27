@@ -56,6 +56,18 @@ function hit(q: string, words: string[]): number | null {
   return best
 }
 
+// §114 B: splitting and normalising a name is the slow part of a search; each name is done once, not per keystroke
+const prepared = new Map<string, { m: string[]; v: string[]; variant: string | null }>()
+function nameWords(name: string) {
+  let got = prepared.get(name)
+  if (!got) {
+    const { model, variant } = splitName(name)
+    got = { m: searchWords(model), v: variant ? searchWords(variant) : [], variant }
+    prepared.set(name, got)
+  }
+  return got
+}
+
 /**
  * How well `name` answers `query` (lower is better), or null when it doesn't. Every word has to land
  * in the name; words in the model beat words only in the variant, whole words beat word starts, and
@@ -64,9 +76,7 @@ function hit(q: string, words: string[]): number | null {
  */
 export function searchScore(name: string, query: string[]): number | null {
   if (!query.length) return null
-  const { model, variant } = splitName(name)
-  const m = searchWords(model)
-  const v = variant ? searchWords(variant) : []
+  const { m, v, variant } = nameWords(name)
   let score = 0
   let used = 0
   for (const q of query) {

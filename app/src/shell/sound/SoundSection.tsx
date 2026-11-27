@@ -28,6 +28,7 @@ import {
   XF_ANGLE_RANGE,
 } from '../../spatial/settings'
 import { crossfeedParams } from '../../spatial/stage'
+import { Spatial360View } from './Spatial360View'
 import { forgetHrirSet, loadHrirIndex, type HrirIndexEntry } from '../../spatial/hrir'
 import { deleteStoredHrir, IMPORTED_ID, loadStoredHrir, saveStoredHrir } from '../../spatial/hrirStore'
 import { importSofa } from '../../spatial/sofa'
@@ -141,7 +142,12 @@ function SoundGraph({ grid, r }: { grid: ArrayLike<number>; r: SoundResult }) {
 let hrtfTestWanted = false
 export const openHrtfTestOnArrival = () => { hrtfTestWanted = true }
 
-export function SpatialCrossfeedSection() {
+/**
+ * §115 F: one half or the other. 'crossfeed' (Equalizer → Spatial): crossfeed only. 'stage' (Wireless control):
+ * virtual speakers, room, 360, HRTF and head tracking. They are one setting (`mode`), so each half says when the other
+ * is the one playing.
+ */
+export function SpatialCrossfeedSection({ part = 'all', onOther }: { part?: 'all' | 'spatial' | 'tracking'; onOther?: () => void } = {}) {
   const [spatial, setSpatialState] = useState<SpatialSettings>(() => loadSpatial())
   const [hrirList, setHrirList] = useState<HrirIndexEntry[]>([])
   const [importedName, setImportedName] = useState<string | null>(null)
@@ -198,6 +204,9 @@ export function SpatialCrossfeedSection() {
 
   const crossfeedOn = spatial.mode === 'crossfeed'
   const speakersOn = spatial.mode === 'speakers' || spatial.mode === 'room' || spatial.mode === '360'
+  // §119: 360 is tuned as a whole; while it plays, the Spatial tab's modes and crossfeed wait (HRTF and head stay open)
+  const locked = part === 'spatial' && spatial.mode === '360'
+  const lockStyle = locked ? { opacity: 0.45, pointerEvents: 'none' as const } : undefined
   const xfAmount = spatial.xfAmount ?? DEFAULT_SPATIAL.xfAmount
   const xfAngle = spatial.xfAngle ?? DEFAULT_SPATIAL.xfAngle
   const xfCutHz = spatial.xfCutHz ?? DEFAULT_SPATIAL.xfCutHz
@@ -237,16 +246,35 @@ export function SpatialCrossfeedSection() {
       <div className="ms-snd-head">
         <Icon name="surround_sound" />
         <div className="grow">
-          <h3>Spatial &amp; Crossfeed</h3>
-          <p>Out-of-head stereo crossfeed, virtual speaker room stage, SOFA HRTF profiles, and head tracking.</p>
+          <h3>{part === 'tracking' ? '360 audio' : <>Spatial &amp; Crossfeed</>}</h3>
+          <p>{part === 'tracking' ? 'Sound all around you that stays put when you turn your head.' : 'Out-of-head stereo crossfeed, virtual speaker room stage, SOFA HRTF profiles, and head tracking.'}</p>
         </div>
       </div>
+      {/* the two halves are one setting: say when the other one is playing (owner, §115 F) */}
+      {locked && (
+        <p className="ms-tz-note warn">360 audio is on (Connected control), so these wait until it's off.{' '}
+          <button type="button" className="ms-btn text" onClick={() => updateSpatial({ mode: 'off', modeBeforeTracking: null })}>Turn off 360</button>
+          {onOther && <button type="button" className="ms-btn text" onClick={onOther}>Open 360</button>}</p>
+      )}
+      {part === 'tracking' && spatial.mode !== '360' && spatial.mode !== 'off' && (
+        <p className="ms-tz-note warn">{crossfeedOn ? 'Crossfeed' : 'Virtual speakers'} is on (Equalizer → Spatial). Turning 360 on replaces it.{onOther && <> <button type="button" className="ms-btn text" onClick={onOther}>Open</button></>}</p>
+      )}
+      {part === 'tracking' && (
+        <div className="ms-snd-row">
+          <div className="ms-snd-switchline">
+            <div><b>360 audio</b><p className="ms-tz-note tight">Your HRTF and head size come from Equalizer → Spatial.</p></div>
+            <input type="checkbox" role="switch" aria-label="360 audio" className="ms-switch" checked={spatial.mode === '360'}
+              onChange={(e) => updateSpatial({ mode: e.target.checked ? '360' : 'off', modeBeforeTracking: null })} />
+          </div>
+          <Spatial360View on={spatial.mode === '360'} />
+        </div>
+      )}
 
       {/* Mode Selector */}
-      <div className="ms-snd-row">
+      {part !== 'tracking' && <div className="ms-snd-row" style={lockStyle}>
         <small>Spatial stage mode</small>
         <div className="ms-tz-seg modes" role="radiogroup" aria-label="Spatial stage mode">
-          {SPATIAL_MODE_OPTS.map((m) => (
+          {SPATIAL_MODE_OPTS.filter((m) => part === 'all' || m.mode !== '360').map((m) => (
             <button
               type="button"
               key={m.mode}
@@ -261,10 +289,10 @@ export function SpatialCrossfeedSection() {
             </button>
           ))}
         </div>
-      </div>
+      </div>}
 
       {/* 1. Crossfeed (CanOpener-style) */}
-      <div className="ms-snd-row ms-snd-part">
+      {part !== 'tracking' && <div className="ms-snd-row ms-snd-part" style={lockStyle}>
         <div className="ms-snd-switchline">
           <div>
             <b>Crossfeed (CanOpener-style)</b>
@@ -345,11 +373,11 @@ export function SpatialCrossfeedSection() {
             }}
           />
         </div>
-      </div>
+      </div>}
 
       {/* 2. Virtual Speakers & HRTF */}
-      <div className="ms-snd-row ms-snd-part">
-        <div className="ms-snd-switchline">
+      {part !== 'tracking' && <div className="ms-snd-row ms-snd-part">
+        <div className="ms-snd-switchline" style={lockStyle}>
           <div>
             <b>Virtual Speaker Stage &amp; HRTF</b>
             <p className="ms-tz-note tight">
@@ -367,7 +395,7 @@ export function SpatialCrossfeedSection() {
         </div>
 
         {/* Room / Speaker angle & distance presets */}
-        <div className="ms-snd-row">
+        <div className="ms-snd-row" style={lockStyle}>
           <small>Room / speaker angle &amp; distance preset</small>
           <div className="ms-snd-targets" role="radiogroup" aria-label="Speaker stage presets">
             {STAGE_PRESETS.map((p) => {
@@ -507,7 +535,10 @@ export function SpatialCrossfeedSection() {
           </div>
         </div>
 
-        {/* Head Tracking (camera / sensor toggle) */}
+      </div>}
+
+      {/* Head Tracking (camera / sensor toggle): on the 360 screen (§119) */}
+      {part !== 'spatial' && <div className="ms-snd-row ms-snd-part">
         <div className="ms-snd-row">
           <div className="ms-snd-switchline">
             <div>
@@ -582,7 +613,7 @@ export function SpatialCrossfeedSection() {
           )}
           {trackState.error && trackState.error !== NO_HEAD_SENSORS && <p className="ms-tz-note danger">{trackState.error}</p>}
         </div>
-      </div>
+      </div>}
     </section>
   )
 }
@@ -714,7 +745,7 @@ export function SoundSection() {
           )}
         </section>
       )}
-      <SpatialCrossfeedSection />
+      <SpatialCrossfeedSection part="spatial" />
     </>
   )
 }

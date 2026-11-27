@@ -1,7 +1,7 @@
 // Scrollable Audio Profile Sheet (max-height: 70vh):
 // Lists Raw Sound, Reference Targets with color dots, and Imitating Audio Gear.
 // Supports right-click (PC) / long-press (Android) percentage adjustment and 'Copy this EQ'.
-import { useState, useRef, useMemo, useEffect } from 'react'
+import { useState, useRef, useMemo, useEffect, useDeferredValue } from 'react'
 import { Dialog, Icon, Menu } from '../ui'
 import { useShell } from '../context'
 import {
@@ -148,7 +148,7 @@ export function AudioProfileSheet({ onClose }: { onClose: () => void }) {
               className={`ms-profile-item raw${profile.activeItemId === null && !my.active ? ' active' : ''}`}
               role="button"
               tabIndex={0}
-              onClick={() => applyProfileItem(null, gear.active)}
+              onClick={() => { applyProfileItem(null, gear.active); setEq({ on: false }) }}
             >
               <span className="ms-gear-circle-dot raw" />
               <div className="grow">
@@ -569,12 +569,16 @@ function StrengthCurvePreview({
   )
 }
 
-export function DevicePickerModal({ db, onPick }: { db: Database; onPick: (id: string, name: string) => void }) {
+const ALL_KINDS = ['iems', 'tws', 'headphones', 'speakers', 'soundbar'] as const
+
+/** `allKinds`: any device (an imported EQ can be for anything, §114 A); otherwise the active gear's family only. */
+export function DevicePickerModal({ db, onPick, allKinds }: { db: Database; onPick: (id: string, name: string) => void; allKinds?: boolean }) {
   const [query, setQuery] = useState('')
   const active = useGear().active
+  const deferred = useDeferredValue(query)
   const matches = useMemo(
-    () => (query ? listModels(db.models, { query, kinds: new Set(aimKindsFor(active)), reviewedOnly: false, sort: 'name' }).slice(0, 10) : []),
-    [db, query, active],
+    () => (deferred ? listModels(db.models, { query: deferred, kinds: new Set(allKinds ? ALL_KINDS : aimKindsFor(active)), reviewedOnly: false, sort: 'name' }).slice(0, 10) : []),
+    [db, deferred, active, allKinds],
   )
 
   return (
@@ -583,7 +587,7 @@ export function DevicePickerModal({ db, onPick }: { db: Database; onPick: (id: s
         <Icon name="search" />
         <input
           autoFocus
-          placeholder="Search headphones or IEMs..."
+          placeholder={allKinds ? 'Search any device...' : 'Search headphones or IEMs...'}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />

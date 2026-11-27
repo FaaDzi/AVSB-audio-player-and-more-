@@ -49,6 +49,11 @@ describe('bracket kinds', () => {
     expect(kindOfIem(row('hp-sennheiser-hd-600', 'Sennheiser HD 600'))).toBe('headphones')
     // §106 F: a phone's own speakers are speakers, not in-ears
     expect(kindOfIem(row('phone-speaker-xiaomi-14', 'Xiaomi 14 speakers'))).toBe('speakers')
+    // §114 D: rows the sources filed wrong, variants included
+    expect(kindOfIem(row('akg-n9-n9-wired-anc', 'AKG N9 (Wired ANC)'))).toBe('headphones')
+    expect(kindOfIem(row('hp-bose-quietcomfort-20-passive', 'Bose QC20 (passive)'))).toBe('iems')
+    expect(kindOfIem(row('kinera-verdandi-tws-wired', 'Kinera Verdandi TWS Wired'))).toBe('iems')
+    expect(kindOfIem(row('akg-n90q', 'AKG N90Q'))).toBe('iems')
     expect(gearWords('headphones').upper).toBe('HEADPHONE')
   })
   it('keeps one in-ear kind per bracket, with duplicate ids still resolving', () => {

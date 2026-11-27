@@ -60,13 +60,17 @@ interface LinkPlugin {
   /** §88 B: the phone's own little HTTP server for PC songs (127.0.0.1, secret path). */
   audioBase?: () => Promise<{ base: string }>
   ping?: () => Promise<PhoneLinkStatus>
-  testSpeed?: () => Promise<PhoneLinkStatus>
+  /** §115 E: `bytes` (default 4 MB) and `directOnly` (skip unless the direct Wi-Fi path is up) for the quiet re-check. */
+  testSpeed?: (o?: { bytes?: number; directOnly?: boolean }) => Promise<PhoneLinkStatus & { skipped?: boolean }>
   isAirplaneMode?: () => Promise<{ airplaneMode: boolean }>
   /** True on mobile data (Android's own answer). */
   network?: () => Promise<{ mobile: boolean }>
   /** §80 A: the PC's playlists (JSON of SyncState in PC ids); no json when not connected. */
   playlists?: () => Promise<{ json?: string }>
   putPlaylists?: (o: { json: string }) => Promise<void>
+  /** §114 G: EQs the PC sent to this phone (JSON array); taken once fetched. */
+  eqInbox?: () => Promise<{ json?: string }>
+  putEq?: (o: { json: string }) => Promise<void>
   /** Sends one of the phone's own songs (its content:// path) to the PC's library. */
   upload?: (o: { uri: string; name: string }) => Promise<{ name: string }>
   addListener: (event: 'changed', cb: () => void) => Promise<{ remove: () => Promise<void> }>

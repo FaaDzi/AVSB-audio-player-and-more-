@@ -394,6 +394,44 @@ app.whenReady().then(async () => {
 
   ipcMain.handle('trash-track', (_event, wanted) => trashTrackItem(wanted))
 
+  // §119: the EQ in other apps on Windows = Equalizer APO. Its config folder (registry ConfigPath, under Program Files)
+  // gets an AVSB.txt include, replaced atomically on every change, and one "Include: AVSB.txt" line in config.txt.
+  // The folder needs admin once: Windows asks, and only that folder's write access is granted to this user.
+  let apoAskedAdmin = false
+  const apoConfigDir = () => new Promise((resolve) => {
+    execFile('reg', ['query', 'HKLM\\SOFTWARE\\EqualizerAPO', '/v', 'ConfigPath'], { windowsHide: true }, (err, out) => {
+      const m = !err && /ConfigPath\s+REG_\w+\s+(.+)/i.exec(String(out))
+      resolve(m ? m[1].trim() : null)
+    })
+  })
+  const apoWrite = (dir, text) => {
+    const tmp = path.join(dir, `AVSB.txt.${process.pid}.tmp`)
+    const crlf = (t) => t.replace(/\r?\n/g, '\r\n')
+    fs.writeFileSync(tmp, crlf(`# AVSB: written by the app while "EQ in Equalizer APO" is on\n${text ?? ''}`))
+    fs.renameSync(tmp, path.join(dir, 'AVSB.txt'))
+    const cfg = path.join(dir, 'config.txt')
+    const now = fs.existsSync(cfg) ? fs.readFileSync(cfg, 'utf8') : ''
+    if (!/^\s*Include:\s*AVSB\.txt\s*$/im.test(now)) fs.appendFileSync(cfg, `${now && !now.endsWith('\n') ? '\r\n' : ''}Include: AVSB.txt\r\n`)
+  }
+  ipcMain.handle('apo-write', async (_event, text) => {
+    if (text !== null && (typeof text !== 'string' || text.length > 20000)) return { ok: false, error: 'refused' }
+    const dir = await apoConfigDir()
+    if (!dir || !fs.existsSync(dir)) return { ok: false, error: 'Equalizer APO is not installed' }
+    try {
+      apoWrite(dir, text)
+      return { ok: true }
+    } catch (e) {
+      if (e.code !== 'EACCES' && e.code !== 'EPERM') return { ok: false, error: String(e.message ?? e) }
+      if (apoAskedAdmin) return { ok: false, error: 'No write access to the Equalizer APO folder' }
+      apoAskedAdmin = true
+      // one UAC prompt: give this Windows user Modify on APO's config folder only
+      const user = `${process.env.USERDOMAIN}\\${process.env.USERNAME}`
+      const ps = `Start-Process icacls -ArgumentList '"${dir.replace(/'/g, "''")}" /grant "${user.replace(/'/g, "''")}:(OI)(CI)M"' -Verb RunAs -Wait -WindowStyle Hidden`
+      await new Promise((resolve) => execFile('powershell', ['-NoProfile', '-Command', ps], { windowsHide: true }, () => resolve()))
+      try { apoWrite(dir, text); return { ok: true } } catch (e2) { return { ok: false, error: String(e2.message ?? e2) } }
+    }
+  })
+
   ipcMain.handle('save-lyrics', async (_event, wanted, text) => {
     const file = songFile(wanted)
     if (!file || typeof text !== 'string' || !text.trim() || text.length > 200000) return 'refused'
@@ -441,6 +479,8 @@ app.whenReady().then(async () => {
   let lastPushedVersion = -1
   // §80 A: the page's playlists as JSON, kept here so a restarted link worker gets them again
   let lastPlaylistsJson = null
+  // §114 G: the page's EQ outbox, likewise
+  let lastEqOutbox = null
 
   function loadOrCreateLinkSecretKey() {
     const keyFile = path.join(dataDir, 'link', 'key.bin')
@@ -544,6 +584,11 @@ app.whenReady().then(async () => {
           winRef?.webContents.send('link-playlists', msg.sent)
           return
         }
+        // §114 G: an EQ from a phone, and a phone that took its EQs: the page saves / clears them
+        if (msg.type === 'eq-put' || msg.type === 'eq-taken') {
+          winRef?.webContents.send('link-eq', msg)
+          return
+        }
         // a song a phone sent landed in the library folder: the page scans it in
         if (msg.type === 'uploaded') {
           logToFile(`Link: song from a phone saved to ${msg.file}`)
@@ -609,6 +654,7 @@ app.whenReady().then(async () => {
         snapshot: snap,
       })
       if (lastPlaylistsJson) worker.postMessage({ type: 'playlists-snapshot', json: lastPlaylistsJson })
+      if (lastEqOutbox) worker.postMessage({ type: 'eq-outbox', byPhone: lastEqOutbox })
     } catch (e) {
       logToFile(`Link: not available: ${e?.stack ?? e}`)
     }
@@ -625,6 +671,11 @@ app.whenReady().then(async () => {
     if (typeof json !== 'string' || json.length > 4 * 1024 * 1024) return
     lastPlaylistsJson = json
     try { linkWorker?.postMessage({ type: 'playlists-snapshot', json }) } catch { /* worker restarting: sent again on init */ }
+  })
+  ipcMain.on('link-push-eq-outbox', (_event, json) => {
+    if (typeof json !== 'string' || json.length > 4 * 1024 * 1024) return
+    try { lastEqOutbox = JSON.parse(json) } catch { return }
+    try { linkWorker?.postMessage({ type: 'eq-outbox', byPhone: lastEqOutbox }) } catch { /* worker restarting: sent again on init */ }
   })
   ipcMain.handle('link-status', () => callLinkWorker('status'))
   ipcMain.handle('link-resync', async () => {

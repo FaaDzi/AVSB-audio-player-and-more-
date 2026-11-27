@@ -6,7 +6,7 @@
 
 export const ALPN = 'iemdream/1'
 export const REQUEST_MAX = 4096
-export const OPS = ['hello', 'library', 'cover', 'song', 'pair', 'ping', 'bench', 'playlists', 'playlists-put', 'upload']
+export const OPS = ['hello', 'library', 'cover', 'song', 'pair', 'ping', 'bench', 'playlists', 'playlists-put', 'upload', 'eq-inbox', 'eq-put']
 /** Playlists the phone sends (§80 A): JSON after the request line. */
 export const PLAYLISTS_MAX = 2 * 1024 * 1024
 /** A song the phone sends (§80 A): its file after the request line. */
@@ -73,6 +73,12 @@ export function parseRequest(bytes) {
     case 'playlists-put':
       if (!Number.isInteger(req.bytes) || req.bytes <= 0 || req.bytes > PLAYLISTS_MAX) throw new BadRequest('bad size')
       return { op: 'playlists-put', bytes: req.bytes }
+    // §114 G: EQs between the PC and a phone (an EQ is a few KB; 256 KB is plenty)
+    case 'eq-inbox':
+      return { op: 'eq-inbox' }
+    case 'eq-put':
+      if (!Number.isInteger(req.bytes) || req.bytes <= 0 || req.bytes > 256 * 1024) throw new BadRequest('bad size')
+      return { op: 'eq-put', bytes: req.bytes }
     case 'upload': {
       const name = uploadName(req.name)
       if (!name) throw new BadRequest('bad name')

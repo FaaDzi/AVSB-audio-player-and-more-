@@ -26,6 +26,9 @@
 .ms-snd-switchline { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .ms-tz-note.tight { margin: 2px 0 0; }
 .ms-tz-note.danger { color: var(--danger); }
+/* §115 F: crossfeed and 360 replace each other: said where either is set */
+.ms-tz-note.warn { padding: 10px 14px; border-radius: 12px; background: var(--accent-container); color: var(--on-accent-container); }
+.ms-tz-note.warn .ms-btn { min-height: 0; padding: 0 6px; color: inherit; text-decoration: underline; }
 .ms-snd-hrtf { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .ms-snd-select { flex: 1 1 220px; min-width: 0; height: 40px; padding: 0 12px; border-radius: 12px; background: var(--chip); color: var(--text-strong); border: 1px solid var(--outline); }
 .ms-btn.text.ms-snd-reset { margin-left: 8px; padding: 0 6px; min-height: 22px; }
@@ -483,3 +486,93 @@
 .ab-dots i { width: 8px; height: 8px; border-radius: 50%; background: rgb(var(--ink) / 0.15); }
 .ab-dots i.done { background: var(--accent); opacity: 0.5; }
 .ab-dots i.now { background: var(--accent); }
+
+/* §117 Wireless control: one page for every pair */
+.ms-wl { display: flex; flex-direction: column; gap: 4px; }
+.ms-wl .dim { opacity: 0.45; }
+.ms-wl-why { display: block; color: var(--text-dim); font-size: 13px; font-weight: 400; }
+.ms-wl-battery { margin: 10px auto 0; }
+.ms-wl-tile { height: 74px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; border-radius: 14px; background: var(--control); color: var(--text); font-size: 15px; }
+.ms-wl-noise h3 { font-variant-numeric: tabular-nums; }
+.ms-wl-track { position: relative; margin-top: 14px; height: 24px; }
+.ms-wl-track > i { position: absolute; top: 10px; height: 4px; pointer-events: none; }
+.ms-wl-track .half { width: 50%; background: color-mix(in srgb, var(--accent) 26%, transparent); }
+.ms-wl-track .half.left { left: 0; border-radius: 2px 0 0 2px; }
+.ms-wl-track .half.right { left: 50%; border-radius: 0 2px 2px 0; }
+/* §120: a side the pair doesn't have */
+.ms-wl-track .half.none { background: repeating-linear-gradient(90deg, var(--text-dim) 0 4px, transparent 4px 8px); opacity: 0.35; }
+.ms-wl-track .fill { height: 6px; top: 9px; border-radius: 3px; }
+.ms-wl-track .fill.anc { background: linear-gradient(270deg, color-mix(in srgb, var(--accent) 45%, #3b82f6), color-mix(in srgb, var(--accent) 25%, #1d4ed8)); }
+.ms-wl-track .fill.amb { background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 55%, transparent), var(--accent)); }
+.ms-wl-track .ms-wl-slider { position: absolute; inset: 0; width: 100%; margin: 0; }
+.ms-wl-track .ms-wl-slider::-webkit-slider-runnable-track { background: transparent; }
+.ms-wl-nodes i.none { background: var(--text-dim); opacity: 0.35; }
+.ms-wl-ends .none { opacity: 0.35; }
+.ms-wl-nodes { position: relative; height: 10px; margin: -6px 10px 0; pointer-events: none; }
+.ms-wl-nodes i { position: absolute; top: 0; width: 2px; height: 6px; margin-left: -1px; border-radius: 1px; background: color-mix(in srgb, var(--accent) 45%, transparent); }
+.ms-wl-nodes i.major { height: 10px; width: 3px; margin-left: -1.5px; background: var(--accent); }
+.ms-wl-nodes i.on { background: var(--accent); }
+.ms-wl-ends { position: relative; display: flex; justify-content: space-between; margin-top: 4px; color: var(--text-dim); font-size: 13px; }
+.ms-wl-ends .off { position: absolute; top: 0; transform: translateX(-50%); }
+/* an Off stop near an end drops to a second line, under its notch, so it doesn't run into the end label */
+.ms-wl-ends:has(.off.low) { padding-bottom: 18px; }
+.ms-wl-ends .off.low { top: 18px; }
+.ms-wl-gestures { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-top: 10px; }
+.ms-wl-gesture { display: grid; grid-template-columns: auto auto; grid-template-rows: auto auto; gap: 2px 8px; align-items: center; padding: 12px; border-radius: 14px; background: var(--control); }
+.ms-wl-gesture span:last-child { grid-column: 1 / -1; color: var(--text-dim); font-size: 14px; }
+.ms-wl-ear { justify-self: start; padding: 2px 8px; border-radius: 999px; background: var(--accent-container); color: var(--on-accent-container); font-size: 13px; font-weight: 600; }
+.ms-wl-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 8px 4px 16px; color: var(--text-dim); }
+
+/* §118 the noise scene: line art in the theme's one accent colour; the slider matches */
+.ms-noise-scene { display: block; width: 100%; height: auto; margin-top: 10px; color: var(--accent); fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.ms-noise-scene * { transition: opacity 280ms ease, r 280ms ease; }
+.ms-noise-scene .thin { stroke-width: 1.4; }
+.ms-noise-scene.dim { color: var(--text-dim); }
+.ms-wl-slider { accent-color: var(--accent); }
+.ms-wl-slider::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: color-mix(in srgb, var(--accent) 30%, transparent); }
+.ms-wl-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; margin-top: -8px; border-radius: 50%; background: var(--accent); border: none; }
+.ms-wl-slider { -webkit-appearance: none; appearance: none; background: transparent; height: 24px; }
+
+/* §118 presets as a list; Gaming slides open its genres */
+.ms-wl-presets { display: flex; flex-direction: column; gap: 4px; }
+.ms-wl-preset { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 60px; padding: 10px 14px; border-radius: 14px; text-align: left; color: var(--text); background: transparent; }
+@media (hover: hover) { .ms-wl-preset:hover { background: var(--control); } }
+.ms-wl-preset.on { background: var(--accent-container); color: var(--on-accent-container); }
+.ms-wl-preset > .ms-icon:first-child { color: var(--accent); }
+.ms-wl-preset.on > .ms-icon { color: inherit; }
+.ms-wl-preset-text { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.ms-wl-preset-text b { font-size: 16px; font-weight: 600; }
+.ms-wl-preset-text small { font-size: 13px; color: var(--text-dim); }
+.ms-wl-preset.on .ms-wl-preset-text small { color: inherit; opacity: 0.8; }
+.ms-wl-subpresets { display: flex; flex-direction: column; gap: 2px; margin: 0 0 4px 36px; padding-left: 10px; border-left: 2px solid color-mix(in srgb, var(--accent) 40%, transparent); animation: ms-wl-open 200ms ease-out; }
+.ms-wl-preset.sub { min-height: 52px; }
+@keyframes ms-wl-open { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+
+/* §119 the 360 screen's live view: top-down, line art in the accent */
+.ms-360-view { display: flex; flex-direction: column; align-items: center; gap: 6px; margin: 14px 0 4px; }
+.ms-360-view svg { width: min(260px, 70vw); height: auto; color: var(--accent); fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ms-360-view svg .thin { stroke-width: 1.3; }
+.ms-360-view svg .faint { opacity: 0.45; }
+.ms-360-view svg g[transform] { transition: transform 90ms linear; }
+.ms-360-view svg .ray { animation: ms-360-ray 1.4s linear infinite; }
+@keyframes ms-360-ray { to { stroke-dashoffset: -16; } }
+.ms-360-view.dim svg { color: var(--text-dim); }
+.ms-360-view.dim svg .ray { animation: none; }
+.ms-360-dot { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-dim); }
+.ms-360-dot::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--text-dim); }
+.ms-360-dot.live::before { background: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent); }
+
+/* §120: the calibration shows a head making the move, not a camera frame */
+.ms-cal-head { position: relative; width: min(52vw, 220px); aspect-ratio: 1; display: grid; place-items: center; color: var(--accent); }
+.ms-cal-head svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; overflow: visible; }
+.ms-cal-head .eye, .ms-cal-head .bud { fill: currentColor; stroke: none; }
+.ms-cal-head .head { transform-origin: 60px 60px; transition: transform 0.6s ease; }
+.ms-cal-head.up .head { transform: translateY(-8px) scaleY(0.88); }
+.ms-cal-head.down .head { transform: translateY(8px) scaleY(0.88); }
+.ms-cal-head.left .head { transform: translateX(-10px) scaleX(0.8); }
+.ms-cal-head.right .head { transform: translateX(10px) scaleX(0.8); }
+.ms-cal-head.nod .head { animation: ms-cal-nod 1.6s ease-in-out infinite; }
+@keyframes ms-cal-nod { 0%, 100% { transform: translateY(-6px) scaleY(0.9); } 50% { transform: translateY(6px) scaleY(0.9); } }
+.ms-cal-head.done { color: #4ade80; }
+.ms-cal-head.failed { color: #f87171; }
+.ms-cal-head > .ms-icon { position: absolute; bottom: -4px; right: 8%; padding: 6px; border-radius: 50%; background: var(--accent-container); color: var(--on-accent-container); }

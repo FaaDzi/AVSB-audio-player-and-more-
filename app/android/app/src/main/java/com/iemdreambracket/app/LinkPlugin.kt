@@ -111,6 +111,8 @@ class LinkPlugin : Plugin() {
     @Volatile private var activeLanToken: String? = null
     /** The PC's playlists number from its last hello (§81 A); -1 before the first. */
     @Volatile private var playlistsVersion = -1
+    /** §114 G: the PC's EQ outbox number from its last hello; moving tells the page to look for EQs sent to it. */
+    @Volatile private var eqsVersion = -1
     /** PC clock minus this phone's, from the last hello: the time in signed LAN requests is the PC's. */
     @Volatile private var pcClockOffsetMs = 0L
     private var lastNetwork: Network? = null
@@ -814,8 +816,10 @@ class LinkPlugin : Plugin() {
     /** True when the PC's playlists number moved since the last hello (the first one counts: the page pulls on connect anyway). */
     private fun playlistsMoved(head: JSONObject): Boolean {
         val v = head.optInt("playlists", -1)
-        val moved = v != playlistsVersion
+        val e = head.optInt("eqs", -1)
+        val moved = v != playlistsVersion || e != eqsVersion
         playlistsVersion = v
+        eqsVersion = e
         return moved
     }
 
@@ -1333,6 +1337,33 @@ class LinkPlugin : Plugin() {
         }
     }
 
+    /** §114 G: EQs the PC sent to this phone (JSON array of presets); taken once fetched. No json when not reachable. */
+    @PluginMethod
+    fun eqInbox(call: PluginCall) {
+        scope.launch {
+            if (!paired()) return@launch call.resolve(JSObject())
+            runCatching {
+                val (head, body) = withConnection { ask(it, JSONObject().put("op", "eq-inbox")) }
+                if (!head.optBoolean("ok")) error(head.optString("error"))
+                JSObject().put("json", String(body, Charsets.UTF_8))
+            }.onSuccess { call.resolve(it) }.onFailure { call.resolve(JSObject()) }
+        }
+    }
+
+    /** §114 G: one of the phone's saved EQs (JSON) for the PC. */
+    @PluginMethod
+    fun putEq(call: PluginCall) {
+        val json = call.getString("json") ?: return call.reject("no EQ")
+        scope.launch {
+            if (!paired()) return@launch call.reject("not paired")
+            runCatching {
+                val bytes = json.toByteArray(Charsets.UTF_8)
+                val head = withConnection { askWithBody(it, JSONObject().put("op", "eq-put").put("bytes", bytes.size)) { write -> write(bytes) } }
+                if (!head.optBoolean("ok")) error(head.optString("error"))
+            }.onSuccess { call.resolve() }.onFailure { call.reject(it.message ?: "failed") }
+        }
+    }
+
     /** §80 A: sends one of the phone's own songs into the PC's library ("From phone" in its first folder). */
     @PluginMethod
     fun upload(call: PluginCall) {
@@ -1382,6 +1413,9 @@ class LinkPlugin : Plugin() {
     @PluginMethod
     fun testSpeed(call: PluginCall) {
         val airplaneMode = Settings.Global.getInt(context.contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) != 0
+        // §115 E: the quiet re-check sends a smaller test, and only over the direct Wi-Fi path (no relay, no internet)
+        val benchBytes = (call.getInt("bytes") ?: 4194304).coerceIn(512 * 1024, 4194304)
+        val directOnly = call.getBoolean("directOnly", false) == true
         scope.launch {
             val res = pingAndSync()
             res.put("airplaneMode", airplaneMode)
@@ -1404,7 +1438,7 @@ class LinkPlugin : Plugin() {
                             res.put("latencyMs", rttMs)
                         }
                         // 4 MB timed from the response headers: 1 MB from before the connect mostly measured the setup (item 13)
-                        httpConn = (URL("$lanBase/bench?bytes=4194304").openConnection() as HttpURLConnection).apply {
+                        httpConn = (URL("$lanBase/bench?bytes=$benchBytes").openConnection() as HttpURLConnection).apply {
                             connectTimeout = 1500
                             readTimeout = 10000
                         }
@@ -1434,11 +1468,12 @@ class LinkPlugin : Plugin() {
                     }
                     runCatching { httpConn?.disconnect() }
                 }
-                if (!measured) {
+                if (!measured && directOnly) res.put("skipped", true)
+                else if (!measured) {
                     runCatching {
                         withConnection { c ->
                             val bi = c.openBi()
-                            bi.send().writeAll((JSONObject().put("op", "bench").put("bytes", 4194304).toString() + "\n").toByteArray())
+                            bi.send().writeAll((JSONObject().put("op", "bench").put("bytes", benchBytes).toString() + "\n").toByteArray())
                             bi.send().finish()
                             val headerBuf = ByteArrayOutputStream(256)
                             var nl = -1

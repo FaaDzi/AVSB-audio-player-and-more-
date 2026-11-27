@@ -175,6 +175,8 @@ describe('link over iroh (loopback, no relay)', { timeout: 30_000 }, () => {
   // §80 A: playlists the page keeps, and songs a phone sends
   const playlistJson = JSON.stringify({ lists: [{ id: 'p1', name: 'Mix', tracks: ['aaaaaaaaaaaa'], updated: 1 }], deleted: {} })
   const putLists: unknown[] = []
+  let eqWaiting: unknown[] = [{ name: 'Warm', mode: 'advanced+' }]
+  const eqPut: unknown[] = []
   const received: string[] = []
   const inbox = join(music, 'From phone')
   const pc = createLink({
@@ -187,6 +189,8 @@ describe('link over iroh (loopback, no relay)', { timeout: 30_000 }, () => {
     askAllow: async () => allowNext,
     playlists: { state: () => ({ json: playlistJson, version: 1 }), put: (sent: unknown) => { putLists.push(sent) } },
     uploads: { dir: () => inbox, done: (file: string) => { received.push(file) } },
+    // §114 G: one EQ waiting for whichever phone asks; EQs a phone sends
+    eqs: { version: () => 7, inbox: () => eqWaiting, taken: () => { eqWaiting = [] }, put: (_id: string, from: string, preset: unknown) => { eqPut.push({ from, preset }) } },
     relay: false,
     bind: ['127.0.0.1:0'],
   })
@@ -282,6 +286,16 @@ describe('link over iroh (loopback, no relay)', { timeout: 30_000 }, () => {
     const mine = Buffer.from(JSON.stringify({ lists: [{ id: 'p2', name: 'Phone', tracks: ['phone:42'], updated: 5 }], deleted: {} }))
     expect(await askWithBody(c1, { op: 'playlists-put', bytes: mine.length }, mine)).toEqual({ ok: true })
     expect(putLists).toEqual([JSON.parse(mine.toString('utf8'))])
+    // §114 G: an EQ from the PC, once; one from the phone; nonsense refused
+    expect(hello.head.eqs).toBe(7)
+    expect(JSON.parse((await ask(c1, { op: 'eq-inbox' })).body.toString('utf8'))).toEqual([{ name: 'Warm', mode: 'advanced+' }])
+    expect(JSON.parse((await ask(c1, { op: 'eq-inbox' })).body.toString('utf8'))).toEqual([])
+    const eq = Buffer.from(JSON.stringify({ name: 'Mine', mode: 'basic' }))
+    expect(await askWithBody(c1, { op: 'eq-put', bytes: eq.length }, eq)).toEqual({ ok: true })
+    expect(eqPut).toHaveLength(1)
+    expect((eqPut[0] as { preset: unknown }).preset).toEqual({ name: 'Mine', mode: 'basic' })
+    const junk = Buffer.from('{"name":""}')
+    expect((await askWithBody(c1, { op: 'eq-put', bytes: junk.length }, junk)).ok).toBe(false)
     const file = Buffer.alloc(300_000, 9)
     const sentSong = await askWithBody(c1, { op: 'upload', name: '../../Artist - Song.flac', bytes: file.length }, file)
     expect(sentSong).toEqual({ ok: true, name: 'Artist - Song.flac' })

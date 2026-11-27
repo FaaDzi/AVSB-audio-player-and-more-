@@ -1,7 +1,8 @@
+import { isAdaptiveLowDataActive, noteLinkCheck } from '../engine'
 import { useEffect, useState } from 'react'
 import { Icon } from '../ui'
 import { useShell } from '../context'
-import { phoneLink, type PhoneLinkStatus } from '../linkClient'
+import { onMobileData, phoneLink, type PhoneLinkStatus } from '../linkClient'
 import { host } from '../host'
 import { getSetting, setSetting, useSettings } from './store'
 
@@ -79,6 +80,7 @@ export function DataNetworkSection() {
 
     setTesting(true)
     const t0 = performance.now()
+    const wasAutoLow = isAdaptiveLowDataActive()
 
     try {
       if (phoneLink) {
@@ -128,6 +130,8 @@ export function DataNetworkSection() {
 
         const r: SpeedResult = { latencyMs: latency, speedMbps: speed, tier, path }
         setResult(r)
+        // §115 E: a passed check brings Auto back to lossless and trusts the link for a while
+        if (noteLinkCheck(speed, latency) && wasAutoLow) showToast('Connection is good: lossless from the next song')
 
         if (tier === 'very_low') {
           if (autoWeak) {
@@ -253,6 +257,40 @@ export function DataNetworkSection() {
         </span>
         {testing ? 'Testing connection…' : 'Test Connection'}
       </button>
+      <InternetSpeed />
     </div>
+  )
+}
+
+/**
+ * §115 E: this device's own internet speed (Cloudflare's public speed test files), for information. It isn't what
+ * decides lossless from the PC: that's the PC link above. ~10 MB on Wi-Fi, ~3 MB on mobile data.
+ */
+function InternetSpeed() {
+  const [busy, setBusy] = useState(false)
+  const [got, setGot] = useState<{ mbps: number; ms: number } | null | 'failed'>(null)
+  const run = async () => {
+    setBusy(true)
+    try {
+      const base = 'https://speed.cloudflare.com/__down?bytes='
+      const p0 = performance.now()
+      await (await fetch(`${base}0`, { cache: 'no-store' })).arrayBuffer()
+      const ms = performance.now() - p0
+      const bytes = onMobileData() ? 3_000_000 : 10_000_000
+      const r = await fetch(`${base}${bytes}`, { cache: 'no-store' })
+      const t0 = performance.now()
+      const n = (await r.arrayBuffer()).byteLength
+      setGot({ mbps: (n * 8) / ((performance.now() - t0) / 1000) / 1e6, ms })
+    } catch {
+      setGot('failed')
+    } finally {
+      setBusy(false)
+    }
+  }
+  return (
+    <button type="button" className="ms-btn text" disabled={busy} onClick={() => { void run() }} style={{ width: '100%', height: 40, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+      <Icon name={busy ? 'sync' : 'public'} size={18} />
+      {busy ? 'Testing internet…' : got === 'failed' ? "Internet test didn't finish" : got ? `Internet: ${got.mbps.toFixed(1)} Mbps · ${Math.round(got.ms)} ms` : 'Test internet speed'}
+    </button>
   )
 }

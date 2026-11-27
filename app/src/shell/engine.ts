@@ -19,7 +19,7 @@ import { airMode } from '../audio/filter'
 import { loadRefs, type RefData } from '../audio/reference'
 import { loadFit } from '../fit/fit'
 import { loadDatabase, type Database } from './database/catalog'
-import { soundCurve, type SoundResult } from './sound/soundCurve'
+import { soundCurve, targetsFor, type SoundResult } from './sound/soundCurve'
 import { getSound } from './sound/soundState'
 import { onMobileData, onNetworkChange, phoneLink } from './linkClient'
 
@@ -32,13 +32,9 @@ function recordPcStreamThroughput(bytes: number, elapsedMs: number, isLowData: b
   if (bytes < 512_000 || elapsedMs < 2000) return
   const mbps = (bytes * 8) / (elapsedMs / 1000) / 1_000_000
   if (!isLowData && mbps < 1.5 && getSetting('auto_lowdata_on_weak') !== false && !adaptiveLowData) {
-    adaptiveLowData = true
-    logLine('INFO', 'Network', `PC stream throughput low (${mbps.toFixed(1)} Mbps). Enabled Low Data mode for smoother playback.`)
-    lowDataListeners.forEach((l) => l())
+    autoLowDataOn(`PC stream throughput low (${mbps.toFixed(1)} Mbps). Enabled Low Data mode for smoother playback.`, true)
   } else if (adaptiveLowData && mbps >= 8.0 && getSetting('stream_quality') !== 'Low Data (~128 kbps)') {
-    adaptiveLowData = false
-    logLine('INFO', 'Network', `PC stream throughput healthy (${mbps.toFixed(1)} Mbps). Resumed full quality streaming.`)
-    lowDataListeners.forEach((l) => l())
+    autoLowDataOff(`PC stream throughput healthy (${mbps.toFixed(1)} Mbps). Resumed full quality streaming.`)
   }
 }
 
@@ -56,9 +52,71 @@ function noteStall() {
   stalls.push(now)
   if (stalls.length < 2) return
   stalls.length = 0
+  autoLowDataOn('The PC stream stalled twice in 20 s: Low Data (auto) is on until the connection is better')
+}
+
+// §115 E: Auto used to stay on Low Data while on Wi-Fi: only a network change or a whole low-data song arriving at
+// 8 Mbps (the player never reads that far ahead) turned it off. Now a passed link check turns it off and trusts the
+// link for 30 min (one slow start or one slow song is forgiven then; two stalls in 20 s still count), and while it's
+// on, a quiet 2 MB check runs over direct Wi-Fi only (never mobile data, never the relay), backing off 2 → 16 min.
+const TRUST_MS = 30 * 60_000
+const RECHECK_MIN = [2, 4, 8, 16]
+const RECHECK_BYTES = 2 * 1024 * 1024
+let trustUntil = 0
+let recheckTimer: ReturnType<typeof setTimeout> | undefined
+let recheckStep = 0
+let recheckPasses = 0
+/** A link check good enough for lossless: the PC's FLAC needs ~1–1.5 Mbps, hi-res ~3–5; this leaves room. */
+export const linkCheckPasses = (mbps: number, latencyMs: number) => mbps >= 8 && latencyMs < 150
+
+function autoLowDataOn(why: string, forgivable = false) {
+  if (forgivable && performance.now() < trustUntil) {
+    logLine('INFO', 'Network', `${why.split(':')[0].split('.')[0]}, but the link passed its check lately: staying lossless`)
+    return false
+  }
   adaptiveLowData = true
-  logLine('INFO', 'Network', 'The PC stream stalled twice in 20 s: Low Data (auto) is on until the connection is better')
+  logLine('INFO', 'Network', why)
   lowDataListeners.forEach((l) => l())
+  recheckStep = 0
+  recheckPasses = 0
+  scheduleRecheck()
+  return true
+}
+
+function autoLowDataOff(why: string) {
+  clearTimeout(recheckTimer)
+  trustUntil = performance.now() + TRUST_MS
+  if (!adaptiveLowData) return
+  adaptiveLowData = false
+  logLine('INFO', 'Network', why)
+  lowDataListeners.forEach((l) => l())
+}
+
+/** The owner's "Check the PC connection" (or the quiet re-check): a pass brings lossless back from the next song. */
+export function noteLinkCheck(mbps: number, latencyMs: number) {
+  if (!linkCheckPasses(mbps, latencyMs)) return false
+  autoLowDataOff(`Link check passed (${mbps.toFixed(1)} Mbps, ${Math.round(latencyMs)} ms): lossless from the next song`)
+  return true
+}
+
+function scheduleRecheck(soon = false) {
+  clearTimeout(recheckTimer)
+  if (!adaptiveLowData || !phoneLink?.testSpeed) return
+  const min = RECHECK_MIN[Math.min(recheckStep, RECHECK_MIN.length - 1)]
+  recheckTimer = setTimeout(() => { void recheck() }, soon ? 30_000 : min * 60_000)
+}
+
+async function recheck() {
+  if (!adaptiveLowData) return
+  recheckStep++
+  if (onMobileData() || getSetting('auto_lowdata_on_weak') === false) return scheduleRecheck()
+  const r = await phoneLink!.testSpeed!({ bytes: RECHECK_BYTES, directOnly: true }).catch(() => null)
+  if (!adaptiveLowData) return
+  const passed = Boolean(r?.connected && !r.skipped && linkCheckPasses(r.speedMbps ?? 0, r.latencyMs ?? Infinity))
+  recheckPasses = passed ? recheckPasses + 1 : 0
+  // two passes in a row, half a minute apart, before trusting it again
+  if (recheckPasses >= 2) noteLinkCheck(r!.speedMbps ?? 0, r!.latencyMs ?? 0)
+  else scheduleRecheck(passed)
 }
 const lowDataListeners = new Set<() => void>()
 /** The Now Playing pill follows the automatic switch. */
@@ -66,6 +124,7 @@ export const useAdaptiveLowData = () =>
   useSyncExternalStore((l) => { lowDataListeners.add(l); return () => { lowDataListeners.delete(l) } }, () => adaptiveLowData)
 onNetworkChange((mobile) => {
   if (mobile || !adaptiveLowData) return
+  clearTimeout(recheckTimer)
   adaptiveLowData = false
   logLine('INFO', 'Network', 'On Wi-Fi: Low Data (auto) is off from the next song')
   lowDataListeners.forEach((l) => l())
@@ -689,10 +748,7 @@ export async function playTrack(t: Track, autostart = true, startAt = 0, exact =
         window.setTimeout(() => resolve(song.el.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA || 'low'), SLOW_START_MS)
     })
     if (mine !== token) return
-    if (ready === 'low') {
-      adaptiveLowData = true
-      logLine('INFO', 'Network', `"${t.title}" had no sound after ${took()}: Low Data (auto) is on until the connection is better`)
-      lowDataListeners.forEach((l) => l())
+    if (ready === 'low' && autoLowDataOn(`"${t.title}" had no sound after ${took()}: Low Data (auto) is on until the connection is better`, true)) {
       switching = false
       p.switching = false
       void playTrack(t, wantPlaying, livePosition())
@@ -1046,6 +1102,63 @@ export function currentSound(): SoundResult | null {
   const sound = getSound()
   if (sound.aim.kind === 'off' || !soundDb || !soundRefs) return null
   return soundCurve({ catalog: soundDb.catalog, refs: soundRefs, fit: loadFit(), airMode: airMode() }, sound)
+}
+
+/**
+ * §118: the gear as heard now (its measurement, plus the Sound correction when that plays) minus neutral (the Sound
+ * aim, or the gear's first target when Sound is off), in dB on the data grid, levelled at 300 Hz–3 kHz. Null when no
+ * gear is set or its measurement isn't loaded yet (presets then use half their values).
+ */
+let deviationCache: { key: string; value: { grid: ArrayLike<number>; dev: Float64Array } | null } | null = null
+export function gearDeviation(): { grid: ArrayLike<number>; dev: Float64Array } | null {
+  const sound = getSound()
+  if (!sound.deviceId || !soundEnvReady() || !soundDb || !soundRefs) return null
+  // the same gear and Sound give the same answer: work it out once, not on every preset tap
+  const key = JSON.stringify([sound, loadFit(), airMode()])
+  if (deviationCache?.key === key) return deviationCache.value
+  const value = deviationOf(sound, soundDb, soundRefs)
+  deviationCache = { key, value }
+  return value
+}
+
+function deviationOf(sound: ReturnType<typeof getSound>, soundDb: Database, soundRefs: RefData): { grid: ArrayLike<number>; dev: Float64Array } | null {
+  const catalog = soundDb.catalog
+  const playing = sound.aim.kind !== 'off' && !sound.bypass
+  const target = targetsFor(catalog, sound.deviceId)[0]
+  const state = playing ? sound : target ? { ...sound, aim: { kind: 'target' as const, name: target.name }, strength: 0 } : null
+  if (!state) return null
+  const r = soundCurve({ catalog, refs: soundRefs, fit: loadFit(), airMode: airMode() }, state)
+  if (!r.aim || r.aim.length !== r.reference.length) return null
+  const grid = catalog.data.grid
+  const dev = r.reference.map((v, i) => v + (playing && r.curve ? r.curve[i] : 0) - r.aim![i])
+  let sum = 0
+  let n = 0
+  for (let i = 0; i < grid.length; i++) if (grid[i] >= 300 && grid[i] <= 3000) { sum += dev[i]; n++ }
+  const mid = n ? sum / n : 0
+  return { grid, dev: dev.map((v) => v - mid) }
+}
+
+/**
+ * §119: the curve playing now (EQ filters plus the Sound correction, without the preamp), in dB at `freqs`, for the
+ * EQ in other apps (Android DynamicsProcessing, Equalizer APO). Flat when both are off.
+ */
+export function playingCurveDb(freqs: number[]): number[] {
+  const eq = getEq()
+  const filters = eq.on ? eqFilters(eq) : []
+  const sound = getSound()
+  const sim = sound.aim.kind !== 'off' && !sound.bypass && soundEnvReady() ? currentSound() : null
+  const grid = sim?.curve ? soundDb!.catalog.data.grid : GRID
+  const curve = chainDb(filters, grid, 48000)
+  if (sim?.curve) for (let i = 0; i < curve.length; i++) curve[i] += sim.curve[i]
+  // linear interpolation on a log-frequency axis
+  return freqs.map((f) => {
+    let i = 0
+    while (i < grid.length - 2 && grid[i + 1] < f) i++
+    const a = Math.log(grid[i])
+    const b = Math.log(grid[i + 1])
+    const t = Math.min(1, Math.max(0, (Math.log(f) - a) / (b - a)))
+    return curve[i] + (curve[i + 1] - curve[i]) * t
+  })
 }
 
 function applyEq() {

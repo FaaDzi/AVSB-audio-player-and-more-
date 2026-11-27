@@ -36,6 +36,10 @@ export interface BluetoothCodec {
   bits?: number
   /** LDAC's quality mode: 990 / 660 / 330, 0 = adaptive. */
   ldacKbps?: number
+  /** §119: codecs this phone and pair could switch to. */
+  selectable?: string[]
+  /** setCodec only: whether the phone took it. */
+  applied?: boolean
 }
 
 interface AudioRoute {
@@ -43,6 +47,8 @@ interface AudioRoute {
   status(): Promise<{ speaker: boolean; stereo?: boolean; model?: string }>
   output(): Promise<AndroidOutput>
   codec(): Promise<BluetoothCodec>
+  setCodec(o: { codec: string; ldacKbps?: number }): Promise<BluetoothCodec>
+  openDeveloperOptions(): Promise<void>
   openBluetoothSettings(): Promise<void>
   addListener(e: 'change', cb: (r: { speaker: boolean }) => void): Promise<{ remove: () => Promise<void> }>
   addListener(e: 'devices', cb: (r: AndroidOutput) => void): Promise<{ remove: () => Promise<void> }>

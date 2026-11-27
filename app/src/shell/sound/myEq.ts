@@ -8,8 +8,9 @@ export function useMyEq(device: string | null) {
   // useEq re-renders on every settings change, which covers the saved presets too
   const eq = useEq()
   const mine = getPresets().filter((p) => p.device === device)
-  const active = eq.on ? mine.find((p) => p.name === eq.preset) ?? null : null
-  return { mine, active }
+  // §114 E: loaded = picked, on or off (Raw keeps it loaded so one tap brings it back)
+  const loaded = mine.find((p) => p.name === eq.preset) ?? null
+  return { mine, active: eq.on ? loaded : null, loaded }
 }
 
 /** Plays a saved preset; the circle's target goes to Raw so nothing is applied twice (as AutoEQ does). */

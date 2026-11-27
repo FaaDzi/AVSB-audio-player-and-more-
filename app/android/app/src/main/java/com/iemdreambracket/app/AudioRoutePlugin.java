@@ -301,10 +301,102 @@ public class AudioRoutePlugin extends Plugin {
                 int mode = (int) specific1;
                 r.put("ldacKbps", mode == 1000 ? 990 : mode == 1001 ? 660 : mode == 1002 ? 330 : 0);
             }
+            // §119: the codecs this pair and phone could switch to (shown as choices; none listed = nothing to pick)
+            try {
+                Object sel = st.getClass().getMethod("getCodecsSelectableCapabilities").invoke(st);
+                com.getcapacitor.JSArray list = new com.getcapacitor.JSArray();
+                if (sel instanceof List) for (Object c : (List<?>) sel) list.put(codecName((Integer) c.getClass().getMethod("getCodecType").invoke(c)));
+                r.put("selectable", list);
+            } catch (ReflectiveOperationException | RuntimeException e) {
+                // not offered on this phone
+            }
         } catch (ReflectiveOperationException | RuntimeException e) {
             // not readable on this phone
         }
         return r;
+    }
+
+    /**
+     * §119: ask Android for another codec (and LDAC quality: 990 / 660 / 330 kbps, 0 = adaptive). It's
+     * setCodecConfigPreference, which Android keeps for system apps (BLUETOOTH_PRIVILEGED); some phones let it through
+     * reflection. The answer is the codec read back a moment later: { applied, ...codec } — applied false means the
+     * phone refused, and the page offers Developer options instead.
+     */
+    @PluginMethod
+    public void setCodec(PluginCall call) {
+        String want = call.getString("codec", "");
+        int kbps = call.getInt("ldacKbps", -1);
+        int type = -1;
+        for (int t = 0; t <= 6; t++) if (codecName(t).equals(want)) type = t;
+        if (type < 0) { call.reject("Unknown codec"); return; }
+        final int codecType = type;
+        BluetoothManager bm = (BluetoothManager) getContext().getSystemService(Context.BLUETOOTH_SERVICE);
+        BluetoothAdapter ad = bm == null ? null : bm.getAdapter();
+        if (ad == null) { call.reject("Bluetooth is off"); return; }
+        try {
+            ad.getProfileProxy(getContext(), new BluetoothProfile.ServiceListener() {
+                @Override
+                public void onServiceConnected(int profile, BluetoothProfile proxy) {
+                    BluetoothA2dp a2dp = (BluetoothA2dp) proxy;
+                    try {
+                        List<BluetoothDevice> devs = proxy.getConnectedDevices();
+                        if (devs.isEmpty()) { call.reject("No Bluetooth audio connected"); return; }
+                        BluetoothDevice dev = devs.get(0);
+                        long specific1 = codecType == 4 ? (kbps == 990 ? 1000 : kbps == 660 ? 1001 : kbps == 330 ? 1002 : 1003) : 0;
+                        Class<?> cfgClass = Class.forName("android.bluetooth.BluetoothCodecConfig");
+                        Object cfg;
+                        try {
+                            // hidden constructor (type, priority, sampleRate, bits, channel, specific1..4); 1000000 = highest priority
+                            cfg = cfgClass.getConstructor(int.class, int.class, int.class, int.class, int.class, long.class, long.class, long.class, long.class)
+                                .newInstance(codecType, 1000000, 0, 0, 0, specific1, 0L, 0L, 0L);
+                        } catch (ReflectiveOperationException e) {
+                            Object b = Class.forName("android.bluetooth.BluetoothCodecConfig$Builder").getConstructor().newInstance();
+                            b.getClass().getMethod("setCodecType", int.class).invoke(b, codecType);
+                            b.getClass().getMethod("setCodecPriority", int.class).invoke(b, 1000000);
+                            b.getClass().getMethod("setCodecSpecific1", long.class).invoke(b, specific1);
+                            cfg = b.getClass().getMethod("build").invoke(b);
+                        }
+                        BluetoothA2dp.class.getMethod("setCodecConfigPreference", BluetoothDevice.class, cfgClass).invoke(a2dp, dev, cfg);
+                        // the switch takes a moment: read back after it settles
+                        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                            JSObject r = codecOf(a2dp, dev);
+                            boolean same = want.equals(r.getString("codec")) && (codecType != 4 || kbps < 0 || r.getInteger("ldacKbps", -1) == kbps);
+                            r.put("applied", same);
+                            ad.closeProfileProxy(BluetoothProfile.A2DP, proxy);
+                            call.resolve(r);
+                        }, 1500);
+                    } catch (ReflectiveOperationException | RuntimeException e) {
+                        // SecurityException included: the phone keeps this for system apps
+                        BluetoothDevice d0 = devsFirst(proxy);
+                        JSObject r = d0 == null ? new JSObject() : codecOf(a2dp, d0);
+                        r.put("applied", false);
+                        ad.closeProfileProxy(BluetoothProfile.A2DP, proxy);
+                        call.resolve(r);
+                    }
+                }
+
+                @Override
+                public void onServiceDisconnected(int profile) {}
+            }, BluetoothProfile.A2DP);
+        } catch (RuntimeException e) {
+            call.reject("Couldn't reach Bluetooth audio");
+        }
+    }
+
+    private static BluetoothDevice devsFirst(BluetoothProfile proxy) {
+        List<BluetoothDevice> d = proxy.getConnectedDevices();
+        return d.isEmpty() ? null : d.get(0);
+    }
+
+    /** Developer options, where Android keeps the Bluetooth codec and LDAC quality choices. */
+    @PluginMethod
+    public void openDeveloperOptions(PluginCall call) {
+        try {
+            getContext().startActivity(new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject("Developer options are off on this phone (Settings → About → tap Build number 7 times)");
+        }
     }
 
     /** BluetoothCodecConfig.SOURCE_CODEC_TYPE_*; vendor codecs (Samsung's Scalable/SSC) show as "Vendor". */

@@ -109,6 +109,9 @@
 .ms-np .ms-pl-add .ms-iconbtn { width: 44px; height: 44px; color: #fff; border-radius: 50%; }
 /* the + turns yellow while the song is in one of your playlists (the heart is pink) */
 .ms-pl-add.saved .ms-iconbtn, .ms-np .ms-pl-add.saved .ms-iconbtn { color: #facc15; }
+/* §119: yellow-400 is ~1.6:1 on the light surface; amber-700 keeps 3:1 there (Now Playing's dark cover backdrop keeps yellow) */
+:root[data-theme='light'] .ms-pl-add.saved .ms-iconbtn { color: #b45309; }
+:root .ms-np .ms-pl-add.saved .ms-iconbtn { color: #facc15; }
 /* a liked heart, wherever it is: filled (ui.tsx), pink, with a short pop */
 .ms-iconbtn.liked, .ms-player .ms-iconbtn.liked, .ms-np-fav-btn.active { color: #ff4081; }
 .ms-iconbtn.liked .ms-icon { animation: ms-like-pop 250ms ease-out; }

@@ -23,6 +23,19 @@ describe('wireless earbuds', () => {
       'KZ Carol',
       'Soundpeats Air4 Pro',
       'Technics EAH-AZ80',
+      // §114 D: names the audit found missed
+      'Tronsmart Apollo Bold',
+      'Moondrop Pudding',
+      'Edifier Neodots',
+      'SoundPeat Capsule 3 Pro+',
+      'Technics AZ100',
+      'Sennheiser Momentum TW3',
+      'grell TWS1X',
+      'Samsung Galazy Buds Core',
+      'Audio-Technica ATH-CKSTW2',
+      'Sony WI-C100',
+      'JBL Tune 110BT',
+      'Apple Powerbeats Pro',
     ])
       expect(isWirelessName(n), n).toBe(true)
   })

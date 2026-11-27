@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
+import { useDeferredValue, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import type { CatalogKind } from '../../data/catalog'
 import { imgUrl } from '../../reviews/reviews'
 import { useShell } from '../context'
@@ -72,7 +72,9 @@ export function DatabasePage({ initialKind }: { initialKind?: 'tips' } = {}) {
   const [view, setView] = useState({ top: 0, height: 900 })
 
   const [customOnly, setCustomOnly] = useState(false)
-  const shown = useMemo(() => (db && !tipsMode ? listModels(db.models, { query, kinds, reviewedOnly, sort, customOnly }) : []), [db, query, kinds, reviewedOnly, sort, tipsMode, customOnly])
+  // §114 B: typing stays smooth; the list catches up a frame later
+  const deferredQuery = useDeferredValue(query)
+  const shown = useMemo(() => (db && !tipsMode ? listModels(db.models, { query: deferredQuery, kinds, reviewedOnly, sort, customOnly }) : []), [db, deferredQuery, kinds, reviewedOnly, sort, tipsMode, customOnly])
   const customCount = useMemo(() => (db?.models ?? []).filter((m) => m.custom).length, [db])
   const shownTips = useMemo(() => (tipsMode ? (tips?.rows ?? []).filter((r) => tipMatches(r, query)) : []), [tips, query, tipsMode])
   const counts = useMemo(() => {

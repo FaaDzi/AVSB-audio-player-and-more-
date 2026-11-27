@@ -36,6 +36,9 @@ import { SettingsPage } from './settings/SettingsPage'
 import { ShellContext, type Repeat, type Route, type SidePanel, type ToastItem } from './context'
 import { canPlay, coverUrl, overlayTracks, feedRegisteredNamingSink, setCuratedSongs, type CuratedSong, type LibraryData, type Track } from './library'
 import { localEdit, usePlaylistLink } from './playlistLink'
+import { useEqLink } from './eqLink'
+import { useOutputFollow } from './sound/outputGear'
+import { useSystemEq } from './sound/systemEq'
 import { dismissNowPlaying, moveToBackground, onMediaControls, setMediaActive, setNowPlaying as showOnLockScreen } from '../platform'
 
 function shuffled<T>(list: T[]): T[] {
@@ -192,6 +195,9 @@ export function Shell() {
     setSetting('playlists', JSON.stringify(playlists))
   }, [])
   usePlaylistLink(data, savePlaylists)
+  useEqLink(setToast)
+  useOutputFollow(setToast)
+  useSystemEq(setToast)
 
   useEffect(() => {
     if (!toast) return

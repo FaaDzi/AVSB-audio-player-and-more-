@@ -1,7 +1,7 @@
 {
   "name": "iem-tournament",
   "private": true,
-  "version": "1.1.6-preview.3",
+  "version": "1.1.6-preview.4",
   "type": "module",
   "scripts": {
     "sync-data": "node -e \"require('fs').copyFileSync('../songs/manifest.json','public/data/songs.json')\"",

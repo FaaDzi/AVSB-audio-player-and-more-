@@ -4684,7 +4684,7 @@ function createPairing({ load, save, now = Date.now, random = randomBytes }) {
 // electron/link/protocol.mjs
 var ALPN = "iemdream/1";
 var REQUEST_MAX = 4096;
-var OPS = ["hello", "library", "cover", "song", "pair", "ping", "bench", "playlists", "playlists-put", "upload"];
+var OPS = ["hello", "library", "cover", "song", "pair", "ping", "bench", "playlists", "playlists-put", "upload", "eq-inbox", "eq-put"];
 var PLAYLISTS_MAX = 2 * 1024 * 1024;
 var UPLOAD_MAX = 1024 * 1024 * 1024;
 var UPLOAD_EXTS = [".flac", ".mp3", ".m4a", ".aac", ".ogg", ".opus", ".wav", ".wma", ".alac", ".aiff", ".aif", ".ape", ".wv", ".dsf"];
@@ -4740,6 +4740,12 @@ function parseRequest(bytes) {
     case "playlists-put":
       if (!Number.isInteger(req.bytes) || req.bytes <= 0 || req.bytes > PLAYLISTS_MAX) throw new BadRequest("bad size");
       return { op: "playlists-put", bytes: req.bytes };
+    // §114 G: EQs between the PC and a phone (an EQ is a few KB; 256 KB is plenty)
+    case "eq-inbox":
+      return { op: "eq-inbox" };
+    case "eq-put":
+      if (!Number.isInteger(req.bytes) || req.bytes <= 0 || req.bytes > 256 * 1024) throw new BadRequest("bad size");
+      return { op: "eq-put", bytes: req.bytes };
     case "upload": {
       const name = uploadName(req.name);
       if (!name) throw new BadRequest("bad name");
@@ -5137,6 +5143,9 @@ function createLink(opts) {
   }, log = () => {
   } } = opts;
   const playlists = opts.playlists ?? { state: () => ({ json: '{"lists":[],"deleted":{}}', version: 0 }), put: () => {
+  } };
+  const eqs = opts.eqs ?? { version: () => 0, inbox: () => [], taken: () => {
+  }, put: () => {
   } };
   const uploads = opts.uploads ?? { dir: () => null, done: () => {
   } };
@@ -5667,6 +5676,7 @@ function createLink(opts) {
         library: version,
         // §81 A: the phone asks every few seconds and fetches the playlists when this number moved
         playlists: playlists.state().version,
+        eqs: eqs.version(),
         // the PC's clock, for the time in the phone's signed LAN requests
         now: Date.now(),
         protocol: 2,
@@ -5713,6 +5723,30 @@ function createLink(opts) {
       }
       if (!sent || !Array.isArray(sent.lists) || typeof sent.deleted !== "object") return send(bi, header({ ok: false, error: "bad playlists" }));
       playlists.put(sent);
+      return send(bi, header({ ok: true }));
+    }
+    if (req.op === "eq-inbox") {
+      const body = Buffer.from(JSON.stringify(eqs.inbox(phoneId)), "utf8");
+      await send(bi, header({ ok: true, type: "application/json", bytes: body.length }));
+      await send(bi, body);
+      eqs.taken(phoneId);
+      return;
+    }
+    if (req.op === "eq-put") {
+      if (!(req.bytes > 0 && req.bytes <= 256 * 1024)) return send(bi, header({ ok: false, error: "bad size" }));
+      const parts = [];
+      if (!await readBody(bi.recv, req, req.bytes, (b) => {
+        parts.push(b);
+      })) return send(bi, header({ ok: false, error: "cut off" }));
+      let preset;
+      try {
+        preset = JSON.parse(Buffer.concat(parts).toString("utf8"));
+      } catch {
+        return send(bi, header({ ok: false, error: "not JSON" }));
+      }
+      if (!preset || typeof preset.name !== "string" || !preset.name.trim() || typeof preset.mode !== "string") return send(bi, header({ ok: false, error: "bad EQ" }));
+      const known = pairing.phones().find((p) => p.id === phoneId);
+      eqs.put(phoneId, known?.customName || known?.name || "Phone", preset);
       return send(bi, header({ ok: true }));
     }
     if (req.op === "upload") {
